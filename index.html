@@ -234,6 +234,37 @@
       cursor: not-allowed;
     }
 
+    /* FIX: coming-soon card — visually distinct from locked, not as faded */
+    .pillar-card.coming-soon {
+      opacity: 0.75;
+      cursor: default;
+    }
+    .pillar-card.coming-soon::before { background: var(--accent-primary); }
+    .pillar-card.coming-soon:hover {
+      box-shadow: none;
+      transform: none;
+      border-color: var(--border-color);
+    }
+    .coming-soon-ribbon {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.67rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-family: var(--font-display);
+      background: rgba(230,126,34,0.12);
+      color: var(--accent-warning);
+      border: 1px solid rgba(230,126,34,0.25);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    [data-theme="dark"] .coming-soon-ribbon {
+      background: rgba(230,126,34,0.15);
+      color: #f0a050;
+    }
+
     .card-top {
       display: flex;
       align-items: flex-start;
@@ -249,16 +280,16 @@
       font-size: 1.15rem;
       flex-shrink: 0;
     }
-    .card-icon.net { background: rgba(83,70,212,0.12); }
+    .card-icon.net   { background: rgba(83,70,212,0.12); }
     .card-icon.linux { background: rgba(15,110,86,0.12); }
-    .card-icon.sec { background: rgba(231,76,60,0.1); }
-    .card-icon.script { background: rgba(230,126,34,0.1); }
-    .card-icon.db { background: rgba(41,128,185,0.1); }
-    .card-icon.docker { background: rgba(0,150,220,0.1); }
-    .card-icon.k8s { background: rgba(50,108,229,0.1); }
-    .card-icon.cicd { background: rgba(130,80,200,0.1); }
+    .card-icon.sec   { background: rgba(231,76,60,0.1); }
+    .card-icon.script{ background: rgba(230,126,34,0.1); }
+    .card-icon.db    { background: rgba(41,128,185,0.1); }
+    .card-icon.docker  { background: rgba(0,150,220,0.1); }
+    .card-icon.k8s     { background: rgba(50,108,229,0.1); }
+    .card-icon.cicd    { background: rgba(130,80,200,0.1); }
     .card-icon.terraform { background: rgba(94,50,168,0.1); }
-    .card-icon.monitor { background: rgba(231,76,60,0.1); }
+    .card-icon.monitor   { background: rgba(231,76,60,0.1); }
 
     .card-status-badge {
       font-size: 0.67rem;
@@ -269,10 +300,10 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
-    .card-status-badge.complete { background: #e1f5ee; color: #0f6e56; }
-    .card-status-badge.in-progress { background: var(--pillar-color-light); color: var(--pillar-color); }
+    .card-status-badge.complete     { background: #e1f5ee; color: #0f6e56; }
+    .card-status-badge.in-progress  { background: var(--pillar-color-light); color: var(--pillar-color); }
     .card-status-badge.locked-badge { background: var(--bg-tertiary); color: var(--text-muted); }
-    [data-theme="dark"] .card-status-badge.complete { background: #04342c; color: #5dcaa5; }
+    [data-theme="dark"] .card-status-badge.complete    { background: #04342c; color: #5dcaa5; }
     [data-theme="dark"] .card-status-badge.in-progress { background: #1e1e38; color: #a09be8; }
 
     .card-number {
@@ -328,7 +359,7 @@
       flex-shrink: 0;
       transition: var(--transition);
     }
-    .pillar-card:hover:not(.locked-card) .card-arrow {
+    .pillar-card:hover:not(.locked-card):not(.coming-soon) .card-arrow {
       background: var(--accent-primary);
       border-color: var(--accent-primary);
       color: white;
@@ -346,7 +377,7 @@
       border-radius: 3px;
     }
     .card-progress-fill.complete { background: var(--accent-secondary); width: 100%; }
-    .card-progress-fill.half { background: var(--accent-primary); width: 10%; }
+    .card-progress-fill.not-started { background: var(--border-color); width: 0%; }
 
     /* Timeline / study path */
     .study-path {
@@ -408,7 +439,7 @@
       z-index: 1;
       position: relative;
     }
-    .path-item.complete .path-dot { background: var(--accent-secondary); color: white; }
+    .path-item.complete    .path-dot { background: var(--accent-secondary); color: white; }
     .path-item.in-progress .path-dot { background: var(--accent-primary); color: white; box-shadow: 0 0 0 4px rgba(83,70,212,0.15); }
     .path-item.locked-path .path-dot { background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border-color); }
 
@@ -431,25 +462,32 @@
       line-height: 1.5;
     }
 
-    /* GitHub CTA */
+    /* GitHub CTA — dual repo */
     .github-cta {
       margin-top: 2.5rem;
       background: var(--bg-sidebar);
       border-radius: var(--radius-lg);
       padding: 1.5rem;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 1.5rem;
       flex-wrap: wrap;
     }
-    .github-cta-left {
+    .github-repos {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .github-repo-row {
       display: flex;
       align-items: center;
       gap: 14px;
     }
     .github-icon {
-      width: 42px; height: 42px;
+      width: 38px; height: 38px;
       background: rgba(255,255,255,0.08);
       border-radius: var(--radius-md);
       display: flex;
@@ -460,25 +498,36 @@
     }
     .github-cta-text .cta-title {
       font-family: var(--font-display);
-      font-size: 0.9rem;
+      font-size: 0.875rem;
       font-weight: 600;
       color: #ffffff;
       margin-bottom: 2px;
     }
     .github-cta-text .cta-sub {
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       color: #6878a0;
       font-family: var(--font-mono);
     }
-    .github-cta .btn-github {
+    .github-cta-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+    .github-cta-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .btn-github {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 0.55rem 1.1rem;
+      padding: 0.5rem 1rem;
       background: rgba(255,255,255,0.09);
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: var(--radius-md);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 500;
       font-family: var(--font-display);
       color: #c8d0e0;
@@ -486,10 +535,7 @@
       transition: var(--transition);
       white-space: nowrap;
     }
-    .github-cta .btn-github:hover {
-      background: rgba(255,255,255,0.14);
-      color: #ffffff;
-    }
+    .btn-github:hover { background: rgba(255,255,255,0.14); color: #ffffff; }
 
     /* Sidebar home link */
     .nav-item.home-link { margin-bottom: 6px; }
@@ -500,6 +546,7 @@
       .hero-stats { gap: 1.25rem; }
       .pillars-grid { grid-template-columns: 1fr; }
       .github-cta { flex-direction: column; }
+      .github-cta-buttons { flex-direction: row; flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -516,7 +563,7 @@
         <div class="logo-icon">GC</div>
         <div>
           <div class="logo-text">Great Cheatsheets</div>
-          <div class="logo-sub">SAA Foundation · Phase 1</div>
+          <div class="logo-sub">SAA Foundation · DevOps Journey</div>
         </div>
       </a>
     </div>
@@ -536,52 +583,55 @@
         Pillar 1 — Networking
         <span class="nav-badge">✓</span>
       </a>
-      <a class="nav-item" href="linux.html">
+      <!-- FIX: Linux not yet published — disabled, not linked -->
+      <span class="nav-item" style="opacity:0.5;cursor:default;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
-        Pillar 2 — Linux & CLI
-        <span class="nav-badge" style="background:rgba(15,110,86,0.25);color:#0f9e75;">Now</span>
-      </a>
-      <a class="nav-item" href="#" style="opacity:0.4;cursor:not-allowed;">
+        Pillar 2 — Linux &amp; CLI
+        <span class="nav-badge" style="background:rgba(230,126,34,0.25);color:#e67e22;margin-left:auto;">Soon</span>
+      </span>
+      <span class="nav-item" style="opacity:0.4;cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Pillar 3 — Security
-      </a>
-      <a class="nav-item" href="#" style="opacity:0.4;cursor:not-allowed;">
+      </span>
+      <span class="nav-item" style="opacity:0.4;cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Pillar 4 — Scripting
-      </a>
-      <a class="nav-item" href="#" style="opacity:0.4;cursor:not-allowed;">
+      </span>
+      <span class="nav-item" style="opacity:0.4;cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Pillar 5 — Databases
-      </a>
+      </span>
     </nav>
 
+    <!-- FIX: Full Phase 2 sidebar matching the cards grid -->
     <div class="sidebar-section-label">Phase 2 — DevOps</div>
     <nav class="sidebar-nav">
-      <a class="nav-item" href="#" style="opacity:0.35;cursor:not-allowed;">
+      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Docker &amp; Containers
-      </a>
-      <a class="nav-item" href="#" style="opacity:0.35;cursor:not-allowed;">
-        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Kubernetes
-      </a>
-      <a class="nav-item" href="#" style="opacity:0.35;cursor:not-allowed;">
+      </span>
+      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         CI/CD Pipelines
-      </a>
-      <a class="nav-item" href="#" style="opacity:0.35;cursor:not-allowed;">
+      </span>
+      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Kubernetes
+      </span>
+      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         IaC — Terraform
-      </a>
-      <a class="nav-item" href="#" style="opacity:0.35;cursor:not-allowed;">
+      </span>
+      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Monitoring &amp; Observability
-      </a>
+      </span>
     </nav>
 
     <div class="sidebar-footer">
-      <div style="font-size:0.72rem;color:#4a5270;text-align:center;">
-        github.com/K-Mash24/Great_Cheatsheets
+      <div style="font-size:0.68rem;color:#4a5270;text-align:center;line-height:1.8;">
+        <div>github.com/K-Mash24/Great_Cheatsheets</div>
+        <div>github.com/K-Mash24/DevOps-Journey</div>
       </div>
     </div>
   </aside>
@@ -624,7 +674,7 @@
       <div class="home-hero">
         <div class="hero-eyebrow"><span class="dot"></span> Active — Phase 1 in progress</div>
         <h1>DevOps Journey<br>from Zero to Cloud</h1>
-        <p>A structured self-study roadmap building the independent foundations required before AWS Solutions Architect and the full DevOps roadmap. No cloud until the prerequisites are solid.</p>
+        <p>A structured self-study roadmap building the independent foundations required before AWS Solutions Architect Associate (SAA) and the full roadmap.sh DevOps roadmap. No cloud until the prerequisites are solid.</p>
         <div class="hero-stats">
           <div class="hero-stat">
             <span class="stat-num">1/5</span>
@@ -643,7 +693,7 @@
           <div class="stat-divider"></div>
           <div class="hero-stat">
             <span class="stat-num">SAA</span>
-            <span class="stat-label">End goal</span>
+            <span class="stat-label">Next milestone</span>
           </div>
         </div>
       </div>
@@ -655,7 +705,7 @@
           <span class="progress-pct">10% complete</span>
         </div>
         <div class="progress-track">
-          <div class="progress-fill" style="width: 10%;"></div>
+          <div class="progress-fill" style="width: 0%;"></div>
         </div>
         <div class="progress-segments">
           <div class="progress-seg"><span class="seg-dot complete"></span> Networking — complete</div>
@@ -703,28 +753,32 @@
           </div>
         </a>
 
-        <!-- Pillar 2 — Linux (IN PROGRESS) -->
-        <a href="linux.html" class="pillar-card in-progress">
+        <!-- FIX: Pillar 2 — Linux (IN PROGRESS, page not yet published — not linked) -->
+        <div class="pillar-card coming-soon">
           <div class="card-top">
             <div class="card-icon linux">🐧</div>
-            <span class="card-status-badge in-progress">In Progress</span>
+            <span class="coming-soon-ribbon">
+              <svg width="10" height="10" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+              In Progress
+            </span>
           </div>
           <div>
             <div class="card-number">Pillar 02</div>
             <div class="card-title">Linux &amp; CLI Proficiency</div>
           </div>
           <div class="card-desc">File system hierarchy, permissions, process management, SSH, text processing, bash scripting, and systemd.</div>
-          <div class="card-progress"><div class="card-progress-fill half"></div></div>
+          <!-- FIX: progress 0 — not started -->
+          <div class="card-progress"><div class="card-progress-fill not-started"></div></div>
           <div class="card-footer">
             <div class="card-meta-pills">
               <span class="meta-pill">10 sections</span>
               <span class="meta-pill">not started</span>
             </div>
-            <div class="card-arrow">
-              <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+            <div class="card-arrow" style="opacity:0.3;">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
             </div>
           </div>
-        </a>
+        </div>
 
         <!-- Pillar 3 — Security (LOCKED) -->
         <div class="pillar-card locked-card">
@@ -739,9 +793,7 @@
           <div class="card-desc">Encryption, TLS/SSL, PKI, hashing, least privilege, OWASP top 10, and network hardening.</div>
           <div class="card-progress"><div class="card-progress-fill" style="width:0%;background:var(--border-color);"></div></div>
           <div class="card-footer">
-            <div class="card-meta-pills">
-              <span class="meta-pill">after Linux</span>
-            </div>
+            <div class="card-meta-pills"><span class="meta-pill">after Linux</span></div>
             <div class="card-arrow">
               <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
             </div>
@@ -761,9 +813,7 @@
           <div class="card-desc">Python fundamentals, Bash scripting, file I/O, REST APIs, JSON parsing, and automation patterns.</div>
           <div class="card-progress"><div class="card-progress-fill" style="width:0%;background:var(--border-color);"></div></div>
           <div class="card-footer">
-            <div class="card-meta-pills">
-              <span class="meta-pill">after Security</span>
-            </div>
+            <div class="card-meta-pills"><span class="meta-pill">after Security</span></div>
             <div class="card-arrow">
               <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
             </div>
@@ -783,9 +833,7 @@
           <div class="card-desc">SQL, NoSQL, normalisation, indexing, ACID properties, transactions, caching, and the CAP theorem.</div>
           <div class="card-progress"><div class="card-progress-fill" style="width:0%;background:var(--border-color);"></div></div>
           <div class="card-footer">
-            <div class="card-meta-pills">
-              <span class="meta-pill">after Scripting</span>
-            </div>
+            <div class="card-meta-pills"><span class="meta-pill">after Scripting</span></div>
             <div class="card-arrow">
               <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
             </div>
@@ -902,7 +950,7 @@
             <div class="path-dot-wrap"><div class="path-dot">→</div></div>
             <div class="path-content">
               <div class="path-name">Pillar 2 — Linux &amp; CLI Proficiency <span style="font-size:0.7rem;color:var(--accent-primary);font-family:var(--font-mono);margin-left:6px;">← YOU ARE HERE</span></div>
-              <div class="path-sub">10 sections · File system, permissions, processes, SSH, package management, text processing, bash scripting, systemd, users</div>
+              <div class="path-sub">10 sections · File system, permissions, processes, SSH, package management, text processing, bash scripting, systemd · page published when complete</div>
             </div>
           </div>
           <div class="path-item locked-path">
@@ -943,21 +991,39 @@
         </div>
       </div>
 
-      <!-- GitHub CTA -->
+      <!-- FIX: Dual GitHub CTA — both repos -->
       <div class="github-cta">
-        <div class="github-cta-left">
-          <div class="github-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        <div class="github-repos">
+          <div class="github-repo-row">
+            <div class="github-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div class="github-cta-text">
+              <div class="cta-title">K-Mash24 / Great_Cheatsheets</div>
+              <div class="cta-sub">branch: Master · raw study notes · saa-foundation/ · committed per section</div>
+            </div>
           </div>
-          <div class="github-cta-text">
-            <div class="cta-title">K-Mash24 / Great_Cheatsheets</div>
-            <div class="cta-sub">saa-foundation/ · branch: Master · notes committed after each session</div>
+          <div class="github-cta-divider"></div>
+          <div class="github-repo-row">
+            <div class="github-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div class="github-cta-text">
+              <div class="cta-title">K-Mash24 / DevOps-Journey</div>
+              <div class="cta-sub">branch: main · published site · k-mash24.github.io/DevOps-Journey · built per pillar</div>
+            </div>
           </div>
         </div>
-        <a href="https://github.com/K-Mash24/Great_Cheatsheets" target="_blank" rel="noopener" class="btn-github">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-          View Repository
-        </a>
+        <div class="github-cta-buttons">
+          <a href="https://github.com/K-Mash24/Great_Cheatsheets" target="_blank" rel="noopener" class="btn-github">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            Notes Repo
+          </a>
+          <a href="https://github.com/K-Mash24/DevOps-Journey" target="_blank" rel="noopener" class="btn-github">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            Site Repo
+          </a>
+        </div>
       </div>
 
     </main>
