@@ -113,9 +113,9 @@
         <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
         </button>
-        <div class="search-bar" style="max-width:380px;">
+        <div class="search-bar">
           <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
-          <input type="text" class="search-input" placeholder="Jump to pillar or topic..." autocomplete="off" />
+          <input type="text" class="search-input" id="searchInput" placeholder="Jump to pillar or topic..." autocomplete="off" />
           <kbd class="search-shortcut">/</kbd>
         </div>
       </div>
@@ -159,25 +159,6 @@
             <span class="stat-num">SAA</span>
             <span class="stat-label">Next milestone</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Overall Progress -->
-      <div class="overall-progress">
-        <div class="overall-progress-header">
-          <h3>Overall Roadmap Progress</h3>
-          <span class="progress-pct">10% complete</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width: 0%;"></div>
-        </div>
-        <div class="progress-segments">
-          <div class="progress-seg"><span class="seg-dot complete"></span> Networking — complete</div>
-          <div class="progress-seg"><span class="seg-dot active"></span> Linux — in progress</div>
-          <div class="progress-seg"><span class="seg-dot locked"></span> Security — locked</div>
-          <div class="progress-seg"><span class="seg-dot locked"></span> Scripting — locked</div>
-          <div class="progress-seg"><span class="seg-dot locked"></span> Databases — locked</div>
-          <div class="progress-seg"><span class="seg-dot locked"></span> Phase 2 — locked</div>
         </div>
       </div>
 
@@ -352,6 +333,25 @@
           </div>
         </div>
 
+      </div>
+
+        <!-- Overall Progress -->
+      <div class="overall-progress">
+        <div class="overall-progress-header">
+          <h3>Overall Roadmap Progress</h3>
+          <span class="progress-pct">10% complete</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <div class="progress-segments">
+          <div class="progress-seg"><span class="seg-dot complete"></span> Networking — complete</div>
+          <div class="progress-seg"><span class="seg-dot active"></span> Linux — in progress</div>
+          <div class="progress-seg"><span class="seg-dot locked"></span> Security — locked</div>
+          <div class="progress-seg"><span class="seg-dot locked"></span> Scripting — locked</div>
+          <div class="progress-seg"><span class="seg-dot locked"></span> Databases — locked</div>
+          <div class="progress-seg"><span class="seg-dot locked"></span> Phase 2 — locked</div>
+        </div>
       </div>
 
       <!-- Phase 2 Pillars -->
