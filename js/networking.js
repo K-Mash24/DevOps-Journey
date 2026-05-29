@@ -1,124 +1,9 @@
 // ============================================================
-// PILLAR 1: NETWORKING INTERACTIVE DATA ENGINE
+// PILLAR 1: NETWORKING – FLASHCARDS & QUIZ (only pillar-specific)
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Active Navigation Scroll-Spy Setup ──
-  const navItems = document.querySelectorAll('.sidebar-nav .nav-item[href^="#"]');
-  const sections = ['overview', 'checklist', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 'flashcards', 'quiz', 'resources'];
-
-  const observerOptions = {
-    root: null,
-    rootMargin: '-20% 0px -60% 0px', // Triggers when the section is in the top-middle of the screen
-    threshold: 0
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const id = entry.target.getAttribute('id');
-      
-      // 1. Manage active sidebar link state
-      navItems.forEach(item => {
-        item.classList.toggle('active', item.getAttribute('href') === `#${id}`);
-      });
-
-      // 2. NEW: Fire the lighting visual animation if we hit the resources section
-      if (id === 'resources') {
-        const resourceCards = entry.target.querySelectorAll('.resource-card');
-        resourceCards.forEach((card, index) => {
-          // Stagger the flash animation slightly for each resource item
-          setTimeout(() => {
-            card.classList.add('lighting-flash');
-          }, index * 150); 
-        });
-      }
-    }
-  });
-}, observerOptions);
-
-  // Attach the observer to all sections
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) observer.observe(el);
-  });
-
-  // ── Accordion UI Interface Window Attachment ──
-  window.toggleAccordion = function(header) {
-    const accordion = header.closest('.accordion');
-    if (accordion) accordion.classList.toggle('open');
-  };
-
-  // ── Optimized Debounced Real-Time Filter & Search Engine ──
-  const searchInput = document.getElementById('searchInput');
-  const noResults = document.getElementById('noResults');
-
-  function removeHighlights(el) {
-    el.querySelectorAll('.highlight').forEach(h => {
-      h.outerHTML = h.textContent;
-    });
-  }
-
-  function highlightText(el, term) {
-    if (!term) return;
-    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(node => {
-      if (!node.textContent.toLowerCase().includes(term.toLowerCase())) return;
-      const span = document.createElement('span');
-      span.innerHTML = node.textContent.replace(
-        new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),
-        '<mark class="highlight">$1</mark>'
-      );
-      node.parentNode.replaceChild(span, node);
-    });
-  }
-
-  if (searchInput) {
-    let searchDebounceTimeout;
-
-    searchInput.addEventListener('input', function() {
-      clearTimeout(searchDebounceTimeout);
-      
-      // Delay processing by 250ms to verify if typing has paused
-      searchDebounceTimeout = setTimeout(() => {
-        const term = this.value.trim().toLowerCase();
-        const accordions = document.querySelectorAll('.accordion[data-searchable]');
-        let visibleCount = 0;
-
-        accordions.forEach(acc => {
-          removeHighlights(acc);
-          if (!term) {
-            acc.classList.remove('search-hidden');
-            visibleCount++;
-            return;
-          }
-          const text = acc.textContent.toLowerCase();
-          if (text.includes(term)) {
-            acc.classList.remove('search-hidden');
-            acc.classList.add('open');
-            highlightText(acc, term);
-            visibleCount++;
-          } else {
-            acc.classList.add('search-hidden');
-          }
-        });
-
-        if (noResults) noResults.classList.toggle('show', term !== '' && visibleCount === 0);
-      }, 250);
-    });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === '/' && document.activeElement !== searchInput) {
-        e.preventDefault();
-        searchInput.focus();
-      }
-      if (e.key === 'Escape') searchInput.blur();
-    });
-  }
-
-  // ── Flashcards Processing Datastore ──
+  // ----- FLASHCARDS DATA -----
   const FLASHCARDS = [
     { term: "OSI Model mnemonic", answer: "All People Seem To Need Data Processing — layers 7 to 1: Application, Presentation, Session, Transport, Network, Data Link, Physical" },
     { term: "PDU at Layer 4", answer: "Segment — TCP breaks data into numbered segments with source/destination port numbers and sequence numbers" },
@@ -149,12 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.getElementById('flashcardGrid');
     if (!grid) return;
     grid.innerHTML = FLASHCARDS.map((card) => `
-      <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard: ${card.term}" onclick="this.classList.toggle('flipped')" onkeydown="if(event.key===' ' || event.key==='Enter'){ event.preventDefault(); this.classList.toggle('flipped'); }">
+      <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard: ${card.term}" 
+           onclick="this.classList.toggle('flipped')" 
+           onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();this.classList.toggle('flipped');}">
         <div class="flashcard-inner">
           <div class="flashcard-front">
             <div class="card-label">Term</div>
             <div class="card-term">${card.term}</div>
-            <div class="card-hint">click to reveal</div>
+            <div class="card-hint">click or press enter to reveal</div>
           </div>
           <div class="flashcard-back">
             <div class="card-answer">${card.answer}</div>
@@ -164,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
-  // ── Quiz Datastore Logic Core ──
+  // ----- QUIZ DATA -----
   const QUIZ_QUESTIONS = [
     {
       q: "Which OSI layer is responsible for logical addressing and routing packets across multiple networks?",
@@ -233,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderQuiz() {
     const body = document.getElementById('quizBody');
     if (!body) return;
-    
     body.innerHTML = QUIZ_QUESTIONS.map((q, qi) => `
       <div class="quiz-question" id="qq${qi}" style="margin-bottom:1.75rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border-color);">
         <span class="q-number">Question ${qi + 1} of ${QUIZ_QUESTIONS.length}</span>
@@ -256,7 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
       opt.classList.toggle('selected', i === oi);
     });
     const answered = userAnswers.filter(a => a !== null).length;
-    document.getElementById('quizProgressFill').style.width = (answered / QUIZ_QUESTIONS.length * 100) + '%';
+    const fill = document.getElementById('quizProgressFill');
+    if (fill) fill.style.width = (answered / QUIZ_QUESTIONS.length * 100) + '%';
   };
 
   window.submitQuiz = function() {
@@ -265,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const fb = document.getElementById('quizFeedback');
       fb.className = 'quiz-feedback incorrect';
       fb.textContent = `Please answer all ${QUIZ_QUESTIONS.length} questions before submitting. (${answered}/${QUIZ_QUESTIONS.length} answered)`;
+      fb.style.display = 'block';
       return;
     }
 
@@ -272,32 +160,33 @@ document.addEventListener('DOMContentLoaded', () => {
     QUIZ_QUESTIONS.forEach((q, qi) => {
       const isCorrect = userAnswers[qi] === q.correct;
       if (isCorrect) score++;
-      
       document.querySelectorAll(`#qq${qi} .quiz-option`).forEach((opt, oi) => {
         if (oi === q.correct) opt.classList.add('correct');
         else if (oi === userAnswers[qi] && !isCorrect) opt.classList.add('incorrect');
         opt.style.pointerEvents = 'none';
       });
-      
       const qEl = document.getElementById(`qq${qi}`);
       if (!qEl.querySelector('.quiz-explain')) {
         const explain = document.createElement('div');
         explain.className = 'info-box ' + (isCorrect ? 'tip' : 'warning') + ' quiz-explain';
         explain.style.marginTop = '0.75rem';
-        explain.innerHTML = `<strong>${isCorrect ? 'Correct' : 'Incorrect'}</strong>${q.explain}`;
+        explain.innerHTML = `<strong>${isCorrect ? 'Correct' : 'Incorrect'}</strong> ${q.explain}`;
         qEl.appendChild(explain);
       }
     });
 
     document.getElementById('quizFeedback').style.display = 'none';
     document.getElementById('quizScore').classList.add('show');
-    document.getElementById('scoreNum').textContent = score + '/' + QUIZ_QUESTIONS.length;
-    
+    document.getElementById('scoreNum').textContent = `${score}/${QUIZ_QUESTIONS.length}`;
+
     const pct = Math.round(score / QUIZ_QUESTIONS.length * 100);
-    // NEW: Save highest score to local storage
     const previousBest = localStorage.getItem('gc-score-networking') || 0;
     if (pct > previousBest) {
       localStorage.setItem('gc-score-networking', pct);
+      // Trigger global progress update (if function exists)
+      if (typeof window.updateGlobalProgress === 'function') {
+        window.updateGlobalProgress();
+      }
     }
 
     let msg = '';
@@ -305,20 +194,22 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (pct >= 80) msg = 'Strong result — revisit any incorrect questions and you are ready to move on.';
     else if (pct >= 60) msg = 'Good foundation — review the sections where you made errors before advancing.';
     else msg = 'Keep studying — revisit the accordion sections above, then try again.';
-    
-    document.getElementById('scoreMsg').textContent = pct + '% — ' + msg;
+    document.getElementById('scoreMsg').textContent = `${pct}% — ${msg}`;
     document.getElementById('quizScore').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   window.resetQuiz = function() {
     userAnswers = new Array(QUIZ_QUESTIONS.length).fill(null);
     document.getElementById('quizScore').classList.remove('show');
-    document.getElementById('quizFeedback').className = 'quiz-feedback';
-    document.getElementById('quizProgressFill').style.width = '0%';
+    const fb = document.getElementById('quizFeedback');
+    fb.className = 'quiz-feedback';
+    fb.style.display = 'none';
+    const fill = document.getElementById('quizProgressFill');
+    if (fill) fill.style.width = '0%';
     renderQuiz();
   };
 
-  // Run initial render configurations safely inside DOMContentLoaded
+  // Render flashcards and quiz when the page loads
   renderFlashcards();
   renderQuiz();
 });
