@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Theme Toggle Layer (kept from original) ──
+  // ── Theme Toggle ──
   const html = document.documentElement;
   const lightBtn = document.getElementById('lightBtn');
   const darkBtn = document.getElementById('darkBtn');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTheme('dark');
   }
 
-  // ── Responsive Mobile Sidebar Control (kept from original) ──
+  // ── Mobile Sidebar ──
   const sidebar = document.getElementById('sidebar');
   const hamburger = document.getElementById('hamburger');
   const overlay = document.getElementById('sidebarOverlay');
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Auto-collapse mobile sidebar drawer upon selecting links
   document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
     item.addEventListener('click', () => {
       if (sidebar) sidebar.classList.remove('open');
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ── Scroll to Top (fixed click handler) ──
+  // ── Scroll to Top ──
   const scrollTopBtn = document.getElementById('scrollTop');
   if (scrollTopBtn) {
     window.addEventListener('scroll', () => {
@@ -64,23 +63,41 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // NEW GLOBAL FEATURES (formerly duplicated across pillars)
+  // CORE FEATURES
   // ============================================================
 
-  // ── 1. GLOBAL ACCORDION TOGGLE (single source of truth) ──
+  // ── Accordion Toggle (with state saving) ──
   window.toggleAccordion = function(header) {
     const accordion = header.closest('.accordion');
     if (!accordion) return;
     accordion.classList.toggle('open');
-    // Accessibility
     header.setAttribute('aria-expanded', accordion.classList.contains('open'));
+    // Save state
+    const id = accordion.querySelector('.accordion-title')?.innerText || 'unknown';
+    const openStates = JSON.parse(localStorage.getItem('gc-accordion-states') || '{}');
+    openStates[id] = accordion.classList.contains('open');
+    localStorage.setItem('gc-accordion-states', JSON.stringify(openStates));
   };
 
-  // ── 2. GLOBAL SEARCH ENGINE (debounced, with highlights) ──
+  // ── Restore saved accordion states ──
+  function restoreAccordionStates() {
+    const openStates = JSON.parse(localStorage.getItem('gc-accordion-states') || '{}');
+    document.querySelectorAll('.accordion').forEach(acc => {
+      const id = acc.querySelector('.accordion-title')?.innerText;
+      if (id && openStates[id] === true) {
+        acc.classList.add('open');
+        const header = acc.querySelector('.accordion-header');
+        if (header) header.setAttribute('aria-expanded', 'true');
+      }
+    });
+  }
+
+  // ── Search Engine ──
   function initGlobalSearch() {
     const searchInput = document.getElementById('searchInput');
     const noResults = document.getElementById('noResults');
     if (!searchInput) return;
+    searchInput.value = ''; // clear on load
 
     let debounceTimeout;
 
@@ -121,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (acc.textContent.toLowerCase().includes(term)) {
             acc.classList.remove('search-hidden');
             acc.classList.add('open');
-            // Also update aria-expanded on the header
             const header = acc.querySelector('.accordion-header');
             if (header) header.setAttribute('aria-expanded', 'true');
             highlightText(acc, term);
@@ -135,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── 3. GLOBAL SCROLL‑SPY (dynamic active nav) ──
+  // ── Scroll Spy ──
   function initGlobalScrollSpy() {
     const navItems = document.querySelectorAll('.sidebar-nav .nav-item[href^="#"]');
     if (navItems.length === 0) return;
@@ -158,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── 4. RESOURCE PULSE ANIMATION (only if .resource-card exists) ──
+  // ── Resource Pulse ──
   function initResourcePulse() {
     const resContainer = document.getElementById('resources');
     if (!resContainer) return;
@@ -174,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(resContainer);
   }
 
-  // ── 5. GLOBAL PROGRESS INDICATOR (FIXED – single version) ──
+  // ── Global Progress ──
   window.updateGlobalProgress = function() {
     const progressFill = document.querySelector('.overall-progress .progress-fill');
     const progressPctSpan = document.querySelector('.overall-progress .progress-pct');
@@ -200,7 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
     progressFill.style.width = `${overallPercent}%`;
     if (progressPctSpan) progressPctSpan.textContent = `${overallPercent}% complete`;
 
-    // Also update the segment dots below the progress bar
     const segDots = document.querySelectorAll('.progress-segments .seg-dot');
     const order = ['networking', 'linux', 'security', 'scripting', 'databases'];
     segDots.forEach((dot, idx) => {
@@ -213,12 +228,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // ── 6. GLOBAL KEYBOARD SHORTCUTS ( / to focus search, Escape to close sidebar ) ──
+  // ── Keyboard Shortcuts ──
   function initGlobalKeyboard() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
       window.addEventListener('keydown', (e) => {
-        // Skip if user is typing in an input or textarea
         const activeTag = document.activeElement.tagName;
         if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || document.activeElement.isContentEditable) {
           return;
@@ -239,12 +253,134 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ── Run all global initialisers ──
+  // ── Copy Code Buttons ──
+  function initCopyButtons() {
+    document.querySelectorAll('.code-block').forEach(block => {
+      if (block.querySelector('.copy-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1z"/><path d="M8 5h12a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.style.position = 'absolute';
+      btn.style.top = '8px';
+      btn.style.right = '8px';
+      btn.style.background = 'var(--bg-card)';
+      btn.style.border = '1px solid var(--border-color)';
+      btn.style.borderRadius = 'var(--radius-sm)';
+      btn.style.padding = '4px 8px';
+      btn.style.cursor = 'pointer';
+      btn.style.opacity = '0.7';
+      btn.style.transition = 'opacity 0.2s';
+      block.style.position = 'relative';
+      block.appendChild(btn);
+
+      btn.addEventListener('click', async () => {
+        const pre = block.querySelector('pre');
+        const text = pre ? pre.innerText : block.innerText;
+        await navigator.clipboard.writeText(text);
+        btn.innerHTML = '✓';
+        setTimeout(() => {
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1z"/><path d="M8 5h12a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>';
+        }, 1500);
+      });
+    });
+  }
+
+  // ── Fetch Last Updated Date ──
+  async function fetchLastUpdated() {
+    try {
+      const res = await fetch('https://api.github.com/repos/K-Mash24/DevOps-Journey/commits/main');
+      if (!res.ok) throw new Error('GitHub API error');
+      const data = await res.json();
+      const date = new Date(data.commit.committer.date);
+      const footer = document.querySelector('.sidebar-footer-text');
+      if (footer && !footer.querySelector('.last-updated')) {
+        const updatedSpan = document.createElement('div');
+        updatedSpan.className = 'last-updated';
+        updatedSpan.style.marginTop = '6px';
+        updatedSpan.style.fontSize = '0.55rem';
+        updatedSpan.textContent = `Last updated: ${date.toLocaleDateString()}`;
+        footer.appendChild(updatedSpan);
+      }
+    } catch(e) {
+      console.debug('Could not fetch last updated date');
+    }
+  }
+
+  // ── Reset Progress Button ──
+  function addResetButton() {
+    const footer = document.querySelector('.sidebar-footer');
+    if (!footer) return;
+    if (footer.querySelector('.btn-reset-progress')) return;
+    const btn = document.createElement('button');
+    btn.textContent = 'Reset all progress';
+    btn.className = 'btn-reset-progress';
+    btn.style.marginTop = '10px';
+    btn.style.background = 'none';
+    btn.style.border = 'none';
+    btn.style.color = 'var(--text-sidebar-muted)';
+    btn.style.fontSize = '0.65rem';
+    btn.style.cursor = 'pointer';
+    btn.style.textDecoration = 'underline';
+    btn.addEventListener('click', () => {
+      if (confirm('Are you sure? This will delete all quiz scores and progress.')) {
+        localStorage.removeItem('gc-score-networking');
+        localStorage.removeItem('gc-score-linux');
+        localStorage.removeItem('gc-score-security');
+        localStorage.removeItem('gc-score-scripting');
+        localStorage.removeItem('gc-score-databases');
+        window.updateGlobalProgress();
+        alert('Progress reset. Refresh the page to see changes.');
+      }
+    });
+    footer.appendChild(btn);
+  }
+
+  // ── Clickable Headings (copy link) ──
+  function initClickableHeadings() {
+    document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+      heading.style.cursor = 'pointer';
+      heading.addEventListener('click', () => {
+        const url = `${window.location.pathname}#${heading.id}`;
+        navigator.clipboard.writeText(url);
+        const toast = document.createElement('div');
+        toast.textContent = 'Link copied to clipboard';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.background = 'var(--accent-primary)';
+        toast.style.color = 'white';
+        toast.style.padding = '8px 16px';
+        toast.style.borderRadius = '20px';
+        toast.style.zIndex = '999';
+        toast.style.fontSize = '0.8rem';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      });
+    });
+  }
+
+  // ── Service Worker ──
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.error('SW registration failed:', err));
+    });
+  }
+
+  // ============================================================
+  // RUN ALL INITIALISERS (in correct order)
+  // ============================================================
   initGlobalSearch();
   initGlobalScrollSpy();
-  initResourcePulse();     // safe – does nothing if no .resource-card
+  initResourcePulse();
   initGlobalKeyboard();
-  window.updateGlobalProgress(); // initial progress calculation
+  window.updateGlobalProgress();
+  initCopyButtons();
+  fetchLastUpdated();
+  addResetButton();
+  restoreAccordionStates();   // restore open states after accordions exist
+  initClickableHeadings();    // make headings clickable
 
   // Listen for storage changes (if quiz updates happen in another tab)
   window.addEventListener('storage', () => {
