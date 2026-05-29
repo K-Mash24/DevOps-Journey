@@ -75,23 +75,22 @@
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
         Self-Test Quiz
       </a>
-    </nav>
-
-    <div class="sidebar-section-label">Phase 2 — DevOps</div>
-    <nav class="sidebar-nav">
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;">
-        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Docker &amp; Containers
+      <a class="nav-item" href="#resources">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
+        Resources
       </a>
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;">
+
+      <div class="sidebar-section-label">Coming Next</div>
+      <a class="nav-item" href="#pillar2" style="opacity:0.4; cursor:not-allowed;">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Kubernetes
+        Pillar 2 — Linux &amp; CLI Proficiency
       </a>
     </nav>
 
     <div class="sidebar-footer">
-      <div style="font-size:0.72rem; color:#4a5270; text-align:center;">
-        github.com/K-Mash24/Great_Cheatsheets
+      <div class="sidebar-footer-text">
+        <div>github.com/K-Mash24/Great_Cheatsheets</div>
+        <div>github.com/K-Mash24/DevOps-Journey</div>
       </div>
     </div>
   </aside>
@@ -200,14 +199,14 @@
 
       <!-- OSI Model -->
       <div class="accordion open" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title">
             <span class="acc-icon">⬡</span>
             OSI Model — Seven Layers
             <span class="tag priority">priority</span>
           </div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>The OSI (Open Systems Interconnection) model breaks down how data travels between two computers into seven discrete layers. Each layer has one job and hands its output to the layer above or below it.</p>
           <p><strong>Mnemonic (layer 7 → 1):</strong> <code>All People Seem To Need Data Processing</code></p>
@@ -272,10 +271,10 @@
 
       <!-- TCP/IP Model -->
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">⬡</span>TCP/IP Model &amp; OSI Mapping</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>The TCP/IP model is the practical framework that actually runs the internet. OSI is the theory; TCP/IP is the real-world implementation — four layers instead of seven, collapsing those rarely treated separately.</p>
           <div class="code-block"><pre>OSI model (7 layers)              TCP/IP model (4 layers)
@@ -301,10 +300,10 @@
 
       <!-- Encapsulation -->
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">⬡</span>Packets &amp; Encapsulation</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p><strong>Encapsulation</strong> is the process by which each layer wraps the data from the layer above in its own header, adding only the information that layer needs. <strong>Decapsulation</strong> is the reverse — each layer strips its header on the receiving side.</p>
           <div class="code-block"><pre>SENDER — encapsulation (down the stack)
@@ -332,10 +331,10 @@ Layer 7  Data     → original HTTP request delivered</pre></div>
 
       <!-- Protocols & Ports -->
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">⬡</span>Protocols &amp; Common Port Numbers</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>A <strong>protocol</strong> is an agreed set of rules two machines follow to understand each other. A <strong>port number</strong> gets data to the right application on a machine — the IP address is the building, the port is the flat number inside.</p>
           <p>Port ranges: <code>0–1023</code> well-known · <code>1024–49151</code> registered · <code>49152–65535</code> ephemeral</p>
@@ -370,10 +369,10 @@ Layer 7  Data     → original HTTP request delivered</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◈</span>IPv4 Structure &amp; Binary Conversion</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>A 32-bit numerical label written as four decimal octets separated by dots. Each octet = 8 bits, value always 0–255. The 0–255 range is a hard mathematical limit: 2⁸ = 256 values.</p>
           <div class="code-block"><pre>192      .    168      .    1        .    1
@@ -401,10 +400,10 @@ Full address 192.168.1.1 → 11000000.10101000.00000001.00000001</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◈</span>Public vs Private IP Ranges (RFC 1918) &amp; Special Addresses</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>IPv4 has only ~4.3 billion addresses (2³²). RFC 1918 designates three ranges as <strong>private</strong> — never routable on the public internet, reusable across any private network.</p>
           <div class="table-wrapper">
@@ -433,10 +432,10 @@ Full address 192.168.1.1 → 11000000.10101000.00000001.00000001</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◈</span>IPv6 Basics</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>IPv6 uses 128 bits, providing 2¹²⁸ ≈ 340 undecillion addresses. Written as eight groups of four hexadecimal digits separated by colons.</p>
           <div class="code-block"><pre>IPv4:   32 bits  → 4 groups of  8 bits → decimal   (0–255)
@@ -469,10 +468,10 @@ Expanding 2001:db8::1 → 3 groups shown → 8-3=5 zeros hidden
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◆</span>Subnet Masks &amp; CIDR Notation</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>A <strong>subnet mask</strong> is a 32-bit number that defines the boundary between network ID and host ID. 1-bits = network, 0-bits = host. All 1s always appear before all 0s.</p>
           <p><strong>CIDR notation</strong> expresses an address and its mask together. The prefix length is the count of consecutive 1-bits.</p>
@@ -498,10 +497,10 @@ Expanding 2001:db8::1 → 3 groups shown → 8-3=5 zeros hidden
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◆</span>Subnetting by Hand &amp; VLSM</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p><strong>The four-step method:</strong> (1) Determine bits to borrow · (2) Calculate new mask · (3) Calculate block size · (4) List subnet boundaries</p>
           <div class="code-block"><pre>Example: Divide 192.168.1.0/24 into 4 equal subnets
@@ -527,10 +526,10 @@ Unused:                     192.168.1.116  – 192.168.1.255</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◆</span>Supernetting &amp; Route Summarisation</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>Supernetting combines multiple contiguous networks into one summary route — the opposite of subnetting. The prefix gets <em>shorter</em>. Used to reduce routing table size.</p>
           <div class="code-block"><pre>Summarise: 192.168.0.0/24, 192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24
@@ -559,10 +558,10 @@ Supernetting:  /24 /24 /24 /24 → /22  (prefix gets shorter)</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">▣</span>Routers vs Switches &amp; ARP</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <div class="table-wrapper">
             <table class="data-table">
@@ -587,10 +586,10 @@ Router 2    → [MAC:R2→server] [IP:laptop→server]</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">▣</span>Routing Tables, Default Gateway &amp; NAT/PAT</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>A <strong>routing table</strong> maps destination networks to next hops. The router uses <strong>longest prefix match</strong> — the most specific matching entry always wins. <code>0.0.0.0/0</code> is the default route — catches all unmatched traffic.</p>
           <p>The <strong>default gateway</strong> is your machine's exit point — the router's private-side IP (typically <code>192.168.1.1</code> at home).</p>
@@ -611,10 +610,10 @@ All three share one public IP — differentiated by port number</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◉</span>DNS Hierarchy &amp; Resolution</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>DNS translates hostnames to IP addresses. Operates at layer 7 on port 53 (UDP for standard queries, TCP for large responses).</p>
           <p><strong>Hierarchy:</strong> Root servers (13 sets, labeled a–m) → TLD servers (.com, .org, .ke) → Authoritative name servers (hold actual records)</p>
@@ -633,10 +632,10 @@ Typical completion: under 100 milliseconds</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◉</span>DNS Record Types &amp; Tools</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <div class="table-wrapper">
             <table class="data-table">
@@ -672,10 +671,10 @@ Typical completion: under 100 milliseconds</pre></div>
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">⊞</span>TCP — Three-Way Handshake &amp; Flow Control</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p>TCP is registered post — tracked, signed for, re-sent if lost. UDP is dropping a flyer through a letterbox — fast, no confirmation.</p>
           <div class="code-block"><pre>Three-way handshake (connection establishment):
@@ -695,10 +694,10 @@ Client ──── ACK ──────────────► Server</pr
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">⊞</span>TCP vs UDP — When to Use Which</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <div class="table-wrapper">
             <table class="data-table">
@@ -724,10 +723,10 @@ Client ──── ACK ──────────────► Server</pr
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◐</span>Firewalls, ACLs &amp; Network Zones</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <p><strong>Stateless firewall</strong> — examines each packet in isolation. Matches source IP, destination IP, protocol, port. Cannot understand connection context. Fast but limited.</p>
           <p><strong>Stateful firewall</strong> — tracks every active connection in a state table. Only allows inbound packets that correspond to established outbound connections. Standard in modern networks.</p>
@@ -749,10 +748,10 @@ Client ──── ACK ──────────────► Server</pr
       </div>
 
       <div class="accordion" data-searchable>
-        <div class="accordion-header" onclick="toggleAccordion(this)">
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)">
           <div class="accordion-title"><span class="acc-icon">◐</span>Common Network Attacks &amp; Wireshark</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </div>
+        </button>
         <div class="accordion-body">
           <div class="table-wrapper">
             <table class="data-table">
@@ -828,6 +827,46 @@ arp                          <span class="code-comment"># ARP packets (detect sp
         <p>No results found for your search.</p>
       </div>
 
+      <!-- FIX: Dual GitHub CTA — both repos -->
+      <div class="section-divider" id="resources">
+        <div class="section-number">∞</div>
+        <h2>Resources &amp; Further Reading</h2>
+      </div>
+
+      <div class="github-cta">
+        <div class="github-repos">
+          <div class="github-repo-row">
+            <div class="github-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div class="github-cta-text">
+              <div class="cta-title">K-Mash24 / Great_Cheatsheets</div>
+              <div class="cta-sub">branch: Master · raw study notes · saa-foundation/ · committed per section</div>
+            </div>
+          </div>
+          <div class="github-cta-divider"></div>
+          <div class="github-repo-row">
+            <div class="github-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div class="github-cta-text">
+              <div class="cta-title">K-Mash24 / DevOps-Journey</div>
+              <div class="cta-sub">branch: main · published site · k-mash24.github.io/DevOps-Journey · built per pillar</div>
+            </div>
+          </div>
+        </div>
+        <div class="github-cta-buttons">
+          <a href="https://github.com/K-Mash24/Great_Cheatsheets" target="_blank" rel="noopener" class="btn-github">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            Notes Repo
+          </a>
+          <a href="https://github.com/K-Mash24/DevOps-Journey" target="_blank" rel="noopener" class="btn-github">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            Site Repo
+          </a>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -837,375 +876,8 @@ arp                          <span class="code-comment"># ARP packets (detect sp
   <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
 </button>
 
-<script>
-// ═══════════════════════════════════════════
-// DATA
-// ═══════════════════════════════════════════
-
-const FLASHCARDS = [
-  { term: "OSI Model mnemonic", answer: "All People Seem To Need Data Processing — layers 7 to 1: Application, Presentation, Session, Transport, Network, Data Link, Physical" },
-  { term: "PDU at Layer 4", answer: "Segment — TCP breaks data into numbered segments with source/destination port numbers and sequence numbers" },
-  { term: "PDU at Layer 3", answer: "Packet — IP wraps the segment adding source and destination IP addresses. Routers forward at this layer" },
-  { term: "PDU at Layer 2", answer: "Frame — Ethernet wraps the packet with MAC addresses + FCS trailer. Switches operate here" },
-  { term: "RFC 1918 private ranges", answer: "10.0.0.0/8 (enterprise) · 172.16.0.0/12 (mid-size) · 192.168.0.0/16 (home/office)" },
-  { term: "APIPA range", answer: "169.254.0.0/16 — self-assigned when DHCP fails. Seeing 169.254.x.x = DHCP unreachable" },
-  { term: "Loopback address", answer: "127.0.0.1 — traffic sent here never leaves the host. Also accessible as 'localhost'" },
-  { term: "Subnet formula: usable hosts", answer: "2^(host bits) − 2. Subtract 2 for network address and broadcast address" },
-  { term: "CIDR /26 — key facts", answer: "Mask: 255.255.255.192 · Block size: 64 · Usable hosts: 62 · Subnets from /24: 4" },
-  { term: "TCP three-way handshake", answer: "SYN (client initiates) → SYN-ACK (server confirms + sends seq) → ACK (client confirms). Connection established" },
-  { term: "DNS port and protocol", answer: "Port 53. UDP for standard queries (small, fast). TCP for large responses (zone transfers, 512+ byte replies)" },
-  { term: "NAT vs PAT", answer: "NAT = IP translation only (one private per public). PAT = IP + port translation (many private per public IP)" },
-  { term: "Stateful vs stateless firewall", answer: "Stateless: examines each packet in isolation. Stateful: tracks connection state table — only allows responses to established outbound connections" },
-  { term: "ARP purpose", answer: "Address Resolution Protocol — resolves IP addresses to MAC addresses within a subnet. Broadcasts 'Who has x.x.x.x?' and caches the reply" },
-  { term: "Default gateway", answer: "The router's private-side IP configured on every device. Traffic to destinations outside the local subnet is forwarded here" },
-  { term: "SYN flood attack", answer: "Attacker sends many SYN packets but never completes the handshake. Target's connection table fills with half-open connections, refusing legitimate traffic" },
-  { term: "VLSM golden rule", answer: "Always allocate subnets from largest host requirement to smallest. Prevents large subnets consuming space needed by smaller ones" },
-  { term: "BGP", answer: "Border Gateway Protocol — holds the public internet together. ISPs use it to advertise address blocks and determine routing paths globally" },
-  { term: "FCS", answer: "Frame Check Sequence — a checksum trailer added at Layer 2. Receiver recalculates; mismatch = frame corrupted and discarded. Only footer in the stack" },
-  { term: "IPv6 shortening rules", answer: "Rule 1: drop leading zeros in each group (0db8 → db8). Rule 2: replace one consecutive run of all-zero groups with :: (can appear only once)" }
-];
-
-const QUIZ_QUESTIONS = [
-  {
-    q: "Which OSI layer is responsible for logical addressing and routing packets across multiple networks?",
-    options: ["Layer 2 — Data Link", "Layer 3 — Network", "Layer 4 — Transport", "Layer 7 — Application"],
-    correct: 1,
-    explain: "Layer 3 (Network) handles IP addressing and routing. Routers operate exclusively at this layer, reading the IP header to forward packets hop-by-hop."
-  },
-  {
-    q: "What is the correct formula for calculating the number of usable host addresses in a subnet?",
-    options: ["2^(host bits)", "2^(host bits) − 1", "2^(host bits) − 2", "2^(prefix length) − 2"],
-    correct: 2,
-    explain: "2^(host bits) − 2. You subtract 2 to exclude the network address (host bits all zeros) and broadcast address (host bits all ones)."
-  },
-  {
-    q: "A device on your network has the IP address 169.254.45.12. What does this indicate?",
-    options: ["The device has a valid DHCP-assigned address", "The device cannot reach a DHCP server and has self-assigned an APIPA address", "The device is using a loopback address", "The device is on the 172.16.0.0/12 private range"],
-    correct: 1,
-    explain: "169.254.0.0/16 is the APIPA (Automatic Private IP Addressing) range. Seeing a 169.254.x.x address means DHCP failed — the device is isolated from the broader network."
-  },
-  {
-    q: "You need to divide 192.168.1.0/24 into 8 equal subnets. What is the new prefix length?",
-    options: ["/25", "/26", "/27", "/28"],
-    correct: 2,
-    explain: "8 subnets = 2³, so you borrow 3 bits. /24 + 3 = /27. Each /27 subnet has a block size of 32 and 30 usable hosts."
-  },
-  {
-    q: "During the TCP three-way handshake, what is the correct sequence of messages?",
-    options: ["ACK → SYN → SYN-ACK", "SYN → SYN-ACK → ACK", "SYN → ACK → SYN-ACK", "SYN-ACK → SYN → ACK"],
-    correct: 1,
-    explain: "SYN (client initiates) → SYN-ACK (server acknowledges and sends its sequence number) → ACK (client confirms). Connection is now established."
-  },
-  {
-    q: "Which statement correctly describes the difference between a stateless and stateful firewall?",
-    options: [
-      "A stateless firewall is slower because it checks every packet twice",
-      "A stateful firewall tracks the connection state table and only allows inbound packets matching established outbound connections",
-      "A stateless firewall tracks MAC addresses; stateful tracks IP addresses",
-      "A stateful firewall only works at layer 2"
-    ],
-    correct: 1,
-    explain: "A stateful firewall maintains a state table of active connections. Inbound packets that don't match an established outbound connection are dropped — protecting against forged/injected packets."
-  },
-  {
-    q: "What is the purpose of ARP (Address Resolution Protocol)?",
-    options: [
-      "It translates domain names to IP addresses",
-      "It assigns IP addresses to devices on a network",
-      "It resolves IP addresses to MAC addresses within the same subnet",
-      "It encrypts traffic between two devices"
-    ],
-    correct: 2,
-    explain: "ARP resolves an IP address to its corresponding MAC address on the local subnet. The device broadcasts 'Who has IP x.x.x.x?' and the owner replies with its MAC address."
-  },
-  {
-    q: "A DNS query for 'www.example.com' reaches a recursive resolver that has no cached answer. What is the correct order of servers it contacts?",
-    options: [
-      "Authoritative NS → TLD server → Root server",
-      "TLD server → Root server → Authoritative NS",
-      "Root server → TLD server → Authoritative NS",
-      "Root server → Authoritative NS → TLD server"
-    ],
-    correct: 2,
-    explain: "Root server → tells the resolver which TLD server handles .com. TLD server → tells the resolver which authoritative NS handles example.com. Authoritative NS → returns the actual IP address."
-  },
-  {
-    q: "Why does DHCP use UDP instead of TCP?",
-    options: [
-      "UDP is more secure than TCP for network configuration",
-      "TCP requires an established connection but the client has no IP address yet when it first requests one",
-      "DHCP messages are too large for TCP",
-      "UDP supports broadcast; TCP does not"
-    ],
-    correct: 1,
-    explain: "When a device first joins a network, it has no IP address — it cannot establish a TCP connection (which requires source/destination IPs). UDP allows the initial broadcast to 255.255.255.255 without a prior connection."
-  },
-  {
-    q: "You are summarising four networks: 10.0.0.0/24, 10.0.1.0/24, 10.0.2.0/24, 10.0.3.0/24. What is the correct summary route?",
-    options: ["10.0.0.0/22", "10.0.0.0/23", "10.0.0.0/24", "10.0.0.0/20"],
-    correct: 0,
-    explain: "The four networks share the first 22 bits (10.0.000000xx in the third octet — they diverge at bit 23). Summary = 10.0.0.0/22. Block size 2^10 = 1024 addresses, range 10.0.0.0 → 10.0.3.255 ✓"
-  }
-];
-
-// ═══════════════════════════════════════════
-// THEME TOGGLE
-// ═══════════════════════════════════════════
-
-const html = document.documentElement;
-const lightBtn = document.getElementById('lightBtn');
-const darkBtn = document.getElementById('darkBtn');
-
-function setTheme(theme) {
-  html.setAttribute('data-theme', theme);
-  localStorage.setItem('gc-theme', theme);
-  lightBtn.classList.toggle('active', theme === 'light');
-  darkBtn.classList.toggle('active', theme === 'dark');
-}
-
-lightBtn.addEventListener('click', () => setTheme('light'));
-darkBtn.addEventListener('click', () => setTheme('dark'));
-
-const saved = localStorage.getItem('gc-theme');
-if (saved) setTheme(saved);
-else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
-
-// ═══════════════════════════════════════════
-// SIDEBAR TOGGLE (mobile)
-// ═══════════════════════════════════════════
-
-const sidebar = document.getElementById('sidebar');
-const hamburger = document.getElementById('hamburger');
-const overlay = document.getElementById('sidebarOverlay');
-
-hamburger.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('show');
-});
-overlay.addEventListener('click', () => {
-  sidebar.classList.remove('open');
-  overlay.classList.remove('show');
-});
-
-// Close sidebar on nav item click (mobile)
-document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
-  item.addEventListener('click', () => {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('show');
-  });
-});
-
-// Active nav highlight on scroll
-const navItems = document.querySelectorAll('.sidebar-nav .nav-item[href^="#"]');
-const sections = ['overview','s1','s2','s3','s4','s5','s6','s7','flashcards','quiz'];
-
-function updateActiveNav() {
-  let current = '';
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el && window.scrollY >= el.offsetTop - 120) current = '#' + id;
-  });
-  navItems.forEach(item => {
-    item.classList.toggle('active', item.getAttribute('href') === current);
-  });
-}
-window.addEventListener('scroll', updateActiveNav, { passive: true });
-
-// ═══════════════════════════════════════════
-// ACCORDION
-// ═══════════════════════════════════════════
-
-function toggleAccordion(header) {
-  const accordion = header.closest('.accordion');
-  accordion.classList.toggle('open');
-}
-
-// ═══════════════════════════════════════════
-// SEARCH
-// ═══════════════════════════════════════════
-
-const searchInput = document.getElementById('searchInput');
-const noResults = document.getElementById('noResults');
-
-function removeHighlights(el) {
-  el.querySelectorAll('.highlight').forEach(h => {
-    h.outerHTML = h.textContent;
-  });
-}
-
-function highlightText(el, term) {
-  if (!term) return;
-  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-  const nodes = [];
-  while (walker.nextNode()) nodes.push(walker.currentNode);
-  nodes.forEach(node => {
-    if (!node.textContent.toLowerCase().includes(term.toLowerCase())) return;
-    const span = document.createElement('span');
-    span.innerHTML = node.textContent.replace(
-      new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),
-      '<mark class="highlight">$1</mark>'
-    );
-    node.parentNode.replaceChild(span, node);
-  });
-}
-
-searchInput.addEventListener('input', function() {
-  const term = this.value.trim().toLowerCase();
-  const accordions = document.querySelectorAll('.accordion[data-searchable]');
-  let visibleCount = 0;
-
-  accordions.forEach(acc => {
-    // Remove previous highlights
-    removeHighlights(acc);
-
-    if (!term) {
-      acc.classList.remove('search-hidden');
-      visibleCount++;
-      return;
-    }
-
-    const text = acc.textContent.toLowerCase();
-    if (text.includes(term)) {
-      acc.classList.remove('search-hidden');
-      acc.classList.add('open');
-      highlightText(acc, this.value.trim());
-      visibleCount++;
-    } else {
-      acc.classList.add('search-hidden');
-    }
-  });
-
-  noResults.classList.toggle('show', term !== '' && visibleCount === 0);
-});
-
-// Keyboard shortcut: / focuses search
-document.addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement !== searchInput) {
-    e.preventDefault();
-    searchInput.focus();
-  }
-  if (e.key === 'Escape') searchInput.blur();
-});
-
-// ═══════════════════════════════════════════
-// FLASHCARDS
-// ═══════════════════════════════════════════
-
-function renderFlashcards() {
-  const grid = document.getElementById('flashcardGrid');
-  grid.innerHTML = FLASHCARDS.map((card, i) => `
-    <div class="flashcard" onclick="this.classList.toggle('flipped')" role="button" aria-label="Flashcard: ${card.term}">
-      <div class="flashcard-inner">
-        <div class="flashcard-front">
-          <div class="card-label">Term</div>
-          <div class="card-term">${card.term}</div>
-          <div class="card-hint">click to reveal</div>
-        </div>
-        <div class="flashcard-back">
-          <div class="card-answer">${card.answer}</div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-renderFlashcards();
-
-// ═══════════════════════════════════════════
-// QUIZ
-// ═══════════════════════════════════════════
-
-let userAnswers = new Array(QUIZ_QUESTIONS.length).fill(null);
-
-function renderQuiz() {
-  const body = document.getElementById('quizBody');
-  body.innerHTML = QUIZ_QUESTIONS.map((q, qi) => `
-    <div class="quiz-question" id="qq${qi}" style="margin-bottom:1.75rem; padding-bottom:1.75rem; border-bottom: 1px solid var(--border-color);">
-      <span class="q-number">Question ${qi + 1} of ${QUIZ_QUESTIONS.length}</span>
-      ${q.q}
-      <div class="quiz-options" style="margin-top:0.875rem;">
-        ${q.options.map((opt, oi) => `
-          <label class="quiz-option" id="opt${qi}_${oi}" onclick="selectOption(${qi}, ${oi})">
-            <input type="radio" name="q${qi}" value="${oi}" />
-            <span>${opt}</span>
-          </label>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-function selectOption(qi, oi) {
-  userAnswers[qi] = oi;
-  document.querySelectorAll(`#qq${qi} .quiz-option`).forEach((opt, i) => {
-    opt.classList.toggle('selected', i === oi);
-  });
-  const answered = userAnswers.filter(a => a !== null).length;
-  document.getElementById('quizProgressFill').style.width = (answered / QUIZ_QUESTIONS.length * 100) + '%';
-}
-
-function submitQuiz() {
-  const answered = userAnswers.filter(a => a !== null).length;
-  if (answered < QUIZ_QUESTIONS.length) {
-    const fb = document.getElementById('quizFeedback');
-    fb.className = 'quiz-feedback incorrect';
-    fb.textContent = `Please answer all ${QUIZ_QUESTIONS.length} questions before submitting. (${answered}/${QUIZ_QUESTIONS.length} answered)`;
-    return;
-  }
-
-  let score = 0;
-  QUIZ_QUESTIONS.forEach((q, qi) => {
-    const isCorrect = userAnswers[qi] === q.correct;
-    if (isCorrect) score++;
-    document.querySelectorAll(`#qq${qi} .quiz-option`).forEach((opt, oi) => {
-      if (oi === q.correct) opt.classList.add('correct');
-      else if (oi === userAnswers[qi] && !isCorrect) opt.classList.add('incorrect');
-      opt.style.pointerEvents = 'none';
-    });
-    // Show explanation
-    const qEl = document.getElementById(`qq${qi}`);
-    const existing = qEl.querySelector('.quiz-explain');
-    if (!existing) {
-      const explain = document.createElement('div');
-      explain.className = 'info-box ' + (isCorrect ? 'tip' : 'warning');
-      explain.style.marginTop = '0.75rem';
-      explain.innerHTML = `<strong>${isCorrect ? 'Correct' : 'Incorrect'}</strong>${q.explain}`;
-      qEl.appendChild(explain);
-    }
-  });
-
-  document.getElementById('quizFeedback').style.display = 'none';
-  document.getElementById('quizScore').classList.add('show');
-  document.getElementById('scoreNum').textContent = score + '/' + QUIZ_QUESTIONS.length;
-  const pct = Math.round(score / QUIZ_QUESTIONS.length * 100);
-  let msg = '';
-  if (pct === 100) msg = 'Perfect score — outstanding command of networking fundamentals.';
-  else if (pct >= 80) msg = 'Strong result — revisit any incorrect questions and you are ready to move on.';
-  else if (pct >= 60) msg = 'Good foundation — review the sections where you made errors before advancing.';
-  else msg = 'Keep studying — revisit the accordion sections above, then try again.';
-  document.getElementById('scoreMsg').textContent = pct + '% — ' + msg;
-  document.getElementById('quizScore').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-function resetQuiz() {
-  userAnswers = new Array(QUIZ_QUESTIONS.length).fill(null);
-  document.getElementById('quizScore').classList.remove('show');
-  document.getElementById('quizFeedback').className = 'quiz-feedback';
-  document.getElementById('quizProgressFill').style.width = '0%';
-  renderQuiz();
-}
-
-renderQuiz();
-
-// ═══════════════════════════════════════════
-// SCROLL TO TOP
-// ═══════════════════════════════════════════
-
-const scrollTopBtn = document.getElementById('scrollTop');
-window.addEventListener('scroll', () => {
-  scrollTopBtn.classList.toggle('show', window.scrollY > 400);
-}, { passive: true });
-</script>
+<script src="js/main.js"></script>
+<script src="js/networking.js"></script>
 
 </body>
 </html>

@@ -26,6 +26,7 @@
   --text-sidebar: #c8d0e0;
   --text-sidebar-active: #ffffff;
   --text-on-accent: #ffffff;
+  --text-sidebar-muted: #4a5270;
 
   --accent-primary: #5346d4;
   --accent-secondary: #0f9e75;
@@ -69,6 +70,7 @@
   --text-muted: #606880;
   --text-sidebar: #8890a8;
   --text-sidebar-active: #ffffff;
+  --text-sidebar-muted: #515b80;
 
   --accent-primary: #7c72e8;
   --accent-secondary: #1dcda0;
@@ -537,17 +539,21 @@ code, pre {
 /* ── Accordion ── */
 .accordion { margin-bottom: 0.5rem; }
 .accordion-header {
+  /* Reset native button styles */
+  background: transparent;
+  border: none;
+  font-family: inherit; /* Prevents button from swapping to system font */
+  text-align: left;     /* Keeps text aligned cleanly */
+  width: 100%;          /* Ensures the click region spans the full block width */
+  cursor: pointer;      /* Keeps the hand-pointer icon */
+  
+  /* Your existing design properties (padding, flex properties, fonts, etc.) */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.25rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: var(--transition);
-  user-select: none;
+  padding: 1.25rem;
 }
+
 .accordion-header:hover { border-color: var(--accent-primary); background: var(--pillar-color-light); }
 .accordion.open .accordion-header {
   border-bottom-left-radius: 0;
@@ -1627,4 +1633,64 @@ code, pre {
   .pillars-grid { grid-template-columns: 1fr; }
   .github-cta { flex-direction: column; }
   .github-cta-buttons { flex-direction: row; flex-wrap: wrap; }
+}
+
+/* ── Sidebar Nav Item States ── */
+
+/* For unreleased pillars */
+.nav-item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none; 
+}
+
+/* For upcoming pillars with a badge */
+.nav-item.soon {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Coming Soon Badge */
+.nav-badge.badge-soon {
+  background: rgba(230, 126, 34, 0.25);
+  color: var(--accent-warning);
+  margin-left: auto;
+}
+
+/* ── Sidebar Footer Typography ── */
+.sidebar-footer-text {
+  font-size: 0.60rem;
+  color: var(--text-sidebar-muted);
+  transition: var(--transition);
+  text-align: center;
+  font-family: var(--font-mono); /* Optional: fits the GitHub URL theme nicely! */
+  line-height: 1.4;
+}
+
+/* ── Resource Section Lighting Pulse Animation ── */
+.resource-card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* The pulse state applied by the Intersection Observer script */
+.resource-card.lighting-flash {
+  animation: resourceGlowPulse 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes resourceGlowPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 210, 255, 0);
+    transform: translateY(0);
+  }
+  30% {
+    /* Bright surge highlighting the border region */
+    box-shadow: 0 0 20px 2px var(--accent-light, #38bdf8);
+    transform: translateY(-4px);
+  }
+  100% {
+    /* Fades perfectly back into your standard native theme styles */
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0,0,0,0.05));
+    transform: translateY(0);
+  }
 }

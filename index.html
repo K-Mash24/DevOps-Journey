@@ -29,11 +29,16 @@
 
     <div class="sidebar-section-label">Navigation</div>
     <nav class="sidebar-nav">
-      <a class="nav-item active home-link" href="index.html">
+      <a class="nav-item active home-link" href="#home">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
         Home
       </a>
+      <a class="nav-item active home-link" href="#resources">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>
+        Resources
+      </a>
     </nav>
+
 
     <div class="sidebar-section-label">Phase 1 — Foundations</div>
     <nav class="sidebar-nav">
@@ -43,20 +48,20 @@
         <span class="nav-badge">✓</span>
       </a>
       <!-- FIX: Linux not yet published — disabled, not linked -->
-      <span class="nav-item" style="opacity:0.5;cursor:default;">
+      <span class="nav-item soon">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
         Pillar 2 — Linux &amp; CLI
-        <span class="nav-badge" style="background:rgba(230,126,34,0.25);color:#e67e22;margin-left:auto;">Soon</span>
+        <span class="nav-badge soon">Soon</span>
       </span>
-      <span class="nav-item" style="opacity:0.4;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Pillar 3 — Security
       </span>
-      <span class="nav-item" style="opacity:0.4;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Pillar 4 — Scripting
       </span>
-      <span class="nav-item" style="opacity:0.4;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Pillar 5 — Databases
       </span>
@@ -65,30 +70,30 @@
     <!-- FIX: Full Phase 2 sidebar matching the cards grid -->
     <div class="sidebar-section-label">Phase 2 — DevOps</div>
     <nav class="sidebar-nav">
-      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Docker &amp; Containers
+        Pillar 1 - Docker &amp; Containers
       </span>
-      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        CI/CD Pipelines
+        Pillar 2 - CI/CD Pipelines
       </span>
-      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Kubernetes
+        Pillar 3 - Kubernetes
       </span>
-      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        IaC — Terraform
+        Pillar 4 - IaC — Terraform
       </span>
-      <span class="nav-item" style="opacity:0.35;cursor:not-allowed;">
+      <span class="nav-item disabled">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Monitoring &amp; Observability
+        Pillar 5 - Monitoring &amp; Observability
       </span>
     </nav>
 
     <div class="sidebar-footer">
-      <div style="font-size:0.68rem;color:#4a5270;text-align:center;line-height:1.8;">
+      <div class="sidebar-footer-text">
         <div>github.com/K-Mash24/Great_Cheatsheets</div>
         <div>github.com/K-Mash24/DevOps-Journey</div>
       </div>
@@ -130,7 +135,7 @@
     <main class="page-container">
 
       <!-- Hero -->
-      <div class="home-hero">
+      <div class="home-hero" id="home">
         <div class="hero-eyebrow"><span class="dot"></span> Active — Phase 1 in progress</div>
         <h1>DevOps Journey<br>from Zero to Cloud</h1>
         <p>A structured self-study roadmap building the independent foundations required before AWS Solutions Architect Associate (SAA) and the full roadmap.sh DevOps roadmap. No cloud until the prerequisites are solid.</p>
@@ -175,6 +180,54 @@
           <div class="progress-seg"><span class="seg-dot locked"></span> Phase 2 — locked</div>
         </div>
       </div>
+
+      <!-- Roadmap Tracker -->
+      <div class="roadmap-tracker">
+        <h3>Phase 1 — Foundations Roadmap</h3>
+        <div class="roadmap-phases">
+          <div class="phase-item complete">
+            <div class="phase-dot">✓</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 1 — Networking Fundamentals</div>
+              <div class="phase-desc">OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security</div>
+            </div>
+            <span class="phase-status">COMPLETE</span>
+          </div>
+          <div class="phase-item in-progress">
+            <div class="phase-dot">2</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 2 — Linux &amp; CLI Proficiency</div>
+              <div class="phase-desc">File system, permissions, SSH, bash scripting, systemd</div>
+            </div>
+            <span class="phase-status">IN PROGRESS</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot">3</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 3 — Security Concepts</div>
+              <div class="phase-desc">Encryption, TLS, PKI, least privilege, OWASP</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot">4</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 4 — Scripting &amp; Automation</div>
+              <div class="phase-desc">Python and Bash, file I/O, APIs, JSON</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot">5</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 5 — Databases &amp; Storage</div>
+              <div class="phase-desc">SQL, NoSQL, indexing, ACID, caching, CAP theorem</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+        </div>
+      </div>
+
 
       <!-- Phase 1 Pillars -->
       <div class="phase-header">
@@ -450,7 +503,58 @@
         </div>
       </div>
 
+      <!-- Phase 2 — DevOps Roadmap Tracker -->
+      <div class="roadmap-tracker" style="margin-top:3rem;">
+        <h3>Phase 2 — DevOps Roadmap</h3>
+        <div class="roadmap-phases">
+          <div class="phase-item locked">
+            <div class="phase-dot">1</div>
+            <div class="phase-content">
+              <div class="phase-name">Phase 2 · 1 — Docker &amp; Containers</div>
+              <div class="phase-desc">Images, containers, registries, Dockerfile, docker-compose</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot">2</div>
+            <div class="phase-content">
+              <div class="phase-name">Phase 2 · 2 — CI/CD Pipelines proficiency</div>
+              <div class="phase-desc">GitHub Actions, GitLab CI, Jenkins — automated build, test, and deploy workflows.</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot">3</div>
+            <div class="phase-content">
+              <div class="phase-name">Phase 2 · 3 — Kubernetes Fundamentals</div>
+              <div class="phase-desc">Pods, Services, Deployments, Ingress, ConfigMaps, Secrets</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot">4</div>
+            <div class="phase-content">
+              <div class="phase-name">Phase 2 · 4 — Infrastructure as Code (IaC) - Terraform &amp; Ansible</div>
+              <div class="phase-desc">Infrastructure as Code, state management, modules, and configuration management with Ansible.</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot">5</div>
+            <div class="phase-content">
+              <div class="phase-name">Phase 2 · 5 — Monitoring &amp; Observability</div>
+              <div class="phase-desc">Prometheus, Grafana, logging stacks (ELK/Loki), alerting, and distributed tracing fundamentals.</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+        </div>
+      </div>
+
       <!-- FIX: Dual GitHub CTA — both repos -->
+      <div class="section-divider" id="resources">
+        <div class="section-number">∞</div>
+        <h2>Resources &amp; Further Reading</h2>
+      </div>
       <div class="github-cta">
         <div class="github-repos">
           <div class="github-repo-row">
@@ -494,49 +598,7 @@
   <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
 </button>
 
-<script>
-// Theme toggle
-const html = document.documentElement;
-const lightBtn = document.getElementById('lightBtn');
-const darkBtn = document.getElementById('darkBtn');
-function setTheme(t) {
-  html.setAttribute('data-theme', t);
-  localStorage.setItem('gc-theme', t);
-  lightBtn.classList.toggle('active', t === 'light');
-  darkBtn.classList.toggle('active', t === 'dark');
-}
-lightBtn.addEventListener('click', () => setTheme('light'));
-darkBtn.addEventListener('click', () => setTheme('dark'));
-const saved = localStorage.getItem('gc-theme');
-if (saved) setTheme(saved);
-else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
-
-// Sidebar toggle (mobile)
-const sidebar = document.getElementById('sidebar');
-const hamburger = document.getElementById('hamburger');
-const overlay = document.getElementById('sidebarOverlay');
-hamburger.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('show');
-});
-overlay.addEventListener('click', () => {
-  sidebar.classList.remove('open');
-  overlay.classList.remove('show');
-});
-
-// Scroll to top
-const scrollTopBtn = document.getElementById('scrollTop');
-window.addEventListener('scroll', () => {
-  scrollTopBtn.classList.toggle('show', window.scrollY > 400);
-}, { passive: true });
-
-// Animate progress bar on load
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.querySelector('.progress-fill').style.width = '10%';
-  }, 300);
-});
-</script>
+<script src="js/main.js"></script>
 
 </body>
 </html>
