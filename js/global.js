@@ -575,4 +575,213 @@ document.addEventListener('DOMContentLoaded', () => {
     window.updateGlobalProgress();
   });
 
+  function initProgressRing() {
+    const ringFill = document.querySelector('.progress-ring-fill');
+    const percentSpan = document.getElementById('ringPercent');
+    if (!ringFill || !percentSpan) return;
+
+    // Calculate Phase 1 progress: 1/5 pillars = 20%
+    const completedPillars = document.querySelectorAll('.pillar-card.complete, .phase-item.complete').length;
+    const totalPhase1Pillars = 5;
+    const percent = Math.round((completedPillars / totalPhase1Pillars) * 100);
+    
+    // New circumference for r=78: 2 * π * 78 = 490.088
+    const circumference = 490.09;
+    const offset = circumference - (percent / 100) * circumference;
+    
+    ringFill.style.strokeDasharray = `${circumference}`;
+    ringFill.style.strokeDashoffset = `${circumference}`;
+    
+    // Animate
+    setTimeout(() => {
+      ringFill.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      ringFill.style.strokeDashoffset = offset;
+      percentSpan.textContent = `${percent}%`;
+    }, 100);
+  }
+
+  function initPillarScroller() {
+    const scroller = document.getElementById('progressScroller');
+    const prevBtn = document.getElementById('scrollerPrev');
+    const nextBtn = document.getElementById('scrollerNext');
+    const chips = document.querySelectorAll('.pillar-chip');
+    
+    if (!scroller) return;
+    
+    // Scroll buttons
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', () => {
+        scroller.scrollBy({ left: -180, behavior: 'smooth' });
+      });
+      nextBtn.addEventListener('click', () => {
+        scroller.scrollBy({ left: 180, behavior: 'smooth' });
+      });
+    }
+    
+    // Chip click handling
+    chips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isLocked = chip.classList.contains('locked');
+        const isComingSoon = chip.getAttribute('data-coming-soon') === 'true';
+        const link = chip.getAttribute('data-link');
+        
+        if (isLocked || isComingSoon) {
+          showComingSoonToast(chip.querySelector('.chip-name')?.innerText || 'This pillar');
+          return;
+        }
+        
+        if (link && link !== '#') {
+          window.location.href = link;
+        }
+      });
+    });
+  }
+  
+  function showComingSoonToast(pillarName) {
+    // Remove existing toast
+    const existing = document.querySelector('.coming-soon-toast');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'coming-soon-toast';
+    toast.textContent = `${pillarName} — page coming soon after foundations are complete`;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 2500);
+  }
+  
+  function scrollToActiveChip() {
+    const activeChip = document.querySelector('.pillar-chip.active');
+    const scroller = document.getElementById('progressScroller');
+    if (activeChip && scroller) {
+      const chipRect = activeChip.getBoundingClientRect();
+      const scrollerRect = scroller.getBoundingClientRect();
+      const scrollNeeded = chipRect.left - scrollerRect.left + scroller.scrollLeft - 20;
+      scroller.scrollTo({ left: scrollNeeded, behavior: 'smooth' });
+    }
+  }
+  
+  // Arrow position relative to active chip
+  function positionScrollerArrow() {
+    const arrow = document.getElementById('scrollerArrow');
+    const activeChip = document.querySelector('.pillar-chip.active');
+    if (!arrow || !activeChip) return;
+    
+    const chipRect = activeChip.getBoundingClientRect();
+    const scrollerRect = document.getElementById('progressScroller')?.getBoundingClientRect();
+    if (scrollerRect) {
+      const relativeLeft = chipRect.left + chipRect.width / 2 - scrollerRect.left;
+      arrow.style.left = `${relativeLeft}px`;
+    }
+  }
+  
+  // Call these on home page
+  if (document.querySelector('.progress-ring')) {
+    initProgressRing();
+    initPillarScroller();
+    setTimeout(() => {
+      scrollToActiveChip();
+      positionScrollerArrow();
+    }, 200);
+    
+    // Reposition arrow on window resize
+    window.addEventListener('resize', () => {
+      positionScrollerArrow();
+    });
+  }
+
+    // ============================================================
+  // PHASE 2 PROGRESS RING + SCROLLER
+  // ============================================================
+
+  function initPhase2ProgressRing() {
+    const ringFill = document.querySelector('.phase2-ring');
+    const percentSpan = document.getElementById('phase2RingPercent');
+    if (!ringFill || !percentSpan) return;
+
+    // Phase 2 progress: 0/5 completed (all locked)
+    const completedPhases = 0;
+    const totalPhases = 5;
+    const percent = Math.round((completedPhases / totalPhases) * 100);
+    
+    const circumference = 490.09;
+    const offset = circumference - (percent / 100) * circumference;
+    
+    ringFill.style.strokeDasharray = `${circumference}`;
+    ringFill.style.strokeDashoffset = `${circumference}`;
+    
+    setTimeout(() => {
+      ringFill.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+      ringFill.style.strokeDashoffset = offset;
+      percentSpan.textContent = `${percent}%`;
+    }, 100);
+  }
+
+  function initPhase2Scroller() {
+    const scroller = document.getElementById('phase2ProgressScroller');
+    const prevBtn = document.getElementById('phase2ScrollerPrev');
+    const nextBtn = document.getElementById('phase2ScrollerNext');
+    const chips = document.querySelectorAll('.phase2-chip');
+    
+    if (!scroller) return;
+    
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', () => {
+        scroller.scrollBy({ left: -180, behavior: 'smooth' });
+      });
+      nextBtn.addEventListener('click', () => {
+        scroller.scrollBy({ left: 180, behavior: 'smooth' });
+      });
+    }
+    
+    chips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        showComingSoonToast(chip.querySelector('.chip-name')?.innerText || 'This phase');
+      });
+    });
+  }
+
+  function positionPhase2Arrow() {
+    const arrow = document.getElementById('phase2ScrollerArrow');
+    const activeChip = document.querySelector('.phase2-chip.active');
+    if (!arrow || !activeChip) return;
+    
+    const chipRect = activeChip.getBoundingClientRect();
+    const scrollerRect = document.getElementById('phase2ProgressScroller')?.getBoundingClientRect();
+    if (scrollerRect) {
+      const relativeLeft = chipRect.left + chipRect.width / 2 - scrollerRect.left;
+      arrow.style.left = `${relativeLeft}px`;
+    }
+  }
+
+  function scrollToActivePhase2Chip() {
+    const activeChip = document.querySelector('.phase2-chip.active');
+    const scroller = document.getElementById('phase2ProgressScroller');
+    if (activeChip && scroller) {
+      const chipRect = activeChip.getBoundingClientRect();
+      const scrollerRect = scroller.getBoundingClientRect();
+      const scrollNeeded = chipRect.left - scrollerRect.left + scroller.scrollLeft - 20;
+      scroller.scrollTo({ left: scrollNeeded, behavior: 'smooth' });
+    }
+  }
+
+  // Initialize Phase 2 (if on home page and Phase 2 ring exists)
+  if (document.querySelector('.phase2-ring')) {
+    initPhase2ProgressRing();
+    initPhase2Scroller();
+    setTimeout(() => {
+      scrollToActivePhase2Chip();
+      positionPhase2Arrow();
+    }, 200);
+    
+    window.addEventListener('resize', () => {
+      positionPhase2Arrow();
+    });
+  }
+
 }); // DOMContentLoaded end
