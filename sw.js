@@ -1,8 +1,9 @@
-const CACHE_NAME = 'devops-journey-v1';
+const CACHE_NAME = 'devops-journey-v2';  // ← increment this when you make major changes
+
 const urlsToCache = [
   '/',
   '/index.html',
-  '/html/networking.html',   // ← updated path
+  '/html/networking.html',   // ← fixed path (not /html/networking.html unless that's correct)
   '/style.css',
   '/js/global.js',
   '/js/networking.js',
@@ -10,16 +11,54 @@ const urlsToCache = [
   '/img/Network.svg',
   '/img/T568A vs T568B Practical Wiring Diagram.webp',
   '/img/t568b-wiring-diagram-patch-panel-8086.jpg'
-
-  // Remove any images that don't exist
 ];
 
+// Install event - cache files
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
+  self.skipWaiting();  // Force waiting service worker to become active
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+  );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
+// Activate event - clean up old caches
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cache => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
   );
+  self.clients.claim();  // Take control of all clients immediately
+});
+
+// Fetch event - network-first strategy for HTML, cache-first for assets
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  
+  // For HTML files, try network first, fall back to cache
+  if (url.pathname.endsWith('.html') || url.pathname === '/') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+  } else {
+    // For CSS/JS/images, use cache-first
+    event.respondWith(
+      caches.match(event.request)
+        .then(response => response || fetch(event.request))
+    );
+  }
 });

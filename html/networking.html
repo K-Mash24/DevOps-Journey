@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Networking Fundamentals pillar of the DevOps Journey. Covers OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, network security, flashcards and quiz." />
+  <meta name="description" content="Networking Fundamentals pillar of the DevOps Journey. Covers OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, network security, RJ45 cabling, flashcards and quiz." />
   <title>Pillar 1 — Networking Fundamentals | Great Cheatsheets</title>
   <link rel="icon" type="image/svg+xml" href="../img/Network.svg"/>
   <link rel="stylesheet" href="../style.css" />
@@ -39,7 +39,7 @@
       <a class="nav-item" href="#s1">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
         Section 1 — Internet Structure
-        <span class="nav-badge">4</span>
+        <span class="nav-badge">5</span>
       </a>
       <a class="nav-item" href="#s2">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
@@ -144,7 +144,7 @@
         <div class="page-meta">
           <span class="meta-badge complete">✓ Complete</span>
           <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">7 Sections</span>
-          <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">10 Files</span>
+          <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">11 Files</span>
         </div>
       </div>
 
@@ -156,7 +156,7 @@
             <div class="phase-dot" aria-hidden="true">✓</div>
             <div class="phase-content">
               <div class="phase-name">Pillar 1 — Networking Fundamentals</div>
-              <div class="phase-desc">OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security</div>
+              <div class="phase-desc">OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security, RJ45 cabling</div>
             </div>
             <span class="phase-status">COMPLETE</span>
           </div>
@@ -212,7 +212,6 @@
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <!-- All original content remains unchanged -->
           <p>The OSI (Open Systems Interconnection) model breaks down how data travels between two computers into seven discrete layers. Each layer has one job and hands its output to the layer above or below it.</p>
           <p><strong>Mnemonic (layer 7 → 1):</strong> <code>All People Seem To Need Data Processing</code></p>
           <div class="osi-stack">
@@ -366,6 +365,75 @@ Layer 7  Data     → original HTTP request delivered</pre></div>
           </div>
         </div>
       </div>
+
+      <!-- ══════════ RJ45 CABLING ACCORDION (NEW) ══════════ -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">⬡</span>RJ45 Cabling — T568A, T568B, Straight‑Through vs Crossover</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>RJ45 is the standard 8‑pin connector used for Ethernet cables. Two wiring standards exist: <strong>T568A</strong> and <strong>T568B</strong>. The only difference is that the orange and green pairs swap positions. Pins 4,5,7,8 (blue and brown) are identical in both standards.</p>
+
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Pin</th><th>T568A</th><th>T568B</th><th>Pair</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td style="color:green;">White/Green</td><td style="color:orange;">White/Orange</td><td>Pair 3 / Pair 2</td></tr>
+                <tr><td>2</td><td style="color:green;">Green</td><td style="color:orange;">Orange</td><td>Pair 3 / Pair 2</td></tr>
+                <tr><td>3</td><td style="color:orange;">White/Orange</td><td style="color:green;">White/Green</td><td>Pair 2 / Pair 3</td></tr>
+                <tr><td>4</td><td style="color:blue;">Blue</td><td style="color:blue;">Blue</td><td>Pair 1</td></tr>
+                <tr><td>5</td><td style="color:blue;">White/Blue</td><td style="color:blue;">White/Blue</td><td>Pair 1</td></tr>
+                <tr><td>6</td><td style="color:orange;">Orange</td><td style="color:green;">Green</td><td>Pair 2 / Pair 3</td></tr>
+                <tr><td>7</td><td style="color:brown;">White/Brown</td><td style="color:brown;">White/Brown</td><td>Pair 4</td></tr>
+                <tr><td>8</td><td style="color:brown;">Brown</td><td style="color:brown;">Brown</td><td>Pair 4</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p><strong>Your mnemonic — O G B G B (2-1-2-1-2 format) for T568B:</strong></p>
+          <div class="code-block"><pre>Orange  → 2 wires  → White/Orange (pin1), Orange (pin2)
+Green   → 1 wire   → White/Green  (pin3)
+Blue    → 2 wires  → Blue (pin4), White/Blue (pin5)
+Green   → 1 wire   → Green (pin6)
+Brown   → 2 wires  → White/Brown (pin7), Brown (pin8)</pre></div>
+
+          <p>For T568A, swap the leading colors: <strong>G O B O B</strong> (Green then Orange).</p>
+
+          <div class="table-wrapper" style="margin-top:1rem;">
+            <table class="data-table">
+              <thead><tr><th>Cable Type</th><th>Both ends</th><th>Use case</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Straight‑through</strong></td><td>Same standard (A‑A or B‑B)</td><td>Different device types: computer → switch, switch → router</td></tr>
+                <tr><td><strong>Crossover</strong></td><td>One end A, other end B</td><td>Same device types: computer → computer, switch → switch</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="info-box note">
+            <strong>Colour‑by‑colour straight‑through vs crossover (T568B on both ends vs A‑B)</strong>
+            <ul style="margin-top:0.5rem;">
+              <li><strong>Straight‑through (B‑B):</strong> pin1→pin1 (W‑O), pin2→pin2 (O), pin3→pin3 (W‑G), pin6→pin6 (G), blue/brown pins stay matched.</li>
+              <li><strong>Crossover (A‑B):</strong> pin1 (W‑G) ↔ pin3 (W‑O), pin2 (G) ↔ pin6 (O), the orange and green pairs cross; blue and brown pairs stay straight.</li>
+            </ul>
+          </div>
+
+          <!-- Visual diagrams displaying the crossover and the straight-through cables -->
+          <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+            <div style="background:var(--bg-tertiary); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; flex:1;">
+              <img src="https://www.showmecables.com/media/wysiwyg/RJ45-Pinout-T568A.jpg" alt="T568A wiring diagram — Green/White, Green, Orange/White, Blue, Blue/White, Orange, Brown/White, Brown" style="width:100%; border-radius: var(--radius-sm); object-fit: contain; max-height: 120px;">
+              <small style="display: block; margin-top: 0.5rem;">T568A — Green pair leads (pins 1-2)</small>
+            </div>
+            <div style="background:var(--bg-tertiary); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; flex:1;">
+              <img src="https://www.showmecables.com/media/wysiwyg/RJ45-Pinout-T568B.jpg" alt="T568B wiring diagram — Orange/White, Orange, Green/White, Blue, Blue/White, Green, Brown/White, Brown" style="width:100%; border-radius: var(--radius-sm); object-fit: contain; max-height: 120px;">
+              <small style="display: block; margin-top: 0.5rem;">T568B — Orange pair leads (pins 1-2) — most common</small>
+            </div>
+            <div style="background:var(--bg-tertiary); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; flex:1;">
+              <img src="https://www.showmecables.com/media/wysiwyg/Crossover-Pinout-1024x512.png" alt="Crossover cable wiring — one end T568A, other end T568B showing orange and green pairs crossing" style="width:100%; border-radius: var(--radius-sm); object-fit: contain; max-height: 120px;">
+              <small style="display: block; margin-top: 0.5rem;">Crossover — pins 1↔3, 2↔6 swap orange/green pairs</small>
+            </div>
+          </div>
+        </div>
 
       <!-- ══════════ SECTION 2 ══════════ -->
       <div class="section-divider" id="s2">
@@ -579,10 +647,10 @@ Supernetting:  /24 /24 /24 /24 → /22  (prefix gets shorter)</pre></div>
             <table class="data-table">
               <thead><tr><th>Feature</th><th>Switch</th><th>Router</th></tr></thead>
               <tbody>
-                <tr><td>OSI Layer</td><td>Layer 2 — Data link</td><td>Layer 3 — Network</td></tr>
-                <tr><td>Address used</td><td>MAC address</td><td>IP address</td></tr>
-                <tr><td>Scope</td><td>Within one subnet</td><td>Between different networks</td></tr>
-                <tr><td>Primary function</td><td>Frame delivery to correct port</td><td>Packet forwarding to next hop</td></tr>
+                <tr><td>OSI Layer</td><td>Layer 2 — Data link</td><td>Layer 3 — Network</td> </tr>
+                <tr><td>Address used</td><td>MAC address</td><td>IP address</td> </tr>
+                <tr><td>Scope</td><td>Within one subnet</td><td>Between different networks</td> </tr>
+                <tr><td>Primary function</td><td>Frame delivery to correct port</td><td>Packet forwarding to next hop</td> </tr>
               </tbody>
             </table>
           </div>
@@ -656,14 +724,14 @@ Typical completion: under 100 milliseconds</pre></div>
             <table class="data-table">
               <thead><tr><th>Record</th><th>Full name</th><th>Purpose</th></tr></thead>
               <tbody>
-                <tr><td><code>A</code></td><td>Address</td><td>Maps hostname → IPv4 address</td></tr>
-                <tr><td><code>AAAA</code></td><td>IPv6 Address</td><td>Maps hostname → IPv6 address</td></tr>
-                <tr><td><code>CNAME</code></td><td>Canonical Name</td><td>Alias — maps one hostname to another hostname</td></tr>
-                <tr><td><code>MX</code></td><td>Mail Exchange</td><td>Mail server for a domain. Contains hostname, not IP</td></tr>
-                <tr><td><code>NS</code></td><td>Name Server</td><td>Identifies authoritative name servers for a domain</td></tr>
-                <tr><td><code>TXT</code></td><td>Text</td><td>Arbitrary text — domain verification, SPF, security records</td></tr>
-                <tr><td><code>PTR</code></td><td>Pointer</td><td>Reverse DNS — IP address → hostname</td></tr>
-                <tr><td><code>SOA</code></td><td>Start of Authority</td><td>Admin info about a DNS zone</td></tr>
+                <tr><td><code>A</code></td><td>Address</td><td>Maps hostname → IPv4 address</td> </tr>
+                <tr><td><code>AAAA</code></td><td>IPv6 Address</td><td>Maps hostname → IPv6 address</td> </tr>
+                <tr><td><code>CNAME</code></td><td>Canonical Name</td><td>Alias — maps one hostname to another hostname</td> </tr>
+                <tr><td><code>MX</code></td><td>Mail Exchange</td><td>Mail server for a domain. Contains hostname, not IP</td> </tr>
+                <tr><td><code>NS</code></td><td>Name Server</td><td>Identifies authoritative name servers for a domain</td> </tr>
+                <tr><td><code>TXT</code></td><td>Text</td><td>Arbitrary text — domain verification, SPF, security records</td> </tr>
+                <tr><td><code>PTR</code></td><td>Pointer</td><td>Reverse DNS — IP address → hostname</td> </tr>
+                <tr><td><code>SOA</code></td><td>Start of Authority</td><td>Admin info about a DNS zone</td> </tr>
               </tbody>
             </table>
           </div>
@@ -720,12 +788,12 @@ Client ──── ACK ──────────────► Server</pr
             <table class="data-table">
               <thead><tr><th>Feature</th><th>TCP</th><th>UDP</th></tr></thead>
               <tbody>
-                <tr><td>Connection</td><td>Connection-oriented</td><td>Connectionless</td></tr>
-                <tr><td>Reliability</td><td>Guaranteed delivery</td><td>No guarantees</td></tr>
-                <tr><td>Ordering</td><td>In-order delivery</td><td>Not guaranteed</td></tr>
-                <tr><td>Speed</td><td>Slower (overhead)</td><td>Faster (minimal overhead)</td></tr>
-                <tr><td>Header size</td><td>20 bytes minimum</td><td>8 bytes</td></tr>
-                <tr><td>Use cases</td><td>HTTP, FTP, SSH, email</td><td>DNS, VoIP, streaming, gaming, DHCP</td></tr>
+                <tr><td>Connection</td><td>Connection-oriented</td><td>Connectionless</td> </tr>
+                <tr><td>Reliability</td><td>Guaranteed delivery</td><td>No guarantees</td> </tr>
+                <tr><td>Ordering</td><td>In-order delivery</td><td>Not guaranteed</td> </tr>
+                <tr><td>Speed</td><td>Slower (overhead)</td><td>Faster (minimal overhead)</td> </tr>
+                <tr><td>Header size</td><td>20 bytes minimum</td><td>8 bytes</td> </tr>
+                <tr><td>Use cases</td><td>HTTP, FTP, SSH, email</td><td>DNS, VoIP, streaming, gaming, DHCP</td> </tr>
               </tbody>
             </table>
           </div>
@@ -776,13 +844,13 @@ Client ──── ACK ──────────────► Server</pr
             <table class="data-table">
               <thead><tr><th>Attack</th><th>Layer</th><th>Mechanism</th><th>Effect</th></tr></thead>
               <tbody>
-                <tr><td>DoS</td><td>Any</td><td>Traffic flood from one source</td><td>Service unavailable</td></tr>
-                <tr><td>DDoS</td><td>Any</td><td>Flood from botnet</td><td>Service unavailable, hard to block</td></tr>
-                <tr><td>SYN flood</td><td>L4</td><td>Incomplete TCP handshakes</td><td>Connection table exhausted</td></tr>
-                <tr><td>IP spoofing</td><td>L3</td><td>Forged source IP</td><td>Origin disguised, access control bypass</td></tr>
-                <tr><td>MITM</td><td>Any</td><td>Intercepts traffic between two parties</td><td>Data exposed or altered</td></tr>
-                <tr><td>ARP spoofing</td><td>L2</td><td>Forged ARP replies poison caches</td><td>Traffic redirected to attacker</td></tr>
-                <tr><td>Port scanning</td><td>L4</td><td>Probe port range for open services</td><td>Reconnaissance for further attack</td></tr>
+                <tr><td>DoS</td><td>Any</td><td>Traffic flood from one source</td><td>Service unavailable</td> </tr>
+                <tr><td>DDoS</td><td>Any</td><td>Flood from botnet</td><td>Service unavailable, hard to block</td> </tr>
+                <tr><td>SYN flood</td><td>L4</td><td>Incomplete TCP handshakes</td><td>Connection table exhausted</td> </tr>
+                <tr><td>IP spoofing</td><td>L3</td><td>Forged source IP</td><td>Origin disguised, access control bypass</td> </tr>
+                <tr><td>MITM</td><td>Any</td><td>Intercepts traffic between two parties</td><td>Data exposed or altered</td> </tr>
+                <tr><td>ARP spoofing</td><td>L2</td><td>Forged ARP replies poison caches</td><td>Traffic redirected to attacker</td> </tr>
+                <tr><td>Port scanning</td><td>L4</td><td>Probe port range for open services</td><td>Reconnaissance for further attack</td> </tr>
               </tbody>
             </table>
           </div>
