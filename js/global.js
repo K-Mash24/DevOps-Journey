@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Search Engine ──
+    // ── Search Engine (Unified – works on all pages) ──
   function initGlobalSearch() {
     const searchInput = document.getElementById('searchInput');
     const noResults = document.getElementById('noResults');
@@ -121,33 +121,221 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
+    // ── Helper: Scroll to element smoothly ──
+    function scrollToElement(element) {
+      if (!element) return;
+      const offset = 80; // header offset
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
+    }
+
+    // ── Create search results dropdown ──
+    function createResultsDropdown(results, searchTerm) {
+      // Remove existing dropdown
+      const existingDropdown = document.querySelector('.search-results-dropdown');
+      if (existingDropdown) existingDropdown.remove();
+
+      if (!results.length) return;
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'search-results-dropdown';
+      dropdown.style.position = 'absolute';
+      dropdown.style.top = `${searchInput.getBoundingClientRect().bottom + window.scrollY}px`;
+      dropdown.style.left = `${searchInput.getBoundingClientRect().left}px`;
+      dropdown.style.width = `${searchInput.offsetWidth}px`;
+      dropdown.style.maxHeight = '400px';
+      dropdown.style.overflowY = 'auto';
+      dropdown.style.background = 'var(--bg-card)';
+      dropdown.style.border = '1px solid var(--border-color)';
+      dropdown.style.borderRadius = 'var(--radius-md)';
+      dropdown.style.boxShadow = 'var(--shadow-md)';
+      dropdown.style.zIndex = '1000';
+      dropdown.style.backdropFilter = 'blur(4px)';
+
+      results.forEach(result => {
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.style.padding = '10px 12px';
+        item.style.cursor = 'pointer';
+        item.style.borderBottom = '1px solid var(--border-color)';
+        item.style.transition = 'background 0.2s';
+
+        // Highlight the matching term in the title and preview
+        const titleHighlight = result.title.replace(
+          new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),
+          '<mark class="highlight">$1</mark>'
+        );
+        const previewHighlight = result.preview.replace(
+          new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),
+          '<mark class="highlight">$1</mark>'
+        );
+
+        item.innerHTML = `
+          <div style="font-weight: 600; font-family: var(--font-display); font-size: 0.85rem;">${titleHighlight}</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">${previewHighlight}</div>
+        `;
+
+        item.addEventListener('click', () => {
+          scrollToElement(result.element);
+          // Temporarily highlight the element
+          result.element.style.transition = 'background 0.3s';
+          result.element.style.background = 'var(--pillar-color-light)';
+          setTimeout(() => {
+            result.element.style.background = '';
+          }, 1500);
+          dropdown.remove();
+          searchInput.blur();
+        });
+
+        item.addEventListener('mouseenter', () => {
+          item.style.background = 'var(--bg-tertiary)';
+        });
+        item.addEventListener('mouseleave', () => {
+          item.style.background = '';
+        });
+
+        dropdown.appendChild(item);
+      });
+
+      document.body.appendChild(dropdown);
+
+      // Close dropdown when clicking outside
+      const closeDropdown = (e) => {
+        if (!dropdown.contains(e.target) && e.target !== searchInput) {
+          dropdown.remove();
+          document.removeEventListener('click', closeDropdown);
+        }
+      };
+      setTimeout(() => document.addEventListener('click', closeDropdown), 100);
+    }
+
+    // ── Main search logic – searches different content based on page ──
+    function performSearch(term) {
+      const results = [];
+      const lowerTerm = term.toLowerCase();
+
+      // Helper to add result if term matches
+      const addResult = (element, title, preview) => {
+        if (preview.toLowerCase().includes(lowerTerm) || title.toLowerCase().includes(lowerTerm)) {
+          results.push({ element, title, preview: preview.substring(0, 150) });
+        }
+      };
+
+      // 1. Search accordions (networking page)
+      document.querySelectorAll('.accordion[data-searchable]').forEach(accordion => {
+        const header = accordion.querySelector('.accordion-title');
+        const title = header ? header.innerText.trim() : 'Section';
+        const body = accordion.querySelector('.accordion-body');
+        const preview = body ? body.innerText.trim() : '';
+        if (preview.toLowerCase().includes(lowerTerm) || title.toLowerCase().includes(lowerTerm)) {
+          addResult(accordion, title, preview);
+          // Auto-open the accordion if closed
+          if (!accordion.classList.contains('open')) {
+            const headerBtn = accordion.querySelector('.accordion-header');
+            if (headerBtn && window.toggleAccordion) {
+              window.toggleAccordion(headerBtn);
+            }
+          }
+        }
+      });
+
+      // 2. Search pillar cards (home page)
+      document.querySelectorAll('.pillar-card').forEach(card => {
+        const title = card.querySelector('.card-title')?.innerText || '';
+        const desc = card.querySelector('.card-desc')?.innerText || '';
+        const preview = `${title} ${desc}`;
+        if (preview.toLowerCase().includes(lowerTerm)) {
+          addResult(card, `📚 ${title}`, desc);
+        }
+      });
+
+      // 3. Search study path items (home page)
+      document.querySelectorAll('.path-item').forEach(item => {
+        const name = item.querySelector('.path-name')?.innerText || '';
+        const sub = item.querySelector('.path-sub')?.innerText || '';
+        const preview = `${name} ${sub}`;
+        if (preview.toLowerCase().includes(lowerTerm)) {
+          addResult(item, `🔄 ${name}`, sub);
+        }
+      });
+
+      // 4. Search roadmap tracker phases
+      document.querySelectorAll('.phase-item').forEach(phase => {
+        const name = phase.querySelector('.phase-name')?.innerText || '';
+        const desc = phase.querySelector('.phase-desc')?.innerText || '';
+        const preview = `${name} ${desc}`;
+        if (preview.toLowerCase().includes(lowerTerm)) {
+          addResult(phase, `📌 ${name}`, desc);
+        }
+      });
+
+      return results;
+    }
+
+    // ── Input handler with dropdown ──
     searchInput.addEventListener('input', function() {
       clearTimeout(debounceTimeout);
       debounceTimeout = setTimeout(() => {
         const term = this.value.trim().toLowerCase();
-        const accordions = document.querySelectorAll('.accordion[data-searchable]');
-        let visibleCount = 0;
+        
+        // Remove existing highlights from all searchable elements
+        document.querySelectorAll('.accordion, .pillar-card, .path-item, .phase-item').forEach(el => {
+          removeHighlights(el);
+        });
 
-        accordions.forEach(acc => {
-          removeHighlights(acc);
-          if (!term) {
+        if (!term) {
+          // Show everything
+          document.querySelectorAll('.accordion').forEach(acc => {
             acc.classList.remove('search-hidden');
-            visibleCount++;
-            return;
-          }
-          if (acc.textContent.toLowerCase().includes(term)) {
-            acc.classList.remove('search-hidden');
-            acc.classList.add('open');
-            const header = acc.querySelector('.accordion-header');
-            if (header) header.setAttribute('aria-expanded', 'true');
-            highlightText(acc, term);
-            visibleCount++;
-          } else {
+          });
+          if (noResults) noResults.classList.remove('show');
+          // Remove dropdown if exists
+          const dropdown = document.querySelector('.search-results-dropdown');
+          if (dropdown) dropdown.remove();
+          return;
+        }
+
+        // Perform search and get results
+        const results = performSearch(term);
+        
+        // Hide accordions that don't match (on networking page)
+        document.querySelectorAll('.accordion[data-searchable]').forEach(acc => {
+          const header = acc.querySelector('.accordion-title');
+          const title = header ? header.innerText.trim() : '';
+          const body = acc.querySelector('.accordion-body');
+          const content = body ? body.innerText.trim() : '';
+          if (!title.toLowerCase().includes(term) && !content.toLowerCase().includes(term)) {
             acc.classList.add('search-hidden');
+          } else {
+            acc.classList.remove('search-hidden');
+            highlightText(acc, term);
           }
         });
-        if (noResults) noResults.classList.toggle('show', term !== '' && visibleCount === 0);
+
+        // Show/hide no results message (only on pages with accordions)
+        const hasAccordions = document.querySelectorAll('.accordion[data-searchable]').length > 0;
+        if (hasAccordions && noResults) {
+          const visibleAccordions = document.querySelectorAll('.accordion[data-searchable]:not(.search-hidden)').length;
+          noResults.classList.toggle('show', visibleAccordions === 0);
+        }
+
+        // Create dropdown with results (always show for quick navigation)
+        if (results.length > 0) {
+          createResultsDropdown(results, term);
+        } else {
+          const dropdown = document.querySelector('.search-results-dropdown');
+          if (dropdown) dropdown.remove();
+        }
       }, 250);
+    });
+
+    // Close dropdown on Escape
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const dropdown = document.querySelector('.search-results-dropdown');
+        if (dropdown) dropdown.remove();
+        searchInput.blur();
+      }
     });
   }
 

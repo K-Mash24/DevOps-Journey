@@ -1503,3 +1503,41 @@ code, pre {
   background: var(--accent-primary);
   color: white;
 }
+
+/* Search Results Dropdown */
+.search-results-dropdown {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.search-results-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results-dropdown::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.search-results-dropdown::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+.search-result-item mark,
+.search-results-dropdown mark {
+  background: rgba(239, 180, 48, 0.4);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* Search highlight in content */
+.highlight {
+  background: rgba(239, 180, 48, 0.4);
+  border-radius: 2px;
+  padding: 0 2px;
+  transition: background 0.2s;
+}
