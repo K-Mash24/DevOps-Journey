@@ -1,4 +1,4 @@
-const CACHE_NAME = 'devops-journey-v2.1';  // ← increment this when you make major changes
+const CACHE_NAME = 'devops-journey-v2.3';  // ← increment this when you make major changes
 
 const urlsToCache = [
   '/',
