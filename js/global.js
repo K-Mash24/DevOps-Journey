@@ -580,8 +580,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const percentSpan = document.getElementById('ringPercent');
     if (!ringFill || !percentSpan) return;
 
-    // Calculate Phase 1 progress: 1/5 pillars = 20%
-    const completedPillars = document.querySelectorAll('.pillar-card.complete, .phase-item.complete').length;
+    // Calculate Phase 1 progress: Count ONLY completed pillar cards
+    // Look for pillar cards with class 'complete' (Networking only)
+    const completedPillars = document.querySelectorAll('.pillar-card.complete').length;
     const totalPhase1Pillars = 5;
     const percent = Math.round((completedPillars / totalPhase1Pillars) * 100);
     
@@ -645,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const toast = document.createElement('div');
     toast.className = 'coming-soon-toast';
-    toast.textContent = `${pillarName} — page coming soon after foundations are complete`;
+    toast.textContent = `${pillarName} — page coming soon after the previous pillars are complete`;
     document.body.appendChild(toast);
     
     setTimeout(() => {
