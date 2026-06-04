@@ -1,9 +1,10 @@
-const CACHE_NAME = 'devops-journey-v3.5';  // ← increment this when you make major changes
+const CACHE_NAME = 'devops-journey-v4';  // ← increment this when you make major changes
 
 const urlsToCache = [
   '/',
   '/index.html',
   '/html/networking.html',   // ← fixed path (not /html/networking.html unless that's correct)
+  '/html/linux.html',
   '/style.css',
   '/js/global.js',
   '/js/networking.js',

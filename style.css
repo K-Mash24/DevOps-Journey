@@ -224,7 +224,7 @@ code, pre {
 .nav-badge {
   margin-left: auto;
   font-size: 0.65rem;
-  padding: 2px 7px;
+  padding: 2px 6px;
   border-radius: 20px;
   background: rgba(83, 70, 212, 0.4);
   color: #a09be8;
@@ -1180,7 +1180,6 @@ code, pre {
 .pillar-card.locked-card, .pillar-card.coming-soon {
   opacity: 0.55;
   cursor: not-allowed;
-  pointer-events: none;
 }
 .card-top {
   display: flex;

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Linux & CLI Proficiency pillar of the DevOps Journey. Covers filesystem navigation, file operations, permissions, SSH, bash scripting, and systemd." />
+  <title>Pillar 2 — Linux & CLI Proficiency | Great Cheatsheets</title>
+  <link rel="icon" type="image/svg+xml" href="../img/linux-icon.svg"/>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preload" href="../style.css" as="style" />
+  <link rel="preload" href="../js/global.js" as="script" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ═══════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="../index.html" class="logo-mark" aria-label="Home">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="../img/Logo.svg" alt="Great Cheatsheets Logo">
+        </div>
+        <div>
+          <div class="logo-text">Great Cheatsheets</div>
+          <div class="logo-sub">SAA Foundation · Phase 1</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="sidebar-section-label">Navigation</div>
+    <nav class="sidebar-nav" aria-label="Primary navigation">
+      <a class="nav-item" href="../index.html">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 0a1.44 1.44 0 0 0-.947.399L.547 10.762a1.26 1.26 0 0 0-.342.808v11.138c0 .768.53 1.292 1.311 1.292h20.968c.78 0 1.311-.522 1.311-1.292V11.57a1.25 1.25 0 0 0-.34-.804L15.68 3.097h-.001L12.947.4A1.454 1.454 0 0 0 12 0Zm0 6.727 6.552 6.456v5.65H5.446v-5.65z" clip-rule="evenodd"/></svg>
+        Home
+      </a>
+      <a class="nav-item" href="#resources">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
+        Resources
+      </a>
+      <a class="nav-item" href="../html/networking.html" aria-label="Go back to Networking Fundamentals pillar">
+        <svg class="nav-icon" viewBox="0 0 15 15" fill="currentColor" aria-hidden="true"><path d="M3.29199 0.0488633C3.46998 -0.0324273 3.67922 -0.00204229 3.82715 0.126012L12.8584 7.95023C13.013 8.08416 13.0709 8.29901 13.0039 8.49222C12.9367 8.68544 12.7581 8.81898 12.5537 8.82816L9.21875 8.97464L11.1504 13.2188C11.2648 13.4701 11.1536 13.7664 10.9023 13.8809L8.75 14.8614C8.4989 14.9756 8.2025 14.8652 8.08789 14.6143L6.15234 10.3692L3.8623 12.7852C3.72148 12.9337 3.50454 12.9821 3.31445 12.9063C3.12448 12.8304 3 12.646 3 12.4414V0.503941L3.00488 0.431676C3.02912 0.26538 3.13621 0.120068 3.29199 0.0488633ZM4 11.1875L5.93848 9.14457L5.9834 9.10257C6.09412 9.0115 6.23945 8.97131 6.38281 8.99515C6.54677 9.02255 6.6869 9.13004 6.75586 9.28129L8.79004 13.7432L10.0332 13.1778L8.00195 8.71488C7.93331 8.56388 7.94376 8.38861 8.03027 8.24711C8.11701 8.10558 8.26877 8.01628 8.43457 8.00882L11.2549 7.88382L4 1.59769V11.1875Z" /></svg>
+        Back to Networking Fundamentals
+      </a>
+    </nav>
+
+    <!-- ===========================
+         Phase 1 Sections -->
+
+    <div class="sidebar-section-label">Phase 1 — Foundations (Linux & CLI Proficiency)</div>
+    <nav class="sidebar-nav" aria-label="Phase 1 sections">
+      <a class="nav-item" href="#overview">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M14.727 6.727H14V0H4.91c-.905 0-1.637.732-1.637 1.636v20.728c0 .904.732 1.636 1.636 1.636h14.182c.904 0 1.636-.732 1.636-1.636V6.727h-6zm-.545 10.455H7.09v-1.364h7.09v1.364zm2.727-3.273H7.091v-1.364h9.818v1.364zm0-3.273H7.091V9.273h9.818v1.363zM14.727 6h6l-6-6v6z"/></svg>
+        Overview
+      </a>
+      <a class="nav-item" href="#s1">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+        Section 1 — Filesystem Structure
+        <span class="nav-badge">6</span>
+      </a>
+      <a class="nav-item" href="#s2">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+        Section 2 — File & Directory Ops
+        <span class="nav-badge">8</span>
+      </a>
+      <!-- Placeholders for future sections -->
+      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 3 — Permissions & Ownership
+        <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 4 — Processes & Job Control
+        <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 5 — SSH & Remote Access
+        <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 6 — Package Management
+        <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 7 — Bash Scripting
+        <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 8 — Systemd & Services
+        <span class="nav-badge soon">Soon</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">
+        <div>github.com/K-Mash24/Great_Cheatsheets</div>
+        <div>github.com/K-Mash24/DevOps-Journey</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+        </button>
+        <div class="search-bar">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search Linux concepts..." autocomplete="off" aria-label="Search" />
+          <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="theme-toggle" role="group" aria-label="Theme toggle">
+          <button class="theme-toggle-btn active" id="lightBtn" aria-label="Light mode" title="Light mode">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
+          </button>
+          <button class="theme-toggle-btn" id="darkBtn" aria-label="Dark mode" title="Dark mode">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <main class="page-container" id="mainContent">
+
+      <!-- Page Header -->
+      <div class="page-header" id="overview">
+        <div class="breadcrumb">
+          <span>Phase 1 — Foundations</span>
+          <span aria-hidden="true">›</span>
+          <span class="crumb-active">Pillar 2 — Linux &amp; CLI Proficiency</span>
+        </div>
+        <h1>Linux &amp; CLI Proficiency</h1>
+        <div class="page-meta">
+          <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">In Progress</span>
+          <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">8 Sections</span>
+          <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">2 Files (so far)</span>
+        </div>
+      </div>
+
+      <!-- Roadmap Tracker -->
+      <div class="roadmap-tracker" aria-labelledby="tracker-heading">
+        <h3 id="tracker-heading">Phase 1 — Foundations Roadmap</h3>
+        <div class="roadmap-phases">
+          <div class="phase-item complete">
+            <div class="phase-dot" aria-hidden="true">✓</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 1 — Networking Fundamentals</div>
+              <div class="phase-desc">OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security</div>
+            </div>
+            <span class="phase-status">COMPLETE</span>
+          </div>
+          <div class="phase-item in-progress">
+            <div class="phase-dot" aria-hidden="true">2</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 2 — Linux &amp; CLI Proficiency</div>
+              <div class="phase-desc">File system, permissions, SSH, bash scripting, systemd</div>
+            </div>
+            <span class="phase-status">IN PROGRESS</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot" aria-hidden="true">3</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 3 — Security Concepts</div>
+              <div class="phase-desc">Encryption, TLS, PKI, least privilege, OWASP</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot" aria-hidden="true">4</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 4 — Scripting &amp; Automation</div>
+              <div class="phase-desc">Python and Bash, file I/O, APIs, JSON</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+          <div class="phase-item locked">
+            <div class="phase-dot" aria-hidden="true">5</div>
+            <div class="phase-content">
+              <div class="phase-name">Pillar 5 — Databases &amp; Storage</div>
+              <div class="phase-desc">SQL, NoSQL, indexing, ACID, caching, CAP theorem</div>
+            </div>
+            <span class="phase-status">LOCKED</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ SECTION 1 — FILESYSTEM STRUCTURE ══════════ -->
+      <div class="section-divider" id="s1">
+        <div class="section-number" aria-hidden="true">1</div>
+        <h2>Filesystem Structure &amp; Navigation</h2>
+      </div>
+
+      <!-- What is a filesystem? -->
+      <div class="accordion open" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📁</span>What is a filesystem?</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>A filesystem is the system that organises data on disk into a structured hierarchy. On Linux, this is a single tree with one root — everything lives under it. Unlike Windows, which gives each disk its own tree (`C:\`, `D:\`), Linux has one tree for everything.</p>
+        </div>
+      </div>
+
+      <!-- The filesystem tree (FHS) -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🌳</span>Filesystem tree &amp; top-level directories</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>The top of the tree is written as <code>/</code> (called "root"). All files, directories, and devices live somewhere below it.</p>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Directory</th><th>Purpose</th></tr></thead>
+              <tbody>
+                <tr><td><code>/</code></td><td>Root — top of the entire filesystem tree</td></tr>
+                <tr><td><code>/home</code></td><td>Home directories for regular users (e.g. <code>/home/codespace</code>)</td></tr>
+                <tr><td><code>/root</code></td><td>Home directory for the root (admin) user — separate from <code>/home</code></td></tr>
+                <tr><td><code>/etc</code></td><td>System-wide configuration files (human-readable text)</td></tr>
+                <tr><td><code>/var</code></td><td>Variable data — grows while system runs (logs, caches)</td></tr>
+                <tr><td><code>/usr</code></td><td>Installed programs and their supporting files</td></tr>
+                <tr><td><code>/tmp</code></td><td>Temporary files — cleared on every reboot</td></tr>
+                <tr><td><code>/bin</code></td><td>Essential command binaries (<code>ls</code>, <code>cd</code>, <code>pwd</code>, etc.)</td></tr>
+                <tr><td><code>/dev</code></td><td>Devices represented as files (disks, terminals, etc.)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Special directory symbols -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔣</span>Special directory symbols</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Symbol</th><th>Name</th><th>What it is</th></tr></thead>
+              <tbody>
+                <tr><td><code>/</code></td><td>Root</td><td>Top of the entire filesystem tree</td></tr>
+                <tr><td><code>~</code></td><td>Tilde</td><td>Shortcut for your home directory (<code>/home/codespace</code>)</td></tr>
+                <tr><td><code>.</code></td><td>Dot</td><td>Current directory</td></tr>
+                <tr><td><code>..</code></td><td>Dot-dot</td><td>Parent directory — one level up</td></tr>
+                <tr><td><code>/root</code></td><td>Root's home</td><td>The admin user's home — not the filesystem root</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box note"><strong>Common confusion:</strong> <code>~</code> and <code>/root</code> are completely different things. <code>~</code> expands to your own home (<code>/home/codespace</code>). <code>/root</code> is a specific directory that belongs to the admin user.</div>
+        </div>
+      </div>
+
+      <!-- Navigation commands -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🧭</span>Navigation commands — <code>pwd</code>, <code>ls</code>, <code>cd</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>pwd                 # Print Working Directory — shows your current location
+ls                  # List contents of current directory
+ls -l               # Long format — permissions, owner, size, date
+ls -a               # All files including hidden
+ls -la              # Long format + hidden (most common combo)
+cd /etc             # Change to /etc (absolute path)
+cd ..               # Go up one level
+cd ~                # Go to your home directory
+cd -                # Go back to the previous directory</pre></div>
+          <div class="info-box tip"><strong>Reading <code>ls -l</code> output:</strong> <code>drwxr-xr-x 2 alice users 4096 Jun 3 10:30 Documents</code><br/>First character: <code>d</code>=directory, <code>-</code>=regular file, <code>l</code>=symlink. Then 9 permission characters (user/group/other).</div>
+        </div>
+      </div>
+
+      <!-- Absolute vs relative paths -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔄</span>Absolute vs relative paths</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p><strong>Absolute path:</strong> Full address starting from root, always starts with <code>/</code>. Works the same no matter where you are.</p>
+          <p><strong>Relative path:</strong> Address starting from your current working directory. Uses <code>.</code> and <code>..</code>.</p>
+          <div class="code-block"><pre>cd /home/codespace/projects   # absolute
+cd projects                    # relative — only works if 'projects' exists in current dir
+cd ../..                       # go up two levels</pre></div>
+          <div class="info-box note"><strong>The key rule:</strong> A relative path only works if the target exists inside your current directory.</div>
+        </div>
+      </div>
+
+      <!-- Hidden files & tree command -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🙈</span>Hidden files &amp; the <code>tree</code> command</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>Any file or directory whose name starts with <code>.</code> is hidden. Hidden = not shown by default in <code>ls</code>. Not protected or encrypted — just kept out of the way.</p>
+          <div class="code-block"><pre>ls -a ~                # reveal hidden files in home
+tree ~ -L 2            # show tree structure, 2 levels deep
+tree -a ~              # include hidden files</pre></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>File/Dir</th><th>Purpose</th></tr></thead>
+              <tbody>
+                <tr><td><code>.bashrc</code></td><td>Bash shell config — runs every time a terminal opens</td></tr>
+                <tr><td><code>.gitconfig</code></td><td>Git settings — name, email, preferences</td></tr>
+                <tr><td><code>.ssh/</code></td><td>SSH keys and known hosts</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ SECTION 2 — FILE & DIRECTORY OPERATIONS ══════════ -->
+      <div class="section-divider" id="s2">
+        <div class="section-number" aria-hidden="true">2</div>
+        <h2>File &amp; Directory Operations</h2>
+      </div>
+
+      <!-- Creating files -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📄</span>Creating files — <code>touch</code>, <code>&gt;</code>, <code>&gt;&gt;</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>touch notes.txt                    # creates empty file (or updates timestamp)
+echo "hello world" > notes.txt    # writes content, overwrites entire file
+echo "another line" >> notes.txt  # appends to file, preserves existing content</pre></div>
+          <div class="info-box warning"><strong>Warning:</strong> <code>&gt;</code> is destructive — it wipes the entire file, not just one line.</div>
+        </div>
+      </div>
+
+      <!-- Creating directories -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📁</span>Creating directories — <code>mkdir</code>, <code>mkdir -p</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>mkdir projects
+mkdir -p projects/linux/section-2   # creates full nested path in one shot</pre></div>
+          <p><code>-p</code> creates all missing parent directories along the way. Without it, <code>mkdir a/b/c</code> fails if <code>a/b</code> doesn't already exist.</p>
+        </div>
+      </div>
+
+      <!-- Copying (cp) -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Copying — <code>cp</code>, <code>cp -r</code>, <code>cp -i</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>cp notes.txt backup/
+cp -r projects projects-backup      # -r required for directories
+cp -i notes.txt backup/             # interactive — asks before overwriting</pre></div>
+        </div>
+      </div>
+
+      <!-- Moving & renaming (mv) -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🚚</span>Moving &amp; renaming — <code>mv</code>, <code>mv -i</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>mv notes.txt archive/               # move into directory
+mv old-name.txt new-name.txt        # rename in same location
+mv -i notes.txt archive/            # interactive — asks before overwriting</pre></div>
+          <div class="info-box note">Unlike <code>cp</code>, <code>mv</code> leaves no copy behind — the original is gone. <code>mv</code> doesn't need <code>-r</code> for directories.</div>
+        </div>
+      </div>
+
+      <!-- Deleting (rm, rmdir) -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🗑️</span>Deleting — <code>rm</code>, <code>rm -rf</code>, <code>rmdir</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>rm notes.txt                         # delete a file
+rm -r projects/                      # delete a directory and all its contents
+rm -rf projects/                     # force delete — no prompts, no mercy
+rmdir empty-dir/                     # only works if the directory is empty</pre></div>
+          <div class="info-box warning"><strong>Warning:</strong> Linux has no recycle bin. Deleted = gone permanently. <code>rm -rf</code> is irreversible.</div>
+        </div>
+      </div>
+
+      <!-- Wildcards -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">*</span>Wildcards — <code>*</code> and <code>?</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>rm *.log                               # delete all .log files
+cp *.txt backup/                       # copy all .txt files
+ls file-?.txt                          # matches file-1.txt, file-a.txt (exactly one char)</pre></div>
+          <div class="info-box tip"><strong>Caution with <code>rm *</code>:</strong> Always run <code>ls *</code> first to see what you're about to delete.</div>
+        </div>
+      </div>
+
+      <!-- Viewing file contents -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👀</span>Viewing file contents — <code>cat</code>, <code>less</code>, <code>head</code>, <code>tail</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>cat notes.txt                          # print entire file to screen (good for short files)
+less notes.txt                         # scrollable viewer (Space=down, b=up, q=quit)
+head -n 5 notes.txt                    # first 5 lines
+tail -n 5 notes.txt                    # last 5 lines
+tail -f app.log                        # follow — prints new lines as file grows</pre></div>
+          <p><code>tail -f</code> is essential for watching log files in real time.</p>
+        </div>
+      </div>
+
+      <!-- Quick reference table -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📌</span>Quick reference — file &amp; directory commands</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>What you want</th><th>Command</th></tr></thead>
+              <tbody>
+                <tr><td>Create empty file</td><td><code>touch file.txt</code></td></tr>
+                <tr><td>Write to file (overwrite)</td><td><code>echo "text" > file.txt</code></td></tr>
+                <tr><td>Append to file</td><td><code>echo "text" >> file.txt</code></td></tr>
+                <tr><td>Create directory</td><td><code>mkdir dir</code></td></tr>
+                <tr><td>Create nested directories</td><td><code>mkdir -p a/b/c</code></td></tr>
+                <tr><td>Copy file</td><td><code>cp src dest</code></td></tr>
+                <tr><td>Copy directory</td><td><code>cp -r src dest</code></td></tr>
+                <tr><td>Move / rename</td><td><code>mv src dest</code></td></tr>
+                <tr><td>Delete file</td><td><code>rm file.txt</code></td></tr>
+                <tr><td>Delete directory</td><td><code>rm -r dir</code></td></tr>
+                <tr><td>Force delete</td><td><code>rm -rf dir</code></td></tr>
+                <tr><td>Delete empty directory</td><td><code>rmdir dir</code></td></tr>
+                <tr><td>Print file</td><td><code>cat file.txt</code></td></tr>
+                <tr><td>Scroll through file</td><td><code>less file.txt</code></td></tr>
+                <tr><td>First N lines</td><td><code>head -n N file.txt</code></td></tr>
+                <tr><td>Last N lines</td><td><code>tail -n N file.txt</code></td></tr>
+                <tr><td>Watch file live</td><td><code>tail -f file.txt</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- GitHub CTA (same as networking.html) -->
+      <div class="github-cta">
+        <div class="github-repos">
+          <div class="github-repo-row">
+            <div class="github-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div class="github-cta-text">
+              <div class="cta-title">K-Mash24 / Great_Cheatsheets</div>
+              <div class="cta-sub">branch: Master · raw study notes · saa-foundation/02-linux/</div>
+            </div>
+          </div>
+          <div class="github-cta-divider" aria-hidden="true"></div>
+          <div class="github-repo-row">
+            <div class="github-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </div>
+            <div class="github-cta-text">
+              <div class="cta-title">K-Mash24 / DevOps-Journey</div>
+              <div class="cta-sub">branch: main · published site · built per pillar</div>
+            </div>
+          </div>
+        </div>
+        <div class="github-cta-buttons">
+          <a href="https://github.com/K-Mash24/Great_Cheatsheets" target="_blank" rel="noopener" class="btn-github">Notes Repo</a>
+          <a href="https://github.com/K-Mash24/DevOps-Journey" target="_blank" rel="noopener" class="btn-github">Site Repo</a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+  <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+</button>
+
+<script src="../js/global.js"></script>
+<!-- No linux-specific JS yet — add later for flashcards/quiz -->
+</body>
+</html>
