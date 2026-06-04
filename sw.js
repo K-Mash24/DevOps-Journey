@@ -1,4 +1,4 @@
-const CACHE_NAME = 'devops-journey-v2.3';  // ← increment this when you make major changes
+const CACHE_NAME = 'devops-journey-v3.2';  // ← increment this when you make major changes
 
 const urlsToCache = [
   '/',
@@ -8,7 +8,8 @@ const urlsToCache = [
   '/js/global.js',
   '/js/networking.js',
   '/img/favicon.svg',
-  '/img/Network.svg'
+  '/img/Network.svg',
+  '/img/Logo.svg'
 ];
 
 // Install event - cache files
