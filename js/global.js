@@ -785,4 +785,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+    // ── Read search param from URL on load ──
+  function initSearchFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+    if (searchQuery) {
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.value = searchQuery;
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        // Remove param from URL without reloading
+        const newURL = window.location.pathname;
+        window.history.replaceState({}, '', newURL);
+      }
+    }
+  }
+  initSearchFromURL();
+
 }); // DOMContentLoaded end

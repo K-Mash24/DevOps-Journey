@@ -7,7 +7,7 @@
   <title>Page not found | Great Cheatsheets</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="img/favicon-404.svg" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
   <style>
     /* Minimal extra styles for 404 page – no sidebar adjustments */
@@ -66,11 +66,11 @@
   <header class="topbar">
     <div class="topbar-left">
       <a href="index.html" class="logo-mark" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-        <div class="logo-icon" style="width: 28px; height: 28px; font-size: 14px;">GC</div>
+        <div class="logo-icon" style="width: 28px; height: 28px; font-size: 14px;"><img src="img/Logo.svg" alt="Great Cheatsheets Logo"></div>
         <span style="font-family: var(--font-display); font-weight: 600; font-size: 0.9rem;">Great Cheatsheets</span>
       </a>
-      <div class="search-bar" style="max-width: 300px; margin-left: 1rem;">
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+      <div class="search-bar" style="max-width: 400px; margin-left: 1rem;">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
         <input type="text" class="search-input" id="searchInput" placeholder="Search the roadmap..." autocomplete="off" aria-label="Search" />
         <kbd class="search-shortcut" aria-hidden="true">/</kbd>
       </div>
@@ -95,13 +95,12 @@
 
     <div class="error-actions">
       <a href="index.html" class="btn btn-primary">← Back to Home</a>
-      <a href="networking.html" class="btn btn-secondary">Networking Pillar</a>
+      <a href="html/networking.html" class="btn btn-secondary">Networking Pillar</a>
       <a href="index.html#resources" class="btn btn-secondary">Resources</a>
     </div>
 
     <div class="error-search">
-      <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">Or try searching for a topic:</p>
-      <!-- Search input already exists above, but we show a second callout? It's fine, the top search works. -->
+      <p style="font-size: 0.8rem; margin-bottom: 0.5rem;">Or try searching across the entire study guide:</p>
     </div>
 
     <!-- GitHub CTA (condensed) -->
@@ -123,6 +122,32 @@
     </div>
   </main>
 </div>
+
+<script>
+  // Custom search for 404 page – redirects to home page with search query
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      // Handle Enter key – redirect to home page with search param
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          const query = this.value.trim();
+          if (query) {
+            window.location.href = `index.html?search=${encodeURIComponent(query)}`;
+          }
+        }
+      });
+      
+      // Handle / shortcut to focus search
+      window.addEventListener('keydown', function(e) {
+        if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+          e.preventDefault();
+          searchInput.focus();
+        }
+      });
+    }
+  });
+</script>
 
 <script src="js/global.js"></script>
 </body>
