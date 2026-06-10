@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Linux & CLI Proficiency pillar of the DevOps Journey. Covers filesystem navigation, file operations, permissions, SSH, bash scripting, and systemd." />
+  <meta name="description" content="Linux & CLI Proficiency pillar of the DevOps Journey. Covers filesystem navigation, file operations, permissions, SSH, bash scripting, systemd, and more." />
   <title>Pillar 2 — Linux & CLI Proficiency | Great Cheatsheets</title>
   <link rel="icon" type="image/svg+xml" href="../img/linux-icon.svg"/>
   <link rel="stylesheet" href="../style.css" />
@@ -16,9 +16,7 @@
 
 <div class="app-shell">
 
-  <!-- ═══════════════════════════════════════════
-       SIDEBAR
-  ═══════════════════════════════════════════ -->
+  <!-- ======================= SIDEBAR ======================= -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <a href="../index.html" class="logo-mark" aria-label="Home">
@@ -48,55 +46,77 @@
       </a>
     </nav>
 
-    <!-- ===========================
-         Phase 1 Sections -->
-
-    <div class="sidebar-section-label">Phase 1 — Foundations (Linux & CLI Proficiency)</div>
+    <div class="sidebar-section-label">Phase 1 — Foundations (Linux & CLI)</div>
     <nav class="sidebar-nav" aria-label="Phase 1 sections">
       <a class="nav-item" href="#overview">
-        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M14.727 6.727H14V0H4.91c-.905 0-1.637.732-1.637 1.636v20.728c0 .904.732 1.636 1.636 1.636h14.182c.904 0 1.636-.732 1.636-1.636V6.727h-6zm-.545 10.455H7.09v-1.364h7.09v1.364zm2.727-3.273H7.091v-1.364h9.818v1.364zm0-3.273H7.091V9.273h9.818v1.363zM14.727 6h6l-6-6v6z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 30 30" fill="currentColor" aria-hidden="true"><path d="M14.727 6.727H14V0H4.91c-.905 0-1.637.732-1.637 1.636v20.728c0 .904.732 1.636 1.636 1.636h14.182c.904 0 1.636-.732 1.636-1.636V6.727h-6zm-.545 10.455H7.09v-1.364h7.09v1.364zm2.727-3.273H7.091v-1.364h9.818v1.364zm0-3.273H7.091V9.273h9.818v1.363zM14.727 6h6l-6-6v6z"/></svg>
         Overview
       </a>
       <a class="nav-item" href="#s1">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
-        Section 1 — Filesystem Structure
+        Section 1 — Filesystem structure & navigation
         <span class="nav-badge">6</span>
       </a>
       <a class="nav-item" href="#s2">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
-        Section 2 — File & Directory Ops
+        Section 2 — File & directory operations
         <span class="nav-badge">8</span>
       </a>
-      <!-- Placeholders for future sections -->
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+      <a class="nav-item" href="#s3">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Section 3 — Permissions & Ownership
         <span class="nav-badge soon">Soon</span>
       </a>
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+      <a class="nav-item" href="#s4">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Section 4 — Processes & Job Control
+        Section 4 — Users & groups
         <span class="nav-badge soon">Soon</span>
       </a>
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+      <a class="nav-item" href="#s5">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Section 5 — SSH & Remote Access
+        Section 5 — Processes
         <span class="nav-badge soon">Soon</span>
       </a>
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+      <a class="nav-item" href="#s6">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Section 6 — Package Management
         <span class="nav-badge soon">Soon</span>
       </a>
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+      <a class="nav-item" href="#s7">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Section 7 — Bash Scripting
+        Section 7 — Networking commands
         <span class="nav-badge soon">Soon</span>
       </a>
-      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+      <a class="nav-item" href="#s8">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
-        Section 8 — Systemd & Services
+        Section 8 — Bash scripting
         <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#s9">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 9 — Systems & services
+        <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#s10">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        Section 10 — Text processing (grep/sed/awk/pipes)
+        <span class="nav-badge soon">Soon</span>
+      </a>
+      <a class="nav-item" href="#flashcards">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+        Flashcards
+      </a>
+      <a class="nav-item" href="#quiz">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+        Self-Test Quiz
+      </a>
+    </nav>
+
+    <div class="sidebar-section-label">Coming Next</div>
+    <nav class="sidebar-nav" aria-label="Primary navigation">
+      <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed;" aria-disabled="true">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/></svg>
+        Pillar 3 — Security Concepts
       </a>
     </nav>
 
@@ -110,9 +130,7 @@
 
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- ═══════════════════════════════════════════
-       MAIN CONTENT
-  ═══════════════════════════════════════════ -->
+  <!-- ======================= MAIN CONTENT ======================= -->
   <div class="main-content">
 
     <!-- Top Bar -->
@@ -152,65 +170,113 @@
         <h1>Linux &amp; CLI Proficiency</h1>
         <div class="page-meta">
           <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">In Progress</span>
-          <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">8 Sections</span>
+          <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">10 Sections</span>
           <span class="meta-badge" style="background:var(--bg-tertiary);color:var(--text-muted);">2 Files (so far)</span>
         </div>
       </div>
 
-      <!-- Roadmap Tracker -->
-      <div class="roadmap-tracker" aria-labelledby="tracker-heading">
-        <h3 id="tracker-heading">Phase 1 — Foundations Roadmap</h3>
-        <div class="roadmap-phases">
-          <div class="phase-item complete">
-            <div class="phase-dot" aria-hidden="true">✓</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 1 — Networking Fundamentals</div>
-              <div class="phase-desc">OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security</div>
-            </div>
-            <span class="phase-status">COMPLETE</span>
-          </div>
-          <div class="phase-item in-progress">
-            <div class="phase-dot" aria-hidden="true">2</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 2 — Linux &amp; CLI Proficiency</div>
-              <div class="phase-desc">File system, permissions, SSH, bash scripting, systemd</div>
-            </div>
-            <span class="phase-status">IN PROGRESS</span>
-          </div>
-          <div class="phase-item locked">
-            <div class="phase-dot" aria-hidden="true">3</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 3 — Security Concepts</div>
-              <div class="phase-desc">Encryption, TLS, PKI, least privilege, OWASP</div>
-            </div>
-            <span class="phase-status">LOCKED</span>
-          </div>
-          <div class="phase-item locked">
-            <div class="phase-dot" aria-hidden="true">4</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 4 — Scripting &amp; Automation</div>
-              <div class="phase-desc">Python and Bash, file I/O, APIs, JSON</div>
-            </div>
-            <span class="phase-status">LOCKED</span>
-          </div>
-          <div class="phase-item locked">
-            <div class="phase-dot" aria-hidden="true">5</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 5 — Databases &amp; Storage</div>
-              <div class="phase-desc">SQL, NoSQL, indexing, ACID, caching, CAP theorem</div>
-            </div>
-            <span class="phase-status">LOCKED</span>
-          </div>
+      <!-- ========== OVERVIEW CONTENT ========== -->
+      <div class="section-divider" id="overview-divider">
+        <div class="section-number" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M15 3.5V7.5C15 7.9 14.85 8.28 14.56 8.56C14.28 8.84 13.9 9 13.5 9H11V8.5C11 8.33 10.98 8.16 10.95 8H13.5C13.63 8 13.76 7.95 13.85 7.85C13.95 7.76 14 7.63 14 7.5V3.5C14 3.37 13.95 3.24 13.85 3.15C13.76 3.05 13.63 3 13.5 3H7.5C7.37 3 7.24 3.05 7.15 3.15C7.05 3.24 7 3.37 7 3.5V6H6V3.5C6 3.1 6.16 2.72 6.44 2.44C6.72 2.16 7.1 2 7.5 2H13.5C13.9 2 14.28 2.16 14.56 2.44C14.84 2.72 15 3.1 15 3.5ZM12.5 5C12.776 5 13 4.776 13 4.5C13 4.224 12.776 4 12.5 4H8.5C8.224 4 8 4.224 8 4.5C8 4.776 8.224 5 8.5 5H12.5ZM13 6.5C13 6.22 12.78 6 12.5 6H8.5C9.32 6 10.04 6.39 10.5 7H12.5C12.78 7 13 6.78 13 6.5ZM7.5 9H3.5C3.224 9 3 9.224 3 9.5C3 9.776 3.224 10 3.5 10H7.5C7.776 10 8 9.776 8 9.5C8 9.224 7.776 9 7.5 9ZM7.5 11H3.5C3.224 11 3 11.224 3 11.5C3 11.776 3.224 12 3.5 12H7.5C7.776 12 8 11.776 8 11.5C8 11.224 7.776 11 7.5 11ZM10 8.5V12.5C10 13.327 9.327 14 8.5 14H2.5C1.673 14 1 13.327 1 12.5V8.5C1 7.673 1.673 7 2.5 7H8.5C9.327 7 10 7.673 10 8.5ZM9 8.5C9 8.225 8.775 8 8.5 8H2.5C2.225 8 2 8.225 2 8.5V12.5C2 12.775 2.225 13 2.5 13H8.5C8.775 13 9 12.775 9 12.5V8.5Z"/></svg></div>
+        <h2>Pillar Overview</h2>
+      </div>
+
+      <div class="overview-content" style="margin-bottom: 2rem;">
+        
+        <!-- Purpose -->
+        <div class="info-box note" style="margin-bottom: 1.5rem;">
+          <strong>📌 Purpose</strong>
+          <p>This pillar builds genuine Linux command-line proficiency from first principles. Linux is the operating system that powers the vast majority of servers, cloud infrastructure, and DevOps tooling. Mastering the CLI is not optional — it is the primary interface you will use to navigate, configure, and troubleshoot systems throughout your career.</p>
+          <p style="margin-top: 0.5rem;">Every concept here is learned through hands-on practice. The knowledge transfers directly to AWS (EC2 instances, container hosts, automation scripts) and to the full DevOps roadmap (Dockerfile commands, Kubernetes pod debugging, CI/CD pipeline scripting).</p>
+        </div>
+
+        <!-- Learning Objectives -->
+        <div class="info-box tip" style="margin-bottom: 1.5rem;">
+          <strong>🎯 Learning objectives</strong>
+          <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+            <li>Navigate the Linux filesystem using absolute and relative paths</li>
+            <li>Create, copy, move, and delete files and directories safely</li>
+            <li>Understand and modify file permissions (chmod, chown, umask)</li>
+            <li>Manage processes (ps, top, kill, jobs, bg, fg)</li>
+            <li>Connect to remote systems using SSH and manage keys</li>
+            <li>Install, update, and remove software using package managers (apt, yum, dnf)</li>
+            <li>Write bash scripts with variables, conditionals, loops, and functions</li>
+            <li>Manage system services with systemd (systemctl, journalctl)</li>
+            <li>Use text processing tools (grep, sed, awk) for log analysis and data extraction</li>
+            <li>Troubleshoot network issues with commands like ping, traceroute, netstat, ss, and curl</li>
+          </ul>
+        </div>
+
+        <!-- Key Concepts to Revise -->
+        <div class="info-box warning" style="margin-bottom: 2rem;">
+          <strong>🔁 Key concepts to revise</strong>
+          <dl class="key-concepts-list">
+            <dt>Absolute vs relative paths</dt>
+            <dd>Understanding the difference and when to use each</dd>
+
+            <dt>File permissions (rwx)</dt>
+            <dd>Read, write, execute for user, group, other</dd>
+
+            <dt>Process signals (SIGTERM, SIGKILL)</dt>
+            <dd>Graceful vs forceful termination</dd>
+
+            <dt>SSH key authentication</dt>
+            <dd>Passwordless login using public/private keys</dd>
+
+            <dt>Package managers (apt, yum)</dt>
+            <dd>Installing, updating, removing software</dd>
+
+            <dt>Bash scripting basics</dt>
+            <dd>Shebang, variables, conditionals, loops</dd>
+
+            <dt>systemd units</dt>
+            <dd>Services, timers, sockets, and targets</dd>
+
+            <dt>grep, sed, awk</dt>
+            <dd>Pattern matching, text substitution, data extraction</dd>
+
+            <dt>Redirection (>, >>, |, <)</dt>
+            <dd>Pipes and file redirection</dd>
+
+            <dt>Exit codes ($?)</dt>
+            <dd>Checking command success/failure</dd>
+          </dl>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="table-wrapper" style="margin-bottom: 1rem;">
+          <table class="data-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Sections</strong></td><td>10 total (2 complete, 8 in progress)</td></tr>
+              <tr><td><strong>Topics covered</strong></td><td>20+</td></tr>
+              <tr><td><strong>Estimated time</strong></td><td>~20-25 hours</td></tr>
+              <tr><td><strong>Difficulty range</strong></td><td>🟢 Beginner → 🟡 Intermediate</td></tr>
+              <tr><td><strong>Status</strong></td><td>🔄 IN PROGRESS</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Link to detailed notes -->
+        <div class="info-box note" style="background: var(--bg-sidebar); color: var(--text-sidebar); margin-bottom: 0;">
+          <strong>📖 Detailed notes</strong>
+          <p style="margin-top: 0.25rem;">All markdown notes are committed to <a href="https://github.com/K-Mash24/Great_Cheatsheets/tree/Master/saa-foundation/02-linux" target="_blank" style="color: var(--accent-secondary);">Great_Cheatsheets/saa-foundation/02-linux/</a>. Section notes are added as they are completed.</p>
         </div>
       </div>
 
-      <!-- ══════════ SECTION 1 — FILESYSTEM STRUCTURE ══════════ -->
+      <!-- ══════════ SECTION 1 — FILESYSTEM STRUCTURE (COMPLETE) ══════════ -->
       <div class="section-divider" id="s1">
         <div class="section-number" aria-hidden="true">1</div>
         <h2>Filesystem Structure &amp; Navigation</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="1">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
-      <!-- What is a filesystem? -->
+      <!-- Accordions for Section 1 (existing content) -->
       <div class="accordion open" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📁</span>What is a filesystem?</div>
@@ -221,7 +287,6 @@
         </div>
       </div>
 
-      <!-- The filesystem tree (FHS) -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🌳</span>Filesystem tree &amp; top-level directories</div>
@@ -234,21 +299,20 @@
               <thead><tr><th>Directory</th><th>Purpose</th></tr></thead>
               <tbody>
                 <tr><td><code>/</code></td><td>Root — top of the entire filesystem tree</td></tr>
-                <tr><td><code>/home</code></td><td>Home directories for regular users (e.g. <code>/home/codespace</code>)</td></tr>
-                <tr><td><code>/root</code></td><td>Home directory for the root (admin) user — separate from <code>/home</code></td></tr>
-                <tr><td><code>/etc</code></td><td>System-wide configuration files (human-readable text)</td></tr>
-                <tr><td><code>/var</code></td><td>Variable data — grows while system runs (logs, caches)</td></tr>
-                <tr><td><code>/usr</code></td><td>Installed programs and their supporting files</td></tr>
-                <tr><td><code>/tmp</code></td><td>Temporary files — cleared on every reboot</td></tr>
-                <tr><td><code>/bin</code></td><td>Essential command binaries (<code>ls</code>, <code>cd</code>, <code>pwd</code>, etc.)</td></tr>
-                <tr><td><code>/dev</code></td><td>Devices represented as files (disks, terminals, etc.)</td></tr>
+                <tr><td><code>/home</code></td><td>Home directories for regular users</td></tr>
+                <tr><td><code>/root</code></td><td>Home directory for the root (admin) user</td></tr>
+                <tr><td><code>/etc</code></td><td>System-wide configuration files</td></tr>
+                <tr><td><code>/var</code></td><td>Variable data (logs, caches, spools)</td></tr>
+                <tr><td><code>/usr</code></td><td>Installed programs and supporting files</td></tr>
+                <tr><td><code>/tmp</code></td><td>Temporary files — cleared on reboot</td></tr>
+                <tr><td><code>/bin</code></td><td>Essential command binaries (<code>ls</code>, <code>cd</code>, <code>pwd</code>)</td></tr>
+                <tr><td><code>/dev</code></td><td>Devices represented as files</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- Special directory symbols -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔣</span>Special directory symbols</div>
@@ -260,18 +324,16 @@
               <thead><tr><th>Symbol</th><th>Name</th><th>What it is</th></tr></thead>
               <tbody>
                 <tr><td><code>/</code></td><td>Root</td><td>Top of the entire filesystem tree</td></tr>
-                <tr><td><code>~</code></td><td>Tilde</td><td>Shortcut for your home directory (<code>/home/codespace</code>)</td></tr>
+                <tr><td><code>~</code></td><td>Tilde</td><td>Shortcut for your home directory</td></tr>
                 <tr><td><code>.</code></td><td>Dot</td><td>Current directory</td></tr>
                 <tr><td><code>..</code></td><td>Dot-dot</td><td>Parent directory — one level up</td></tr>
                 <tr><td><code>/root</code></td><td>Root's home</td><td>The admin user's home — not the filesystem root</td></tr>
               </tbody>
             </table>
           </div>
-          <div class="info-box note"><strong>Common confusion:</strong> <code>~</code> and <code>/root</code> are completely different things. <code>~</code> expands to your own home (<code>/home/codespace</code>). <code>/root</code> is a specific directory that belongs to the admin user.</div>
         </div>
       </div>
 
-      <!-- Navigation commands -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🧭</span>Navigation commands — <code>pwd</code>, <code>ls</code>, <code>cd</code></div>
@@ -287,11 +349,9 @@ cd /etc             # Change to /etc (absolute path)
 cd ..               # Go up one level
 cd ~                # Go to your home directory
 cd -                # Go back to the previous directory</pre></div>
-          <div class="info-box tip"><strong>Reading <code>ls -l</code> output:</strong> <code>drwxr-xr-x 2 alice users 4096 Jun 3 10:30 Documents</code><br/>First character: <code>d</code>=directory, <code>-</code>=regular file, <code>l</code>=symlink. Then 9 permission characters (user/group/other).</div>
         </div>
       </div>
 
-      <!-- Absolute vs relative paths -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔄</span>Absolute vs relative paths</div>
@@ -300,44 +360,32 @@ cd -                # Go back to the previous directory</pre></div>
         <div class="accordion-body">
           <p><strong>Absolute path:</strong> Full address starting from root, always starts with <code>/</code>. Works the same no matter where you are.</p>
           <p><strong>Relative path:</strong> Address starting from your current working directory. Uses <code>.</code> and <code>..</code>.</p>
-          <div class="code-block"><pre>cd /home/codespace/projects   # absolute
-cd projects                    # relative — only works if 'projects' exists in current dir
-cd ../..                       # go up two levels</pre></div>
-          <div class="info-box note"><strong>The key rule:</strong> A relative path only works if the target exists inside your current directory.</div>
         </div>
       </div>
 
-      <!-- Hidden files & tree command -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🙈</span>Hidden files &amp; the <code>tree</code> command</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <p>Any file or directory whose name starts with <code>.</code> is hidden. Hidden = not shown by default in <code>ls</code>. Not protected or encrypted — just kept out of the way.</p>
           <div class="code-block"><pre>ls -a ~                # reveal hidden files in home
 tree ~ -L 2            # show tree structure, 2 levels deep
 tree -a ~              # include hidden files</pre></div>
-          <div class="table-wrapper">
-            <table class="data-table">
-              <thead><tr><th>File/Dir</th><th>Purpose</th></tr></thead>
-              <tbody>
-                <tr><td><code>.bashrc</code></td><td>Bash shell config — runs every time a terminal opens</td></tr>
-                <tr><td><code>.gitconfig</code></td><td>Git settings — name, email, preferences</td></tr>
-                <tr><td><code>.ssh/</code></td><td>SSH keys and known hosts</td></tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
 
-      <!-- ══════════ SECTION 2 — FILE & DIRECTORY OPERATIONS ══════════ -->
+      <!-- ══════════ SECTION 2 — FILE & DIRECTORY OPERATIONS (COMPLETE) ══════════ -->
       <div class="section-divider" id="s2">
         <div class="section-number" aria-hidden="true">2</div>
         <h2>File &amp; Directory Operations</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="2">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
-      <!-- Creating files -->
+      <!-- Accordions for Section 2 (existing content) -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📄</span>Creating files — <code>touch</code>, <code>&gt;</code>, <code>&gt;&gt;</code></div>
@@ -351,7 +399,6 @@ echo "another line" >> notes.txt  # appends to file, preserves existing content<
         </div>
       </div>
 
-      <!-- Creating directories -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📁</span>Creating directories — <code>mkdir</code>, <code>mkdir -p</code></div>
@@ -360,11 +407,9 @@ echo "another line" >> notes.txt  # appends to file, preserves existing content<
         <div class="accordion-body">
           <div class="code-block"><pre>mkdir projects
 mkdir -p projects/linux/section-2   # creates full nested path in one shot</pre></div>
-          <p><code>-p</code> creates all missing parent directories along the way. Without it, <code>mkdir a/b/c</code> fails if <code>a/b</code> doesn't already exist.</p>
         </div>
       </div>
 
-      <!-- Copying (cp) -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Copying — <code>cp</code>, <code>cp -r</code>, <code>cp -i</code></div>
@@ -377,7 +422,6 @@ cp -i notes.txt backup/             # interactive — asks before overwriting</p
         </div>
       </div>
 
-      <!-- Moving & renaming (mv) -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🚚</span>Moving &amp; renaming — <code>mv</code>, <code>mv -i</code></div>
@@ -387,11 +431,9 @@ cp -i notes.txt backup/             # interactive — asks before overwriting</p
           <div class="code-block"><pre>mv notes.txt archive/               # move into directory
 mv old-name.txt new-name.txt        # rename in same location
 mv -i notes.txt archive/            # interactive — asks before overwriting</pre></div>
-          <div class="info-box note">Unlike <code>cp</code>, <code>mv</code> leaves no copy behind — the original is gone. <code>mv</code> doesn't need <code>-r</code> for directories.</div>
         </div>
       </div>
 
-      <!-- Deleting (rm, rmdir) -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🗑️</span>Deleting — <code>rm</code>, <code>rm -rf</code>, <code>rmdir</code></div>
@@ -402,11 +444,10 @@ mv -i notes.txt archive/            # interactive — asks before overwriting</p
 rm -r projects/                      # delete a directory and all its contents
 rm -rf projects/                     # force delete — no prompts, no mercy
 rmdir empty-dir/                     # only works if the directory is empty</pre></div>
-          <div class="info-box warning"><strong>Warning:</strong> Linux has no recycle bin. Deleted = gone permanently. <code>rm -rf</code> is irreversible.</div>
+          <div class="info-box warning"><strong>Warning:</strong> Linux has no recycle bin. Deleted = gone permanently.</div>
         </div>
       </div>
 
-      <!-- Wildcards -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">*</span>Wildcards — <code>*</code> and <code>?</code></div>
@@ -416,61 +457,188 @@ rmdir empty-dir/                     # only works if the directory is empty</pre
           <div class="code-block"><pre>rm *.log                               # delete all .log files
 cp *.txt backup/                       # copy all .txt files
 ls file-?.txt                          # matches file-1.txt, file-a.txt (exactly one char)</pre></div>
-          <div class="info-box tip"><strong>Caution with <code>rm *</code>:</strong> Always run <code>ls *</code> first to see what you're about to delete.</div>
         </div>
       </div>
 
-      <!-- Viewing file contents -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👀</span>Viewing file contents — <code>cat</code>, <code>less</code>, <code>head</code>, <code>tail</code></div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <div class="code-block"><pre>cat notes.txt                          # print entire file to screen (good for short files)
+          <div class="code-block"><pre>cat notes.txt                          # print entire file to screen
 less notes.txt                         # scrollable viewer (Space=down, b=up, q=quit)
 head -n 5 notes.txt                    # first 5 lines
 tail -n 5 notes.txt                    # last 5 lines
 tail -f app.log                        # follow — prints new lines as file grows</pre></div>
-          <p><code>tail -f</code> is essential for watching log files in real time.</p>
         </div>
       </div>
 
-      <!-- Quick reference table -->
-      <div class="accordion" data-searchable>
-        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
-          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📌</span>Quick reference — file &amp; directory commands</div>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-        </button>
-        <div class="accordion-body">
-          <div class="table-wrapper">
-            <table class="data-table">
-              <thead><tr><th>What you want</th><th>Command</th></tr></thead>
-              <tbody>
-                <tr><td>Create empty file</td><td><code>touch file.txt</code></td></tr>
-                <tr><td>Write to file (overwrite)</td><td><code>echo "text" > file.txt</code></td></tr>
-                <tr><td>Append to file</td><td><code>echo "text" >> file.txt</code></td></tr>
-                <tr><td>Create directory</td><td><code>mkdir dir</code></td></tr>
-                <tr><td>Create nested directories</td><td><code>mkdir -p a/b/c</code></td></tr>
-                <tr><td>Copy file</td><td><code>cp src dest</code></td></tr>
-                <tr><td>Copy directory</td><td><code>cp -r src dest</code></td></tr>
-                <tr><td>Move / rename</td><td><code>mv src dest</code></td></tr>
-                <tr><td>Delete file</td><td><code>rm file.txt</code></td></tr>
-                <tr><td>Delete directory</td><td><code>rm -r dir</code></td></tr>
-                <tr><td>Force delete</td><td><code>rm -rf dir</code></td></tr>
-                <tr><td>Delete empty directory</td><td><code>rmdir dir</code></td></tr>
-                <tr><td>Print file</td><td><code>cat file.txt</code></td></tr>
-                <tr><td>Scroll through file</td><td><code>less file.txt</code></td></tr>
-                <tr><td>First N lines</td><td><code>head -n N file.txt</code></td></tr>
-                <tr><td>Last N lines</td><td><code>tail -n N file.txt</code></td></tr>
-                <tr><td>Watch file live</td><td><code>tail -f file.txt</code></td></tr>
-              </tbody>
-            </table>
+      <!-- ══════════ SECTIONS 3-10 — PLACEHOLDERS ══════════ -->
+      <!-- Section 3 — Permissions -->
+      <div class="section-divider" id="s3">
+        <div class="section-number" aria-hidden="true">3</div>
+        <h2>Permissions &amp; Ownership</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="3">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover file permissions (chmod, chown, umask), special permissions (setuid, setgid, sticky bit), and ownership concepts.</p>
+      </div>
+
+      <!-- Section 4 — Processes -->
+      <div class="section-divider" id="s4">
+        <div class="section-number" aria-hidden="true">4</div>
+        <h2>Processes &amp; Job Control</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="4">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover viewing processes (ps, top, htop), process signals (kill, killall), job control (&, jobs, fg, bg), and process priorities (nice, renice).</p>
+      </div>
+
+      <!-- Section 5 — SSH -->
+      <div class="section-divider" id="s5">
+        <div class="section-number" aria-hidden="true">5</div>
+        <h2>SSH &amp; Remote Access</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="5">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover SSH client usage (ssh, scp), key generation (ssh-keygen), agent forwarding, and SSH server configuration basics.</p>
+      </div>
+
+      <!-- Section 6 — Package Management -->
+      <div class="section-divider" id="s6">
+        <div class="section-number" aria-hidden="true">6</div>
+        <h2>Package Management</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="6">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover APT (Debian/Ubuntu), YUM/DNF (RHEL/Fedora), package searching, installation, updates, and removal.</p>
+      </div>
+
+      <!-- Section 7 — Bash Scripting -->
+      <div class="section-divider" id="s7">
+        <div class="section-number" aria-hidden="true">7</div>
+        <h2>Bash Scripting</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="7">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover shebang, variables, conditionals (if/else), loops (for, while), functions, exit codes, and debugging.</p>
+      </div>
+
+      <!-- Section 8 — Systemd -->
+      <div class="section-divider" id="s8">
+        <div class="section-number" aria-hidden="true">8</div>
+        <h2>Systemd &amp; Services</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="8">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover systemctl commands, unit files, service management, journalctl for logs, and timers.</p>
+      </div>
+
+      <!-- Section 9 — Text Processing -->
+      <div class="section-divider" id="s9">
+        <div class="section-number" aria-hidden="true">9</div>
+        <h2>Text Processing (grep, sed, awk)</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="9">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover grep for pattern matching, sed for stream editing, and awk for data extraction and reporting.</p>
+      </div>
+
+      <!-- Section 10 — Networking Commands -->
+      <div class="section-divider" id="s10">
+        <div class="section-number" aria-hidden="true">10</div>
+        <h2>Networking Commands &amp; Troubleshooting</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="10">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
+      </div>
+      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
+        <strong>🚧 Coming soon</strong>
+        <p>This section will cover ping, traceroute, netstat, ss, curl, wget, and network configuration with ip and nmcli.</p>
+      </div>
+
+      <!-- ══════════ FLASHCARDS ══════════ -->
+      <div class="section-divider" id="flashcards">
+        <div class="section-number" aria-hidden="true">★</div>
+        <h2>Flashcards</h2>
+      </div>
+      <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Click any card to reveal the answer.</p>
+      <div class="flashcard-grid" id="flashcardGrid"></div>
+
+      <!-- ══════════ QUIZ ══════════ -->
+      <div class="section-divider" id="quiz">
+        <div class="section-number" aria-hidden="true">✓</div>
+        <h2>Self-Test Quiz</h2>
+      </div>
+      <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Select an answer for each question, then click Submit to grade yourself.</p>
+
+      <div class="quiz-container">
+        <div class="quiz-header">
+          <div>
+            <h3>Linux Fundamentals — 5 Questions</h3>
+            <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
           </div>
         </div>
+        <div class="quiz-body" id="quizBody"></div>
+        <div class="quiz-footer">
+          <div class="quiz-feedback" id="quizFeedback"></div>
+          <div style="display:flex;gap:8px;margin-left:auto;">
+            <button class="btn btn-secondary btn-sm" onclick="resetLinuxQuiz()">Reset</button>
+            <button class="btn btn-primary btn-sm" onclick="submitLinuxQuiz()">Submit Quiz</button>
+          </div>
+        </div>
+        <div class="quiz-score" id="quizScore">
+          <div class="score-circle">
+            <div class="score-number" id="scoreNum">0/5</div>
+            <div class="score-label">score</div>
+          </div>
+          <div class="score-message" id="scoreMsg"></div>
+          <button class="btn btn-primary btn-sm" onclick="resetLinuxQuiz()">Try Again</button>
+        </div>
       </div>
 
-      <!-- GitHub CTA (same as networking.html) -->
+      <!-- No results -->
+      <div class="no-results" id="noResults" aria-live="polite">
+        <svg width="40" height="40" viewBox="0 0 20 20" fill="currentColor" style="margin-bottom:0.75rem;color:var(--text-muted);" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+        <p>No results found for your search.</p>
+      </div>
+
+      <!-- Resources & GitHub CTA -->
+      <div class="section-divider" id="resources">
+        <div class="section-number" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M15 3.5V7.5C15 7.9 14.85 8.28 14.56 8.56C14.28 8.84 13.9 9 13.5 9H11V8.5C11 8.33 10.98 8.16 10.95 8H13.5C13.63 8 13.76 7.95 13.85 7.85C13.95 7.76 14 7.63 14 7.5V3.5C14 3.37 13.95 3.24 13.85 3.15C13.76 3.05 13.63 3 13.5 3H7.5C7.37 3 7.24 3.05 7.15 3.15C7.05 3.24 7 3.37 7 3.5V6H6V3.5C6 3.1 6.16 2.72 6.44 2.44C6.72 2.16 7.1 2 7.5 2H13.5C13.9 2 14.28 2.16 14.56 2.44C14.84 2.72 15 3.1 15 3.5ZM12.5 5C12.776 5 13 4.776 13 4.5C13 4.224 12.776 4 12.5 4H8.5C8.224 4 8 4.224 8 4.5C8 4.776 8.224 5 8.5 5H12.5ZM13 6.5C13 6.22 12.78 6 12.5 6H8.5C9.32 6 10.04 6.39 10.5 7H12.5C12.78 7 13 6.78 13 6.5ZM7.5 9H3.5C3.224 9 3 9.224 3 9.5C3 9.776 3.224 10 3.5 10H7.5C7.776 10 8 9.776 8 9.5C8 9.224 7.776 9 7.5 9ZM7.5 11H3.5C3.224 11 3 11.224 3 11.5C3 11.776 3.224 12 3.5 12H7.5C7.776 12 8 11.776 8 11.5C8 11.224 7.776 11 7.5 11ZM10 8.5V12.5C10 13.327 9.327 14 8.5 14H2.5C1.673 14 1 13.327 1 12.5V8.5C1 7.673 1.673 7 2.5 7H8.5C9.327 7 10 7.673 10 8.5ZM9 8.5C9 8.225 8.775 8 8.5 8H2.5C2.225 8 2 8.225 2 8.5V12.5C2 12.775 2.225 13 2.5 13H8.5C8.775 13 9 12.775 9 12.5V8.5Z"/></svg></div>
+        <h2>Resources &amp; Further Reading</h2>
+      </div>
+
       <div class="github-cta">
         <div class="github-repos">
           <div class="github-repo-row">
@@ -494,8 +662,8 @@ tail -f app.log                        # follow — prints new lines as file gro
           </div>
         </div>
         <div class="github-cta-buttons">
-          <a href="https://github.com/K-Mash24/Great_Cheatsheets" target="_blank" rel="noopener" class="btn-github">Notes Repo</a>
-          <a href="https://github.com/K-Mash24/DevOps-Journey" target="_blank" rel="noopener" class="btn-github">Site Repo</a>
+          <a href="https://github.com/K-Mash24/Great_Cheatsheets" target="_blank" class="btn-github">Notes Repo</a>
+          <a href="https://github.com/K-Mash24/DevOps-Journey" target="_blank" class="btn-github">Site Repo</a>
         </div>
       </div>
 
@@ -503,12 +671,35 @@ tail -f app.log                        # follow — prints new lines as file gro
   </div>
 </div>
 
+<!-- Scroll to top -->
 <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
   <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
 </button>
 
-<script src="../js/Linux.js"></script>
+<!-- Progress Modal -->
+<div id="progressModal" class="progress-modal" style="display: none;">
+  <div class="progress-modal-content">
+    <div class="progress-modal-header">
+      <h3>📊 Linux Pillar Progress</h3>
+      <button class="modal-close" id="closeModalBtn">&times;</button>
+    </div>
+    <div class="progress-modal-body">
+      <div class="modal-section-list" id="modalSectionList"></div>
+      <div class="modal-quiz-row">
+        <label class="section-complete-checkbox disabled">
+          <input type="checkbox" id="modalQuizCheckbox" disabled>
+          <span>Quiz mastered (100%)</span>
+        </label>
+      </div>
+    </div>
+    <div class="progress-modal-footer">
+      <button class="btn btn-secondary btn-sm" id="modalResetBtn">🗑️ Reset Pillar Progress</button>
+      <button class="btn btn-secondary btn-sm" id="modalOverviewBtn">📖 Go to Overview</button>
+    </div>
+  </div>
+</div>
+
 <script src="../js/global.js"></script>
-<!-- No linux-specific JS yet — add later for flashcards/quiz -->
+<script src="../js/linux.js"></script>
 </body>
 </html>

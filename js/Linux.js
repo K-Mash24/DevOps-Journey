@@ -1,8 +1,9 @@
 // ============================================================
-// PILLAR 2: LINUX – FLASHCARDS & QUIZ
+// PILLAR 2: LINUX – FLASHCARDS, QUIZ & PROGRESS TRACKING
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
+  // ----- FLASHCARDS DATA -----
   const FLASHCARDS = [
     { term: "Absolute vs relative path", answer: "Absolute starts with / (from root). Relative starts from current directory. Example: /home/user/file.txt (absolute) vs ./file.txt (relative)" },
     { term: "Create nested directories in one command", answer: "mkdir -p parent/child/grandchild" },
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
+  // ----- QUIZ DATA -----
   const QUIZ_QUESTIONS = [
     {
       q: "Which command shows your current directory location?",
@@ -130,6 +132,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    const totalQuestions = QUIZ_QUESTIONS.length;
+    if (score === totalQuestions) {
+      localStorage.setItem('linux-quiz-passed', 'true');
+    }
+
+    // Force update of the floating ring
+    if (window.updateFloatingRing) window.updateFloatingRing();
+
     document.getElementById('quizFeedback').style.display = 'none';
     document.getElementById('quizScore').classList.add('show');
     document.getElementById('scoreNum').textContent = `${score}/${QUIZ_QUESTIONS.length}`;
@@ -161,8 +171,232 @@ document.addEventListener('DOMContentLoaded', () => {
     const fill = document.getElementById('quizProgressFill');
     if (fill) fill.style.width = '0%';
     renderQuiz();
+
+    // Reset quiz mastery flag and update floating ring
+    localStorage.removeItem('linux-quiz-passed');
+    if (window.updateFloatingRing) window.updateFloatingRing();
   };
 
-  if (document.getElementById('flashcardGrid')) renderFlashcards();
-  if (document.getElementById('quizBody')) renderQuiz();
+  // ----- FLOATING PROGRESS RING & MODAL -----
+  function initFloatingProgressRing() {
+    const checkboxes = document.querySelectorAll('.section-checkbox');
+    if (!checkboxes.length) return;
+
+    const floatingDiv = document.createElement('div');
+    floatingDiv.className = 'floating-progress-ring';
+    floatingDiv.innerHTML = `
+      <svg class="floating-ring-svg" viewBox="0 0 60 60">
+        <circle class="floating-ring-bg" cx="30" cy="30" r="26" fill="none" stroke-width="4"/>
+        <circle class="floating-ring-fill" cx="30" cy="30" r="26" fill="none" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <div class="floating-ring-percent" id="floatingPercent">0%</div>
+    `;
+    document.body.appendChild(floatingDiv);
+
+    const ringFill = floatingDiv.querySelector('.floating-ring-fill');
+    const percentSpan = floatingDiv.querySelector('#floatingPercent');
+    const circumference = 2 * Math.PI * 26;
+
+    function updateFloatingRing() {
+      const checkboxes = document.querySelectorAll('.section-checkbox');
+      const total = checkboxes.length + 1;
+      let checked = 0;
+
+      checkboxes.forEach(cb => {
+        const section = cb.dataset.section;
+        const saved = localStorage.getItem(`linux-section-${section}`);
+        const isChecked = saved === 'true' ? true : false;
+        cb.checked = isChecked;
+        if (isChecked) checked++;
+      });
+
+      const quizPassed = localStorage.getItem('linux-quiz-passed') === 'true';
+      if (quizPassed) checked++;
+
+      const percent = Math.round((checked / total) * 100);
+      const offset = circumference - (percent / 100) * circumference;
+      ringFill.style.strokeDasharray = circumference;
+      ringFill.style.strokeDashoffset = offset;
+      percentSpan.textContent = `${percent}%`;
+
+      // Congratulation toast on 100%
+      if (percent === 100) {
+        const alreadyCongratulated = localStorage.getItem('linux-100-congrats-shown');
+        if (!alreadyCongratulated) {
+          localStorage.setItem('linux-100-congrats-shown', 'true');
+          const toast = document.createElement('div');
+          toast.className = 'coming-soon-toast';
+          toast.innerHTML = '🎉 CONGRATULATIONS! 🎉<br>You have mastered Linux & CLI Proficiency!';
+          toast.style.background = 'linear-gradient(135deg, var(--accent-secondary), var(--accent-primary))';
+          toast.style.padding = '12px 24px';
+          toast.style.fontSize = '0.9rem';
+          toast.style.fontWeight = 'bold';
+          toast.style.textAlign = 'center';
+          document.body.appendChild(toast);
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+          }, 4000);
+        }
+      }
+    }
+
+    window.updateFloatingRing = updateFloatingRing;
+
+    function saveCheckboxState() {
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+          localStorage.setItem(`linux-section-${cb.dataset.section}`, cb.checked);
+          updateFloatingRing();
+        });
+      });
+    }
+
+    // Modal functions
+    function openProgressModal() {
+      const modal = document.getElementById('progressModal');
+      if (!modal) return;
+
+      const sectionList = document.getElementById('modalSectionList');
+      if (sectionList) {
+        sectionList.innerHTML = '';
+        const checkboxes = document.querySelectorAll('.section-checkbox');
+        checkboxes.forEach(cb => {
+          const sectionNum = cb.dataset.section;
+          const sectionTitle = getSectionTitle(sectionNum);
+          const row = document.createElement('div');
+          row.className = 'modal-section-row';
+          row.innerHTML = `
+            <input type="checkbox" class="modal-section-cb" data-section="${sectionNum}" ${cb.checked ? 'checked' : ''}>
+            <span class="modal-section-name" data-section="${sectionNum}">${sectionTitle}</span>
+          `;
+          sectionList.appendChild(row);
+        });
+
+        document.querySelectorAll('.modal-section-cb').forEach(modalCb => {
+          modalCb.addEventListener('change', (e) => {
+            const section = modalCb.dataset.section;
+            const actualCb = document.querySelector(`.section-checkbox[data-section="${section}"]`);
+            if (actualCb && actualCb.checked !== modalCb.checked) {
+              actualCb.click();
+            }
+          });
+        });
+
+        document.querySelectorAll('.modal-section-name').forEach(nameSpan => {
+          nameSpan.addEventListener('click', (e) => {
+            const section = nameSpan.dataset.section;
+            const targetId = `s${section}`;
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth' });
+              closeProgressModal();
+            }
+          });
+        });
+      }
+
+      const modalQuizCb = document.getElementById('modalQuizCheckbox');
+      if (modalQuizCb) {
+        const quizPassed = localStorage.getItem('linux-quiz-passed') === 'true';
+        modalQuizCb.checked = quizPassed;
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeProgressModal() {
+      const modal = document.getElementById('progressModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function getSectionTitle(sectionNum) {
+      const titles = {
+        '1': 'Section 1 — Filesystem Structure & Navigation',
+        '2': 'Section 2 — File & Directory Operations',
+        '3': 'Section 3 — Permissions & Ownership',
+        '4': 'Section 4 — Users & Groups',
+        '5': 'Section 5 — Processes',
+        '6': 'Section 6 — Package Management',
+        '7': 'Section 7 — Networking Commands',
+        '8': 'Section 8 — Bash Scripting',
+        '9': 'Section 9 — Systemd & Services',
+        '10': 'Section 10 — Text processing (grep/sed/awk/pipes)', 
+      };
+      return titles[sectionNum] || `Section ${sectionNum}`;
+    }
+
+    floatingDiv.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openProgressModal();
+    });
+
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('progressModal');
+      if (modal && modal.style.display === 'flex') {
+        if (!modal.querySelector('.progress-modal-content').contains(e.target)) {
+          closeProgressModal();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeProgressModal();
+      }
+    });
+
+    const closeBtn = document.getElementById('closeModalBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeProgressModal);
+
+    const overviewBtn = document.getElementById('modalOverviewBtn');
+    if (overviewBtn) {
+      overviewBtn.addEventListener('click', () => {
+        const overview = document.getElementById('overview');
+        if (overview) overview.scrollIntoView({ behavior: 'smooth' });
+        closeProgressModal();
+      });
+    }
+
+    const resetBtn = document.getElementById('modalResetBtn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (confirm('⚠️ Are you sure? This will reset ALL section checkboxes and quiz mastery for Linux. This cannot be undone.')) {
+          for (let i = 1; i <= 8; i++) {
+            localStorage.removeItem(`linux-section-${i}`);
+          }
+          localStorage.removeItem('linux-quiz-passed');
+          localStorage.removeItem('linux-100-congrats-shown');
+
+          const checkboxes = document.querySelectorAll('.section-checkbox');
+          checkboxes.forEach(cb => {
+            cb.checked = false;
+          });
+
+          if (window.updateFloatingRing) window.updateFloatingRing();
+          closeProgressModal();
+
+          const toast = document.createElement('div');
+          toast.className = 'coming-soon-toast';
+          toast.textContent = '✅ Linux progress has been reset';
+          toast.style.background = 'var(--accent-secondary)';
+          document.body.appendChild(toast);
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+          }, 2000);
+        }
+      });
+    }
+
+    updateFloatingRing();
+    saveCheckboxState();
+  }
+
+  if (document.querySelector('.section-checkbox')) {
+    initFloatingProgressRing();
+  }
+
+  renderFlashcards();
+  renderQuiz();
 });
