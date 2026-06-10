@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const percentSpan = floatingDiv.querySelector('#floatingPercent');
     const circumference = 2 * Math.PI * 26; // ≈ 163.36
 
-    // Load saved states and update ring
+        // Load saved states and update ring
     function updateFloatingRing() {
       const checkboxes = document.querySelectorAll('.section-checkbox');
       const total = checkboxes.length + 1; // +1 for quiz
@@ -268,6 +268,33 @@ document.addEventListener('DOMContentLoaded', () => {
       ringFill.style.strokeDasharray = circumference;
       ringFill.style.strokeDashoffset = offset;
       percentSpan.textContent = `${percent}%`;
+
+      // Show congratulations toast when 100% is reached (only once)
+      if (percent === 100) {
+        const alreadyCongratulated = localStorage.getItem('networking-100-congrats-shown');
+        if (!alreadyCongratulated) {
+          // Mark as shown so it doesn't repeat
+          localStorage.setItem('networking-100-congrats-shown', 'true');
+          
+          // Create and show toast
+          const toast = document.createElement('div');
+          toast.className = 'coming-soon-toast';
+          toast.innerHTML = '🎉 CONGRATULATIONS! 🎉<br>You have mastered Networking Fundamentals!';
+          toast.style.background = 'linear-gradient(135deg, var(--accent-secondary), var(--accent-primary))';
+          toast.style.padding = '12px 24px';
+          toast.style.fontSize = '0.9rem';
+          toast.style.fontWeight = 'bold';
+          toast.style.textAlign = 'center';
+          toast.style.borderRadius = '40px';
+          document.body.appendChild(toast);
+          
+          // Auto-remove after 4 seconds
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+          }, 4000);
+        }
+      }
     }
 
     // Expose globally so quiz submission can call it
@@ -402,6 +429,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           // Reset quiz mastery
           localStorage.removeItem('networking-quiz-passed');
+          // Reset congratulations flag so it can show again
+          localStorage.removeItem('networking-100-congrats-shown');
+
+          // Reset quiz mastery
+          localStorage.removeItem('networking-quiz-passed');
+          localStorage.removeItem('networking-100-congrats-shown');
           
           // Update actual checkboxes on the page
           const checkboxes = document.querySelectorAll('.section-checkbox');
