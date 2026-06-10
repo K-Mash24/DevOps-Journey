@@ -146,7 +146,7 @@
     <main class="page-container" id="mainContent">
 
       <!-- Page Header -->
-      <div class="page-header" id="overview">
+      <div class="page-header">
         <div class="breadcrumb">
           <span>Phase 1 — Foundations</span>
           <span aria-hidden="true">›</span>
@@ -160,57 +160,106 @@
         </div>
       </div>
 
-      <!-- Roadmap Tracker -->
-      <div class="roadmap-tracker" aria-labelledby="tracker-heading">
-        <h3 id="tracker-heading">Phase 1 — Foundations Roadmap</h3>
-        <div class="roadmap-phases">
-          <div class="phase-item complete">
-            <div class="phase-dot" aria-hidden="true">✓</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 1 — Networking Fundamentals</div>
-              <div class="phase-desc">OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security, RJ45 cabling</div>
-            </div>
-            <span class="phase-status">COMPLETE</span>
-          </div>
-          <div class="phase-item in-progress">
-            <div class="phase-dot" aria-hidden="true">2</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 2 — Linux &amp; CLI Proficiency</div>
-              <div class="phase-desc">File system, permissions, SSH, bash scripting, systemd</div>
-            </div>
-            <span class="phase-status">IN PROGRESS</span>
-          </div>
-          <div class="phase-item locked">
-            <div class="phase-dot" aria-hidden="true">3</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 3 — Security Concepts</div>
-              <div class="phase-desc">Encryption, TLS, PKI, least privilege, OWASP</div>
-            </div>
-            <span class="phase-status">LOCKED</span>
-          </div>
-          <div class="phase-item locked">
-            <div class="phase-dot" aria-hidden="true">4</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 4 — Scripting &amp; Automation</div>
-              <div class="phase-desc">Python and Bash, file I/O, APIs, JSON</div>
-            </div>
-            <span class="phase-status">LOCKED</span>
-          </div>
-          <div class="phase-item locked">
-            <div class="phase-dot" aria-hidden="true">5</div>
-            <div class="phase-content">
-              <div class="phase-name">Pillar 5 — Databases &amp; Storage</div>
-              <div class="phase-desc">SQL, NoSQL, indexing, ACID, caching, CAP theorem</div>
-            </div>
-            <span class="phase-status">LOCKED</span>
-          </div>
+      <!-- ========== NEW OVERVIEW CONTENT ========== -->
+      <div class="section-divider" id="overview">
+        <div class="section-number" aria-hidden="true">0</div>
+        <h2>Pillar Overview</h2>
+      </div>
+
+      <div class="overview-content" style="margin-bottom: 2rem;">
+        
+        <!-- Purpose -->
+        <div class="info-box note" style="margin-bottom: 1.5rem;">
+          <strong>📌 Purpose</strong>
+          <p>This pillar builds genuine networking foundations from first principles before touching any cloud infrastructure or AWS services. Networking underpins every system you will design, operate, and troubleshoot as a Solutions Architect and DevOps engineer — understanding it deeply, not superficially, is the goal.</p>
+          <p style="margin-top: 0.5rem;">Every concept here was studied independently of cloud tooling. The knowledge transfers directly to AWS (VPCs, subnets, route tables, security groups, DNS, load balancers) and to the full DevOps roadmap (service discovery, container networking, Kubernetes networking, infrastructure as code).</p>
         </div>
+
+        <!-- Learning Objectives -->
+        <div class="info-box tip" style="margin-bottom: 1.5rem;">
+          <strong>🎯 Learning objectives</strong>
+          <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+            <li>Explain the OSI and TCP/IP models from memory and identify which protocols and devices operate at each layer</li>
+            <li>Read and write IPv4 addresses in both decimal and binary, and identify address classes, private ranges, and special addresses</li>
+            <li>Perform subnetting calculations by hand — network address, broadcast address, usable host range, and host count — for any given CIDR block</li>
+            <li>Design a VLSM addressing scheme for a network with mixed host requirements</li>
+            <li>Explain how routers forward packets using routing tables and longest prefix match, and how switches use MAC address tables for local delivery</li>
+            <li>Describe how NAT and PAT allow private networks to share a public IP address</li>
+            <li>Trace a DNS query from browser cache through recursive resolver, root server, TLD server, and authoritative name server to final answer</li>
+            <li>Differentiate TCP and UDP, explain the three-way handshake, and identify appropriate use cases for each protocol</li>
+            <li>Define stateless and stateful firewalls, explain ACL rule evaluation, and describe network zone design including the DMZ</li>
+            <li>Identify common network attacks (SYN flood, ARP spoofing, MITM, DDoS) and explain the mechanism behind each</li>
+          </ul>
+        </div>
+
+        <!-- Key Concepts to Revise -->
+        <div class="info-box warning" style="margin-bottom: 2rem;">
+          <strong>🔁 Key concepts to revise</strong>
+          <dl class="key-concepts-list">
+            <dt>OSI layers 3, 4, 7</dt>
+            <dd>Know the protocols at each layer cold</dd>
+
+            <dt>Subnetting by hand</dt>
+            <dd>Given any CIDR block, calculate network address, broadcast address, usable range, and host count without assistance</dd>
+
+            <dt>VLSM</dt>
+            <dd>Allocate subnets of different sizes from a single address space</dd>
+
+            <dt>TCP three-way handshake</dt>
+            <dd>SYN, SYN-ACK, ACK and what each step achieves</dd>
+
+            <dt>DNS resolution</dt>
+            <dd>The full path from browser cache to authoritative server</dd>
+
+            <dt>NAT/PAT</dt>
+            <dd>How private addresses share a single public IP using port numbers</dd>
+
+            <dt>Stateful vs stateless firewall</dt>
+            <dd>The difference and why it matters</dd>
+
+            <dt>RFC 1918 ranges</dt>
+            <dd><code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code></dd>
+
+            <dt>TCP flow control (sliding window)</dt>
+            <dd>How it prevents overwhelming the receiver</dd>
+
+            <dt>Longest prefix match</dt>
+            <dd>Router's algorithm for choosing the most specific route</dd>
+          </dl>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="table-wrapper" style="margin-bottom: 1rem;">
+          <table class="data-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Sections</strong></td><td>7/7 (100%)</td></tr>
+              <tr><td><strong>Topics covered</strong></td><td>47+</td></tr>
+              <tr><td><strong>Estimated time</strong></td><td>~14-15 hours</td></tr>
+              <tr><td><strong>Difficulty range</strong></td><td>🟢 Beginner → 🟡 Intermediate</td></tr>
+              <tr><td><strong>Status</strong></td><td>🎉 PILLAR COMPLETE</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Link to detailed README -->
+        <div class="info-box note" style="background: var(--bg-sidebar); color: var(--text-sidebar); margin-bottom: 0;">
+          <strong>📖 Detailed notes</strong>
+          <p style="margin-top: 0.25rem;">All markdown notes are committed to <a href="https://github.com/K-Mash24/Great_Cheatsheets/tree/Master/saa-foundation/01-networking" target="_blank" style="color: var(--accent-secondary);">Great_Cheatsheets/saa-foundation/01-networking/</a>. The <a href="https://github.com/K-Mash24/Great_Cheatsheets/blob/Master/saa-foundation/01-networking/README.md" target="_blank" style="color: var(--accent-secondary);">README.md</a> in that folder contains the complete pillar summary, learning objectives, and revision checklist.</p>
+        </div>
+
       </div>
 
       <!-- ══════════ SECTION 1 ══════════ -->
       <div class="section-divider" id="s1">
         <div class="section-number" aria-hidden="true">1</div>
         <h2>How the Internet Is Structured</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="1">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
       <!-- OSI Model Accordion -->
@@ -451,6 +500,10 @@ Brown   → 2 wires  → White/Brown (pin7), Brown (pin8)</pre></div>
       <div class="section-divider" id="s2">
         <div class="section-number" aria-hidden="true">2</div>
         <h2>IP Addressing</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="2">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
       <!-- IPv4 Accordion -->
@@ -553,6 +606,10 @@ Expanding 2001:db8::1 → 3 groups shown → 8-3=5 zeros hidden
       <div class="section-divider" id="s3">
         <div class="section-number" aria-hidden="true">3</div>
         <h2>Subnetting &amp; CIDR</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="3">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
       <!-- Subnet Masks Accordion -->
@@ -646,6 +703,10 @@ Supernetting:  /24 /24 /24 /24 → /22  (prefix gets shorter)</pre></div>
       <div class="section-divider" id="s4">
         <div class="section-number" aria-hidden="true">4</div>
         <h2>Routing &amp; Switching</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="4">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
       <!-- Routers vs Switches Accordion -->
@@ -700,6 +761,10 @@ All three share one public IP — differentiated by port number</pre></div>
       <div class="section-divider" id="s5">
         <div class="section-number" aria-hidden="true">5</div>
         <h2>DNS — Domain Name System</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="5">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
       <!-- DNS Hierarchy Accordion -->
@@ -763,6 +828,10 @@ Typical completion: under 100 milliseconds</pre></div>
       <div class="section-divider" id="s6">
         <div class="section-number" aria-hidden="true">6</div>
         <h2>TCP &amp; UDP — Transport Layer</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="6">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
       <!-- TCP Handshake Accordion -->
@@ -817,6 +886,10 @@ Client ──── ACK ──────────────► Server</pr
       <div class="section-divider" id="s7">
         <div class="section-number" aria-hidden="true">7</div>
         <h2>Network Security Basics</h2>
+        <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+          <input type="checkbox" class="section-checkbox" data-section="7">
+          <span style="font-size: 0.7rem;">Complete</span>
+        </label>
       </div>
 
       <!-- Firewalls Accordion -->
@@ -965,6 +1038,30 @@ arp                          <span class="code-comment"># ARP packets (detect sp
           </a>
         </div>
       </div>
+
+      <!-- Progress Modal (hidden by default) -->
+    <div id="progressModal" class="progress-modal" style="display: none;">
+      <div class="progress-modal-content">
+        <div class="progress-modal-header">
+          <h3>📊 Pillar Progress</h3>
+          <button class="modal-close" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="progress-modal-body">
+          <div class="modal-section-list" id="modalSectionList"></div>
+          <div class="modal-quiz-row">
+            <label class="section-complete-checkbox disabled">
+              <input type="checkbox" id="modalQuizCheckbox" disabled>
+              <span>Quiz mastered (100%)</span>
+            </label>
+          </div>
+        </div>
+        <div class="progress-modal-footer">
+          <button class="btn btn-secondary btn-sm" id="modalResetBtn">🗑️ Reset Pillar Progress</button>
+          <button class="btn btn-secondary btn-sm" id="modalOverviewBtn">📖 Go to Overview</button>
+        </div>
+      </div>
+    </div>
+
 
     </main>
   </div>

@@ -2054,3 +2054,245 @@ code, pre {
     gap: 0.5rem;
   }
 }
+
+/* Key concepts definition list */
+.key-concepts-list {
+  margin: 0.75rem 0 0 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+}
+
+.key-concepts-list dt {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.key-concepts-list dd {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* On narrow screens, stack term above description */
+@media (max-width: 640px) {
+  .key-concepts-list {
+    grid-template-columns: 1fr;
+    gap: 0.25rem 0;
+  }
+  .key-concepts-list dt {
+    margin-top: 0.5rem;
+  }
+  .key-concepts-list dt:first-of-type {
+    margin-top: 0;
+  }
+  .key-concepts-list dd {
+    margin-left: 0.75rem;
+  }
+}
+
+/* Floating progress ring (pillar level) */
+.floating-progress-ring {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: var(--bg-card);
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid var(--border-color);
+}
+.floating-progress-ring:hover {
+  transform: scale(1.05);
+}
+.floating-ring-svg {
+  width: 54px;
+  height: 54px;
+  transform: rotate(-90deg);
+}
+.floating-ring-bg {
+  stroke: var(--border-color);
+}
+.floating-ring-fill {
+  stroke: var(--accent-secondary);
+  stroke-dasharray: 163.36; /* circumference for r=26 */
+  stroke-dashoffset: 163.36;
+  transition: stroke-dashoffset 0.4s ease;
+}
+.floating-ring-percent {
+  position: absolute;
+  font-size: 0.7rem;
+  font-weight: bold;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  background: var(--bg-card);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Section complete checkboxes */
+.section-complete-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  background: var(--bg-tertiary);
+  padding: 4px 8px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.section-complete-checkbox:hover {
+  background: var(--pillar-color-light);
+}
+
+.section-complete-checkbox input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-strong);
+  border-radius: 4px;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+  background: var(--bg-card);
+}
+
+.section-complete-checkbox input:checked {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.section-complete-checkbox input:checked::after {
+  content: "✓";
+  position: absolute;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  left: 2px;
+  top: -1px;
+}
+
+.section-complete-checkbox span {
+  color: var(--text-secondary);
+}
+
+/* Progress Modal */
+.progress-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-modal-content {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+}
+
+.progress-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.progress-modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: var(--accent-danger);
+}
+
+.progress-modal-body {
+  padding: 1rem 1.25rem;
+}
+
+.modal-section-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.modal-section-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.modal-section-row input {
+  flex-shrink: 0;
+}
+
+.modal-section-name {
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.modal-section-name:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+.modal-quiz-row {
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.modal-quiz-row .section-complete-checkbox.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.progress-modal-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}

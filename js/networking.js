@@ -175,6 +175,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    const totalQuestions = QUIZ_QUESTIONS.length;
+    if (score === totalQuestions) {
+      localStorage.setItem('networking-quiz-passed', 'true');
+    } else {
+      // Optional: uncomment to reset mastery if they don't get 100%
+      // localStorage.setItem('networking-quiz-passed', 'false');
+    }
+
+    // Force update of the floating ring (global function)
+    if (window.updateFloatingRing) window.updateFloatingRing();
+
     document.getElementById('quizFeedback').style.display = 'none';
     document.getElementById('quizScore').classList.add('show');
     document.getElementById('scoreNum').textContent = `${score}/${QUIZ_QUESTIONS.length}`;
@@ -183,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const previousBest = localStorage.getItem('gc-score-networking') || 0;
     if (pct > previousBest) {
       localStorage.setItem('gc-score-networking', pct);
-      // Trigger global progress update (if function exists)
       if (typeof window.updateGlobalProgress === 'function') {
         window.updateGlobalProgress();
       }
@@ -207,7 +217,226 @@ document.addEventListener('DOMContentLoaded', () => {
     const fill = document.getElementById('quizProgressFill');
     if (fill) fill.style.width = '0%';
     renderQuiz();
+
+    // Reset quiz mastery flag and update floating ring
+    localStorage.removeItem('networking-quiz-passed');
+    if (window.updateFloatingRing) window.updateFloatingRing();
   };
+
+  // Floating progress ring for pillar sections + modal popup
+  function initFloatingProgressRing() {
+    const checkboxes = document.querySelectorAll('.section-checkbox');
+    if (!checkboxes.length) return;
+
+    // Create floating ring element
+    const floatingDiv = document.createElement('div');
+    floatingDiv.className = 'floating-progress-ring';
+    floatingDiv.innerHTML = `
+      <svg class="floating-ring-svg" viewBox="0 0 60 60">
+        <circle class="floating-ring-bg" cx="30" cy="30" r="26" fill="none" stroke-width="4"/>
+        <circle class="floating-ring-fill" cx="30" cy="30" r="26" fill="none" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <div class="floating-ring-percent" id="floatingPercent">0%</div>
+    `;
+    document.body.appendChild(floatingDiv);
+
+    const ringFill = floatingDiv.querySelector('.floating-ring-fill');
+    const percentSpan = floatingDiv.querySelector('#floatingPercent');
+    const circumference = 2 * Math.PI * 26; // ≈ 163.36
+
+    // Load saved states and update ring
+    function updateFloatingRing() {
+      const checkboxes = document.querySelectorAll('.section-checkbox');
+      const total = checkboxes.length + 1; // +1 for quiz
+      let checked = 0;
+
+      // Count section checkboxes
+      checkboxes.forEach(cb => {
+        const section = cb.dataset.section;
+        const saved = localStorage.getItem(`networking-section-${section}`);
+        const isChecked = saved === 'true' ? true : false;
+        cb.checked = isChecked;
+        if (isChecked) checked++;
+      });
+
+      // Count quiz if passed
+      const quizPassed = localStorage.getItem('networking-quiz-passed') === 'true';
+      if (quizPassed) checked++;
+
+      const percent = Math.round((checked / total) * 100);
+      const offset = circumference - (percent / 100) * circumference;
+      ringFill.style.strokeDasharray = circumference;
+      ringFill.style.strokeDashoffset = offset;
+      percentSpan.textContent = `${percent}%`;
+    }
+
+    // Expose globally so quiz submission can call it
+    window.updateFloatingRing = updateFloatingRing;
+
+    // Save checkbox state
+    function saveCheckboxState() {
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', () => {
+          localStorage.setItem(`networking-section-${cb.dataset.section}`, cb.checked);
+          updateFloatingRing();
+        });
+      });
+    }
+
+    // ----- MODAL FUNCTIONALITY -----
+    function openProgressModal() {
+      const modal = document.getElementById('progressModal');
+      if (!modal) return;
+
+      // Populate modal with current section checkboxes
+      const sectionList = document.getElementById('modalSectionList');
+      if (sectionList) {
+        sectionList.innerHTML = '';
+        const checkboxes = document.querySelectorAll('.section-checkbox');
+        checkboxes.forEach(cb => {
+          const sectionNum = cb.dataset.section;
+          const sectionTitle = getSectionTitle(sectionNum);
+          const row = document.createElement('div');
+          row.className = 'modal-section-row';
+          row.innerHTML = `
+            <input type="checkbox" class="modal-section-cb" data-section="${sectionNum}" ${cb.checked ? 'checked' : ''}>
+            <span class="modal-section-name" data-section="${sectionNum}">${sectionTitle}</span>
+          `;
+          sectionList.appendChild(row);
+        });
+
+        // Attach events to modal checkboxes and names
+        document.querySelectorAll('.modal-section-cb').forEach(modalCb => {
+          modalCb.addEventListener('change', (e) => {
+            const section = modalCb.dataset.section;
+            const actualCb = document.querySelector(`.section-checkbox[data-section="${section}"]`);
+            if (actualCb && actualCb.checked !== modalCb.checked) {
+              actualCb.click(); // programmatically toggle actual checkbox
+            }
+          });
+        });
+
+        document.querySelectorAll('.modal-section-name').forEach(nameSpan => {
+          nameSpan.addEventListener('click', (e) => {
+            const section = nameSpan.dataset.section;
+            const targetId = `s${section}`;
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth' });
+              closeProgressModal();
+            }
+          });
+        });
+      }
+
+      // Update quiz checkbox state
+      const modalQuizCb = document.getElementById('modalQuizCheckbox');
+      if (modalQuizCb) {
+        const quizPassed = localStorage.getItem('networking-quiz-passed') === 'true';
+        modalQuizCb.checked = quizPassed;
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeProgressModal() {
+      const modal = document.getElementById('progressModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function getSectionTitle(sectionNum) {
+      const titles = {
+        '1': 'Section 1 — Internet Structure',
+        '2': 'Section 2 — IP Addressing',
+        '3': 'Section 3 — Subnetting & CIDR',
+        '4': 'Section 4 — Routing & Switching',
+        '5': 'Section 5 — DNS',
+        '6': 'Section 6 — TCP & UDP',
+        '7': 'Section 7 — Network Security'
+      };
+      return titles[sectionNum] || `Section ${sectionNum}`;
+    }
+
+    // Replace old click handler with modal opener
+    floatingDiv.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openProgressModal();
+    });
+
+    // Global close handlers
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('progressModal');
+      if (modal && modal.style.display === 'flex') {
+        if (!modal.querySelector('.progress-modal-content').contains(e.target)) {
+          closeProgressModal();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeProgressModal();
+      }
+    });
+
+    const closeBtn = document.getElementById('closeModalBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeProgressModal);
+    
+    const overviewBtn = document.getElementById('modalOverviewBtn');
+    if (overviewBtn) {
+      overviewBtn.addEventListener('click', () => {
+        const overview = document.getElementById('overview');
+        if (overview) overview.scrollIntoView({ behavior: 'smooth' });
+        closeProgressModal();
+      });
+    }
+
+    // Reset pillar progress button
+    const resetBtn = document.getElementById('modalResetBtn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (confirm('⚠️ Are you sure? This will reset ALL section checkboxes and quiz mastery for Networking. This cannot be undone.')) {
+          // Reset all 7 section checkboxes
+          for (let i = 1; i <= 7; i++) {
+            localStorage.removeItem(`networking-section-${i}`);
+          }
+          // Reset quiz mastery
+          localStorage.removeItem('networking-quiz-passed');
+          
+          // Update actual checkboxes on the page
+          const checkboxes = document.querySelectorAll('.section-checkbox');
+          checkboxes.forEach(cb => {
+            cb.checked = false;
+          });
+          
+          // Update floating ring
+          if (window.updateFloatingRing) window.updateFloatingRing();
+          
+          // Close modal
+          closeProgressModal();
+          
+          // Show confirmation toast
+          const toast = document.createElement('div');
+          toast.className = 'coming-soon-toast';
+          toast.textContent = '✅ Networking progress has been reset';
+          toast.style.background = 'var(--accent-secondary)';
+          document.body.appendChild(toast);
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+          }, 2000);
+        }
+      });
+    }
+
+    updateFloatingRing();
+    saveCheckboxState();
+  }
+
+  // Run on networking page only
+  if (document.querySelector('.section-checkbox')) {
+    initFloatingProgressRing();
+  }
 
   // Render flashcards and quiz when the page loads
   renderFlashcards();

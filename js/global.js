@@ -575,30 +575,69 @@ document.addEventListener('DOMContentLoaded', () => {
     window.updateGlobalProgress();
   });
 
-  function initProgressRing() {
+  // ============================================================
+// PILLAR PROGRESS CALCULATION (for homepage ring)
+// ============================================================
+
+function getPillarCompletion(pillar) {
+  // Returns a number between 0 and 1, where 1 = fully complete
+  switch (pillar) {
+    case 'networking':
+      let count = 0;
+      for (let i = 1; i <= 7; i++) {
+        if (localStorage.getItem(`networking-section-${i}`) === 'true') count++;
+      }
+      if (localStorage.getItem('networking-quiz-passed') === 'true') count++;
+      return count / 8;   // 7 sections + 1 quiz = 8 items
+    case 'linux':
+      // Placeholder – return 0 until Linux page is built
+      return 0;
+    case 'security':
+      return 0;
+    case 'scripting':
+      return 0;
+    case 'databases':
+      return 0;
+    default:
+      return 0;
+  }
+}
+
+  function updateHomepageRing() {
     const ringFill = document.querySelector('.progress-ring-fill');
     const percentSpan = document.getElementById('ringPercent');
     if (!ringFill || !percentSpan) return;
 
-    // Calculate Phase 1 progress: Count ONLY completed pillar cards
-    // Look for pillar cards with class 'complete' (Networking only)
-    const completedPillars = document.querySelectorAll('.pillar-card.complete').length;
-    const totalPhase1Pillars = 5;
-    const percent = Math.round((completedPillars / totalPhase1Pillars) * 100);
-    
-    // New circumference for r=78: 2 * π * 78 = 490.088
+    const pillars = ['networking', 'linux', 'security', 'scripting', 'databases'];
+    let totalCompletion = 0;
+    pillars.forEach(p => {
+      totalCompletion += getPillarCompletion(p);
+    });
+    // Each pillar contributes max 20% (1/5). So total percent = totalCompletion * 20.
+    const totalPercent = Math.round(totalCompletion * 20);
+
     const circumference = 490.09;
-    const offset = circumference - (percent / 100) * circumference;
-    
-    ringFill.style.strokeDasharray = `${circumference}`;
-    ringFill.style.strokeDashoffset = `${circumference}`;
-    
-    // Animate
+    const offset = circumference - (totalPercent / 100) * circumference;
+    ringFill.style.strokeDasharray = circumference;
+    ringFill.style.strokeDashoffset = circumference;
+
     setTimeout(() => {
       ringFill.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
       ringFill.style.strokeDashoffset = offset;
-      percentSpan.textContent = `${percent}%`;
+      percentSpan.textContent = `${totalPercent}%`;
     }, 100);
+
+    // Also update the five segment dots (complete/active/locked)
+    const segDots = document.querySelectorAll('.progress-segments .seg-dot');
+    const order = ['networking', 'linux', 'security', 'scripting', 'databases'];
+    segDots.forEach((dot, idx) => {
+      const pillarName = order[idx];
+      const completion = getPillarCompletion(pillarName);
+      dot.classList.remove('complete', 'active', 'locked');
+      if (completion >= 0.8) dot.classList.add('complete');
+      else if (completion > 0) dot.classList.add('active');
+      else dot.classList.add('locked');
+    });
   }
 
   function initPillarScroller() {
@@ -682,7 +721,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Call these on home page
   if (document.querySelector('.progress-ring')) {
-    initProgressRing();
+    function initProgressRing() {
+      updateHomepageRing();
+    }
     initPillarScroller();
     setTimeout(() => {
       scrollToActiveChip();
@@ -784,6 +825,27 @@ document.addEventListener('DOMContentLoaded', () => {
       positionPhase2Arrow();
     });
   }
+
+    // Call these on home page
+  if (document.querySelector('.progress-ring')) {
+    initProgressRing();
+    initPillarScroller();
+    setTimeout(() => {
+      scrollToActiveChip();
+      positionScrollerArrow();
+    }, 200);
+    
+    window.addEventListener('resize', () => {
+      positionScrollerArrow();
+    });
+  }
+
+    // Update homepage ring when returning to the tab after visiting a pillar page
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && document.querySelector('.progress-ring')) {
+      updateHomepageRing();
+    }
+  });
 
     // ── Read search param from URL on load ──
   function initSearchFromURL() {
