@@ -361,7 +361,7 @@ code, pre {
   width: 100%;
 }
 
-/* ── Page Header (networking.html) ── */
+/* ── Page Header (pillar pages) ── */
 .page-header {
   margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
@@ -928,8 +928,8 @@ code, pre {
 /* ── Scroll to Top ── */
 .scroll-top {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 20px;
+  right: 20px;
   width: 40px;
   height: 40px;
   background: var(--accent-primary);
@@ -1049,7 +1049,7 @@ code, pre {
   align-self: stretch;
 }
 
-/* Overall Progress Bar */
+/* Overall Progress Bar (deprecated? but kept for safety) */
 .overall-progress {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -1277,8 +1277,6 @@ code, pre {
   border-color: var(--accent-primary);
   color: white;
 }
-
-/* Mini Progress Bar inside card */
 .card-progress {
   height: 3px;
   background: var(--bg-tertiary);
@@ -1467,29 +1465,23 @@ code, pre {
   overflow-y: auto;
   scrollbar-width: thin;
 }
-
 .search-results-dropdown::-webkit-scrollbar {
   width: 6px;
 }
-
 .search-results-dropdown::-webkit-scrollbar-track {
   background: var(--bg-tertiary);
   border-radius: 3px;
 }
-
 .search-results-dropdown::-webkit-scrollbar-thumb {
   background: var(--border-strong);
   border-radius: 3px;
 }
-
 .search-result-item mark,
 .search-results-dropdown mark {
   background: rgba(239, 180, 48, 0.4);
   border-radius: 2px;
   padding: 0 2px;
 }
-
-/* Search highlight in content */
 .highlight {
   background: rgba(239, 180, 48, 0.4);
   border-radius: 2px;
@@ -1498,20 +1490,10 @@ code, pre {
 }
 
 /* ============================================================
-   PROGRESS RING + SCROLLER (Homepage - Stacked Vertical)
+   PROGRESS RING + SCROLLER (Homepage Modal & Pillar Pages)
    ============================================================ */
 
-/* Overall Progress Container */
-.overall-progress {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: var(--shadow-sm);
-}
-
-/* TOP: Large Progress Ring (centered) */
+/* Progress Ring Container (used inside modal) */
 .progress-ring-container {
   display: flex;
   flex-direction: column;
@@ -1521,14 +1503,12 @@ code, pre {
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--border-color);
 }
-
 .progress-ring-wrapper {
   position: relative;
   width: 180px;
   height: 180px;
   margin-bottom: 0.75rem;
 }
-
 .progress-ring-percent {
   position: absolute;
   top: 50%;
@@ -1539,34 +1519,30 @@ code, pre {
   font-weight: 700;
   color: var(--text-primary);
 }
-
 .progress-ring-label {
   text-align: center;
 }
-
 .ring-label-title {
   font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-primary);
 }
-
 .ring-label-sub {
   font-size: 0.7rem;
   color: var(--text-muted);
   margin-top: 2px;
 }
 
-/* BOTTOM: Scroller Container */
+/* Scroller Container */
 .progress-scroller-container {
   position: relative;
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
-
 .scroller-arrow {
   position: absolute;
-  top: -2rem;
+  top: -1.5rem;
   left: 50%;
   transform: translateX(-50%);
   color: var(--accent-primary);
@@ -1574,11 +1550,40 @@ code, pre {
   z-index: 5;
 }
 
+/* Modal scroller – horizontal margins */
+.progress-modal .progress-scroller-container {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Optional: make the arrow slightly narrower on mobile */
+@media (max-width: 768px) {
+  .progress-modal .progress-scroller-container {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+}
+
+/* Center the ring inside modal tabs */
+
+.progress-modal .progress-ring-container {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.progress-modal .progress-ring-wrapper {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @keyframes bounce {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(6px); }
 }
-
 .progress-scroller {
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -1586,21 +1591,17 @@ code, pre {
   scrollbar-width: thin;
   scrollbar-color: var(--accent-primary) var(--border-color);
 }
-
 .progress-scroller::-webkit-scrollbar {
   height: 4px;
 }
-
 .progress-scroller::-webkit-scrollbar-track {
   background: var(--border-color);
   border-radius: 4px;
 }
-
 .progress-scroller::-webkit-scrollbar-thumb {
   background: var(--accent-primary);
   border-radius: 4px;
 }
-
 .scroller-track {
   display: flex;
   gap: 0.75rem;
@@ -1624,48 +1625,31 @@ code, pre {
   white-space: nowrap;
   min-width: 120px;
 }
-
 .pillar-chip:hover:not(.locked) {
   border-color: var(--accent-primary);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
-
 .pillar-chip.complete {
   background: rgba(15, 110, 86, 0.08);
   border-color: var(--accent-secondary);
 }
-
 .pillar-chip.complete .chip-status {
   color: var(--accent-secondary);
 }
-
 .pillar-chip.active {
   background: var(--pillar-color-light);
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 2px rgba(83, 70, 212, 0.2);
 }
-
 .pillar-chip.locked {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
-
-.chip-icon {
-  font-size: 1.1rem;
-}
-
-.chip-name {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.chip-status {
-  font-size: 0.75rem;
-  margin-left: auto;
-  color: var(--text-muted);
-}
+.chip-icon { font-size: 1.1rem; }
+.chip-name { font-weight: 500; color: var(--text-primary); }
+.chip-status { font-size: 0.75rem; margin-left: auto; color: var(--text-muted); }
 
 /* Scroller Navigation Buttons */
 .scroller-nav-buttons {
@@ -1674,7 +1658,6 @@ code, pre {
   margin-top: 0.5rem;
   justify-content: flex-end;
 }
-
 .scroller-nav {
   width: 32px;
   height: 32px;
@@ -1690,7 +1673,6 @@ code, pre {
   color: var(--text-primary);
   transition: var(--transition);
 }
-
 .scroller-nav:hover {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
@@ -1712,347 +1694,38 @@ code, pre {
   animation: fadeInUp 0.3s ease;
   box-shadow: var(--shadow-md);
 }
-
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* ============================================================
-   PHASE 2 PROGRESS RING + SCROLLER
-   ============================================================ */
-
-.phase2-progress-wrapper {
-  margin-top: 2rem;
-}
-
-.phase2-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.phase2-progress {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-}
-
-/* Phase 2 ring uses accent-secondary color */
+/* Phase 2 Progress Ring + Scroller (Modal specific) */
 .phase2-ring {
   stroke: var(--accent-secondary) !important;
 }
-
 .phase2-ring-container .ring-label-title {
   color: var(--accent-secondary);
 }
-
-/* Phase 2 chips styling */
 .pillar-chip.phase2-chip {
   border-left: 3px solid transparent;
 }
-
 .pillar-chip.phase2-chip.complete {
   background: rgba(15, 110, 86, 0.08);
   border-color: var(--accent-secondary);
   border-left-color: var(--accent-secondary);
 }
-
 .pillar-chip.phase2-chip.active {
   background: rgba(15, 110, 86, 0.12);
   border-color: var(--accent-secondary);
   box-shadow: 0 0 0 2px rgba(15, 110, 86, 0.2);
 }
-
-.pillar-chip.phase2-chip.active .chip-status {
-  color: var(--accent-secondary);
-}
-
-/* Phase 2 arrow color */
 .phase2-arrow {
   color: var(--accent-secondary);
 }
-
-/* Phase 2 scroller navigation buttons hover */
 .scroller-nav.phase2-prev:hover,
 .scroller-nav.phase2-next:hover {
   border-color: var(--accent-secondary);
   color: var(--accent-secondary);
-}
-
-/* ============================================================
-   MOBILE RESPONSIVE — Consolidated
-   ============================================================ */
-
-/* Tablet and below (max-width: 768px) */
-@media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .sidebar-overlay.show { display: block; }
-  .main-content { margin-left: 0; }
-  .hamburger { display: flex; }
-  .page-container { padding: 1.25rem 1rem 3rem; }
-  .topbar { padding: 0 1rem; }
-  .search-bar { max-width: 100%; }
-  .search-shortcut { display: none; }
-  .flashcard-grid { grid-template-columns: 1fr; }
-  .page-header h1 { font-size: 1.5rem; }
-  .roadmap-phases { gap: 8px; }
-  .home-hero h1 { font-size: 1.9rem; }
-  .hero-stats { gap: 1.25rem; }
-  .pillars-grid { grid-template-columns: 1fr; }
-  .github-cta { flex-direction: column; }
-  .github-cta-buttons { flex-direction: row; flex-wrap: wrap; }
-  
-  /* Progress Ring + Scroller Mobile */
-  .overall-progress,
-  .phase2-progress {
-    padding: 1rem;
-  }
-  
-  .progress-ring-container {
-    margin-bottom: 0.25rem;
-    padding-bottom: 0.5rem;
-  }
-  
-  .progress-ring-wrapper {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .progress-ring-percent {
-    font-size: 1.3rem;
-  }
-  
-  .ring-label-title {
-    font-size: 0.9rem;
-  }
-  
-  .ring-label-sub {
-    font-size: 0.6rem;
-  }
-  
-  .progress-scroller-container {
-    margin-top: 1rem;
-  }
-  
-  .scroller-arrow {
-    top: -1rem;
-  }
-  
-  .scroller-arrow svg {
-    width: 18px;
-    height: 18px;
-  }
-  
-  .pillar-chip {
-    padding: 0.5rem 0.8rem;
-    min-width: 90px;
-    gap: 6px;
-  }
-  
-  .chip-icon {
-    font-size: 0.9rem;
-  }
-  
-  .chip-name {
-    font-size: 0.7rem;
-  }
-  
-  .chip-status {
-    font-size: 0.65rem;
-  }
-  
-  .scroller-nav {
-    width: 28px;
-    height: 28px;
-    font-size: 1rem;
-  }
-  
-  .scroller-nav-buttons {
-    margin-top: 0.25rem;
-  }
-  
-  .phase2-progress-wrapper {
-    margin-top: 1.5rem;
-  }
-}
-
-/* Small phones (max-width: 480px) */
-@media (max-width: 480px) {
-  .osi-pdu, .osi-protocols { display: none; }
-  .osi-name { width: auto; flex: 1; }
-  .data-table { font-size: 0.78rem; }
-  .data-table thead th,
-  .data-table tbody td { padding: 0.5rem 0.6rem; }
-  
-  /* Progress Ring + Scroller — Extra Small */
-  .progress-ring-wrapper {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .progress-ring-percent {
-    font-size: 1.1rem;
-  }
-  
-  .ring-label-title {
-    font-size: 0.8rem;
-  }
-  
-  .pillar-chip {
-    padding: 0.4rem 0.6rem;
-    min-width: 75px;
-    gap: 4px;
-  }
-  
-  .chip-icon {
-    font-size: 0.8rem;
-  }
-  
-  .chip-name {
-    font-size: 0.65rem;
-  }
-  
-  .chip-status {
-    font-size: 0.6rem;
-  }
-  
-  .scroller-arrow {
-    display: none; /* Hide arrow on very small screens */
-  }
-  
-  .progress-scroller-container {
-    margin-top: 0.75rem;
-  }
-  
-  .scroller-track {
-    gap: 0.5rem;
-  }
-}
-
-/* Print Styles (keep as is) */
-@media print {
-  .sidebar, .topbar, .scroll-top, .github-cta, .theme-toggle, .hamburger, .sidebar-overlay {
-    display: none !important;
-  }
-  .main-content { margin-left: 0; }
-  .page-container { padding: 0; max-width: 100%; }
-  .accordion-body { display: block !important; }
-  .accordion-header { border: 1px solid #ccc; }
-  .accordion-chevron { display: none; }
-  .flashcard { break-inside: avoid; }
-}
-
-  /* Progress Ring + Scroller Mobile */
-  .overall-progress,
-  .phase2-progress {
-    padding: 1rem;
-  }
-  
-  .progress-ring-container {
-    margin-bottom: 0.25rem;
-    padding-bottom: 0.5rem;
-  }
-  
-  .progress-ring-wrapper {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto;  /* ← Add this to center horizontally */
-    display: flex;   /* ← Add this */
-    justify-content: center; /* ← Add this */
-    align-items: center;     /* ← Add this */
-  }
-  
-  .progress-ring-wrapper svg {
-    display: block;
-    margin: 0 auto;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .progress-ring-percent {
-    font-size: 1.3rem;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-  }
-
-    /* Phase 2 mobile ring centering */
-  .phase2-ring-container .progress-ring-wrapper {
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  @media (max-width: 480px) {
-  .osi-pdu, .osi-protocols { display: none; }
-  .osi-name { width: auto; flex: 1; }
-  .data-table { font-size: 0.78rem; }
-  .data-table thead th,
-  .data-table tbody td { padding: 0.5rem 0.6rem; }
-  
-  .progress-ring-wrapper {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
-  }
-  
-  .progress-ring-wrapper svg {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .progress-ring-percent {
-    font-size: 1.1rem;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .ring-label-title {
-    font-size: 0.8rem;
-  }
-  
-  .pillar-chip {
-    padding: 0.4rem 0.6rem;
-    min-width: 75px;
-    gap: 4px;
-  }
-  
-  .chip-icon {
-    font-size: 0.8rem;
-  }
-  
-  .chip-name {
-    font-size: 0.65rem;
-  }
-  
-  .chip-status {
-    font-size: 0.6rem;
-  }
-  
-  .scroller-arrow {
-    display: none;
-  }
-  
-  .progress-scroller-container {
-    margin-top: 0.75rem;
-  }
-  
-  .scroller-track {
-    gap: 0.5rem;
-  }
 }
 
 /* Key concepts definition list */
@@ -2062,7 +1735,6 @@ code, pre {
   grid-template-columns: auto 1fr;
   gap: 0.5rem 1rem;
 }
-
 .key-concepts-list dt {
   font-weight: 600;
   color: var(--text-primary);
@@ -2070,14 +1742,11 @@ code, pre {
   font-size: 0.85rem;
   white-space: nowrap;
 }
-
 .key-concepts-list dd {
   margin: 0;
   color: var(--text-secondary);
   font-size: 0.85rem;
 }
-
-/* On narrow screens, stack term above description */
 @media (max-width: 640px) {
   .key-concepts-list {
     grid-template-columns: 1fr;
@@ -2094,7 +1763,7 @@ code, pre {
   }
 }
 
-/* Floating progress ring (pillar level) */
+/* Floating progress ring (pillar level) – used on networking.html, linux.html */
 .floating-progress-ring {
   position: fixed;
   bottom: 80px;
@@ -2125,7 +1794,7 @@ code, pre {
 }
 .floating-ring-fill {
   stroke: var(--accent-secondary);
-  stroke-dasharray: 163.36; /* circumference for r=26 */
+  stroke-dasharray: 163.36;
   stroke-dashoffset: 163.36;
   transition: stroke-dashoffset 0.4s ease;
 }
@@ -2144,7 +1813,7 @@ code, pre {
   justify-content: center;
 }
 
-/* Section complete checkboxes */
+/* Section complete checkboxes (used in pillar pages) */
 .section-complete-checkbox {
   display: inline-flex;
   align-items: center;
@@ -2157,11 +1826,9 @@ code, pre {
   border-radius: 20px;
   transition: background 0.2s;
 }
-
 .section-complete-checkbox:hover {
   background: var(--pillar-color-light);
 }
-
 .section-complete-checkbox input {
   appearance: none;
   -webkit-appearance: none;
@@ -2174,12 +1841,10 @@ code, pre {
   cursor: pointer;
   background: var(--bg-card);
 }
-
 .section-complete-checkbox input:checked {
   background: var(--accent-secondary);
   border-color: var(--accent-secondary);
 }
-
 .section-complete-checkbox input:checked::after {
   content: "✓";
   position: absolute;
@@ -2189,12 +1854,11 @@ code, pre {
   left: 2px;
   top: -1px;
 }
-
 .section-complete-checkbox span {
   color: var(--text-secondary);
 }
 
-/* Progress Modal */
+/* Progress Modal (homepage) */
 .progress-modal {
   position: fixed;
   top: 0;
@@ -2208,16 +1872,29 @@ code, pre {
   align-items: center;
   justify-content: center;
 }
-
 .progress-modal-content {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
-  width: 90%;
-  max-width: 400px;
-  max-height: 80vh;
-  overflow-y: auto;
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-color);
+  max-width: 500px;        /* was 500px – increase */
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;        /* keep vertical scroll if needed, but horizontal should disappear */
+}
+
+/* Ensure chips wrap or stay within the modal */
+.progress-modal .scroller-track {
+  flex-wrap: wrap;         /* allow chips to wrap on narrow screens */
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Adjust chip size inside modal to prevent overflow */
+.progress-modal .pillar-chip {
+  min-width: auto;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.8rem;
 }
 
 .progress-modal-header {
@@ -2227,12 +1904,10 @@ code, pre {
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border-color);
 }
-
 .progress-modal-header h3 {
   margin: 0;
   font-size: 1.1rem;
 }
-
 .modal-close {
   background: none;
   border: none;
@@ -2241,58 +1916,360 @@ code, pre {
   color: var(--text-muted);
   line-height: 1;
 }
-
 .modal-close:hover {
   color: var(--accent-danger);
 }
-
 .progress-modal-body {
   padding: 1rem 1.25rem;
 }
-
-.modal-section-list {
+.progress-modal-tabs {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 1rem;
 }
-
-.modal-section-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.tab-button {
+  padding: 0.6rem 1rem;
+  background: none;
+  border: none;
   cursor: pointer;
-}
-
-.modal-section-row input {
-  flex-shrink: 0;
-}
-
-.modal-section-name {
-  flex: 1;
+  font-family: var(--font-display);
   font-size: 0.85rem;
-  color: var(--text-primary);
-  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
 }
-
-.modal-section-name:hover {
+.tab-button.active {
   color: var(--accent-primary);
-  text-decoration: underline;
+  border-bottom: 2px solid var(--accent-primary);
 }
-
-.modal-quiz-row {
-  border-top: 1px solid var(--border-color);
-  padding-top: 0.75rem;
-  margin-top: 0.25rem;
+.tab-pane {
+  display: none;
+  padding: 1rem 0;
 }
-
-.modal-quiz-row .section-complete-checkbox.disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.tab-pane.active {
+  display: block;
 }
-
 .progress-modal-footer {
   padding: 0.75rem 1.25rem;
   border-top: 1px solid var(--border-color);
   text-align: center;
+}
+
+/* Global floating ring (homepage) */
+.global-floating-ring {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: var(--bg-card);
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid var(--border-color);
+}
+.global-floating-ring:hover {
+  transform: scale(1.05);
+}
+.global-ring-svg {
+  width: 54px;
+  height: 54px;
+  transform: rotate(-90deg);
+}
+.global-ring-bg {
+  stroke: var(--border-color);
+}
+.global-ring-fill {
+  stroke: var(--accent-primary);
+  stroke-dasharray: 163.36;
+  stroke-dashoffset: 163.36;
+  transition: stroke-dashoffset 0.4s ease;
+}
+.global-ring-percent {
+  position: absolute;
+  font-size: 0.7rem;
+  font-weight: bold;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  background: var(--bg-card);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sidebar progress indicators */
+.sidebar-progress-bar {
+  width: 40px;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  margin-left: auto;
+  overflow: hidden;
+}
+.sidebar-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-secondary);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+.pillar-progress-percent {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--text-sidebar-muted);
+}
+
+/* Methodology Section (used on homepage) */
+
+.method-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+.method-flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+.method-card {
+  flex: 1;
+  min-width: 180px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  border-left: 3px solid var(--accent-primary);
+}
+.method-card.secondary {
+  border-left-color: var(--accent-secondary);
+}
+.method-badge {
+  background: var(--pillar-color-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ============================================================
+   OVERVIEW SECTION (README style)
+   ============================================================ */
+.overview-description {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.overview-description h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.overview-description h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.overview-description p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.overview-description ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.overview-description li {
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.overview-description hr {
+  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid var(--border-color);
+}
+
+.overview-description .info-box {
+  margin-top: 0.5rem;
+  background: rgba(15,110,86,0.05);
+  border-left-color: var(--accent-secondary);
+}
+
+.overview-description .info-box strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--accent-secondary);
+}
+
+@media (max-width: 768px) {
+  .overview-description {
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  .overview-description h3 {
+    font-size: 1.2rem;
+  }
+  .overview-description h4 {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.show { display: block; }
+  .main-content { margin-left: 0; }
+  .hamburger { display: flex; }
+  .page-container { padding: 1.25rem 1rem 3rem; }
+  .topbar { padding: 0 1rem; }
+  .search-bar { max-width: 100%; }
+  .search-shortcut { display: none; }
+  .flashcard-grid { grid-template-columns: 1fr; }
+  .page-header h1 { font-size: 1.5rem; }
+  .roadmap-phases { gap: 8px; }
+  .home-hero h1 { font-size: 1.9rem; }
+  .hero-stats { gap: 1.25rem; }
+  .pillars-grid { grid-template-columns: 1fr; }
+  .github-cta { flex-direction: column; }
+  .github-cta-buttons { flex-direction: row; flex-wrap: wrap; }
+
+  .progress-ring-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+  .progress-ring-percent {
+    font-size: 1.3rem;
+  }
+  .ring-label-title {
+    font-size: 0.9rem;
+  }
+  .ring-label-sub {
+    font-size: 0.6rem;
+  }
+  .progress-scroller-container {
+    margin-top: 1rem;
+  }
+  .scroller-arrow {
+    top: -1rem;
+  }
+  .scroller-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+  .pillar-chip {
+    padding: 0.5rem 0.8rem;
+    min-width: 90px;
+    gap: 6px;
+  }
+  .chip-icon {
+    font-size: 0.9rem;
+  }
+  .chip-name {
+    font-size: 0.7rem;
+  }
+  .chip-status {
+    font-size: 0.65rem;
+  }
+  .scroller-nav {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+  .scroller-nav-buttons {
+    margin-top: 0.25rem;
+  }
+  .global-floating-ring {
+    bottom: 70px;
+  }
+  .scroll-top {
+    bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .osi-pdu, .osi-protocols { display: none; }
+  .osi-name { width: auto; flex: 1; }
+  .data-table { font-size: 0.78rem; }
+  .data-table thead th,
+  .data-table tbody td { padding: 0.5rem 0.6rem; }
+
+  .progress-ring-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+  .progress-ring-percent {
+    font-size: 1.1rem;
+  }
+  .ring-label-title {
+    font-size: 0.8rem;
+  }
+  .pillar-chip {
+    padding: 0.4rem 0.6rem;
+    min-width: 75px;
+    gap: 4px;
+  }
+  .chip-icon {
+    font-size: 0.8rem;
+  }
+  .chip-name {
+    font-size: 0.65rem;
+  }
+  .chip-status {
+    font-size: 0.6rem;
+  }
+  .scroller-arrow {
+    display: none;
+  }
+  .progress-scroller-container {
+    margin-top: 0.75rem;
+  }
+  .scroller-track {
+    gap: 0.5rem;
+  }
+  .global-floating-ring {
+    bottom: 60px;
+    width: 50px;
+    height: 50px;
+  }
+  .global-ring-svg {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media print {
+  .sidebar, .topbar, .scroll-top, .github-cta, .theme-toggle, .hamburger, .sidebar-overlay {
+    display: none !important;
+  }
+  .main-content { margin-left: 0; }
+  .page-container { padding: 0; max-width: 100%; }
+  .accordion-body { display: block !important; }
+  .accordion-header { border: 1px solid #ccc; }
+  .accordion-chevron { display: none; }
+  .flashcard { break-inside: avoid; }
 }
