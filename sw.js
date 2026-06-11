@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Renames linux.js to Linux.js in linux.html to match the case used in the urlsToCache array.
+// Adding a relative path (./sw.js) ensuring it works correctly in the directory, absolute path (/sw.js)
 
-const CACHE_NAME = 'devops-journey-2026-06-11-v5';
+const CACHE_NAME = 'devops-journey-2026-06-11-v6';
 
 const urlsToCache = [
   '/',
