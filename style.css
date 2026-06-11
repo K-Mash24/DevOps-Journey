@@ -1537,7 +1537,7 @@ code, pre {
 /* Scroller Container */
 .progress-scroller-container {
   position: relative;
-  width: 100%;
+  width: auto;
   margin-top: 1rem;
 }
 .scroller-arrow {
@@ -1655,7 +1655,7 @@ code, pre {
 .scroller-nav-buttons {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.5rem;
+  margin-right: 1.5rem;
   justify-content: flex-end;
 }
 .scroller-nav {
@@ -1877,7 +1877,7 @@ code, pre {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-color);
-  max-width: 500px;        /* was 500px – increase */
+  max-width: 600px;        /* was 500px – increase */
   width: 90%;
   max-height: 85vh;
   overflow-y: auto;        /* keep vertical scroll if needed, but horizontal should disappear */
@@ -1887,7 +1887,8 @@ code, pre {
 .progress-modal .scroller-track {
   flex-wrap: wrap;         /* allow chips to wrap on narrow screens */
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.2rem;
+  padding: 0.5rem; /* reduce horizontal padding for better fit */
 }
 
 /* Adjust chip size inside modal to prevent overflow */
@@ -2027,6 +2028,143 @@ code, pre {
   color: var(--text-sidebar-muted);
 }
 
+/* ============================================================
+   PILLAR DETAILS TAB (Modal) – Checkbox Styling
+   ============================================================ */
+
+/* Container for the checklist inside tab 4 */
+#pillarDetailContainer .pillar-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Individual checklist item */
+#pillarDetailContainer .pillar-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+#pillarDetailContainer .pillar-checklist-item:hover {
+  background: var(--pillar-color-light);
+  border-color: var(--accent-primary);
+}
+
+/* Custom checkbox styling – matches section-complete-checkbox */
+#pillarDetailContainer .pillar-detail-cb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-strong);
+  border-radius: 4px;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+  background: var(--bg-card);
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+#pillarDetailContainer .pillar-detail-cb:checked {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+#pillarDetailContainer .pillar-detail-cb:checked::after {
+  content: "✓";
+  position: absolute;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  left: 2px;
+  top: -1px;
+}
+
+/* Label styling */
+#pillarDetailContainer .pillar-checklist-item label {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+#pillarDetailContainer .pillar-checklist-item label:hover {
+  color: var(--accent-primary);
+}
+
+/* Status indicator (optional – shows ✓/⬚ next to label) */
+#pillarDetailContainer .pillar-checklist-status {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  width: 20px;
+  text-align: center;
+}
+
+/* Scrollbar styling for the checklist */
+#pillarDetailContainer .pillar-checklist::-webkit-scrollbar {
+  width: 6px;
+}
+
+#pillarDetailContainer .pillar-checklist::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+#pillarDetailContainer .pillar-checklist::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+#pillarDetailContainer .pillar-checklist::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* Quiz item special styling (optional) */
+#pillarDetailContainer .pillar-checklist-item[data-quiz="true"] {
+  background: rgba(15, 110, 86, 0.05);
+  border-color: var(--accent-secondary);
+}
+
+#pillarDetailContainer .pillar-checklist-item[data-quiz="true"] label {
+  font-weight: 600;
+  color: var(--accent-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  #pillarDetailContainer .pillar-checklist-item {
+    padding: 0.4rem 0.6rem;
+  }
+  
+  #pillarDetailContainer .pillar-checklist-item label {
+    font-size: 0.75rem;
+  }
+  
+  #pillarDetailContainer .pillar-detail-cb {
+    width: 16px;
+    height: 16px;
+  }
+  
+  #pillarDetailContainer .pillar-detail-cb:checked::after {
+    font-size: 10px;
+    left: 1px;
+    top: -2px;
+  }
+}
+
 /* Methodology Section (used on homepage) */
 
 .method-section {
@@ -2114,13 +2252,54 @@ code, pre {
 .overview-description .info-box {
   margin-top: 0.5rem;
   background: rgba(15,110,86,0.05);
-  border-left-color: var(--accent-secondary);
+  /* border-left-color: var(--accent-secondary); */
 }
 
 .overview-description .info-box strong {
   display: block;
   margin-bottom: 0.3rem;
-  color: var(--accent-secondary);
+  /* color: #0f6e56); */
+}
+
+/* Pillar detail checklist */
+.pillar-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.pillar-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.85rem;
+}
+.pillar-checklist-item input {
+  accent-color: var(--accent-secondary);
+  cursor: pointer;
+}
+.pillar-checklist-item label {
+  flex: 1;
+  cursor: pointer;
+}
+.pillar-checklist-status {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.pillar-ring-wrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+.pillar-ring-percent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-weight: bold;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {
@@ -2172,7 +2351,7 @@ code, pre {
     font-size: 0.6rem;
   }
   .progress-scroller-container {
-    margin-top: 1rem;
+    margin-top: 2rem;
   }
   .scroller-arrow {
     top: -1rem;

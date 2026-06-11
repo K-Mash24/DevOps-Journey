@@ -37,10 +37,18 @@
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
         Home
       </a>
+      <a class="nav-item" href="#overview">
+        <svg class="nav-icon" viewBox="0 0 30 30" fill="currentColor" aria-hidden="true"><path d="M14.727 6.727H14V0H4.91c-.905 0-1.637.732-1.637 1.636v20.728c0 .904.732 1.636 1.636 1.636h14.182c.904 0 1.636-.732 1.636-1.636V6.727h-6zm-.545 10.455H7.09v-1.364h7.09v1.364zm2.727-3.273H7.091v-1.364h9.818v1.364zm0-3.273H7.091V9.273h9.818v1.363zM14.727 6h6l-6-6v6z"/></svg>
+        Overview
+      </a>
+      <a class="nav-item" href="#outline">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+        Project Outline
+      </a>
       <a class="nav-item" href="#resources">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" /></svg>
         Resources
-      </a>
+      </a>      
     </nav>
 
     <div class="sidebar-section-label">Phase 1 — Foundations</div>
@@ -162,6 +170,11 @@
         </div>
       </section>
 
+      <div class="section-divider" id="overview">
+        <div class="section-number" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M15 3.5V7.5C15 7.9 14.85 8.28 14.56 8.56C14.28 8.84 13.9 9 13.5 9H11V8.5C11 8.33 10.98 8.16 10.95 8H13.5C13.63 8 13.76 7.95 13.85 7.85C13.95 7.76 14 7.63 14 7.5V3.5C14 3.37 13.95 3.24 13.85 3.15C13.76 3.05 13.63 3 13.5 3H7.5C7.37 3 7.24 3.05 7.15 3.15C7.05 3.24 7 3.37 7 3.5V6H6V3.5C6 3.1 6.16 2.72 6.44 2.44C6.72 2.16 7.1 2 7.5 2H13.5C13.9 2 14.28 2.16 14.56 2.44C14.84 2.72 15 3.1 15 3.5ZM12.5 5C12.776 5 13 4.776 13 4.5C13 4.224 12.776 4 12.5 4H8.5C8.224 4 8 4.224 8 4.5C8 4.776 8.224 5 8.5 5H12.5ZM13 6.5C13 6.22 12.78 6 12.5 6H8.5C9.32 6 10.04 6.39 10.5 7H12.5C12.78 7 13 6.78 13 6.5ZM7.5 9H3.5C3.224 9 3 9.224 3 9.5C3 9.776 3.224 10 3.5 10H7.5C7.776 10 8 9.776 8 9.5C8 9.224 7.776 9 7.5 9ZM7.5 11H3.5C3.224 11 3 11.224 3 11.5C3 11.776 3.224 12 3.5 12H7.5C7.776 12 8 11.776 8 11.5C8 11.224 7.776 11 7.5 11ZM10 8.5V12.5C10 13.327 9.327 14 8.5 14H2.5C1.673 14 1 13.327 1 12.5V8.5C1 7.673 1.673 7 2.5 7H8.5C9.327 7 10 7.673 10 8.5ZM9 8.5C9 8.225 8.775 8 8.5 8H2.5C2.225 8 2 8.225 2 8.5V12.5C2 12.775 2.225 13 2.5 13H8.5C8.775 13 9 12.775 9 12.5V8.5Z"/></svg></div>
+        <h2>Project Summary</h2>
+      </div>
+
       <!-- ========== PROJECT OVERVIEW (README style) ========== -->
       <div class="overview-description">
         <h3>📖 DevOps Journey – From Zero to Cloud</h3>
@@ -169,9 +182,11 @@
 
         <p>The entire journey is divided into two clear phases, each with its own milestones and deliverables. All notes are written in Markdown, version‑controlled on GitHub, and published as an interactive website (the one you're looking at) with flashcards, quizzes, and progress tracking.</p>
 
-        <hr style="margin: 1rem 0; border-color: var(--border-color);">
+        <div class="section-divider">
+          <div class="section-number" aria-hidden="true">I</div>
+          <h2>🎯 Phase 1 – Foundations (5 pillars)</h2>
+        </div>
 
-        <h4>🎯 Phase 1 – Foundations (5 pillars)</h4>
         <p><strong>Duration:</strong> ~3‑4 months (self‑paced) · <strong>Pre‑requisites:</strong> None – absolute beginners welcome.</p>
         <ul>
           <li><strong>🌐 Pillar 1 – Networking Fundamentals (complete)</strong><br>
@@ -191,7 +206,11 @@
             <em>Why it matters:</em> State is hard. Databases are at the heart of almost every application – understanding them prevents catastrophic data loss.</li>
         </ul>
 
-        <h4>🚀 Phase 2 – DevOps Roadmap (after SAA)</h4>
+        <div class="section-divider">
+          <div class="section-number" aria-hidden="true">II</div>
+          <h2>🚀 Phase 2 – DevOps Roadmap (after SAA)</h2>
+        </div>
+
         <p>Once Phase 1 is complete and the AWS Solutions Architect Associate (SAA) certification is earned, the full <a href="https://roadmap.sh/devops" target="_blank">roadmap.sh/devops</a> is followed:</p>
         <ul>
           <li>🐳 Docker &amp; Containers – images, Dockerfile, Compose, registries</li>
@@ -202,9 +221,11 @@
           <li>🔁 GitOps – ArgoCD, Flux</li>
         </ul>
 
-        <hr style="margin: 1rem 0; border-color: var(--border-color);">
+        <div class="section-divider">
+          <div class="section-number" aria-hidden="true">III</div>
+          <h2>📐 Methodology &amp; Learning Principles</h2>
+        </div>
 
-        <h4>📐 Methodology &amp; Learning Principles</h4>
         <ul>
           <li><strong>Foundations first:</strong> No AWS, no cloud abstractions until the raw concepts are mastered. Every topic is studied from first principles – e.g., subnetting by hand before touching a VPC.</li>
           <li><strong>Hands‑on, not passive:</strong> Each section includes practical labs, exercises, and quizzes. Theory without practice is forgotten.</li>
@@ -213,15 +234,28 @@
           <li><strong>Real‑world relevance:</strong> Every concept is explicitly connected to the DevOps tools and AWS services that will use it – but only after the foundation is solid.</li>
         </ul>
 
-        <h4>📈 Current Status (2026)</h4>
-        <div class="info-box note" style="margin-top: 0.5rem;">
-          <strong>✅ Pillar 1 – Networking:</strong> 7 sections, 11 markdown files, flashcards, quiz – complete.<br>
-          <strong>🔄 Pillar 2 – Linux &amp; CLI:</strong> 10 sections planned; Sections 1 &amp; 2 done, Section 3 in progress.<br>
-          <strong>🔒 Pillars 3–5:</strong> Locked – will be unlocked sequentially after Linux is finished.<br>
-          <strong>🏁 Next milestone:</strong> Complete Linux (including bash scripting, systemd, and networking commands), then build the Linux pillar website page.
-        </div>
+        <div class="info-box warning" style="margin-top: 0.5rem;">
+            <strong>📈 Current Status (2026)</strong>
+          <dl class="key-concepts-list" style="margin-top: 0.75rem;">
+            <dt>✅ Pillar 1 – Networking</dt>
+            <dd>7 sections, 11 markdown files, flashcards, quiz – <strong>complete</strong></dd>
 
-        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">All progress is tracked locally in your browser. The floating ring on the bottom right opens a detailed dashboard. Checkboxes on pillar pages sync with the homepage progress rings.</p>
+            <dt>🔄 Pillar 2 – Linux &amp; CLI</dt>
+            <dd>10 sections planned; Sections 1 &amp; 2 done, Section 3 in progress</dd>
+
+            <dt>🔒 Pillars 3 – Security</dt>
+            <dd>Locked – will be unlocked after Linux is finished</dd>
+
+            <dt>🔒 Pillar 4 – Scripting</dt>
+            <dd>Locked – will be unlocked after Security is finished</dd>
+
+            <dt>🔒 Pillar 5 – Databases</dt>
+            <dd>Locked – will be unlocked after Scripting is finished</dd>
+
+            <dt>🏁 Next milestone</dt>
+            <dd>Complete Linux (including bash scripting, systemd, and networking commands), then build the Linux pillar website page</dd>
+          </dl>
+        </div>
       </div>
 
       <!-- Method section (unchanged) -->
@@ -249,7 +283,7 @@
       </div>
 
       <!-- Phase 1 Roadmap Tracker (will be updated by JS) -->
-      <div class="phase-header" style="margin-top:3rem;">
+      <div class="phase-header" style="margin-top:3rem;" id="outline">
         <div class="phase-header-left"><span class="phase-label">Phase 1 — Foundations Roadmap</span><span class="phase-tag locked-tag" id="phase1StatusTag">In Progress</span></div>
         <div class="phase-divider" aria-hidden="true"></div>
       </div>
@@ -287,9 +321,9 @@
       </div>
 
       <!-- Resources & GitHub CTA (unchanged) -->
-      <div class="section-divider" id="resources"><div class="section-number" aria-hidden="true">∞</div><h2>Resources &amp; Further Reading</h2></div>
+      <div class="section-divider" ><div class="section-number" aria-hidden="true">∞</div><h2>Resources &amp; Further Reading</h2></div>
       <div class="github-cta">
-        <div class="github-repos">
+        <div class="github-repos" id="resources">
           <div class="github-repo-row"><div class="github-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></div><div class="github-cta-text"><div class="cta-title">K-Mash24 / Great_Cheatsheets</div><div class="cta-sub">branch: Master · raw study notes · committed per section</div></div></div>
           <div class="github-cta-divider" aria-hidden="true"></div>
           <div class="github-repo-row"><div class="github-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></div><div class="github-cta-text"><div class="cta-title">K-Mash24 / DevOps-Journey</div><div class="cta-sub">branch: main · published site · built per pillar</div></div></div>
@@ -324,6 +358,7 @@
       <button class="tab-button active" data-tab="tab0">Overall</button>
       <button class="tab-button" data-tab="tab1">Phase 1</button>
       <button class="tab-button" data-tab="tab2">Phase 2</button>
+      <button class="tab-button" data-tab="tab3" id="pillarDetailTabBtn">Pillar Details</button>
     </div>
     <!-- Tab 0: Overall Project Progress -->
     <div class="tab-pane active" id="tab0">
@@ -393,6 +428,12 @@
         </div>
       </div>
     </div>
+     <!-- Tab 3: Pillar Details (filled dynamically when a pillar chip is clicked) -->
+      <div class="tab-pane" id="tab3">
+        <div id="pillarDetailContainer" style="min-height: 200px; margin: 10px;">
+          <div class="info-box note">Select a pillar from Phase 1 or Phase 2 to see detailed progress.</div>
+        </div>
+      </div>
   </div>
 </div>
 

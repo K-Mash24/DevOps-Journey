@@ -1,45 +1,47 @@
-const CACHE_NAME = 'devops-journey-v5.5';  // ← increment this when you make major changes
+// 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
+// Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
+const CACHE_NAME = 'devops-journey-2026-06-11-v1';
 
 const urlsToCache = [
   '/',
   '/index.html',
-  '/html/networking.html',   // ← fixed path (not /html/networking.html unless that's correct)
+  '/html/networking.html',
   '/html/linux.html',
   '/style.css',
   '/js/global.js',
   '/js/networking.js',
+  '/js/linux.js',        // ← add this if you have it
   '/img/Logo.svg'
 ];
 
-// Install event - cache files
 self.addEventListener('install', event => {
-  self.skipWaiting();  // Force waiting service worker to become active
+  console.log('[SW] Installing new version:', CACHE_NAME);
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
 });
 
-// Activate event - clean up old caches
 self.addEventListener('activate', event => {
+  console.log('[SW] Activating:', CACHE_NAME);
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cache => {
           if (cache !== CACHE_NAME) {
+            console.log('[SW] Deleting old cache:', cache);
             return caches.delete(cache);
           }
         })
       );
     })
   );
-  self.clients.claim();  // Take control of all clients immediately
+  self.clients.claim();
 });
 
-// Fetch event - network-first strategy for HTML, cache-first for assets
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   
-  // For HTML files, try network first, fall back to cache
   if (url.pathname.endsWith('.html') || url.pathname === '/') {
     event.respondWith(
       fetch(event.request)
@@ -53,7 +55,6 @@ self.addEventListener('fetch', event => {
         .catch(() => caches.match(event.request))
     );
   } else {
-    // For CSS/JS/images, use cache-first
     event.respondWith(
       caches.match(event.request)
         .then(response => response || fetch(event.request))

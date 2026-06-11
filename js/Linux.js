@@ -251,58 +251,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
     }
-
-    // Modal functions
+    
+    // ----- MODAL FUNCTIONALITY -----
     function openProgressModal() {
       const modal = document.getElementById('progressModal');
       if (!modal) return;
-
-      const sectionList = document.getElementById('modalSectionList');
-      if (sectionList) {
-        sectionList.innerHTML = '';
-        const checkboxes = document.querySelectorAll('.section-checkbox');
-        checkboxes.forEach(cb => {
-          const sectionNum = cb.dataset.section;
-          const sectionTitle = getSectionTitle(sectionNum);
-          const row = document.createElement('div');
-          row.className = 'modal-section-row';
-          row.innerHTML = `
-            <input type="checkbox" class="modal-section-cb" data-section="${sectionNum}" ${cb.checked ? 'checked' : ''}>
-            <span class="modal-section-name" data-section="${sectionNum}">${sectionTitle}</span>
-          `;
-          sectionList.appendChild(row);
-        });
-
-        document.querySelectorAll('.modal-section-cb').forEach(modalCb => {
-          modalCb.addEventListener('change', (e) => {
-            const section = modalCb.dataset.section;
-            const actualCb = document.querySelector(`.section-checkbox[data-section="${section}"]`);
-            if (actualCb && actualCb.checked !== modalCb.checked) {
-              actualCb.click();
-            }
-          });
-        });
-
-        document.querySelectorAll('.modal-section-name').forEach(nameSpan => {
-          nameSpan.addEventListener('click', (e) => {
-            const section = nameSpan.dataset.section;
-            const targetId = `s${section}`;
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-              targetEl.scrollIntoView({ behavior: 'smooth' });
-              closeProgressModal();
-            }
-          });
-        });
-      }
-
-      const modalQuizCb = document.getElementById('modalQuizCheckbox');
-      if (modalQuizCb) {
-        const quizPassed = localStorage.getItem('linux-quiz-passed') === 'true';
-        modalQuizCb.checked = quizPassed;
-      }
-
+      
+      // Open modal
       modal.style.display = 'flex';
+      
+      // Switch to Pillar Details tab (tab 3)
+      const tabButton = document.querySelector('.tab-button[data-tab="tab3"]');
+      if (tabButton) tabButton.click();
+      
+      // Load Linux pillar details (using globally exposed function)
+      if (typeof window.showPillarDetail === 'function') {
+        window.showPillarDetail('linux', 'phase1');
+      }
     }
 
     function closeProgressModal() {
@@ -325,10 +290,10 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       return titles[sectionNum] || `Section ${sectionNum}`;
     }
-
+    
     floatingDiv.addEventListener('click', (e) => {
       e.stopPropagation();
-      openProgressModal();
+      window.openModalToPillarDetails('linux', 'phase1');
     });
 
     document.addEventListener('click', (e) => {

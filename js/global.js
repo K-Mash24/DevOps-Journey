@@ -41,6 +41,365 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
+    // ============================================================
+  // PILLAR DETAILS (for both Phase 1 and Phase 2)
+  // ============================================================
+
+  // Phase 1 pillar data
+  const phase1PillarData = {
+    networking: {
+      sections: 7,
+      quiz: true,
+      titles: [
+        'Section 1 — Internet Structure',
+        'Section 2 — IP Addressing',
+        'Section 3 — Subnetting & CIDR',
+        'Section 4 — Routing & Switching',
+        'Section 5 — DNS',
+        'Section 6 — TCP & UDP',
+        'Section 7 — Network Security'
+      ],
+      quizKey: 'networking-quiz-passed',
+      sectionPrefix: 'networking-section-'
+    },
+    linux: {
+      sections: 10,
+      quiz: true,
+      titles: [
+        'Section 1 — Filesystem Structure',
+        'Section 2 — File & Directory Ops',
+        'Section 3 — Permissions & Ownership',
+        'Section 4 — Processes & Job Control',
+        'Section 5 — SSH & Remote Access',
+        'Section 6 — Package Management',
+        'Section 7 — Bash Scripting',
+        'Section 8 — Systemd & Services',
+        'Section 9 — Text Processing (grep, sed, awk)',
+        'Section 10 — Networking Commands'
+      ],
+      quizKey: 'linux-quiz-passed',
+      sectionPrefix: 'linux-section-'
+    },
+    security: { placeholder: true, name: 'Security' },
+    scripting: { placeholder: true, name: 'Scripting' },
+    databases: { placeholder: true, name: 'Databases' }
+  };
+
+  // Phase 2 pillar data – each has a list of topics and a binary key (used by the Phase 2 chip)
+  const phase2PillarData = {
+    docker: {
+      name: 'Docker & Containers',
+      topics: [
+        'Docker architecture (daemon, client, registry)',
+        'Images and layers',
+        'Containers (run, stop, rm)',
+        'Dockerfile basics',
+        'Building and tagging images',
+        'Container networking',
+        'Volumes and persistence',
+        'Docker Compose'
+      ],
+      binaryKey: 'phase2-docker',
+      topicPrefix: 'phase2-docker-topic-'
+    },
+    cicd: {
+      name: 'CI/CD Pipelines',
+      topics: [
+        'CI/CD concepts (continuous integration, delivery, deployment)',
+        'GitHub Actions workflows',
+        'YAML syntax for pipelines',
+        'Build, test, and deploy stages',
+        'Secrets management',
+        'Self-hosted runners',
+        'Artifact storage',
+        'Pipeline monitoring'
+      ],
+      binaryKey: 'phase2-cicd',
+      topicPrefix: 'phase2-cicd-topic-'
+    },
+    kubernetes: {
+      name: 'Kubernetes',
+      topics: [
+        'Cluster architecture (control plane, nodes)',
+        'Pods and containers',
+        'Deployments and replicasets',
+        'Services (ClusterIP, NodePort, LoadBalancer)',
+        'Ingress controllers',
+        'ConfigMaps and Secrets',
+        'Persistent Volumes and Claims',
+        'Helm charts'
+      ],
+      binaryKey: 'phase2-kubernetes',
+      topicPrefix: 'phase2-kubernetes-topic-'
+    },
+    terraform: {
+      name: 'Terraform & Ansible',
+      topics: [
+        'Infrastructure as Code concepts',
+        'Terraform configuration language',
+        'Providers and resources',
+        'State management (local and remote)',
+        'Modules and reusability',
+        'Ansible playbooks and inventory',
+        'Idempotency and declarative config',
+        'Integration with cloud providers'
+      ],
+      binaryKey: 'phase2-terraform',
+      topicPrefix: 'phase2-terraform-topic-'
+    },
+    monitoring: {
+      name: 'Monitoring & Observability',
+      topics: [
+        'Metrics, logs, traces',
+        'Prometheus architecture (scrape, rules, alerts)',
+        'Exporters and service discovery',
+        'Grafana dashboards and data sources',
+        'Logging stacks (Loki, ELK)',
+        'Alertmanager configuration',
+        'Distributed tracing (Jaeger, Zipkin)',
+        'SLIs, SLOs, error budgets'
+      ],
+      binaryKey: 'phase2-monitoring',
+      topicPrefix: 'phase2-monitoring-topic-'
+    }
+  };
+
+  function showPillarDetail(pillarId, phase = 'phase1') {
+    const container = document.getElementById('pillarDetailContainer');
+    if (!container) return;
+
+    let data, checkedCount = 0, totalItems = 0;
+
+    if (phase === 'phase1') {
+      data = phase1PillarData[pillarId];
+      if (!data) return;
+      if (data.placeholder) {
+        container.innerHTML = `<div class="info-box note"><strong>📌 Coming soon</strong><p>The ${data.name} pillar will have its own detailed checklist once you start studying it.</p></div>`;
+        return;
+      }
+      // Build Phase 1 checklist
+      let checklistHtml = '';
+      for (let i = 1; i <= data.sections; i++) {
+        const key = `${data.sectionPrefix}${i}`;
+        const checked = localStorage.getItem(key) === 'true';
+        if (checked) checkedCount++;
+        checklistHtml += `
+          <div class="pillar-checklist-item" data-key="${key}">
+            <input type="checkbox" class="pillar-detail-cb" data-key="${key}" ${checked ? 'checked' : ''}>
+            <label>${data.titles[i-1]}</label>
+            <span class="pillar-checklist-status">${checked ? '✓' : '⬚'}</span>
+          </div>
+        `;
+      }
+      let quizHtml = '';
+      if (data.quiz) {
+        const quizChecked = localStorage.getItem(data.quizKey) === 'true';
+        if (quizChecked) checkedCount++;
+        quizHtml = `
+          <div class="pillar-checklist-item" data-key="${data.quizKey}">
+            <input type="checkbox" class="pillar-detail-cb" data-key="${data.quizKey}" ${quizChecked ? 'checked' : ''}>
+            <label><strong>🏆 Quiz mastered (100%)</strong></label>
+            <span class="pillar-checklist-status">${quizChecked ? '✓' : '⬚'}</span>
+          </div>
+        `;
+      }
+      totalItems = data.sections + (data.quiz ? 1 : 0);
+      const percent = Math.round((checkedCount / totalItems) * 100);
+      const circumference = 2 * Math.PI * 52;
+      const offset = circumference - (percent / 100) * circumference;
+      const ringHtml = `
+        <div style="padding: 0 0.5rem; display: flex; flex-wrap: wrap; gap: 1.0rem; align-items: center;">
+          <div class="pillar-ring-wrapper" style="position: relative; width: 160px; height: 160px;">
+            <svg width="160" height="160" viewBox="0 0 120 120">
+              <circle class="pillar-ring-bg" cx="60" cy="60" r="52" fill="none" stroke="var(--border-color)" stroke-width="8"/>
+              <circle class="pillar-ring-fill" cx="60" cy="60" r="52" fill="none" stroke="var(--accent-secondary)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="pillar-ring-percent" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: bold;">${percent}%</div>
+          </div>
+          <div style="flex: 1;">
+            <div class="pillar-checklist">
+              ${checklistHtml}
+              ${quizHtml}
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 0.75rem; font-size: 0.75rem; text-align: center;">
+          <span>${checkedCount}/${totalItems} items complete</span>
+        </div>
+      `;
+      container.innerHTML = ringHtml;
+    } 
+    else if (phase === 'phase2') {
+      data = phase2PillarData[pillarId];
+      if (!data) return;
+      // Build Phase 2 checklist from topics
+      let checklistHtml = '';
+      for (let i = 0; i < data.topics.length; i++) {
+        const key = `${data.topicPrefix}${i+1}`;
+        const checked = localStorage.getItem(key) === 'true';
+        if (checked) checkedCount++;
+        checklistHtml += `
+          <div class="pillar-checklist-item" data-key="${key}">
+            <input type="checkbox" class="pillar-detail-cb" data-key="${key}" ${checked ? 'checked' : ''}>
+            <label>${data.topics[i]}</label>
+            <span class="pillar-checklist-status">${checked ? '✓' : '⬚'}</span>
+          </div>
+        `;
+      }
+      totalItems = data.topics.length;
+      // Also update the binary pillar completion key based on whether all topics are checked
+      const binaryKey = data.binaryKey;
+      const allChecked = (checkedCount === totalItems);
+      localStorage.setItem(binaryKey, allChecked ? 'true' : 'false');
+      // Force update of Phase 2 chip UI in the Phase 2 tab (will be refreshed later)
+      const percent = Math.round((checkedCount / totalItems) * 100);
+      const circumference = 2 * Math.PI * 52;
+      const offset = circumference - (percent / 100) * circumference;
+      const ringHtml = `
+        <div style="padding: 0 0.5rem; display: flex; flex-wrap: wrap; gap: 1.0rem; align-items: center;">
+          <div class="pillar-ring-wrapper" style="position: relative; width: 160px; height: 160px;">
+            <svg width="160" height="160" viewBox="0 0 120 120">
+              <circle class="pillar-ring-bg" cx="60" cy="60" r="52" fill="none" stroke="var(--border-color)" stroke-width="8"/>
+              <circle class="pillar-ring-fill" cx="60" cy="60" r="52" fill="none" stroke="var(--accent-secondary)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="pillar-ring-percent" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: bold;">${percent}%</div>
+          </div>
+          <div style="flex: 1;">
+            <div class="pillar-checklist">
+              ${checklistHtml}
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 0.75rem; font-size: 0.75rem; text-align: center;">
+          <span>${checkedCount}/${totalItems} topics complete</span>
+        </div>
+      `;
+      container.innerHTML = ringHtml;
+    }
+
+    // Attach event handlers for checkboxes
+    document.querySelectorAll('.pillar-detail-cb').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        const key = cb.dataset.key;
+        if (key) {
+          localStorage.setItem(key, cb.checked ? 'true' : 'false');
+          // Re-render the same pillar to update ring and counts
+          showPillarDetail(pillarId, phase);
+        }
+      });
+    });
+  }
+
+  // Expose globally so pillar pages can call it
+    window.showPillarDetail = showPillarDetail; // Expose globally for fallback
+
+  // ============================================================
+  // OVERRIDE CHIP CLICK HANDLERS IN PHASE 1 AND PHASE 2 SCROLLERS
+  // ============================================================
+
+  // Original renderPhase1ModalScroller – modify the click handler
+  function renderPhase1ModalScroller() {
+    const track = document.getElementById('phase1ModalTrack');
+    if (!track) return;
+    const pillars = ['networking','linux','security','scripting','databases'];
+    const names = ['Networking', 'Linux & CLI', 'Security', 'Scripting', 'Databases'];
+    const icons = ['🌐', '🐧', '🔒', '⚙️', '🗄️'];
+    const links = ['html/networking.html', 'html/linux.html', '#', '#', '#'];
+    track.innerHTML = pillars.map((p, idx) => {
+      const progress = getPhase1PillarCompletion(p);
+      const percent = Math.round(progress * 100);
+      let statusClass = 'locked';
+      let statusSymbol = '🔒';
+      if (percent >= 80) { statusClass = 'complete'; statusSymbol = '✓'; }
+      else if (percent > 0) { statusClass = 'active'; statusSymbol = '→'; }
+      return `<button class="pillar-chip ${statusClass}" data-pillar="${p}" data-phase="phase1" data-link="${links[idx]}" data-coming-soon="${links[idx]==='#'? 'true':'false'}">
+                <span class="chip-icon">${icons[idx]}</span>
+                <span class="chip-name">${names[idx]}</span>
+                <span class="chip-status">${statusSymbol}</span>
+              </button>`;
+    }).join('');
+    track.querySelectorAll('.pillar-chip').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pillar = chip.getAttribute('data-pillar');
+        const phase = chip.getAttribute('data-phase');
+        const isComingSoon = chip.getAttribute('data-coming-soon') === 'true';
+        if (isComingSoon) {
+          showComingSoonToast(chip.querySelector('.chip-name')?.innerText);
+          return;
+        }
+        if (pillar && phase) {
+          showPillarDetail(pillar, phase);
+          // Switch to the Pillar Details tab
+          const tabButton = document.querySelector('.tab-button[data-tab="tab3"]');
+          if (tabButton) tabButton.click();
+        }
+      });
+    });
+  }
+
+  // Original renderPhase2ModalScroller – modify click handler to show detail
+  function renderPhase2ModalScroller() {
+    const track = document.getElementById('phase2ModalTrack');
+    if (!track) return;
+    const phases = ['docker','cicd','kubernetes','terraform','monitoring'];
+    const names = ['Docker', 'CI/CD', 'Kubernetes', 'Terraform', 'Monitoring'];
+    const icons = ['🐳', '🔁', '☸️', '🏗️', '📊'];
+    track.innerHTML = phases.map((p, idx) => {
+      const completed = getPhase2PillarCompletion(p);
+      const statusClass = completed ? 'complete' : 'locked';
+      const statusSymbol = completed ? '✓' : '🔒';
+      return `<button class="pillar-chip phase2-chip ${statusClass}" data-pillar="${p}" data-phase="phase2">
+                <span class="chip-icon">${icons[idx]}</span>
+                <span class="chip-name">${names[idx]}</span>
+                <span class="chip-status">${statusSymbol}</span>
+              </button>`;
+    }).join('');
+    track.querySelectorAll('.phase2-chip').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pillar = chip.getAttribute('data-pillar');
+        const phase = chip.getAttribute('data-phase');
+        if (pillar && phase) {
+          showPillarDetail(pillar, phase);
+          // Switch to the Pillar Details tab
+          const tabButton = document.querySelector('.tab-button[data-tab="tab3"]');
+          if (tabButton) tabButton.click();
+        }
+      });
+    });
+  }
+
+  // Ensure the modal initialisation calls these render functions
+  // (You likely already have initModalAndFloatingRing calling them)
+  // We'll override the existing calls.
+
+  // ... rest of your existing code (initGlobalSearch, etc.) ...
+
+  // After everything, call the render functions
+  if (document.getElementById('phase1ModalTrack')) {
+    renderPhase1ModalScroller();
+    renderPhase2ModalScroller();
+  }
+
+  function openModalToPillarDetails(pillarId, phase) {
+    const modal = document.getElementById('progressModal');
+    if (!modal) return;
+    
+    // Open modal
+    modal.style.display = 'flex';
+    
+    // Switch to Pillar Details tab (tab 3)
+    const tabButton = document.querySelector('.tab-button[data-tab="tab3"]');
+    if (tabButton) tabButton.click();
+    
+    // Load the pillar data
+    showPillarDetail(pillarId, phase);
+  }
+
+// Expose globally so pillar pages can call it
+window.openModalToPillarDetails = openModalToPillarDetails;
+
   // --- Accordion Toggle ---
   window.toggleAccordion = function(header) {
     const accordion = header.closest('.accordion');
@@ -564,73 +923,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Modal and scroller rendering ---
-  function renderPhase1ModalScroller() {
-    const track = document.getElementById('phase1ModalTrack');
-    if (!track) return;
-    const pillars = ['networking','linux','security','scripting','databases'];
-    const names = ['Networking', 'Linux & CLI', 'Security', 'Scripting', 'Databases'];
-    const icons = ['🌐', '🐧', '🔒', '⚙️', '🗄️'];
-    const links = ['html/networking.html', 'html/linux.html', '#', '#', '#'];
-    track.innerHTML = pillars.map((p, idx) => {
-      const progress = getPhase1PillarCompletion(p);
-      const percent = Math.round(progress * 100);
-      let statusClass = 'locked';
-      let statusSymbol = '🔒';
-      if (percent >= 80) { statusClass = 'complete'; statusSymbol = '✓'; }
-      else if (percent > 0) { statusClass = 'active'; statusSymbol = '→'; }
-      const isComingSoon = (links[idx] === '#') ? 'true' : 'false';
-      return `<button class="pillar-chip ${statusClass}" data-pillar="${p}" data-link="${links[idx]}" data-coming-soon="${isComingSoon}">
-                <span class="chip-icon">${icons[idx]}</span>
-                <span class="chip-name">${names[idx]}</span>
-                <span class="chip-status">${statusSymbol}</span>
-              </button>`;
-    }).join('');
-    // Attach click handlers
-    track.querySelectorAll('.pillar-chip').forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        e.preventDefault();
-        const link = chip.getAttribute('data-link');
-        const isComingSoon = chip.getAttribute('data-coming-soon') === 'true';
-        if (!isComingSoon && link && link !== '#') {
-          window.location.href = link;
-        } else {
-          showComingSoonToast(chip.querySelector('.chip-name')?.innerText);
-        }
-      });
-    });
-  }
-
-  function renderPhase2ModalScroller() {
-    const track = document.getElementById('phase2ModalTrack');
-    if (!track) return;
-    const phases = ['docker','cicd','kubernetes','terraform','monitoring'];
-    const names = ['Docker', 'CI/CD', 'Kubernetes', 'Terraform', 'Monitoring'];
-    const icons = ['🐳', '🔁', '☸️', '🏗️', '📊'];
-    track.innerHTML = phases.map((p, idx) => {
-      const completed = getPhase2PillarCompletion(p);
-      const statusClass = completed ? 'complete' : 'locked';
-      const statusSymbol = completed ? '✓' : '🔒';
-      return `<button class="pillar-chip phase2-chip ${statusClass}" data-phase="${p}">
-                <span class="chip-icon">${icons[idx]}</span>
-                <span class="chip-name">${names[idx]}</span>
-                <span class="chip-status">${statusSymbol}</span>
-              </button>`;
-    }).join('');
-    // Click toggles completion
-    track.querySelectorAll('.phase2-chip').forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        e.preventDefault();
-        const phase = chip.getAttribute('data-phase');
-        const currentlyCompleted = getPhase2PillarCompletion(phase);
-        const newState = !currentlyCompleted;
-        localStorage.setItem(`phase2-${phase}`, newState);
-        updateAllUI();
-        renderPhase2ModalScroller();
-      });
-    });
-  }
-
   function initModalAndFloatingRing() {
     const floatingRing = document.getElementById('globalFloatingRing');
     const modal = document.getElementById('progressModal');
@@ -727,6 +1019,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+  }
+
+  function ensureModalExists() {
+    if (document.getElementById('progressModal')) return;
+    
+    const modalHTML = `
+      <div id="progressModal" class="progress-modal" style="display: none;" role="dialog" aria-modal="true">
+        <div class="progress-modal-content">
+          <div class="progress-modal-header">
+            <h3>📊 Global Progress Dashboard</h3>
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+          </div>
+          <div class="progress-modal-tabs">
+            <button class="tab-button active" data-tab="tab0">Overall</button>
+            <button class="tab-button" data-tab="tab1">Phase 1</button>
+            <button class="tab-button" data-tab="tab2">Phase 2</button>
+            <button class="tab-button" data-tab="tab3">Pillar Details</button>
+          </div>
+          <div class="tab-pane active" id="tab0">...</div>
+          <div class="tab-pane" id="tab1">...</div>
+          <div class="tab-pane" id="tab2">...</div>
+          <div class="tab-pane" id="tab3">
+            <div id="pillarDetailContainer" style="min-height: 200px;">
+              <div class="info-box note">Loading...</div>
+            </div>
+          </div>
+          <div class="progress-modal-footer">
+            <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    // Re-initialize modal event listeners
+    initModalAndFloatingRing();
+  }
+
+  // Modify openModalToPillarDetails to ensure modal exists
+  function openModalToPillarDetails(pillarId, phase) {
+    ensureModalExists();
+    const modal = document.getElementById('progressModal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    const tabButton = document.querySelector('.tab-button[data-tab="tab3"]');
+    if (tabButton) tabButton.click();
+    showPillarDetail(pillarId, phase);
   }
 
   // --- Initialisation ---

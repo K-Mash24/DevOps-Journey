@@ -314,56 +314,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function openProgressModal() {
       const modal = document.getElementById('progressModal');
       if (!modal) return;
-
-      // Populate modal with current section checkboxes
-      const sectionList = document.getElementById('modalSectionList');
-      if (sectionList) {
-        sectionList.innerHTML = '';
-        const checkboxes = document.querySelectorAll('.section-checkbox');
-        checkboxes.forEach(cb => {
-          const sectionNum = cb.dataset.section;
-          const sectionTitle = getSectionTitle(sectionNum);
-          const row = document.createElement('div');
-          row.className = 'modal-section-row';
-          row.innerHTML = `
-            <input type="checkbox" class="modal-section-cb" data-section="${sectionNum}" ${cb.checked ? 'checked' : ''}>
-            <span class="modal-section-name" data-section="${sectionNum}">${sectionTitle}</span>
-          `;
-          sectionList.appendChild(row);
-        });
-
-        // Attach events to modal checkboxes and names
-        document.querySelectorAll('.modal-section-cb').forEach(modalCb => {
-          modalCb.addEventListener('change', (e) => {
-            const section = modalCb.dataset.section;
-            const actualCb = document.querySelector(`.section-checkbox[data-section="${section}"]`);
-            if (actualCb && actualCb.checked !== modalCb.checked) {
-              actualCb.click(); // programmatically toggle actual checkbox
-            }
-          });
-        });
-
-        document.querySelectorAll('.modal-section-name').forEach(nameSpan => {
-          nameSpan.addEventListener('click', (e) => {
-            const section = nameSpan.dataset.section;
-            const targetId = `s${section}`;
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-              targetEl.scrollIntoView({ behavior: 'smooth' });
-              closeProgressModal();
-            }
-          });
-        });
-      }
-
-      // Update quiz checkbox state
-      const modalQuizCb = document.getElementById('modalQuizCheckbox');
-      if (modalQuizCb) {
-        const quizPassed = localStorage.getItem('networking-quiz-passed') === 'true';
-        modalQuizCb.checked = quizPassed;
-      }
-
+      
+      // Open modal
       modal.style.display = 'flex';
+      
+      // Switch to Pillar Details tab (tab 3)
+      const tabButton = document.querySelector('.tab-button[data-tab="tab3"]');
+      if (tabButton) tabButton.click();
+      
+      // Load Networking pillar details (using globally exposed function)
+      if (typeof window.showPillarDetail === 'function') {
+        window.showPillarDetail('networking', 'phase1');
+      }
     }
 
     function closeProgressModal() {
@@ -384,10 +346,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return titles[sectionNum] || `Section ${sectionNum}`;
     }
 
-    // Replace old click handler with modal opener
     floatingDiv.addEventListener('click', (e) => {
       e.stopPropagation();
-      openProgressModal();
+      if (typeof window.openModalToPillarDetails === 'function') {
+        window.openModalToPillarDetails('networking', 'phase1');
+      } else {
+        openProgressModal(); // fallback
+      }
     });
 
     // Global close handlers
