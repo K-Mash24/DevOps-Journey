@@ -1,6 +1,3 @@
-I'll convert the summary into a clean, well‑structured `README.md` for your `DevOps-Journey` repository.
-
-```markdown
 # DevOps Journey — Study Platform
 
 [![Netlify Status](https://img.shields.io/badge/status-live-brightgreen)](https://k-mash24.github.io/DevOps-Journey/)
