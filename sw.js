@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Image optimiazation ability added for both pillar pages
+// Renames linux.js to Linux.js to match the case used in the urlsToCache array.
 
-const CACHE_NAME = 'devops-journey-2026-06-11-v3';
+const CACHE_NAME = 'devops-journey-2026-06-11-v4';
 
 const urlsToCache = [
   '/',
@@ -12,7 +12,7 @@ const urlsToCache = [
   '/style.css',
   '/js/global.js',
   '/js/networking.js',
-  '/js/linux.js',        // ← add this if you have it
+  '/js/Linux.js',        // ← add this if you have it
   '/img/Logo.svg'
 ];
 
