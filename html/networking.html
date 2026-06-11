@@ -954,13 +954,23 @@ arp                          <span class="code-comment"># ARP packets (detect sp
       </div>
 
       <!-- ══════════ FLASHCARDS ══════════ -->
+
       <div class="section-divider" id="flashcards">
         <div class="section-number" aria-hidden="true">★</div>
         <h2>Flashcards</h2>
+        <div class="flashcard-nav-buttons">
+          <button class="flashcard-nav" id="flashcardPrev" aria-label="Previous flashcards">‹</button>
+          <button class="flashcard-nav" id="flashcardNext" aria-label="Next flashcards">›</button>
+        </div>
+        <span class="flashcard-count" id="flashcardCount">0 cards</span>
       </div>
-      <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Click any card to reveal the answer.</p>
-      <div class="flashcard-grid" id="flashcardGrid">
-        <!-- JS will render these -->
+      <div class="flashcard-scroller-container">
+        <div class="flashcard-scroller" id="flashcardScroller">
+          <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Click any card to reveal the answer.</p>
+          <div class="flashcard-track" id="flashcardTrack">
+            <!-- JS will render flashcards here -->
+          </div>
+        </div>
       </div>
 
       <!-- ══════════ QUIZ ══════════ -->

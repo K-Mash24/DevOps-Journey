@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Adding a relative path (./sw.js) ensuring it works correctly in the directory, absolute path (/sw.js)
+// Improving mobile responsiveness and made a horizontal scroller for flashcards.
 
-const CACHE_NAME = 'devops-journey-2026-06-11-v6';
+const CACHE_NAME = 'devops-journey-2026-06-11-v7';
 
 const urlsToCache = [
   '/',

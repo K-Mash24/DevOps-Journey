@@ -18,15 +18,17 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   function renderFlashcards() {
-    const grid = document.getElementById('flashcardGrid');
-    if (!grid) return;
-    grid.innerHTML = FLASHCARDS.map((card) => `
+    const track = document.getElementById('flashcardTrack');
+    if (!track) return;
+    
+    track.innerHTML = FLASHCARDS.map((card, index) => `
       <div class="flashcard" tabindex="0" role="button" aria-label="Flashcard: ${card.term}" 
-           onclick="this.classList.toggle('flipped')" 
-           onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();this.classList.toggle('flipped');}">
+          data-index="${index}"
+          onclick="this.classList.toggle('flipped')" 
+          onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();this.classList.toggle('flipped');}">
         <div class="flashcard-inner">
           <div class="flashcard-front">
-            <div class="card-label">Command / Concept</div>
+            <div class="card-label">Term</div>
             <div class="card-term">${card.term}</div>
             <div class="card-hint">click or press enter to reveal</div>
           </div>
@@ -36,6 +38,85 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `).join('');
+    
+        // Update flashcard counter
+    const countSpan = document.getElementById('flashcardCount');
+    if (countSpan) {
+      countSpan.textContent = `${FLASHCARDS.length} cards`;
+    }
+
+    initFlashcardScroller();
+  }
+
+  function initFlashcardScroller() {
+    const scroller = document.getElementById('flashcardScroller');
+    const prevBtn = document.getElementById('flashcardPrev');
+    const nextBtn = document.getElementById('flashcardNext');
+    const indicator = document.getElementById('flashcardIndicator');
+    
+    if (!scroller) return;
+    
+    function updateIndicator() {
+      if (!indicator) return;
+      const scrollLeft = scroller.scrollLeft;
+      const scrollWidth = scroller.scrollWidth;
+      const clientWidth = scroller.clientWidth;
+      const maxScroll = scrollWidth - clientWidth;
+      const scrollPercent = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+      
+      const cards = document.querySelectorAll('.flashcard');
+      const totalCards = cards.length;
+      const activeIndex = Math.round(scrollPercent * (totalCards - 1));
+      
+      const dots = indicator.querySelectorAll('.scroll-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === activeIndex);
+      });
+    }
+    
+    // Create indicator dots
+    if (indicator) {
+      const totalCards = FLASHCARDS.length;
+      indicator.innerHTML = Array.from({ length: totalCards }, (_, i) => 
+        `<span class="scroll-dot" data-index="${i}"></span>`
+      ).join('');
+      
+      indicator.querySelectorAll('.scroll-dot').forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          const index = parseInt(e.target.dataset.index);
+          const cardWidth = document.querySelector('.flashcard')?.offsetWidth || 260;
+          const gap = 16; // gap between cards
+          const scrollPosition = index * (cardWidth + gap);
+          scroller.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+        });
+      });
+    }
+    
+    // Scroll buttons
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        scroller.scrollBy({ left: -280, behavior: 'smooth' });
+      });
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        scroller.scrollBy({ left: 280, behavior: 'smooth' });
+      });
+    }
+    
+    // Update indicator on scroll
+    scroller.addEventListener('scroll', () => {
+      requestAnimationFrame(updateIndicator);
+    });
+    
+    // Initial indicator update
+    setTimeout(updateIndicator, 100);
+    
+    // Update on window resize
+    window.addEventListener('resize', () => {
+      setTimeout(updateIndicator, 100);
+    });
   }
 
   // ----- QUIZ DATA -----

@@ -591,9 +591,20 @@ tail -f app.log                        # follow — prints new lines as file gro
       <div class="section-divider" id="flashcards">
         <div class="section-number" aria-hidden="true">★</div>
         <h2>Flashcards</h2>
+        <div class="flashcard-nav-buttons">
+          <button class="flashcard-nav" id="flashcardPrev" aria-label="Previous flashcards">‹</button>
+          <button class="flashcard-nav" id="flashcardNext" aria-label="Next flashcards">›</button>
+        </div>
+        <span class="flashcard-count" id="flashcardCount">0 cards</span>
       </div>
-      <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Click any card to reveal the answer.</p>
-      <div class="flashcard-grid" id="flashcardGrid"></div>
+      <div class="flashcard-scroller-container">
+        <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Click any card to reveal the answer.</p>
+        <div class="flashcard-scroller" id="flashcardScroller">
+          <div class="flashcard-track" id="flashcardTrack">
+            <!-- JS will render flashcards here -->
+          </div>
+        </div>
+      </div>
 
       <!-- ══════════ QUIZ ══════════ -->
       <div class="section-divider" id="quiz">
