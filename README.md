@@ -40,8 +40,8 @@ This project is a **structured, self‑paced study roadmap** that builds genuine
 DevOps-Journey/
 ├── index.html            – Homepage (roadmap, cards, modal)
 ├── html/
-|   ├── networking.html   – Pillar 1 content (complete)
-|   ├── linux.html        – Pillar 2 content (completed eventually)
+│   ├── networking.html   – Pillar 1 content (complete)
+│   ├── linux.html        – Pillar 2 content (completed eventually)
 ├── style.css             – Global styles (themes, modal, lightbox)
 ├── sw.js                 – Service worker (versioned cache)
 ├── js/

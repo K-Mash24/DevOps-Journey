@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Improving mobile responsiveness and made a horizontal scroller for flashcards.
+// README File corrections and updating service worker version in global.js to ensure minimal errors.
 
-const CACHE_NAME = 'devops-journey-2026-06-11-v7';
+const CACHE_NAME = 'devops-journey-2026-06-11-v7.2';
 
 const urlsToCache = [
   '/',
