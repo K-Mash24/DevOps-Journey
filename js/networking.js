@@ -439,4 +439,185 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render flashcards and quiz when the page loads
   renderFlashcards();
   renderQuiz();
-});
+
+    // ... existing code (renderFlashcards, renderQuiz, etc.) ...
+
+  renderFlashcards();
+  renderQuiz();
+
+  // ----- IMAGE LIGHTBOX (Popup + Zoom) with consistent scaling -----
+  function initImageLightbox() {
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const container = document.getElementById('lightboxContainer');
+    const closeBtn = document.getElementById('lightboxClose');
+    const zoomInBtn = document.getElementById('lightboxZoomIn');
+    const zoomOutBtn = document.getElementById('lightboxZoomOut');
+    const resetBtn = document.getElementById('lightboxReset');
+    const zoomInfo = document.getElementById('lightboxZoomInfo');
+    
+    if (!lightbox) return;
+    
+    let currentScale = 1;
+    let panX = 0, panY = 0;
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let isFitToScreen = true;
+    
+    // Add Fit to Screen button
+    const controlsDiv = document.querySelector('.lightbox-controls');
+    let fitBtn = document.getElementById('lightboxFitBtn');
+    if (!fitBtn && controlsDiv) {
+      fitBtn = document.createElement('button');
+      fitBtn.id = 'lightboxFitBtn';
+      fitBtn.className = 'fit-to-screen-btn';
+      fitBtn.innerHTML = '📐 Fit';
+      fitBtn.title = 'Toggle fit to screen / actual size';
+      controlsDiv.insertBefore(fitBtn, zoomInBtn);
+    }
+    
+    function updateTransform() {
+      if (isFitToScreen) {
+        lightboxImg.classList.remove('zoomed');
+        lightboxImg.style.transform = '';
+        lightboxImg.style.maxWidth = '90vw';
+        lightboxImg.style.maxHeight = '85vh';
+        container.style.overflow = 'hidden';
+        if (fitBtn) fitBtn.classList.add('active');
+      } else {
+        lightboxImg.classList.add('zoomed');
+        lightboxImg.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`;
+        lightboxImg.style.maxWidth = 'none';
+        lightboxImg.style.maxHeight = 'none';
+        container.style.overflow = 'auto';
+        if (fitBtn) fitBtn.classList.remove('active');
+      }
+      if (!isFitToScreen) {
+        zoomInfo.textContent = `${Math.round(currentScale * 100)}%`;
+      } else {
+        zoomInfo.textContent = 'Fit to screen';
+      }
+    }
+    
+    function resetView() {
+      currentScale = 1;
+      panX = 0;
+      panY = 0;
+      isFitToScreen = true;
+      updateTransform();
+      container.style.cursor = 'default';
+    }
+    
+    function toggleFitMode() {
+      isFitToScreen = !isFitToScreen;
+      if (isFitToScreen) {
+        resetView();
+      } else {
+        lightboxImg.classList.add('zoomed');
+        currentScale = 1;
+        panX = 0;
+        panY = 0;
+        updateTransform();
+        container.style.cursor = 'grab';
+      }
+    }
+    
+    function zoomIn() {
+      if (isFitToScreen) toggleFitMode();
+      currentScale = Math.min(currentScale + 0.25, 4);
+      updateTransform();
+    }
+    
+    function zoomOut() {
+      if (isFitToScreen) toggleFitMode();
+      currentScale = Math.max(currentScale - 0.25, 0.5);
+      updateTransform();
+    }
+    
+    // Open lightbox on image click
+    document.querySelectorAll('.accordion-body img, .overview-content img').forEach(img => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || 'Enlarged image';
+        resetView();
+        lightbox.classList.add('active');
+      });
+    });
+    
+    // Close lightbox
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      resetView();
+    }
+    
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    
+    zoomInBtn.addEventListener('click', zoomIn);
+    zoomOutBtn.addEventListener('click', zoomOut);
+    resetBtn.addEventListener('click', resetView);
+    if (fitBtn) fitBtn.addEventListener('click', toggleFitMode);
+    
+    // Panning with mouse
+    container.addEventListener('mousedown', (e) => {
+      if (isFitToScreen || currentScale <= 1) return;
+      isDragging = true;
+      startX = e.clientX - panX;
+      startY = e.clientY - panY;
+      container.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      panX = e.clientX - startX;
+      panY = e.clientY - startY;
+      updateTransform();
+    });
+    
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      container.style.cursor = (!isFitToScreen && currentScale > 1) ? 'grab' : 'default';
+    });
+    
+    // Touch events for mobile
+    container.addEventListener('touchstart', (e) => {
+      if (isFitToScreen || currentScale <= 1) return;
+      isDragging = true;
+      const touch = e.touches[0];
+      startX = touch.clientX - panX;
+      startY = touch.clientY - panY;
+      e.preventDefault();
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const touch = e.touches[0];
+      panX = touch.clientX - startX;
+      panY = touch.clientY - panY;
+      updateTransform();
+      e.preventDefault();
+    });
+    
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === '+' || e.key === '=') zoomIn();
+      if (e.key === '-' || e.key === '_') zoomOut();
+      if (e.key === '0') resetView();
+      if (e.key === 'f' || e.key === 'F') toggleFitMode();
+    });
+  }
+  
+  initImageLightbox();
+
+}); // DOMContentLoaded end
