@@ -36,7 +36,7 @@ This project is a **structured, self‑paced study roadmap** that builds genuine
 
 ## 🗂️ Project Structure
 
-
+```bash
 DevOps-Journey/
 ├── index.html            – Homepage (roadmap, cards, modal)
 ├── networking.html       – Pillar 1 content (complete)
@@ -49,7 +49,7 @@ DevOps-Journey/
 │   └── linux.js          – Linux‑specific flashcards & quiz
 ├── img/                  – Icons, logos, wiring diagrams
 └── README.md             – This file
-
+```
 
 > Other pillars (security, scripting, databases) are planned but not yet built.
 
@@ -218,5 +218,3 @@ MIT – feel free to use, modify, and share.
 **Happy learning!**  
 🚀 *Build foundations first, then conquer the cloud.*
 ```
-
-This `README.md` is ready to be placed in the root of your `DevOps-Journey` repository. It gives any new contributor (or your future self) all the context needed to understand, maintain, or extend the project.
