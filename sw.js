@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Absolute path for sw.js
+// Added icons to manifest.json
 
-const CACHE_NAME = 'devops-journey-2026-06-12-v7.7';
+const CACHE_NAME = 'devops-journey-2026-06-12-v7.8';
 
 const urlsToCache = [
   '/',

@@ -1,10 +1,25 @@
 {
-  "name": "Great Cheatsheets",
-  "short_name": "DevOps Journey", 
-  "description": "Structured self-study roadmap for DevOps",
-  "start_url": "${BASE_PATH}/",
+  "name": "Great Cheatsheets - DevOps Journey",
+  "short_name": "DevOps Journey",
+  "description": "Structured self-study roadmap for DevOps and AWS SAA certification",
+  "start_url": "/DevOps-Journey/",
   "display": "standalone",
   "theme_color": "#5346d4",
   "background_color": "#f8f7f4",
-  "icons": []
+  "orientation": "any",
+  "scope": "/DevOps-Journey/",
+  "icons": [
+    {
+      "src": "/DevOps-Journey/img/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/DevOps-Journey/img/Logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
