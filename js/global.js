@@ -641,7 +641,13 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
   // --- Service Worker ---
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/DevOps-Journey/sw.js').catch(err => console.error('SW registration failed:', err)));
+    window.addEventListener('load', () => {
+      // Use absolute path for GitHub Pages project site
+      const swPath = '/DevOps-Journey/sw.js';
+      navigator.serviceWorker.register(swPath)
+        .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+        .catch(err => console.error('❌ SW registration failed:', err));
+    });
   }
 
   // ========== CORE PROGRESS CALCULATIONS ==========
