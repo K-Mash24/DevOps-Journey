@@ -6,16 +6,16 @@
 /* ── Google Fonts (with font-display swap) ── */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-/* ── CSS Variables — Light Mode (default) ── */
+/* ── CSS Variables — Light Mode (default) ──
 :root {
   --font-display: 'Syne', sans-serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --bg-primary: #f8f7f4;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f0ede8;
-  --bg-card: #ffffff;
+  --bg-primary: #ece9e2;
+  --bg-secondary: #f5f4ef;
+  --bg-tertiary: #e0dbd0;
+  --bg-card: #f8f7f2;
   --bg-sidebar: #1a1a2e;
   --bg-code: #1e1e2e;
 
@@ -52,14 +52,16 @@
   --pillar-color: #5346d4;
   --pillar-color-light: #eeedfe;
   --pillar-color-mid: #7f77dd;
-}
 
-/* ── Dark Mode ── */
+  --logo-color: #faf7f0;  /* light mode logo colour 
+} */
+
+/* ── Dark Mode ── 
 [data-theme="dark"] {
-  --bg-primary: #0f0f1a;
-  --bg-secondary: #1a1a2e;
-  --bg-tertiary: #131320;
-  --bg-card: #1e1e30;
+  --bg-primary: #0a0a14;
+  --bg-secondary: #141428;
+  --bg-tertiary: #0e0e1c;
+  --bg-card: #18182a;
   --bg-sidebar: #0a0a16;
   --bg-code: #0d0d1a;
 
@@ -83,6 +85,137 @@
   --pillar-color: #7c72e8;
   --pillar-color-light: #1e1e38;
   --pillar-color-mid: #5346d4;
+
+  --logo-color: #e8e6f0;  /* Dark mode logo colour 
+} */
+
+/* ── CSS Variables — Light Mode (updated with indigo + mint scheme) ── */
+:root {
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --bg-primary: #f0efe8;
+  --bg-secondary: #faf9f6;
+  --bg-tertiary: #e8e4dc;
+  --bg-card: #fefefe;
+  --bg-sidebar: #1E1B4B;        /* deep indigo sidebar */
+  --bg-code: #1E1B4B;           /* match sidebar for code blocks */
+
+  --text-primary: #1E1B4B;      /* deep indigo for headings */
+  --text-secondary: #4a5568;
+  --text-muted: #8896a5;
+  --text-sidebar: #c8d0e0;
+  --text-sidebar-active: #ffffff;
+  --text-on-accent: #ffffff;
+  --text-sidebar-muted: #8B8BA0;
+
+  --accent-primary: #1E1B4B;    /* deep indigo - primary brand */
+  --accent-secondary: #14B8A6;  /* mint/teal - secondary brand */
+  --accent-warning: #e67e22;
+  --accent-danger: #e74c3c;
+  --accent-info: #2980b9;
+
+  --border-color: #e2ddd6;
+  --border-strong: #c8c0b8;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --sidebar-width: 260px;
+  --topbar-height: 64px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --pillar-color: #1E1B4B;
+  --pillar-color-light: #EEEDFE;
+  --pillar-color-mid: #312E81;
+  
+  --logo-bg: #faf7f0;
+  --logo-text-color: #1E1B4B;
+}
+
+/* ── Dark Mode (updated with indigo + mint scheme) ── */
+[data-theme="dark"] {
+  --bg-primary: #0a0a14;
+  --bg-secondary: #141428;
+  --bg-tertiary: #0e0e1c;
+  --bg-card: #18182a;
+  --bg-sidebar: #0a0a16;
+  --bg-code: #0d0d1a;
+
+  --text-primary: #e8e6f0;
+  --text-secondary: #a0a8bc;
+  --text-muted: #606880;
+  --text-sidebar: #8890a8;
+  --text-sidebar-active: #ffffff;
+  --text-sidebar-muted: #515b80;
+
+  --accent-primary: #7c72e8;    /* lighter indigo for dark mode */
+  --accent-secondary: #2DD4BF;  /* vibrant mint for dark mode */
+
+  --border-color: #2a2a40;
+  --border-strong: #3a3a54;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+
+  --pillar-color: #7c72e8;
+  --pillar-color-light: #1e1e38;
+  --pillar-color-mid: #312E81;
+  
+  --logo-bg: #e8e6f0;
+  --logo-text-color: #7c72e8;
+}
+
+/* ── Mint/Teal accent overrides ── */
+
+/* Progress fill - use mint gradient */
+.progress-fill {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+/* Floating ring fill - use mint */
+.floating-ring-fill,
+.global-ring-fill {
+  stroke: var(--accent-secondary);
+}
+
+/* Section complete checkbox checked state */
+.section-complete-checkbox input:checked {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+/* Pillar chip active state */
+.pillar-chip.active {
+  background: var(--pillar-color-light);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(30, 27, 75, 0.2);
+}
+
+/* Progress ring label */
+.ring-label-title {
+  color: var(--accent-primary);
+}
+
+/* Phase 2 ring uses secondary color */
+.phase2-ring {
+  stroke: var(--accent-secondary) !important;
+}
+.phase2-ring-container .ring-label-title {
+  color: var(--accent-secondary);
+}
+
+/* Code block copy button hover */
+.copy-btn:hover {
+  background: var(--accent-secondary);
 }
 
 /* ── Reset & Base ── */
@@ -141,20 +274,19 @@ code, pre {
 .sidebar::-webkit-scrollbar-thumb { background: #2a2a40; border-radius: 4px; }
 
 .sidebar-logo {
-  padding: 1.5rem 1.25rem 1rem;
+  padding: 1.25rem 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .logo-mark {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
   text-decoration: none;
 }
 .logo-icon {
-  width: 32px;
-  height: 32px;
-  padding: 4px;
-  background: var(--accent-primary);
+  width: 40px;
+  height: 40px;
+  /* background: var(--logo-color); */
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
@@ -2794,7 +2926,7 @@ code, pre {
 .sidebar-logo .logo-icon img {
   width: 100%;
   height: auto;
-  max-width: 32px;
+  max-width: 36px;
   object-fit: contain;
 }
 

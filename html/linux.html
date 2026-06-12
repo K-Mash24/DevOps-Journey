@@ -21,7 +21,7 @@
     <div class="sidebar-logo">
       <a href="../index.html" class="logo-mark" aria-label="Home">
         <div class="logo-icon" aria-hidden="true">
-          <img src="../img/Logo.svg" alt="Great Cheatsheets Logo">
+          <img src="../img/Linux-icon.svg" alt="Great Cheatsheets Logo">
         </div>
         <div>
           <div class="logo-text">Great Cheatsheets</div>
@@ -55,17 +55,17 @@
       <a class="nav-item" href="#s1">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
         Section 1 — Filesystem structure & navigation
-        <span class="nav-badge">6</span>
+        <span class="nav-badge">9</span>
       </a>
       <a class="nav-item" href="#s2">
-        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+        <svg class="nav-icon" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true"><path d="M6 3a3 3 0 0 1 1 5.83V11h8.17a3.001 3.001 0 1 1 0 2H7v4a1 1 0 0 0 1 1h7.17a3.001 3.001 0 1 1 0 2H8a3 3 0 0 1-3-3V8.83A3.001 3.001 0 0 1 6 3m12 15a1 1 0 1 0 0 2 1 1 0 0 0 0-2m0-7a1 1 0 1 0 0 2 1 1 0 0 0 0-2M6 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/></svg>
         Section 2 — File & directory operations
-        <span class="nav-badge">8</span>
+        <span class="nav-badge">9</span>
       </a>
       <a class="nav-item" href="#s3">
-        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8.1 7c-0.2-0.1-0.4-0.2-0.6-0.3l7.5-6.7h-2l-7 6.1c-0.3-0.1-0.6-0.1-1-0.1-2.8 0-5 2.2-5 5s2.3 5 5 5 5-2.2 5-5c0-0.6-0.1-1.2-0.3-1.7l1.3-1.3v-2h2v-2h2l1-1v-3l-7.9 7zM4 13.2c-0.7 0-1.2-0.6-1.2-1.2s0.6-1.2 1.2-1.2 1.2 0.6 1.2 1.2-0.5 1.2-1.2 1.2z" clip-rule="evenodd"/></svg>
         Section 3 — Permissions & Ownership
-        <span class="nav-badge soon">Soon</span>
+        <span class="nav-badge">9</span>
       </a>
       <a class="nav-item" href="#s4">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
@@ -266,7 +266,7 @@
         </div>
       </div>
 
-      <!-- ══════════ SECTION 1 — FILESYSTEM STRUCTURE (COMPLETE) ══════════ -->
+      <!-- ══════════ SECTION 1 — FILESYSTEM STRUCTURE & NAVIGATION (DETAILED) ══════════ -->
       <div class="section-divider" id="s1">
         <div class="section-number" aria-hidden="true">1</div>
         <h2>Filesystem Structure &amp; Navigation</h2>
@@ -276,43 +276,51 @@
         </label>
       </div>
 
-      <!-- Accordions for Section 1 (existing content) -->
-      <div class="accordion open" data-searchable>
-        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">
+      <!-- What is a filesystem? -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📁</span>What is a filesystem?</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <p>A filesystem is the system that organises data on disk into a structured hierarchy. On Linux, this is a single tree with one root — everything lives under it. Unlike Windows, which gives each disk its own tree (`C:\`, `D:\`), Linux has one tree for everything.</p>
+          <p>A filesystem is how the operating system organises data on disk into a structured hierarchy. On Linux, this is a <strong>single tree with one root</strong> — everything lives under it. Unlike Windows, which gives each disk its own tree (<code>C:\</code>, <code>D:\</code>), Linux has one unified tree for all disks, partitions, and even devices.</p>
+          <p>The top of the tree is written as <code>/</code> (called "root"). All files, directories, and devices live somewhere below it.</p>
+          <div class="info-box tip"><strong>💡 Key insight</strong> Even a USB drive or a CD‑ROM is mounted somewhere inside this tree, not given a separate drive letter.</div>
         </div>
       </div>
 
+      <!-- Standard top‑level directories (FHS) -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
-          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🌳</span>Filesystem tree &amp; top-level directories</div>
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🌳</span>Standard top‑level directories (FHS)</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <p>The top of the tree is written as <code>/</code> (called "root"). All files, directories, and devices live somewhere below it.</p>
+          <p>The Filesystem Hierarchy Standard (FHS) defines the structure of Linux directories. Every Linux distribution follows it, so you'll find the same layout on Ubuntu, Debian, RHEL, Fedora, and even container images.</p>
           <div class="table-wrapper">
             <table class="data-table">
-              <thead><tr><th>Directory</th><th>Purpose</th></tr></thead>
+              <thead><tr><th>Directory</th><th>Purpose</th><th>Example contents</th></tr></thead>
               <tbody>
-                <tr><td><code>/</code></td><td>Root — top of the entire filesystem tree</td></tr>
-                <tr><td><code>/home</code></td><td>Home directories for regular users</td></tr>
-                <tr><td><code>/root</code></td><td>Home directory for the root (admin) user</td></tr>
-                <tr><td><code>/etc</code></td><td>System-wide configuration files</td></tr>
-                <tr><td><code>/var</code></td><td>Variable data (logs, caches, spools)</td></tr>
-                <tr><td><code>/usr</code></td><td>Installed programs and supporting files</td></tr>
-                <tr><td><code>/tmp</code></td><td>Temporary files — cleared on reboot</td></tr>
-                <tr><td><code>/bin</code></td><td>Essential command binaries (<code>ls</code>, <code>cd</code>, <code>pwd</code>)</td></tr>
-                <tr><td><code>/dev</code></td><td>Devices represented as files</td></tr>
+                <tr><td><code>/</code> (root)</td><td>Top of the entire filesystem tree</td><td>All other directories branch from here</td></tr>
+                <tr><td><code>/home</code></td><td>Home directories for regular users</td><td><code>/home/alice/</code>, <code>/home/bob/</code></td></tr>
+                <tr><td><code>/root</code></td><td>Home directory for the root (admin) user</td><td>Not under <code>/home</code> — isolated for security</td></tr>
+                <tr><td><code>/etc</code></td><td>System‑wide configuration files (text)</td><td><code>/etc/passwd</code>, <code>/etc/ssh/sshd_config</code></td></tr>
+                <tr><td><code>/var</code></td><td>Variable data — logs, caches, spools</td><td><code>/var/log/</code> (system logs), <code>/var/cache/apt/</code></td></tr>
+                <tr><td><code>/usr</code></td><td>User system resources — installed programs and libraries</td><td><code>/usr/bin/</code>, <code>/usr/lib/</code>, <code>/usr/share/</code></td></tr>
+                <tr><td><code>/tmp</code></td><td>Temporary files — cleared on reboot</td><td>Often a <code>tmpfs</code> (in memory)</td></tr>
+                <tr><td><code>/bin</code></td><td>Essential command binaries (often symlink to <code>/usr/bin</code>)</td><td><code>ls</code>, <code>cp</code>, <code>mv</code>, <code>cat</code></td></tr>
+                <tr><td><code>/sbin</code></td><td>System binaries — for administration (often symlink)</td><td><code>fdisk</code>, <code>mkfs</code>, <code>iptables</code></td></tr>
+                <tr><td><code>/dev</code></td><td>Device files — hardware represented as files</td><td><code>/dev/sda</code> (first hard disk), <code>/dev/tty</code> (terminal)</td></tr>
+                <tr><td><code>/proc</code></td><td>Virtual filesystem for process and kernel info</td><td><code>/proc/cpuinfo</code>, <code>/proc/meminfo</code></td></tr>
+                <tr><td><code>/sys</code></td><td>Kernel and device information (sysfs)</td><td><code>/sys/class/net/</code> (network interfaces)</td></tr>
               </tbody>
             </table>
           </div>
+          <div class="info-box note"><strong>📌 Modern Linux</strong> Many distributions now merge <code>/bin</code>, <code>/sbin</code>, <code>/lib</code> into <code>/usr/bin</code>, <code>/usr/sbin</code>, <code>/usr/lib</code> and symlink them for compatibility.</div>
         </div>
       </div>
 
+      <!-- Special directory symbols -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔣</span>Special directory symbols</div>
@@ -321,19 +329,31 @@
         <div class="accordion-body">
           <div class="table-wrapper">
             <table class="data-table">
-              <thead><tr><th>Symbol</th><th>Name</th><th>What it is</th></tr></thead>
+              <thead><tr><th>Symbol</th><th>Name</th><th>What it is</th><th>Example</th></tr></thead>
               <tbody>
-                <tr><td><code>/</code></td><td>Root</td><td>Top of the entire filesystem tree</td></tr>
-                <tr><td><code>~</code></td><td>Tilde</td><td>Shortcut for your home directory</td></tr>
-                <tr><td><code>.</code></td><td>Dot</td><td>Current directory</td></tr>
-                <tr><td><code>..</code></td><td>Dot-dot</td><td>Parent directory — one level up</td></tr>
-                <tr><td><code>/root</code></td><td>Root's home</td><td>The admin user's home — not the filesystem root</td></tr>
+                <tr><td><code>/</code></td><td>Root</td><td>Top of the entire filesystem tree</td><td><code>cd /</code> → go to root</td></tr>
+                <tr><td><code>~</code></td><td>Tilde</td><td>Shortcut for your home directory</td><td><code>cd ~/Documents</code></td></tr>
+                <tr><td><code>.</code></td><td>Dot</td><td>Current directory</td><td><code>cp file.txt .</code> → copy to current dir</td></tr>
+                <tr><td><code>..</code></td><td>Dot‑dot</td><td>Parent directory — one level up</td><td><code>cd ../..</code> → go up two levels</td></tr>
+                <tr><td><code>-</code></td><td>Hyphen</td><td>Previous directory (with <code>cd</code>)</td><td><code>cd -</code> → toggle back and forth</td></tr>
               </tbody>
             </table>
           </div>
+          <div class="code-block"><pre>$ pwd
+/home/user/projects/linux
+$ cd ..
+$ pwd
+/home/user/projects
+$ cd -
+/home/user/projects/linux
+$ cd ~
+$ pwd
+/home/user</pre></div>
+          <div class="info-box warning"><strong>⚠️ Common confusion:</strong> <code>~</code> and <code>/root</code> are completely different. <code>~</code> expands to your own home (<code>/home/username</code>). <code>/root</code> is a specific directory belonging to the admin user.</div>
         </div>
       </div>
 
+      <!-- Navigation commands: pwd, ls, cd -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🧭</span>Navigation commands — <code>pwd</code>, <code>ls</code>, <code>cd</code></div>
@@ -343,15 +363,32 @@
           <div class="code-block"><pre>pwd                 # Print Working Directory — shows your current location
 ls                  # List contents of current directory
 ls -l               # Long format — permissions, owner, size, date
-ls -a               # All files including hidden
+ls -a               # All files including hidden (those starting with .)
 ls -la              # Long format + hidden (most common combo)
+ls -lh              # Human‑readable sizes (KB, MB, GB)
+ls -ltr             # Long, sort by time, reverse (oldest last) — useful for logs
+
 cd /etc             # Change to /etc (absolute path)
 cd ..               # Go up one level
 cd ~                # Go to your home directory
-cd -                # Go back to the previous directory</pre></div>
+cd -                # Go back to the previous directory
+cd                  # No argument → go to home (same as cd ~)</pre></div>
+          <p><strong>Reading <code>ls -l</code> output:</strong></p>
+          <div class="code-block"><pre>drwxr-xr-x 2 alice users 4096 Jun 3 10:30 Documents
+│         │ │     │     │    │             │
+│         │ │     │     │    └── date/time  └── filename
+│         │ │     │     └── size in bytes
+│         │ │     └── group owner
+│         │ └── user owner
+│         └── link count
+└── file type + permissions
+    │└──────────────────── permissions (9 chars: user/group/other × rwx)
+    └── file type: d=directory  -=regular file  l=symlink</pre></div>
+          <div class="info-box tip"><strong>💡 Tab completion</strong> Press <kbd>Tab</kbd> to auto‑complete file/directory names. Press twice to see possible matches.</div>
         </div>
       </div>
 
+      <!-- Absolute vs relative paths -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔄</span>Absolute vs relative paths</div>
@@ -360,22 +397,116 @@ cd -                # Go back to the previous directory</pre></div>
         <div class="accordion-body">
           <p><strong>Absolute path:</strong> Full address starting from root, always starts with <code>/</code>. Works the same no matter where you are.</p>
           <p><strong>Relative path:</strong> Address starting from your current working directory. Uses <code>.</code> and <code>..</code>.</p>
+          <div class="code-block"><pre># Assuming you are in /home/user/projects
+
+# Absolute path (starts with /)
+cd /var/log
+
+# Relative path (no leading /)
+cd ../../etc          # go up two levels, then into etc
+cd ./scripts          # same as just "cd scripts" (./ is optional)</pre></div>
+          <div class="info-box warning"><strong>⚠️ Common mistake</strong> Forgetting the leading <code>/</code> makes the path relative. <code>cd etc</code> will look for an <code>etc</code> directory <em>inside your current directory</em>, not the system <code>/etc</code>.</div>
+          <div class="info-box tip"><strong>Path decision tree</strong>
+            <ul style="margin-top:0.5rem;">
+              <li>Does the path start with <code>/</code>? → <strong>Absolute</strong> (works anywhere)</li>
+              <li>No leading <code>/</code> → <strong>Relative</strong> (depends on current directory)</li>
+            </ul>
+          </div>
         </div>
       </div>
 
+      <!-- Hidden files -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
-          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🙈</span>Hidden files &amp; the <code>tree</code> command</div>
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🙈</span>Hidden files &amp; directories</div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <div class="code-block"><pre>ls -a ~                # reveal hidden files in home
-tree ~ -L 2            # show tree structure, 2 levels deep
-tree -a ~              # include hidden files</pre></div>
+          <p>Any file or directory whose name starts with <code>.</code> is hidden. Hidden = not shown by default in <code>ls</code>. Not protected or encrypted — just kept out of the way.</p>
+          <div class="code-block"><pre>ls -a ~     # reveal hidden files in home
+ls -la ~    # hidden files + long format</pre></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>File/Dir</th><th>Purpose</th></tr></thead>
+              <tbody>
+                <tr><td><code>.bashrc</code></td><td>Bash shell config — runs every time a terminal opens</td></tr>
+                <tr><td><code>.profile</code></td><td>Login shell config</td></tr>
+                <tr><td><code>.gitconfig</code></td><td>Git settings — name, email, preferences</td></tr>
+                <tr><td><code>.ssh/</code></td><td>SSH keys and known hosts</td></tr>
+                <tr><td><code>.</code></td><td>The current directory itself</td></tr>
+                <tr><td><code>..</code></td><td>The parent directory</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <!-- ══════════ SECTION 2 — FILE & DIRECTORY OPERATIONS (COMPLETE) ══════════ -->
+      <!-- tree command -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🌲</span>The <code>tree</code> command</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>Displays an entire directory structure visually — not just one level at a time.</p>
+          <div class="code-block"><pre>tree ~              # full tree of home directory
+tree -L 1 /         # 1 level deep from root
+tree -L 2 /home     # 2 levels deep from /home
+tree -a ~           # include hidden files
+tree -d ~           # directories only, no files</pre></div>
+          <div class="info-box tip"><strong>💡 <code>-L</code> (Level)</strong> is the most useful flag — always use it on large directories to avoid thousands of lines of output.</div>
+          <p>If <code>tree</code> is not installed: <code>sudo apt install tree</code> (Debian/Ubuntu) or <code>sudo dnf install tree</code> (RHEL/Fedora).</p>
+        </div>
+      </div>
+
+      <!-- Common errors -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">⚠️</span>Common errors &amp; fixes</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Error</th><th>What it means</th><th>Fix</th></tr></thead>
+              <tbody>
+                <tr><td><code>No such file or directory</code></td><td>Path doesn't exist or is wrong</td><td>Check spelling; use <code>ls</code> to see what's actually there</td></tr>
+                <tr><td><code>cd: x: Not a directory</code></td><td><code>x</code> is a file, not a directory</td><td>Can't <code>cd</code> into a file — use <code>cat</code> or <code>less</code> to read it</td></tr>
+                <tr><td><code>Permission denied</code></td><td>You don't have access rights</td><td>Check <code>ls -l</code>; you may need <code>sudo</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick reference table -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Quick reference</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>What you want</th><th>Command</th></tr></thead>
+              <tbody>
+                <tr><td>Where am I?</td><td><code>pwd</code></td></tr>
+                <tr><td>What's in this directory?</td><td><code>ls</code></td></tr>
+                <tr><td>Everything including hidden</td><td><code>ls -a</code></td></tr>
+                <tr><td>Details + hidden</td><td><code>ls -la</code></td></tr>
+                <tr><td>Human‑readable sizes</td><td><code>ls -lh</code></td></tr>
+                <tr><td>Go home</td><td><code>cd</code> or <code>cd ~</code></td></tr>
+                <tr><td>Go up one level</td><td><code>cd ..</code></td></tr>
+                <tr><td>Go back to previous location</td><td><code>cd -</code></td></tr>
+                <tr><td>See folder tree (2 levels)</td><td><code>tree -L 2</code></td></tr>
+                <tr><td>Tree including hidden files</td><td><code>tree -a</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ SECTION 2 — FILE & DIRECTORY OPERATIONS (DETAILED) ══════════ -->
       <div class="section-divider" id="s2">
         <div class="section-number" aria-hidden="true">2</div>
         <h2>File &amp; Directory Operations</h2>
@@ -393,12 +524,23 @@ tree -a ~              # include hidden files</pre></div>
         </button>
         <div class="accordion-body">
           <div class="code-block"><pre>touch notes.txt                    # creates empty file (or updates timestamp)
+touch file1.txt file2.txt          # create multiple at once
 echo "hello world" > notes.txt    # writes content, overwrites entire file
 echo "another line" >> notes.txt  # appends to file, preserves existing content</pre></div>
-          <div class="info-box warning"><strong>Warning:</strong> <code>&gt;</code> is destructive — it wipes the entire file, not just one line.</div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Operator</th><th>Behaviour</th></tr></thead>
+              <tbody>
+                <tr><td><code>&gt;</code></td><td>Wipes the file, writes fresh</td></tr>
+                <tr><td><code>&gt;&gt;</code></td><td>Keeps existing content, adds to the bottom</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box warning"><strong>⚠️ Warning:</strong> <code>&gt;</code> is destructive — it wipes the entire file, not just one line. Always double‑check before using.</div>
         </div>
       </div>
 
+      <!-- Creating directories -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📁</span>Creating directories — <code>mkdir</code>, <code>mkdir -p</code></div>
@@ -406,34 +548,55 @@ echo "another line" >> notes.txt  # appends to file, preserves existing content<
         </button>
         <div class="accordion-body">
           <div class="code-block"><pre>mkdir projects
-mkdir -p projects/linux/section-2   # creates full nested path in one shot</pre></div>
+mkdir docs notes images            # multiple at once
+mkdir -p projects/linux/section-2  # creates full nested path in one shot</pre></div>
+          <div class="info-box tip"><strong>💡 <code>-p</code> (parents)</strong> creates all missing parent directories along the way. Without it, <code>mkdir a/b/c</code> fails if <code>a/b</code> doesn't already exist.</div>
         </div>
       </div>
 
+      <!-- Copying -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
-          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Copying — <code>cp</code>, <code>cp -r</code>, <code>cp -i</code></div>
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Copying — <code>cp</code></div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <div class="code-block"><pre>cp notes.txt backup/
-cp -r projects projects-backup      # -r required for directories
-cp -i notes.txt backup/             # interactive — asks before overwriting</pre></div>
+          <div class="code-block"><pre>cp source destination
+cp notes.txt backup/                     # copy into directory
+cp notes.txt backup/notes-copy.txt       # copy and rename at the same time
+cp -r projects projects-backup           # -r required for directories
+cp -i notes.txt backup/                  # interactive — asks before overwriting</pre></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Flag</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td><code>-r</code></td><td>Recursive — required for directories</td></tr>
+                <tr><td><code>-i</code></td><td>Interactive — prompts before overwriting</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box tip"><strong>💡 <code>-i</code></strong> is a safety net. Use it when unsure whether the destination already has a file with the same name.</div>
         </div>
       </div>
 
+      <!-- Moving & renaming -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
-          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🚚</span>Moving &amp; renaming — <code>mv</code>, <code>mv -i</code></div>
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🚚</span>Moving &amp; renaming — <code>mv</code></div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <div class="code-block"><pre>mv notes.txt archive/               # move into directory
+          <div class="code-block"><pre>mv source destination
+mv notes.txt archive/               # move into directory (same as cut+paste)
 mv old-name.txt new-name.txt        # rename in same location
+mv notes.txt archive/renamed.txt    # move and rename in one step
+mv projects archive/                # move a directory (no -r needed)
 mv -i notes.txt archive/            # interactive — asks before overwriting</pre></div>
+          <div class="info-box note"><strong>Note:</strong> Unlike <code>cp</code>, <code>mv</code> leaves no copy behind — the original is gone. Unlike <code>cp</code>, <code>mv</code> doesn't need <code>-r</code> for directories.</div>
         </div>
       </div>
 
+      <!-- Deleting -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🗑️</span>Deleting — <code>rm</code>, <code>rm -rf</code>, <code>rmdir</code></div>
@@ -441,41 +604,133 @@ mv -i notes.txt archive/            # interactive — asks before overwriting</p
         </button>
         <div class="accordion-body">
           <div class="code-block"><pre>rm notes.txt                         # delete a file
+rm file1.txt file2.txt               # delete multiple files
+rm -i notes.txt                      # interactive — asks for confirmation
 rm -r projects/                      # delete a directory and all its contents
-rm -rf projects/                     # force delete — no prompts, no mercy
+rm -rf projects/                     # force delete — no prompts, no mercy (dangerous!)
 rmdir empty-dir/                     # only works if the directory is empty</pre></div>
-          <div class="info-box warning"><strong>Warning:</strong> Linux has no recycle bin. Deleted = gone permanently.</div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Command</th><th>Behaviour</th></tr></thead>
+              <tbody>
+                <tr><td><code>rm</code></td><td>Deletes files</td></tr>
+                <tr><td><code>rm -r</code></td><td>Deletes a directory and everything inside it</td></tr>
+                <tr><td><code>rm -rf</code></td><td>Force deletes — no confirmation, no recovery</td></tr>
+                <tr><td><code>rmdir</code></td><td>Deletes a directory only if it is empty — safe option</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box warning"><strong>⚠️ Linux has no recycle bin.</strong> Deleted = gone permanently. <code>rm -rf</code> is the most dangerous command — always double‑check the path before running.</div>
+          <div class="info-box tip"><strong>💡 Safety tip:</strong> Some users alias <code>rm</code> to <code>rm -i</code> to prevent accidental deletion. Use <code>rmdir</code> for directories you want to delete safely.</div>
         </div>
       </div>
 
+      <!-- Wildcards -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
-          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">*</span>Wildcards — <code>*</code> and <code>?</code></div>
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">*</span>Wildcards — <code>*</code>, <code>?</code></div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Wildcard</th><th>Matches</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td><code>*</code></td><td>Any number of characters (including zero)</td><td><code>*.txt</code> → all text files</td></tr>
+                <tr><td><code>?</code></td><td>Exactly one character</td><td><code>file-?.txt</code> → file-1.txt, file-a.txt (not file-10.txt)</td></tr>
+              </tbody>
+            </table>
+          </div>
           <div class="code-block"><pre>rm *.log                               # delete all .log files
-cp *.txt backup/                       # copy all .txt files
-ls file-?.txt                          # matches file-1.txt, file-a.txt (exactly one char)</pre></div>
+cp *.txt backup/                       # copy all .txt files into backup/
+ls file-?.txt                          # matches file-1.txt, file-a.txt
+ls chapter-*.md                        # list all markdown files starting with "chapter-"</pre></div>
+          <div class="info-box warning"><strong>⚠️ Caution with <code>rm *</code>:</strong> Always run <code>ls *</code> first to see what you're about to delete.</div>
         </div>
       </div>
 
+      <!-- Viewing file contents -->
       <div class="accordion" data-searchable>
         <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
           <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👀</span>Viewing file contents — <code>cat</code>, <code>less</code>, <code>head</code>, <code>tail</code></div>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
         </button>
         <div class="accordion-body">
-          <div class="code-block"><pre>cat notes.txt                          # print entire file to screen
-less notes.txt                         # scrollable viewer (Space=down, b=up, q=quit)
+          <div class="code-block"><pre>cat notes.txt                          # print entire file to screen (good for short files)
+less notes.txt                         # scrollable viewer (Space=down, b=up, q=quit, /search)
 head -n 5 notes.txt                    # first 5 lines
 tail -n 5 notes.txt                    # last 5 lines
-tail -f app.log                        # follow — prints new lines as file grows</pre></div>
+tail -f app.log                        # follow — prints new lines as file grows (great for logs)</pre></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Key</th><th>Action in <code>less</code></th></tr></thead>
+              <tbody>
+                <tr><td><code>Space</code> or <code>f</code></td><td>Page down</td></tr>
+                <tr><td><code>b</code></td><td>Page up</td></tr>
+                <tr><td><code>q</code></td><td>Quit</td></tr>
+                <tr><td><code>/word</code></td><td>Search for "word"</td></tr>
+                <tr><td><code>n</code></td><td>Next search result</td></tr>
+                <tr><td><code>N</code></td><td>Previous search result</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box tip"><strong>💡 Use <code>less</code> for large files</strong> — <code>cat</code> will flood your terminal with thousands of lines. <code>less</code> loads the file page by page.<br>
+          <strong><code>tail -f</code></strong> is essential for watching log files in real time.</div>
         </div>
       </div>
 
-      <!-- ══════════ SECTIONS 3-10 — PLACEHOLDERS ══════════ -->
-      <!-- Section 3 — Permissions -->
+      <!-- file command -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔍</span><code>file</code> — determine file type</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>Linux doesn't rely on file extensions to know what a file is. Use <code>file</code> to identify what something actually contains.</p>
+          <div class="code-block"><pre>file unknown.bin                       # tells you if it's ASCII text, binary, image, etc.
+file script.sh                         # might show "Bourne-Again shell script"</pre></div>
+        </div>
+      </div>
+
+      <!-- Quick reference table -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Quick reference</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>What you want</th><th>Command</th></tr></thead>
+              <tbody>
+                <tr><td>Create empty file</td><td><code>touch file.txt</code></td></tr>
+                <tr><td>Write to file (overwrite)</td><td><code>echo "text" > file.txt</code></td></tr>
+                <tr><td>Append to file</td><td><code>echo "text" >> file.txt</code></td></tr>
+                <tr><td>Create directory</td><td><code>mkdir dir</code></td></tr>
+                <tr><td>Create nested directories</td><td><code>mkdir -p a/b/c</code></td></tr>
+                <tr><td>Copy file</td><td><code>cp src dest</code></td></tr>
+                <tr><td>Copy file (safe)</td><td><code>cp -i src dest</code></td></tr>
+                <tr><td>Copy directory</td><td><code>cp -r src dest</code></td></tr>
+                <tr><td>Move / rename</td><td><code>mv src dest</code></td></tr>
+                <tr><td>Move / rename (safe)</td><td><code>mv -i src dest</code></td></tr>
+                <tr><td>Delete file</td><td><code>rm file.txt</code></td></tr>
+                <tr><td>Delete directory</td><td><code>rm -r dir</code></td></tr>
+                <tr><td>Force delete</td><td><code>rm -rf dir</code></td></tr>
+                <tr><td>Delete empty directory</td><td><code>rmdir dir</code></td></tr>
+                <tr><td>Delete all <code>.log</code> files</td><td><code>rm *.log</code></td></tr>
+                <tr><td>Match single character</td><td><code>ls file-?.txt</code></td></tr>
+                <tr><td>Print file</td><td><code>cat file.txt</code></td></tr>
+                <tr><td>Scroll through file</td><td><code>less file.txt</code></td></tr>
+                <tr><td>First N lines</td><td><code>head -n N file.txt</code></td></tr>
+                <tr><td>Last N lines</td><td><code>tail -n N file.txt</code></td></tr>
+                <tr><td>Watch file live</td><td><code>tail -f file.txt</code></td></tr>
+                <tr><td>Identify file type</td><td><code>file filename</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+            <!-- Section 3 — Permissions & Ownership (COMPLETE) -->
       <div class="section-divider" id="s3">
         <div class="section-number" aria-hidden="true">3</div>
         <h2>Permissions &amp; Ownership</h2>
@@ -484,11 +739,256 @@ tail -f app.log                        # follow — prints new lines as file gro
           <span style="font-size: 0.7rem;">Complete</span>
         </label>
       </div>
-      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
-        <strong>🚧 Coming soon</strong>
-        <p>This section will cover file permissions (chmod, chown, umask), special permissions (setuid, setgid, sticky bit), and ownership concepts.</p>
+
+      <!-- Why permissions exist -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔐</span>Why permissions exist &amp; the three categories</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr><th>Metadata</th><th>Description</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>User owner</strong> (u)</td><td>The creator or assigned owner of the file — usually the user who created it.</td></tr>
+                <tr><td><strong>Group owner</strong> (g)</td><td>A collection of users who share access. The file's group determines which users get group‑level permissions.</td></tr>
+                <tr><td><strong>Three sets of permissions</strong></td><td>Separate <code>rwx</code> triples for the user owner, the group owner, and everyone else (<strong>other</strong>)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-block"><pre>$ ls -l /etc/shadow
+-rw-r----- 1 root shadow 1234 Mar 10 10:00 /etc/shadow
+
+# Only root (owner) and the shadow group can read. No one else.
+$ ls -ld /root
+drwx------ 5 root root 4096 Mar 10 10:00 /root/
+
+# Only root can enter /root — completely locked.</pre></div>
+          <div class="info-box tip"><strong>💡 Key insight</strong> Permissions are not just for security — they also protect against accidental changes. A missing execute bit on a directory prevents <code>cd</code> into it, which stops you from even seeing what's inside.</div>
+        </div>
       </div>
 
+      <!-- The three permission types -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📖</span>The three permission types</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Permission</th><th>Symbol</th><th>On a file</th><th>On a directory</th></tr></thead>
+              <tbody>
+                <tr><td>Read</td><td><code>r</code></td><td>View contents</td><td>List contents with <code>ls</code></td></tr>
+                <tr><td>Write</td><td><code>w</code></td><td>Modify or delete</td><td>Create, delete, rename files inside</td></tr>
+                <tr><td>Execute</td><td><code>x</code></td><td>Run as a program</td><td>Enter with <code>cd</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box tip"><strong>💡 Directory execute</strong> You need <code>x</code> on a directory just to <code>cd</code> into it — even if you have <code>r</code>.</div>
+          <div class="code-block"><pre># Example: a directory with r but no x
+$ chmod 444 mydir/          # r--r--r--
+$ cd mydir/
+bash: cd: mydir/: Permission denied   # cannot enter
+
+$ chmod 555 mydir/          # r-xr-xr-x (adds execute)
+$ cd mydir/                 # now works</pre></div>
+        </div>
+      </div>
+
+      <!-- Reading the permission string -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔍</span>Reading the permission string</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>d  rwx  r-x  r-x
+│   │    │    │
+│   │    │    └── other
+│   │    └─────── group
+│   └──────────── user (owner)
+└──────────────── type: d=directory  -=file  l=symlink</pre></div>
+          <p>Each block of three is always <code>r</code> then <code>w</code> then <code>x</code>. A <code>-</code> means that permission is not granted.</p>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Output</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td><code>-rw-r--r--</code></td><td>File. Owner: read+write. Group: read. Other: read.</td></tr>
+                <tr><td><code>drwxr-xr-x</code></td><td>Directory. Owner: full. Group: read+execute. Other: read+execute.</td></tr>
+                <tr><td><code>drwx------</code></td><td>Directory. Owner: full. Group: none. Other: none.</td></tr>
+                <tr><td><code>drwxrwxrwt</code></td><td>Directory. Everyone: full. Sticky bit set (<code>t</code>).</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box note"><strong>Real system examples</strong>
+            <ul>
+              <li><code>/etc/hosts</code> → <code>-rw-r--r--</code> (root edits, everyone reads)</li>
+              <li><code>/etc/passwd</code> → <code>-rw-r--r--</code> (user list public)</li>
+              <li><code>/tmp</code> → <code>drwxrwxrwt</code> (shared, sticky bit prevents deleting others' files)</li>
+              <li><code>/root</code> → <code>drwx------</code> (admin's home, locked to everyone else)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- chmod — symbolic mode -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔧</span><code>chmod</code> — changing permissions (symbolic)</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>Syntax: <code>chmod [who][operator][permission] filename</code></p>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Who</th><th>Operator</th><th>Permission</th></tr></thead>
+              <tbody>
+                <tr><td><code>u</code> user</td><td><code>+</code> add</td><td><code>r</code> read</td></tr>
+                <tr><td><code>g</code> group</td><td><code>-</code> remove</td><td><code>w</code> write</td></tr>
+                <tr><td><code>o</code> other</td><td><code>=</code> set exactly</td><td><code>x</code> execute</td></tr>
+                <tr><td><code>a</code> all</td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-block"><pre>chmod u+x script.sh          # add execute for owner
+chmod g-w notes.txt          # remove write from group
+chmod o=r notes.txt          # set other to read only
+chmod a+r notes.txt          # give everyone read
+chmod u+x,g-w notes.txt      # multiple changes at once</pre></div>
+          <div class="info-box tip"><strong>💡 Tip</strong> <code>chmod a+x file</code> adds execute for everyone (user+group+other).</div>
+        </div>
+      </div>
+
+      <!-- chmod — numeric mode -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔢</span><code>chmod</code> — numeric mode (octal)</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Permission</th><th>Value</th></tr></thead>
+              <tbody>
+                <tr><td><code>r</code></td><td>4</td></tr>
+                <tr><td><code>w</code></td><td>2</td></tr>
+                <tr><td><code>x</code></td><td>1</td></tr>
+                <tr><td>none</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Add values for each category (user, group, other) to form a three-digit number.</p>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Number</th><th>Permissions</th><th>Calculation</th></tr></thead>
+              <tbody>
+                <tr><td><code>7</code></td><td><code>rwx</code></td><td>4+2+1</td></tr>
+                <tr><td><code>6</code></td><td><code>rw-</code></td><td>4+2+0</td></tr>
+                <tr><td><code>5</code></td><td><code>r-x</code></td><td>4+0+1</td></tr>
+                <tr><td><code>4</code></td><td><code>r--</code></td><td>4+0+0</td></tr>
+                <tr><td><code>0</code></td><td><code>---</code></td><td>0+0+0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="code-block"><pre>chmod 755 script.sh     # rwxr-xr-x — scripts, directories
+chmod 644 notes.txt     # rw-r--r-- — regular files, config files
+chmod 700 private.txt   # rwx------ — owner only, full access
+chmod 600 secret.txt    # rw------- — owner read+write only
+chmod 777 shared.txt    # rwxrwxrwx — full access for everyone (dangerous)</pre></div>
+          <div class="info-box tip"><strong>Memorise these two:</strong> <code>755</code> for scripts/directories, <code>644</code> for regular files.</div>
+        </div>
+      </div>
+
+      <!-- chown — changing ownership -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👑</span><code>chown</code> — changing ownership</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>chown newowner filename
+chown user:group filename          # change both at once
+chown -R user:group directory/     # recursive — apply to whole directory</pre></div>
+          <p>Examples:</p>
+          <div class="code-block"><pre>sudo chown root notes.txt          # make root the owner
+sudo chown codespace notes.txt     # give back to codespace
+sudo chown codespace:root notes.txt # owner=codespace, group=root</pre></div>
+          <div class="info-box warning"><strong>⚠️ Requires sudo</strong> Only root can transfer ownership of files. A regular user cannot take ownership away from root without <code>sudo</code>.</div>
+        </div>
+      </div>
+
+      <!-- chgrp — changing group -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👪</span><code>chgrp</code> — changing group</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>chgrp newgroup filename
+chgrp root notes.txt               # assign to root group
+chgrp -R codespace projects/       # recursive</pre></div>
+          <div class="info-box note"><strong>Note:</strong> <code>chown user:group</code> does both at once, so <code>chgrp</code> is rarely needed.</div>
+        </div>
+      </div>
+
+      <!-- sudo — acting as administrator -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">⚡</span><code>sudo</code> — acting as administrator</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p><code>sudo</code> (superuser do) lets an authorised user run a single command with root privileges.</p>
+          <div class="code-block"><pre>sudo chown root notes.txt          # run as root
+sudo chmod 600 /etc/hosts          # modify a system file</pre></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td><code>root</code></td><td>The administrator account — no permission restrictions</td></tr>
+                <tr><td><code>sudo</code></td><td>Allows a regular user to act as root for one command</td></tr>
+                <tr><td>sudoers</td><td>The list of users allowed to use <code>sudo</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box tip"><strong>💡 Tip:</strong> <code>sudo</code> asks for your password the first time, then remembers for a few minutes.</div>
+        </div>
+      </div>
+
+      <!-- Quick reference table -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Quick reference</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>What you want</th><th>Command</th></tr></thead>
+              <tbody>
+                <tr><td>View permissions</td><td><code>ls -l filename</code></td></tr>
+                <tr><td>Give owner execute</td><td><code>chmod u+x file</code></td></tr>
+                <tr><td>Remove group write</td><td><code>chmod g-w file</code></td></tr>
+                <tr><td>Set other to read only</td><td><code>chmod o=r file</code></td></tr>
+                <tr><td>Common file permissions</td><td><code>chmod 644 file</code></td></tr>
+                <tr><td>Common script permissions</td><td><code>chmod 755 file</code></td></tr>
+                <tr><td>Owner only, full access</td><td><code>chmod 700 file</code></td></tr>
+                <tr><td>Change file owner</td><td><code>sudo chown user file</code></td></tr>
+                <tr><td>Change owner and group</td><td><code>sudo chown user:group file</code></td></tr>
+                <tr><td>Change recursively</td><td><code>sudo chown -R user:group dir/</code></td></tr>
+                <tr><td>Change group only</td><td><code>chgrp group file</code></td></tr>
+                <tr><td>Run as administrator</td><td><code>sudo command</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ SECTIONS 4-10 — PLACEHOLDERS ══════════ -->
       <!-- Section 4 — Processes -->
       <div class="section-divider" id="s4">
         <div class="section-number" aria-hidden="true">4</div>
