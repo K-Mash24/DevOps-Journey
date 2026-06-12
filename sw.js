@@ -2,7 +2,7 @@
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
 // Gist Integration and it works
 
-const CACHE_NAME = 'devops-journey-2026-06-12-v7.3';
+const CACHE_NAME = 'devops-journey-2026-06-12-v7.4';
 
 const urlsToCache = [
   '/',
