@@ -91,6 +91,7 @@
 
 /* ── CSS Variables — Light Mode (updated with indigo + mint scheme) ── */
 :root {
+  transition: background-color 0.3s ease, color 0.3s ease;
   --font-display: 'Syne', sans-serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -3271,3 +3272,206 @@ code, pre {
     overflow-x: hidden;
   }
 }
+
+.btn-set {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-primary);
+}
+
+.btn-set:hover {
+  border-color: var(--accent-primary);
+  background: var(--pillar-color-light);
+  color: var(--accent-primary);
+}
+
+/* ============================================================
+   WELCOME LIGHTBOX (First-time visitor message)
+   ============================================================ 
+
+.welcome-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-lightbox-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.welcome-lightbox-content {
+  position: relative;
+  max-width: 500px;
+  width: 90%;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  z-index: 10001;
+  animation: welcomeFadeIn 0.3s ease-out;
+}
+
+@keyframes welcomeFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.welcome-lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+  z-index: 10002;
+}
+
+.welcome-lightbox-close:hover {
+  color: var(--accent-danger);
+}
+
+.welcome-lightbox-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.welcome-icon {
+  font-size: 2rem;
+}
+
+.welcome-lightbox-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.welcome-lightbox-body {
+  padding: 1.25rem 1.5rem;
+}
+
+.welcome-lightbox-body p {
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.welcome-lightbox-body ul {
+  margin: 0.75rem 0 1rem;
+  padding-left: 1.5rem;
+}
+
+.welcome-lightbox-body li {
+  margin-bottom: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.welcome-tip {
+  background: var(--pillar-color-light);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin: 1rem 0;
+  border-left: 3px solid var(--accent-primary);
+}
+
+.welcome-tip kbd {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.welcome-progress {
+  background: var(--bg-tertiary);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  margin-top: 0.75rem;
+}
+
+.welcome-progress p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.welcome-lightbox-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.welcome-dont-show {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.welcome-dont-show input {
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+}
+
+@media (max-width: 640px) {
+  .welcome-lightbox-content {
+    max-width: 95%;
+  }
+  
+  .welcome-lightbox-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .welcome-lightbox-body ul {
+    padding-left: 1.2rem;
+  }
+  
+  .welcome-lightbox-body li {
+    font-size: 0.8rem;
+  }
+  
+  .welcome-lightbox-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .welcome-dont-show {
+    justify-content: center;
+  }
+} */

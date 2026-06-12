@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Overhauled linux.html to my liking, added new logos and updated styling.
+// Overwrote the quiz rendering logic in networking.js to use a more dynamic approach, allowing for easier addition of new quizzes and questions in the future. Added welcome toasts that show up once per pillar/page.
 
-const CACHE_NAME = 'devops-journey-2026-06-12-v1';
+const CACHE_NAME = 'devops-journey-2026-06-12-v3.2';
 
 const urlsToCache = [
   '/',

@@ -3,19 +3,44 @@
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ----- FLASHCARDS DATA -----
-  const FLASHCARDS = [
-    { term: "Absolute vs relative path", answer: "Absolute starts with / (from root). Relative starts from current directory. Example: /home/user/file.txt (absolute) vs ./file.txt (relative)" },
-    { term: "Create nested directories in one command", answer: "mkdir -p parent/child/grandchild" },
-    { term: "Difference between > and >>", answer: "> overwrites entire file. >> appends to end. Use >> to preserve existing content." },
-    { term: "Delete a non-empty directory", answer: "rm -r directory_name (or rm -rf for force, no confirmation)" },
-    { term: "View file with scrolling", answer: "less filename (Space=down, b=up, /search, q=quit)" },
-    { term: "Wildcard for single character", answer: "? matches exactly one character. Example: file-?.txt matches file-1.txt, file-a.txt" },
-    { term: "Wildcard for any characters", answer: "* matches zero or more characters. Example: *.log deletes all .log files" },
-    { term: "Copy directory recursively", answer: "cp -r source_dir destination_dir" },
-    { term: "Hidden file prefix", answer: "Dot (.) prefix hides files/directories. Use ls -a to see them." },
-    { term: "Watch log file in real time", answer: "tail -f /var/log/syslog (or any log file)" }
-  ];
+  // ----- FLASHCARDS DATA (25 flashcards total) -----
+const FLASHCARDS = [
+  { term: "Absolute vs relative path", answer: "Absolute starts with / (from root). Relative starts from current directory. Example: /home/user/file.txt (absolute) vs ./file.txt (relative)" },
+  { term: "Create nested directories in one command", answer: "mkdir -p parent/child/grandchild" },
+  { term: "Difference between > and >>", answer: "> overwrites entire file. >> appends to end. Use >> to preserve existing content." },
+  { term: "Delete a non-empty directory", answer: "rm -r directory_name (or rm -rf for force, no confirmation)" },
+  { term: "View file with scrolling", answer: "less filename (Space=down, b=up, /search, q=quit)" },
+  { term: "Wildcard for single character", answer: "? matches exactly one character. Example: file-?.txt matches file-1.txt, file-a.txt" },
+  { term: "Wildcard for any characters", answer: "* matches zero or more characters. Example: *.log deletes all .log files" },
+  { term: "Copy directory recursively", answer: "cp -r source_dir destination_dir" },
+  { term: "Hidden file prefix", answer: "Dot (.) prefix hides files/directories. Use ls -a to see them." },
+  { term: "Watch log file in real time", answer: "tail -f /var/log/syslog (or any log file)" },
+  { term: "Display file permissions in octal", answer: "stat -c '%a %n' filename (e.g., 644 for rw-r--r--)" },
+  { term: "Change file permissions (numeric)", answer: "chmod 755 script.sh (rwxr-xr-x) or chmod 644 file.txt (rw-r--r--)" },
+  { term: "Change file permissions (symbolic)", answer: "chmod u+x file.sh (add execute for user), chmod go-w file.txt (remove write from group and others)" },
+  { term: "Change file owner", answer: "sudo chown newowner filename (requires sudo)" },
+  { term: "Change file owner and group", answer: "sudo chown user:group filename (e.g., sudo chown alice:developers script.sh)" },
+  { term: "Change group ownership only", answer: "chgrp groupname filename" },
+  { term: "Display running processes", answer: "ps aux (all processes), top (interactive), htop (colorful interactive)" },
+  { term: "Kill a process by PID", answer: "kill -9 PID (force kill), kill -15 PID (graceful termination)" },
+  { term: "Kill a process by name", answer: "pkill process_name (e.g., pkill firefox), killall process_name" },
+  { term: "Display disk usage", answer: "df -h (human-readable filesystem disk usage), du -sh directory (size of directory)" },
+  { term: "Search within files using grep", answer: "grep 'pattern' filename (e.g., grep 'error' /var/log/syslog)" },
+  { term: "Search recursively in directories", answer: "grep -r 'pattern' /path/to/dir (recursive search)" },
+  { term: "Stream editor for text replacement", answer: "sed 's/old/new/g' filename (replace all occurrences of 'old' with 'new')" },
+  { term: "Print first N lines of a file", answer: "head -n 20 filename (first 20 lines)" },
+  { term: "Print last N lines of a file", answer: "tail -n 20 filename (last 20 lines)" }
+];
+
+// Total: 25 flashcards covering:
+
+// - Navigation (paths, wildcards, hidden files)
+// -File operations (mkdir, cp, rm, mv, redirections)
+// - Permissions & ownership (chmod, chown, chgrp, stat)
+// - Process management (ps, kill, pkill)
+// - Disk usage (df, du)
+// - Text processing (grep, sed)
+// - File viewing (head, tail, less, tail -f)
 
   function renderFlashcards() {
     const track = document.getElementById('flashcardTrack');
@@ -119,48 +144,67 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Remember to look at networking.js to look at the new ways of rendering quizes when i am done
   // ----- QUIZ DATA -----
-  const QUIZ_QUESTIONS = [
-    {
-      q: "Which command shows your current directory location?",
-      options: ["ls", "cd", "pwd", "dir"],
-      correct: 2,
-      explain: "pwd = Print Working Directory. Shows the full absolute path of your current location."
-    },
-    {
-      q: "What does `cd -` do?",
-      options: ["Goes to root directory", "Goes to home directory", "Goes to previous directory", "Does nothing"],
-      correct: 2,
-      explain: "cd - toggles back to the previous directory you were in before the last cd command."
-    },
-    {
-      q: "How do you create a file without opening an editor?",
-      options: ["newfile.txt", "create file.txt", "touch file.txt", "make file.txt"],
-      correct: 2,
-      explain: "touch creates an empty file. Also updates timestamp if file exists."
-    },
-    {
-      q: "Which wildcard matches exactly one character?",
-      options: ["*", "?", "#", "%"],
-      correct: 1,
-      explain: "? matches a single character. Example: file-?.txt matches file-1.txt, file-a.txt, but not file-10.txt."
-    },
-    {
-      q: "What is the difference between `rmdir` and `rm -r`?",
-      options: ["Nothing, they are the same", "rmdir deletes empty directories only, rm -r deletes directories with contents", "rmdir works on files, rm -r works on directories", "rmdir requires sudo, rm -r doesn't"],
-      correct: 1,
-      explain: "rmdir only removes empty directories. rm -r recursively deletes directories and all contents."
-    }
-  ];
+  const QUIZ_SETS = {
+    1: [
+      {
+          q: "Which command shows your current directory location?",
+          options: ["ls", "cd", "pwd", "dir"],
+          correct: 2,
+          explain: "pwd = Print Working Directory. Shows the full absolute path of your current location."
+      },
+      {
+        q: "What does `cd -` do?",
+        options: ["Goes to root directory", "Goes to home directory", "Goes to previous directory", "Does nothing"],
+        correct: 2,
+        explain: "cd - toggles back to the previous directory you were in before the last cd command."
+      },
+      {
+        q: "How do you create a file without opening an editor?",
+        options: ["newfile.txt", "create file.txt", "touch file.txt", "make file.txt"],
+        correct: 2,
+        explain: "touch creates an empty file. Also updates timestamp if file exists."
+      },
+      {
+        q: "Which wildcard matches exactly one character?",
+        options: ["*", "?", "#", "%"],
+        correct: 1,
+        explain: "? matches a single character. Example: file-?.txt matches file-1.txt, file-a.txt, but not file-10.txt."
+      },
+      {
+        q: "What is the difference between `rmdir` and `rm -r`?",
+        options: ["Nothing, they are the same", "rmdir deletes empty directories only, rm -r deletes directories with contents", "rmdir works on files, rm -r works on directories", "rmdir requires sudo, rm -r doesn't"],
+        correct: 1,
+        explain: "rmdir only removes empty directories. rm -r recursively deletes directories and all contents."
+      }
+    ]
+  };
 
-  let userAnswers = new Array(QUIZ_QUESTIONS.length).fill(null);
+  // After defining QUIZ_SETS
+  let currentSet = 1;
+  let currentQuestions = QUIZ_SETS[currentSet];
+  let userAnswers = new Array(currentQuestions.length).fill(null);
+
+  // Function to load a specific set (to be called by set selector buttons)
+  function loadQuizSet(setNumber) {
+    if (!QUIZ_SETS[setNumber]) return;
+    currentSet = setNumber;
+    currentQuestions = QUIZ_SETS[currentSet];
+    userAnswers = new Array(currentQuestions.length).fill(null);
+    renderQuiz();
+    //Reset progress
+    document.getElementById('quizProgressFill').style.width = '0%';
+    document.getElementById('quizScore').classList.remove('show');
+    document.getElementById('quizFeedback').style.display = 'none';
+  }
 
   function renderQuiz() {
     const body = document.getElementById('quizBody');
     if (!body) return;
-    body.innerHTML = QUIZ_QUESTIONS.map((q, qi) => `
+    body.innerHTML = currentQuestions.map((q, qi) => `
       <div class="quiz-question" id="qq${qi}" style="margin-bottom:1.75rem;padding-bottom:1.75rem;border-bottom:1px solid var(--border-color);">
-        <span class="q-number">Question ${qi + 1} of ${QUIZ_QUESTIONS.length}</span>
+        <span class="q-number">Question ${qi + 1} of ${currentQuestions.length}</span>
         ${q.q}
         <div class="quiz-options" style="margin-top:0.875rem;">
           ${q.options.map((opt, oi) => `
@@ -181,21 +225,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const answered = userAnswers.filter(a => a !== null).length;
     const fill = document.getElementById('quizProgressFill');
-    if (fill) fill.style.width = (answered / QUIZ_QUESTIONS.length * 100) + '%';
+    if (fill) fill.style.width = (answered / currentQuestions.length * 100) + '%';
   };
 
   window.submitLinuxQuiz = function() {
     const answered = userAnswers.filter(a => a !== null).length;
-    if (answered < QUIZ_QUESTIONS.length) {
+    if (answered < currentQuestions.length) {
       const fb = document.getElementById('quizFeedback');
       fb.className = 'quiz-feedback incorrect';
-      fb.textContent = `Please answer all ${QUIZ_QUESTIONS.length} questions before submitting. (${answered}/${QUIZ_QUESTIONS.length} answered)`;
+      fb.textContent = `Please answer all ${currentQuestions.length} questions before submitting. (${answered}/${currentQuestions.length} answered)`;
       fb.style.display = 'block';
       return;
     }
 
     let score = 0;
-    QUIZ_QUESTIONS.forEach((q, qi) => {
+    currentQuestions.forEach((q, qi) => {
       const isCorrect = userAnswers[qi] === q.correct;
       if (isCorrect) score++;
       document.querySelectorAll(`#qq${qi} .quiz-option`).forEach((opt, oi) => {
@@ -213,9 +257,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    const totalQuestions = QUIZ_QUESTIONS.length;
+    const totalQuestions = currentQuestions.length;
     if (score === totalQuestions) {
-      localStorage.setItem('linux-quiz-passed', 'true');
+      // Mark this specific set as passed
+      localStorage.setItem(`linux-quiz-set-${currentSet}-passed`, 'true');
+      
+      // Check if ANY set is mastered to update the floating ring
+      if (isQuizMastered()) {
+        localStorage.setItem('linux-quiz-passed', 'true');
+      }
     }
 
     // Force update of the floating ring
@@ -223,9 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('quizFeedback').style.display = 'none';
     document.getElementById('quizScore').classList.add('show');
-    document.getElementById('scoreNum').textContent = `${score}/${QUIZ_QUESTIONS.length}`;
+    document.getElementById('scoreNum').textContent = `${score}/${currentQuestions.length}`;
 
-    const pct = Math.round(score / QUIZ_QUESTIONS.length * 100);
+    const pct = Math.round(score / currentQuestions.length * 100);
     const previousBest = localStorage.getItem('gc-score-linux') || 0;
     if (pct > previousBest) {
       localStorage.setItem('gc-score-linux', pct);
@@ -244,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.resetLinuxQuiz = function() {
-    userAnswers = new Array(QUIZ_QUESTIONS.length).fill(null);
+    userAnswers = new Array(currentQuestions.length).fill(null);
     document.getElementById('quizScore').classList.remove('show');
     const fb = document.getElementById('quizFeedback');
     fb.className = 'quiz-feedback';
@@ -253,10 +303,40 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fill) fill.style.width = '0%';
     renderQuiz();
 
-    // Reset quiz mastery flag and update floating ring
-    localStorage.removeItem('linux-quiz-passed');
+    // Only reset mastery for the CURRENT set (not all sets)
+    localStorage.removeItem(`linux-quiz-set-${currentSet}-passed`);
+
+    // If no sets are mastered anymore, remove the overall flag
+    if (!isQuizMastered()) {
+      localStorage.removeItem('linux-quiz-passed');
+    }
+    
     if (window.updateFloatingRing) window.updateFloatingRing();
   };
+
+  document.getElementById('set1Btn')?.addEventListener('click', () => loadQuizSet(1));
+  document.getElementById('set2Btn')?.addEventListener('click', () => loadQuizSet(2));
+  document.getElementById('set3Btn')?.addEventListener('click', () => loadQuizSet(3));
+  document.getElementById('resetAllBtn')?.addEventListener('click', resetAllQuizProgress);
+
+  function isQuizMastered() {
+    // Check if any of the three quiz sets have been passed
+    for (let i = 1; i <= 3; i++) {
+      if (localStorage.getItem(`linux-quiz-set-${i}-passed`) === 'true') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function resetAllQuizProgress() {
+    for (let i = 1; i <= 3; i++) {
+      localStorage.removeItem(`linux-quiz-set-${i}-passed`);
+    }
+    localStorage.removeItem('linux-quiz-passed');
+    if (window.updateFloatingRing) window.updateFloatingRing();
+  }
+  // ============================================
 
   // ----- FLOATING PROGRESS RING & MODAL -----
   function initFloatingProgressRing() {
@@ -408,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         if (confirm('⚠️ Are you sure? This will reset ALL section checkboxes and quiz mastery for Linux. This cannot be undone.')) {
-          for (let i = 1; i <= 8; i++) {
+          for (let i = 1; i <= 10; i++) {
             localStorage.removeItem(`linux-section-${i}`);
           }
           localStorage.removeItem('linux-quiz-passed');

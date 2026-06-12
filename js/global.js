@@ -1068,6 +1068,316 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     showPillarDetail(pillarId, phase);
   }
 
+  // // ============================================================
+  // // WELCOME LIGHTBOX all three languages (First-time visitors per pillar)
+  // // ============================================================
+  
+  // function initWelcomeLightbox() {
+  //   const lightbox = document.getElementById('welcomeLightbox');
+  //   const closeBtn = document.getElementById('closeWelcomeLightbox');
+  //   const startBtn = document.getElementById('startLearningBtn');
+  //   const dontShowCheckbox = document.getElementById('dontShowAgain');
+    
+  //   if (!lightbox) return;
+    
+  //   // Determine current page/pillar from URL or body class
+  //   let pageKey = '';
+  //   if (window.location.pathname.includes('networking.html')) {
+  //     pageKey = 'networking-pillar-welcome-seen';
+  //   } else if (window.location.pathname.includes('linux.html')) {
+  //     pageKey = 'linux-pillar-welcome-seen';
+  //   } else if (window.location.pathname.includes('security.html')) {
+  //     pageKey = 'security-pillar-welcome-seen';
+  //   } else {
+  //     // Default for home page or unknown – don't show welcome lightbox
+  //     return;
+  //   }
+    
+  //   // Check if user has seen the welcome message for this pillar
+  //   const hasSeenWelcome = localStorage.getItem(pageKey);
+    
+  //   if (!hasSeenWelcome) {
+  //     // Customize content based on pillar
+  //     customizeWelcomeContent(pageKey);
+  //     // Show lightbox after a short delay
+  //     setTimeout(() => {
+  //       lightbox.style.display = 'flex';
+  //     }, 500);
+  //   }
+    
+  //   // Customize the welcome message based on which pillar
+  //   function customizeWelcomeContent(pageKey) {
+  //     const iconSpan = document.querySelector('.welcome-icon');
+  //     const titleEl = document.querySelector('.welcome-lightbox-header h2');
+  //     const listEl = document.querySelector('.welcome-lightbox-body ul');
+      
+  //     if (!iconSpan || !titleEl || !listEl) return;
+      
+  //     if (pageKey === 'networking-pillar-welcome-seen') {
+  //       iconSpan.textContent = '🌐';
+  //       titleEl.textContent = 'Welcome to Networking Fundamentals';
+  //       listEl.innerHTML = `
+  //         <li>📡 OSI & TCP/IP models</li>
+  //         <li>📍 IP addressing & subnetting</li>
+  //         <li>🔀 Routing & switching</li>
+  //         <li>🌍 DNS resolution</li>
+  //         <li>📦 TCP vs UDP protocols</li>
+  //         <li>🔒 Network security basics</li>
+  //       `;
+  //     } else if (pageKey === 'linux-pillar-welcome-seen') {
+  //       iconSpan.textContent = '🐧';
+  //       titleEl.textContent = 'Welcome to Linux & CLI Proficiency';
+  //       listEl.innerHTML = `
+  //         <li>📁 Filesystem navigation & structure</li>
+  //         <li>📄 File operations (create, copy, move, delete)</li>
+  //         <li>🔐 Permissions & ownership (chmod, chown, sudo)</li>
+  //         <li>⚙️ Process management (ps, kill, top)</li>
+  //         <li>📦 Package management (apt, yum, dnf)</li>
+  //         <li>🖥️ Bash scripting fundamentals</li>
+  //         <li>📊 Text processing (grep, sed, awk)</li>
+  //         <li>🌐 Networking commands (ssh, curl, netstat)</li>
+  //       `;
+  //     }
+  //     // Add more pillars as needed
+  //   }
+    
+  //   // Function to close lightbox
+  //   function closeLightbox() {
+  //     lightbox.style.display = 'none';
+  //   }
+    
+  //   // Save preference and close
+  //   function saveAndClose() {
+  //     if (dontShowCheckbox && dontShowCheckbox.checked) {
+  //       localStorage.setItem(pageKey, 'true');
+  //     }
+  //     closeLightbox();
+  //   }
+    
+  //   // Close button handler
+  //   if (closeBtn) {
+  //     closeBtn.addEventListener('click', saveAndClose);
+  //   }
+    
+  //   // Start learning button handler
+  //   if (startBtn) {
+  //     startBtn.addEventListener('click', saveAndClose);
+  //   }
+    
+  //   // Close when clicking outside
+  //   const overlay = lightbox.querySelector('.welcome-lightbox-overlay');
+  //   if (overlay) {
+  //     overlay.addEventListener('click', saveAndClose);
+  //   }
+    
+  //   // Close with Escape key
+  //   document.addEventListener('keydown', (e) => {
+  //     if (e.key === 'Escape' && lightbox.style.display === 'flex') {
+  //       saveAndClose();
+  //     }
+  //   });
+  // }
+  
+  // // Call the function (add to your existing initialisers)
+  // initWelcomeLightbox();
+
+  // ============================================================
+  // WELCOME MESSAGE SYSTEM JS specific (Shows once per pillar/page)
+  // ============================================================
+  
+  function showWelcomeMessage(pageKey, title, messageLines, icon = '📘') {
+    // Check if this welcome message has been shown before
+    if (localStorage.getItem(pageKey)) return;
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'welcome-toast';
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 60px;
+      right: 20px;
+      max-width: 320px;
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      animation: slideInRight 0.3s ease;
+      font-size: 0.85rem;
+    `;
+    
+    toast.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <span style="font-size: 1.5rem;">${icon}</span>
+        <strong style="font-family: var(--font-display); font-size: 1rem;">${title}</strong>
+        <button class="welcome-close" style="margin-left: auto; background: none; border: none; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+      <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-secondary);">
+        ${messageLines.map(line => `<li style="margin-bottom: 4px;">${line}</li>`).join('')}
+      </ul>
+      <p style="margin-top: 8px; font-size: 0.7rem; color: var(--text-muted);">This message won't appear again.</p>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Close button functionality
+    const closeBtn = toast.querySelector('.welcome-close');
+    closeBtn.addEventListener('click', () => {
+      toast.remove();
+    });
+    
+    // Auto-remove after 8 seconds
+    setTimeout(() => {
+      if (toast.parentNode) toast.remove();
+    }, 8000);
+    
+    // Mark as seen
+    localStorage.setItem(pageKey, 'true');
+  }
+  
+  // Add animation CSS if not present
+  if (!document.querySelector('#welcome-toast-styles')) {
+    const style = document.createElement('style');
+    style.id = 'welcome-toast-styles';
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Determine which page we're on and show appropriate welcome message
+  function initWelcomeMessage() {
+    const path = window.location.pathname;
+    
+    // Homepage (index.html)
+    if (path === '/' || path === '/index.html' || path.endsWith('DevOps-Journey/')) {
+      showWelcomeMessage(
+        'homepage-welcome-seen',
+        'Welcome to DevOps Journey',
+        [
+          '📐 Foundations-first approach to DevOps',
+          '📚 5 pillars before touching AWS',
+          '✅ Track your progress with interactive rings',
+          '🎴 Test yourself with flashcards & quizzes',
+          '🔍 Click any diagram to zoom in'
+        ],
+        '🚀'
+      );
+    }
+    // Networking Pillar
+    else if (path.includes('networking.html')) {
+      showWelcomeMessage(
+        'networking-pillar-welcome-seen',
+        'Welcome to Networking Fundamentals',
+        [
+          '📡 OSI & TCP/IP models explained',
+          '📍 IP addressing & subnetting practice',
+          '🔀 Routing & switching concepts',
+          '🌍 DNS resolution walkthrough',
+          '📦 TCP vs UDP protocols comparison',
+          '🔒 Network security basics (firewalls, ACLs, attacks)',
+          '🔌 RJ45 cabling (T568A/T568B, straight‑through, crossover)'
+        ],
+        '🌐'
+      );
+    }
+    // Linux Pillar
+    else if (path.includes('linux.html')) {
+      showWelcomeMessage(
+        'linux-pillar-welcome-seen',
+        'Welcome to Linux & CLI Proficiency',
+        [
+          '📁 Filesystem navigation & structure (FHS)',
+          '📄 File operations (touch, cp, mv, rm, wildcards)',
+          '🔐 Permissions & ownership (chmod, chown, umask)',
+          '⚙️ Process management (ps, kill, top, jobs)',
+          '🖥️ Bash scripting (variables, loops, conditionals)',
+          '📦 Package management (apt, yum, dnf)',
+          '📊 Text processing (grep, sed, awk, pipes)',
+          '🌐 Networking commands (ssh, curl, netstat, ss)',
+          '🔧 Systemd & service management (systemctl, journalctl)'
+        ],
+        '🐧'
+      );
+    }
+    // Add more pillars here as they are built
+    else if (path.includes('security.html')) {
+      showWelcomeMessage(
+        'security-pillar-welcome-seen',
+        'Welcome to Security Concepts',
+        [
+          '🔐 Symmetric & asymmetric encryption',
+          '📜 TLS/SSL & certificate management (PKI)',
+          '🔑 Authentication & authorisation (OAuth, SSO)',
+          '🛡️ Least privilege & access control models',
+          '🌐 OWASP Top 10 web vulnerabilities',
+          '🔒 Network hardening & secure defaults'
+        ],
+        '🔒'
+      );
+    }
+    else if (path.includes('scripting.html')) {
+      showWelcomeMessage(
+        'scripting-pillar-welcome-seen',
+        'Welcome to Scripting & Automation',
+        [
+          '🐍 Python fundamentals (variables, loops, functions)',
+          '📂 File I/O & error handling',
+          '🌐 REST APIs & JSON parsing (requests library)',
+          '⚙️ Bash scripting for automation',
+          '🤖 Cron jobs & task scheduling',
+          '📊 Log parsing & data transformation'
+        ],
+        '⚙️'
+      );
+    }
+    else if (path.includes('databases.html')) {
+      showWelcomeMessage(
+        'databases-pillar-welcome-seen',
+        'Welcome to Databases & Storage',
+        [
+          '🗄️ SQL vs NoSQL comparison',
+          '📐 Database normalisation (1NF, 2NF, 3NF)',
+          '⚡ Indexing strategies & performance',
+          '🔒 ACID properties & transactions',
+          '💾 Caching strategies (Redis, Memcached)',
+          '🧠 CAP theorem & distributed databases'
+        ],
+        '🗄️'
+      );
+    }
+  }
+
+  // Reset welcome messages button
+  const resetWelcomeBtn = document.getElementById('resetWelcomeBtn');
+  if (resetWelcomeBtn) {
+    resetWelcomeBtn.addEventListener('click', () => {
+      const keys = [
+        'homepage-welcome-seen',
+        'networking-pillar-welcome-seen',
+        'linux-pillar-welcome-seen',
+        'security-pillar-welcome-seen',
+        'scripting-pillar-welcome-seen',
+        'databases-pillar-welcome-seen'
+      ];
+      keys.forEach(key => localStorage.removeItem(key));
+      alert('Welcome messages reset. Refresh the page to see them again.');
+    });
+  }
+  
+  // Call the welcome message init
+  initWelcomeMessage();
+
   // --- Initialisation ---
   initGlobalSearch();
   initGlobalScrollSpy();
