@@ -1,34 +1,43 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Added icons to manifest.json
+// rebuilt sw.js
 
-const CACHE_NAME = 'devops-journey-2026-06-12-v7.8';
+const CACHE_NAME = 'devops-journey-2026-06-12-v8';
 
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/html/networking.html',
-  '/html/linux.html',
-  '/style.css',
-  '/js/global.js',
-  '/js/networking.js',
-  '/js/Linux.js',        
-  '/manifest.json',
-  '/img/Logo.svg',
-  '/img/Network.svg',
-  '/img/linux-icon.svg'
+  '/DevOps-Journey/',
+  '/DevOps-Journey/index.html',
+  '/DevOps-Journey/html/networking.html',
+  '/DevOps-Journey/html/linux.html',
+  '/DevOps-Journey/style.css',
+  '/DevOps-Journey/js/global.js',
+  '/DevOps-Journey/js/networking.js',
+  '/DevOps-Journey/js/linux.js',
+  '/DevOps-Journey/img/favicon.svg',
+  '/DevOps-Journey/img/Logo.svg'
 ];
 
+// Install event – cache essential files
 self.addEventListener('install', event => {
-  console.log('[SW] Installing new version:', CACHE_NAME);
-  self.skipWaiting();
+  console.log('[SW] Installing...');
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('[SW] Caching files');
+        // Add each file individually to handle failures gracefully
+        return Promise.allSettled(
+          urlsToCache.map(url => 
+            cache.add(url).catch(err => console.warn(`[SW] Failed to cache: ${url}`, err))
+          )
+        );
+      })
+      .then(() => self.skipWaiting())
   );
 });
 
+// Activate event – clean up old caches
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating:', CACHE_NAME);
+  console.log('[SW] Activating...');
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
@@ -39,30 +48,30 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
+// Fetch event – serve from cache, fallback to network
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-  
-  if (url.pathname.endsWith('.html') || url.pathname === '/') {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
           return response;
-        })
-        .catch(() => caches.match(event.request))
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request)
-        .then(response => response || fetch(event.request))
-    );
-  }
+        }
+        return fetch(event.request).then(response => {
+          // Don't cache non-successful responses
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          return response;
+        });
+      })
+  );
 });
