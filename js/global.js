@@ -1375,10 +1375,349 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     });
   }
   
-  // Call the welcome message init
-  initWelcomeMessage();
+  // Offline Mode Indicator (Ribbon style)
+  function initOfflineIndicator() {
+    console.log('initOfflineIndicator called');
+    const indicator = document.createElement('div');
+    indicator.id = 'offlineIndicator';
+    indicator.className = 'offline-indicator';
+    indicator.innerHTML = `
+      <span class="offline-dot"></span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="2" y1="2" x2="22" y2="22"/>
+      </svg>
+      <span>OFFLINE — cached content only</span>
+    `;
+    document.body.appendChild(indicator);
+    console.log('Indicator added to DOM');
 
-  // --- Initialisation ---
+    function updateOfflineStatus() {
+      if (!navigator.onLine) {
+        indicator.classList.add('show');
+      } else {
+        indicator.classList.remove('show');
+      }
+    }
+
+    window.addEventListener('online', () => {
+      indicator.classList.remove('show');
+      showOfflineToast('Back online! 🎉', 'success');
+    });
+    
+    window.addEventListener('offline', updateOfflineStatus);
+    updateOfflineStatus();
+  }
+  
+  function showOfflineToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = 'offline-toast';
+    toast.innerHTML = `
+      <span class="offline-toast-icon">${type === 'success' ? '✅' : '⚠️'}</span>
+      <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // ============================================================
+  // PWA INSTALLATION PROMPT
+  // ============================================================
+  
+  let deferredPrompt;
+  let isPWAInstalled = false;
+
+  // Check if already installed as PWA
+  window.addEventListener('appinstalled', () => {
+    isPWAInstalled = true;
+    deferredPrompt = null;
+    console.log('PWA was installed');
+    // Remove the install banner if it exists
+    const banner = document.getElementById('pwaInstallBanner');
+    if (banner) banner.remove();
+  });
+
+  // Detect if running in standalone mode (already installed)
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    isPWAInstalled = true;
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    // Show the install banner after a short delay
+    setTimeout(() => {
+      if (!isPWAInstalled && !localStorage.getItem('pwa-install-dismissed')) {
+        showPWAInstallBanner();
+      }
+    }, 2000);
+  });
+
+  function showPWAInstallBanner() {
+    // Don't show if already dismissed or installed
+    if (localStorage.getItem('pwa-install-dismissed') || isPWAInstalled) return;
+    
+    // Remove existing banner if any
+    const existingBanner = document.getElementById('pwaInstallBanner');
+    if (existingBanner) existingBanner.remove();
+    
+    const banner = document.createElement('div');
+    banner.id = 'pwaInstallBanner';
+    banner.className = 'pwa-install-banner';
+    banner.innerHTML = `
+      <div class="pwa-install-content">
+        <span class="pwa-install-icon">📱</span>
+        <div class="pwa-install-text">
+          <strong>Install Great Cheatsheets</strong>
+          <small>Install as an app for offline access and faster learning</small>
+        </div>
+        <button id="pwaInstallBtn" class="btn btn-primary btn-sm">Install</button>
+        <button id="pwaDismissBtn" class="pwa-dismiss-btn" aria-label="Dismiss">✕</button>
+      </div>
+    `;
+    document.body.appendChild(banner);
+    
+    // Add animation class after a tiny delay
+    setTimeout(() => banner.classList.add('show'), 10);
+    
+    document.getElementById('pwaInstallBtn')?.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to install prompt: ${outcome}`);
+        if (outcome === 'accepted') {
+          isPWAInstalled = true;
+        }
+        deferredPrompt = null;
+      }
+      banner.remove();
+    });
+    
+    document.getElementById('pwaDismissBtn')?.addEventListener('click', () => {
+      localStorage.setItem('pwa-install-dismissed', 'true');
+      banner.classList.remove('show');
+      setTimeout(() => banner.remove(), 300);
+    });
+  }
+
+    // ============================================================
+  // GITHUB GIST BACKUP & SYNC
+  // ============================================================
+  
+  const GIST_CONFIG = {
+    token: null,
+    gistId: null,
+    filename: 'great-cheatsheets-progress.json'
+  };
+
+  function showToast(message, type = 'info') {
+    const existing = document.querySelector('.global-toast');
+    if (existing) existing.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = `global-toast ${type}`;
+    toast.innerHTML = `
+      <span class="toast-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+      <span class="toast-message">${message}</span>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  function setupGistBackup() {
+    const footer = document.querySelector('.sidebar-footer');
+    if (!footer) return;
+
+    // Don't add duplicate
+    if (footer.querySelector('.gist-backup-container')) return;
+
+    const container = document.createElement('div');
+    container.className = 'gist-backup-container';
+    container.innerHTML = `
+      <button id="gistBackupBtn" class="btn-gist" title="Backup to GitHub Gist">📤 Backup</button>
+      <button id="gistRestoreBtn" class="btn-gist" title="Restore from GitHub Gist">📥 Restore</button>
+      <button id="gistSettingsBtn" class="btn-gist" title="GitHub Settings">⚙️</button>
+    `;
+    footer.appendChild(container);
+
+    // Load saved config from localStorage
+    const savedToken = localStorage.getItem('github-token');
+    const savedGistId = localStorage.getItem('github-gist-id');
+    if (savedToken) GIST_CONFIG.token = savedToken;
+    if (savedGistId) GIST_CONFIG.gistId = savedGistId;
+
+    document.getElementById('gistBackupBtn')?.addEventListener('click', backupToGist);
+    document.getElementById('gistRestoreBtn')?.addEventListener('click', restoreFromGist);
+    document.getElementById('gistSettingsBtn')?.addEventListener('click', showGistSettings);
+  }
+
+  async function backupToGist() {
+    if (!GIST_CONFIG.token) {
+      showToast('Please configure GitHub token first (click ⚙️)', 'error');
+      return;
+    }
+
+    // Collect all progress data from localStorage
+    const progress = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.startsWith('gc-') || key.includes('-section-') || 
+          key.includes('-quiz-') || key.includes('-passed') || key.includes('-welcome-seen')) &&
+          key !== 'github-token' && key !== 'github-gist-id') {
+        progress[key] = localStorage.getItem(key);
+      }
+    }
+
+    const content = JSON.stringify(progress, null, 2);
+    
+    try {
+      let url = 'https://api.github.com/gists';
+      let method = 'POST';
+      let body = {
+        description: `Great Cheatsheets Progress - ${new Date().toLocaleDateString()}`,
+        public: false,
+        files: {
+          [GIST_CONFIG.filename]: { content }
+        }
+      };
+
+      if (GIST_CONFIG.gistId) {
+        url = `https://api.github.com/gists/${GIST_CONFIG.gistId}`;
+        method = 'PATCH';
+        body = { files: { [GIST_CONFIG.filename]: { content } } };
+      }
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `token ${GIST_CONFIG.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Backup failed');
+      }
+      
+      const data = await response.json();
+      if (!GIST_CONFIG.gistId) {
+        GIST_CONFIG.gistId = data.id;
+        localStorage.setItem('github-gist-id', data.id);
+      }
+      showToast('✅ Progress backed up to GitHub Gist!', 'success');
+    } catch (error) {
+      console.error('Backup error:', error);
+      showToast(`❌ Backup failed: ${error.message}`, 'error');
+    }
+  }
+
+  async function restoreFromGist() {
+    if (!GIST_CONFIG.token || !GIST_CONFIG.gistId) {
+      showToast('No backup found. Please backup first or configure Gist ID.', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.gistId}`, {
+        headers: { 'Authorization': `token ${GIST_CONFIG.token}` }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch Gist');
+      
+      const data = await response.json();
+      const content = data.files[GIST_CONFIG.filename]?.content;
+      
+      if (content) {
+        const progress = JSON.parse(content);
+        let restoredCount = 0;
+        Object.entries(progress).forEach(([key, value]) => {
+          if (key !== 'github-token' && key !== 'github-gist-id') {
+            localStorage.setItem(key, value);
+            restoredCount++;
+          }
+        });
+        showToast(`✅ Restored ${restoredCount} items! Refresh to see changes.`, 'success');
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        showToast('No backup data found in Gist', 'error');
+      }
+    } catch (error) {
+      console.error('Restore error:', error);
+      showToast('❌ Restore failed. Check your token and Gist ID.', 'error');
+    }
+  }
+
+  function showGistSettings() {
+    // Remove existing modal
+    const existingModal = document.querySelector('.gist-modal');
+    if (existingModal) existingModal.remove();
+    
+    const modal = document.createElement('div');
+    modal.className = 'gist-modal';
+    modal.innerHTML = `
+      <div class="gist-modal-content">
+        <h3>⚙️ GitHub Gist Settings</h3>
+        <p>Create a <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">personal access token</a> with <strong>gist</strong> scope.</p>
+        <div class="gist-form-group">
+          <label>GitHub Token:</label>
+          <input type="password" id="gistTokenInput" placeholder="ghp_xxxxxxxxxxxx" value="${GIST_CONFIG.token || ''}">
+          <small>Token is stored only in your browser.</small>
+        </div>
+        <div class="gist-form-group">
+          <label>Gist ID (optional):</label>
+          <input type="text" id="gistIdInput" placeholder="e.g., 123abc456def" value="${GIST_CONFIG.gistId || ''}">
+          <small>Leave empty to create a new Gist on first backup.</small>
+        </div>
+        <div class="gist-modal-buttons">
+          <button id="gistSaveBtn" class="btn btn-primary">Save</button>
+          <button id="gistCloseBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    document.getElementById('gistTokenInput')?.focus();
+    
+    document.getElementById('gistSaveBtn')?.addEventListener('click', () => {
+      const token = document.getElementById('gistTokenInput').value.trim();
+      const gistId = document.getElementById('gistIdInput').value.trim();
+      
+      if (token) {
+        GIST_CONFIG.token = token;
+        localStorage.setItem('github-token', token);
+      }
+      if (gistId) {
+        GIST_CONFIG.gistId = gistId;
+        localStorage.setItem('github-gist-id', gistId);
+      }
+      modal.remove();
+      showToast('Settings saved! You can now backup your progress.', 'success');
+    });
+    
+    document.getElementById('gistCloseBtn')?.addEventListener('click', () => modal.remove());
+    
+    // Close on outside click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
+  }
+
+   // --- Initialisation ---
+  initWelcomeMessage();  // Call the welcome message initinializer on page load
+  setupGistBackup();   // Call setupGistBackup
   initGlobalSearch();
   initGlobalScrollSpy();
   initResourcePulse();
@@ -1388,7 +1727,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   addResetButton();
   restoreAccordionStates();
   initClickableHeadings();
-
+  initOfflineIndicator();
   updateAllUI();
   renderPhase1ModalScroller();
   renderPhase2ModalScroller();

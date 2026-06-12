@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Overwrote the quiz rendering logic in networking.js to use a more dynamic approach, allowing for easier addition of new quizzes and questions in the future. Added welcome toasts that show up once per pillar/page.
+// Offline indicator, PWA capabilities and creation of manifest.json file.
 
-const CACHE_NAME = 'devops-journey-2026-06-12-v3.2';
+const CACHE_NAME = 'devops-journey-2026-06-12-v5';
 
 const urlsToCache = [
   '/',
@@ -13,6 +13,7 @@ const urlsToCache = [
   '/js/global.js',
   '/js/networking.js',
   '/js/Linux.js',        
+  '/manifest.json',
   '/img/Logo.svg',
   '/img/Network.svg',
   '/img/linux-icon.svg'
