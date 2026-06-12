@@ -949,10 +949,202 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         tabPanes.forEach(pane => pane.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(tabId).classList.add('active');
+        
+        // In your tab click handler (inside initModalAndFloatingRing)
+        if (tabId === 'tab4') {
+          if (typeof createAndRenderBackupTab === 'function') {
+            createAndRenderBackupTab();
+          }
+        }
+        
         if (tabId === 'tab1') setTimeout(() => centerPhase1Arrow(), 50);
         if (tabId === 'tab2') setTimeout(() => centerPhase2Arrow(), 50);
       });
     });
+
+    // Complete backup tab function definition
+  function createAndRenderBackupTab() {
+    const container = document.getElementById('backupContainer');
+    if (!container) {
+      console.error('backupContainer not found');
+      return;
+    }
+    
+    const savedToken = localStorage.getItem('github-token') || '';
+    const savedGistId = localStorage.getItem('github-gist-id') || '';
+    
+    container.innerHTML = `
+      <div class="backup-tab-header">
+        <h4>💾 Backup & Sync Your Progress</h4>
+        <p>Save your study progress to a private GitHub Gist and restore it on any device.</p>
+      </div>
+      
+      <div class="backup-status-card">
+        <div class="backup-status-item">
+          <span class="status-label">GitHub Token:</span>
+          <span class="status-value ${savedToken ? 'configured' : 'missing'}">
+            ${savedToken ? '✓ Configured' : '⚠️ Not configured'}
+          </span>
+        </div>
+        <div class="backup-status-item">
+          <span class="status-label">Gist ID:</span>
+          <span class="status-value ${savedGistId ? 'configured' : 'missing'}">
+            ${savedGistId ? savedGistId.substring(0, 16) + '…' : 'Not set (will be created on first backup)'}
+          </span>
+        </div>
+      </div>
+      
+      <div class="backup-settings">
+        <h5>⚙️ GitHub Settings</h5>
+        <div class="backup-form-group">
+          <label for="backupTokenInput">Personal Access Token</label>
+          <input type="password" id="backupTokenInput" placeholder="github_pat__xxxxxxxxxxxx" value="${savedToken}">
+          <small>Create a <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">token</a> with <strong>gist</strong> scope only.</small>
+        </div>
+        <div class="backup-form-group">
+          <label for="backupGistIdInput">Gist ID (optional)</label>
+          <input type="text" id="backupGistIdInput" placeholder="Leave empty for new Gist" value="${savedGistId}">
+          <small>If you already have a backup Gist, enter its ID here.</small>
+        </div>
+        <button id="saveBackupSettingsBtn" class="btn btn-primary btn-sm">Save Settings</button>
+      </div>
+      
+      <div class="backup-actions">
+        <h5>📦 Backup & Restore</h5>
+        <div class="backup-button-group">
+          <button id="backupNowBtn" class="btn btn-primary">
+            <span class="btn-icon">📤</span> Backup to Gist
+          </button>
+          <button id="restoreNowBtn" class="btn btn-secondary">
+            <span class="btn-icon">📥</span> Restore from Gist
+          </button>
+        </div>
+        <p class="backup-note">⚠️ Restore will overwrite your current progress. Make sure to backup first!</p>
+      </div>
+      <div class="backup-info">
+        <h5>ℹ️ How to set up GitHub Backup (Fine-grained Token)</h5>
+        <ol style="margin: 0.5rem 0 0 1.2rem; font-size: 0.75rem;">
+          <li>Go to <a href="https://github.com/settings/tokens?type=beta" target="_blank">GitHub Fine-grained Tokens</a></li>
+          <li>Click "Generate new token"</li>
+          <li>Name it "Great Cheatsheets Backup"</li>
+          <li>Set expiration (90 days or No expiration)</li>
+          <li>Repository access: <strong>Public Repositories (read-only)</strong></li>
+          <li><strong>SCROLL DOWN</strong> to "Repository permissions"</li>
+          <li>Go to account permissions and find <strong>GISTS</strong> → Set to <strong>Read and write</strong> ⚠️</li>
+          <li>All other permissions leave as "No access"</li>
+          <li>Generate and copy the token (starts with <code>github_pat_</code>)</li>
+          <li>Paste it above and click Save Settings</li>
+          <li>Click "Backup to Gist" – your Gist ID will be saved automatically</li>
+        </ol>
+        <div class="backup-tip" style="margin-top: 0.75rem; padding: 0.5rem; background: rgba(83,70,212,0.1); border-radius: var(--radius-sm);">
+          <strong>💡 Tip:</strong> The token is stored only in your browser. Keep your Gist ID to restore on other devices.
+        </div>
+    </div>
+    `;
+    
+    // Save settings
+    document.getElementById('saveBackupSettingsBtn')?.addEventListener('click', () => {
+      const token = document.getElementById('backupTokenInput')?.value.trim() || '';
+      const gistId = document.getElementById('backupGistIdInput')?.value.trim() || '';
+      if (token) localStorage.setItem('github-token', token);
+      if (gistId) localStorage.setItem('github-gist-id', gistId);
+      alert('Settings saved! Click Backup to save your progress.');
+      createAndRenderBackupTab(); // refresh
+    });
+    
+    // Backup
+    document.getElementById('backupNowBtn')?.addEventListener('click', async () => {
+      const token = localStorage.getItem('github-token');
+      if (!token) {
+        alert('Please configure GitHub token first');
+        return;
+      }
+      
+      const progress = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith('gc-') || key.includes('-section-') || key.includes('-quiz-') || key.includes('-passed'))) {
+          progress[key] = localStorage.getItem(key);
+        }
+      }
+      
+      const gistId = localStorage.getItem('github-gist-id');
+      
+      try {
+        let url = 'https://api.github.com/gists';
+        let method = 'POST';
+        let body = {
+          description: `Great Cheatsheets Progress - ${new Date().toLocaleDateString()}`,
+          public: false,
+          files: { 'great-cheatsheets-progress.json': { content: JSON.stringify(progress, null, 2) } }
+        };
+        
+        if (gistId) {
+          url = `https://api.github.com/gists/${gistId}`;
+          method = 'PATCH';
+          body = { files: { 'great-cheatsheets-progress.json': { content: JSON.stringify(progress, null, 2) } } };
+        }
+        
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+        
+        const data = await response.json();
+        if (data.id) {
+          if (!gistId) localStorage.setItem('github-gist-id', data.id);
+          alert('✅ Backup successful! Gist ID saved.');
+          createAndRenderBackupTab();
+        } else {
+          alert('❌ Backup failed: ' + JSON.stringify(data));
+        }
+      } catch (err) {
+        alert('❌ Error: ' + err.message);
+      }
+    });
+    
+    // Restore
+    document.getElementById('restoreNowBtn')?.addEventListener('click', async () => {
+      const token = localStorage.getItem('github-token');
+      const gistId = localStorage.getItem('github-gist-id');
+      if (!token || !gistId) {
+        alert('Please configure token and Gist ID first');
+        return;
+      }
+      
+      try {
+        const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
+        const data = await response.json();
+        const content = data.files['great-cheatsheets-progress.json']?.content;
+        if (content) {
+          const progress = JSON.parse(content);
+          let count = 0;
+          Object.entries(progress).forEach(([key, value]) => {
+            if (key !== 'github-token' && key !== 'github-gist-id') {
+              localStorage.setItem(key, value);
+              count++;
+            }
+          });
+          alert(`✅ Restored ${count} items! Refresh the page.`);
+          location.reload();
+        } else {
+          alert('No backup data found');
+        }
+      } catch (err) {
+        alert('❌ Restore failed: ' + err.message);
+      }
+    });
+  }
+
+  // Now render the backup UI
+  createAndRenderBackupTab();
+  console.log('Backup tab rendered!');  
 
     // Scroller navigation
     const phase1Scroller = document.getElementById('phase1ModalScroller');
@@ -1036,14 +1228,16 @@ window.openModalToPillarDetails = openModalToPillarDetails;
             <button class="tab-button" data-tab="tab1">Phase 1</button>
             <button class="tab-button" data-tab="tab2">Phase 2</button>
             <button class="tab-button" data-tab="tab3">Pillar Details</button>
+            <button class="tab-button" data-tab="tab4">💾 Backup</button>
           </div>
           <div class="tab-pane active" id="tab0">...</div>
           <div class="tab-pane" id="tab1">...</div>
           <div class="tab-pane" id="tab2">...</div>
           <div class="tab-pane" id="tab3">
-            <div id="pillarDetailContainer" style="min-height: 200px;">
-              <div class="info-box note">Loading...</div>
-            </div>
+            <div id="pillarDetailContainer" style="min-height: 200px;">...</div>
+          </div>
+          <div class="tab-pane" id="tab4">
+            <div id="backupContainer" class="backup-tab-content"></div>
           </div>
           <div class="progress-modal-footer">
             <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
@@ -1052,7 +1246,6 @@ window.openModalToPillarDetails = openModalToPillarDetails;
       </div>
     `;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-    // Re-initialize modal event listeners
     initModalAndFloatingRing();
   }
 
@@ -1066,6 +1259,203 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     const tabButton = document.querySelector('.tab-button[data-tab="tab3"]');
     if (tabButton) tabButton.click();
     showPillarDetail(pillarId, phase);
+  }
+
+  // ============================================================
+  // BACKUP TAB UI (rendered inside modal)
+  // ============================================================
+  
+  function renderBackupTab() {
+    const container = document.getElementById('backupContainer');
+    if (!container) return;
+    
+    const savedToken = localStorage.getItem('github-token') || '';
+    const savedGistId = localStorage.getItem('github-gist-id') || '';
+    
+    container.innerHTML = `
+      <div class="backup-tab-header">
+        <h4>💾 Backup & Sync Your Progress</h4>
+        <p>Save your study progress to a private GitHub Gist and restore it on any device.</p>
+      </div>
+      
+      <div class="backup-status-card">
+        <div class="backup-status-item">
+          <span class="status-label">GitHub Token:</span>
+          <span class="status-value ${savedToken ? 'configured' : 'missing'}">
+            ${savedToken ? '✓ Configured' : '⚠️ Not configured'}
+          </span>
+        </div>
+        <div class="backup-status-item">
+          <span class="status-label">Gist ID:</span>
+          <span class="status-value ${savedGistId ? 'configured' : 'missing'}">
+            ${savedGistId ? savedGistId.substring(0, 16) + '…' : 'Not set (will be created on first backup)'}
+          </span>
+        </div>
+      </div>
+      
+      <div class="backup-settings">
+        <h5>⚙️ GitHub Settings</h5>
+        <div class="backup-form-group">
+          <label for="backupTokenInput">Personal Access Token</label>
+          <input type="password" id="backupTokenInput" placeholder="github_pat_xxxxxxxxxxxx" value="${savedToken}">
+          <small>Create a <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">token</a> with <strong>gist</strong> scope only.</small>
+        </div>
+        <div class="backup-form-group">
+          <label for="backupGistIdInput">Gist ID (optional)</label>
+          <input type="text" id="backupGistIdInput" placeholder="Leave empty for new Gist" value="${savedGistId}">
+          <small>If you already have a backup Gist, enter its ID here.</small>
+        </div>
+        <button id="saveBackupSettingsBtn" class="btn btn-primary btn-sm">Save Settings</button>
+      </div>
+      
+      <div class="backup-actions">
+        <h5>📦 Backup & Restore</h5>
+        <div class="backup-button-group">
+          <button id="backupNowBtn" class="btn btn-primary">
+            <span class="btn-icon">📤</span> Backup to Gist
+          </button>
+          <button id="restoreNowBtn" class="btn btn-secondary">
+            <span class="btn-icon">📥</span> Restore from Gist
+          </button>
+        </div>
+        <p class="backup-note">⚠️ Restore will overwrite your current progress. Make sure to backup first!</p>
+      </div>
+      
+      <div class="backup-info">
+        <h5>ℹ️ How it works</h5>
+        <ul>
+          <li><strong>Token:</strong> Stored only in your browser (localStorage)</li>
+          <li><strong>Gist:</strong> Private Gist created in your GitHub account</li>
+          <li><strong>Data backed up:</strong> Quiz scores, section completion, welcome messages, and all progress</li>
+          <li><strong>Sync:</strong> Use the same token and Gist ID on another device to restore</li>
+        </ul>
+      </div>
+    `;
+    
+    // Attach event listeners
+    document.getElementById('saveBackupSettingsBtn')?.addEventListener('click', saveBackupSettings);
+    document.getElementById('backupNowBtn')?.addEventListener('click', () => backupToGist(true));
+    document.getElementById('restoreNowBtn')?.addEventListener('click', restoreFromGist);
+  }
+  
+  function saveBackupSettings() {
+    const token = document.getElementById('backupTokenInput')?.value.trim() || '';
+    const gistId = document.getElementById('backupGistIdInput')?.value.trim() || '';
+    
+    if (token) {
+      GIST_CONFIG.token = token;
+      localStorage.setItem('github-token', token);
+    }
+    if (gistId) {
+      GIST_CONFIG.gistId = gistId;
+      localStorage.setItem('github-gist-id', gistId);
+    }
+    
+    // Re-render the backup tab to show updated status
+    renderBackupTab();
+    showToast('Settings saved! You can now backup your progress.', 'success');
+  }
+  
+  // Modified backupToGist function (add silent parameter to control toast)
+  async function backupToGist(silent = false) {
+    if (!GIST_CONFIG.token) {
+      showToast('Please configure GitHub token in Backup tab first', 'error');
+      return;
+    }
+
+    // Collect all progress data from localStorage
+    const progress = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.startsWith('gc-') || key.includes('-section-') || 
+          key.includes('-quiz-') || key.includes('-passed') || key.includes('-welcome-seen')) &&
+          key !== 'github-token' && key !== 'github-gist-id') {
+        progress[key] = localStorage.getItem(key);
+      }
+    }
+
+    const content = JSON.stringify(progress, null, 2);
+    
+    try {
+      let url = 'https://api.github.com/gists';
+      let method = 'POST';
+      let body = {
+        description: `Great Cheatsheets Progress - ${new Date().toLocaleDateString()}`,
+        public: false,
+        files: {
+          [GIST_CONFIG.filename]: { content }
+        }
+      };
+
+      if (GIST_CONFIG.gistId) {
+        url = `https://api.github.com/gists/${GIST_CONFIG.gistId}`;
+        method = 'PATCH';
+        body = { files: { [GIST_CONFIG.filename]: { content } } };
+      }
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `token ${GIST_CONFIG.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Backup failed');
+      }
+      
+      const data = await response.json();
+      if (!GIST_CONFIG.gistId) {
+        GIST_CONFIG.gistId = data.id;
+        localStorage.setItem('github-gist-id', data.id);
+        // Re-render backup tab to show the new Gist ID
+        renderBackupTab();
+      }
+      showToast('✅ Progress backed up to GitHub Gist!', 'success');
+    } catch (error) {
+      console.error('Backup error:', error);
+      showToast(`❌ Backup failed: ${error.message}`, 'error');
+    }
+  }
+  
+  // Modified restoreFromGist (add silent parameter)
+  async function restoreFromGist(silent = false) {
+    if (!GIST_CONFIG.token || !GIST_CONFIG.gistId) {
+      showToast('No backup found. Please backup first or configure Gist ID.', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://api.github.com/gists/${GIST_CONFIG.gistId}`, {
+        headers: { 'Authorization': `token ${GIST_CONFIG.token}` }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch Gist');
+      
+      const data = await response.json();
+      const content = data.files[GIST_CONFIG.filename]?.content;
+      
+      if (content) {
+        const progress = JSON.parse(content);
+        let restoredCount = 0;
+        Object.entries(progress).forEach(([key, value]) => {
+          if (key !== 'github-token' && key !== 'github-gist-id') {
+            localStorage.setItem(key, value);
+            restoredCount++;
+          }
+        });
+        showToast(`✅ Restored ${restoredCount} items! Refresh to see changes.`, 'success');
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        showToast('No backup data found in Gist', 'error');
+      }
+    } catch (error) {
+      console.error('Restore error:', error);
+      showToast('❌ Restore failed. Check your token and Gist ID.', 'error');
+    }
   }
 
   // // ============================================================
@@ -1535,32 +1925,32 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     }, 3000);
   }
 
-  function setupGistBackup() {
-    const footer = document.querySelector('.sidebar-footer');
-    if (!footer) return;
+  // function setupGistBackup() {
+  //   const footer = document.querySelector('.sidebar-footer');
+  //   if (!footer) return;
 
-    // Don't add duplicate
-    if (footer.querySelector('.gist-backup-container')) return;
+  //   // Don't add duplicate
+  //   if (footer.querySelector('.gist-backup-container')) return;
 
-    const container = document.createElement('div');
-    container.className = 'gist-backup-container';
-    container.innerHTML = `
-      <button id="gistBackupBtn" class="btn-gist" title="Backup to GitHub Gist">📤 Backup</button>
-      <button id="gistRestoreBtn" class="btn-gist" title="Restore from GitHub Gist">📥 Restore</button>
-      <button id="gistSettingsBtn" class="btn-gist" title="GitHub Settings">⚙️</button>
-    `;
-    footer.appendChild(container);
+  //   const container = document.createElement('div');
+  //   container.className = 'gist-backup-container';
+  //   container.innerHTML = `
+  //     <button id="gistBackupBtn" class="btn-gist" title="Backup to GitHub Gist">📤 Backup</button>
+  //     <button id="gistRestoreBtn" class="btn-gist" title="Restore from GitHub Gist">📥 Restore</button>
+  //     <button id="gistSettingsBtn" class="btn-gist" title="GitHub Settings">⚙️</button>
+  //   `;
+  //   footer.appendChild(container);
 
-    // Load saved config from localStorage
-    const savedToken = localStorage.getItem('github-token');
-    const savedGistId = localStorage.getItem('github-gist-id');
-    if (savedToken) GIST_CONFIG.token = savedToken;
-    if (savedGistId) GIST_CONFIG.gistId = savedGistId;
+  //   // Load saved config from localStorage
+  //   const savedToken = localStorage.getItem('github-token');
+  //   const savedGistId = localStorage.getItem('github-gist-id');
+  //   if (savedToken) GIST_CONFIG.token = savedToken;
+  //   if (savedGistId) GIST_CONFIG.gistId = savedGistId;
 
-    document.getElementById('gistBackupBtn')?.addEventListener('click', backupToGist);
-    document.getElementById('gistRestoreBtn')?.addEventListener('click', restoreFromGist);
-    document.getElementById('gistSettingsBtn')?.addEventListener('click', showGistSettings);
-  }
+  //   document.getElementById('gistBackupBtn')?.addEventListener('click', backupToGist);
+  //   document.getElementById('gistRestoreBtn')?.addEventListener('click', restoreFromGist);
+  //   document.getElementById('gistSettingsBtn')?.addEventListener('click', showGistSettings);
+  // }
 
   async function backupToGist() {
     if (!GIST_CONFIG.token) {
@@ -1673,7 +2063,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         <p>Create a <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">personal access token</a> with <strong>gist</strong> scope.</p>
         <div class="gist-form-group">
           <label>GitHub Token:</label>
-          <input type="password" id="gistTokenInput" placeholder="ghp_xxxxxxxxxxxx" value="${GIST_CONFIG.token || ''}">
+          <input type="password" id="gistTokenInput" placeholder="github_pat_hp_xxxxxxxxxxxx" value="${GIST_CONFIG.token || ''}">
           <small>Token is stored only in your browser.</small>
         </div>
         <div class="gist-form-group">
@@ -1717,7 +2107,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
    // --- Initialisation ---
   initWelcomeMessage();  // Call the welcome message initinializer on page load
-  setupGistBackup();   // Call setupGistBackup
+  // setupGistBackup();   // Call setupGistBackup
   initGlobalSearch();
   initGlobalScrollSpy();
   initResourcePulse();

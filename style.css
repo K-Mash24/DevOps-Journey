@@ -2014,6 +2014,7 @@ code, pre {
   width: 90%;
   max-height: 85vh;
   overflow-y: auto;        /* keep vertical scroll if needed, but horizontal should disappear */
+  scrollbar-color: #2a2a40 transparent;
 }
 
 /* Ensure chips wrap or stay within the modal */
@@ -3666,7 +3667,7 @@ code, pre {
   color: var(--accent-secondary);
 }
 
-/* Gist Modal */
+/* Gist Modal
 .gist-modal {
   position: fixed;
   top: 0;
@@ -3737,4 +3738,172 @@ code, pre {
   gap: 0.75rem;
   justify-content: flex-end;
   margin-top: 1.5rem;
+} */
+
+/* Backup Tab Styles */
+/* Backup Tab Content Styling */
+#backupContainer {
+  padding: 1.25rem;
+}
+
+.backup-tab-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.backup-tab-header h4 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  font-family: var(--font-display);
+}
+
+.backup-tab-header p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.backup-status-card {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.backup-status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.backup-status-item:last-child {
+  border-bottom: none;
+}
+
+.status-label {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.status-value {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.status-value.configured {
+  color: var(--accent-secondary);
+}
+
+.status-value.missing {
+  color: var(--accent-warning);
+}
+
+.backup-settings {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.backup-settings h5 {
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-display);
+}
+
+.backup-form-group {
+  margin-bottom: 0.75rem;
+}
+
+.backup-form-group label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.backup-form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.backup-form-group small {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.backup-actions {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.backup-actions h5 {
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-display);
+}
+
+.backup-button-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.backup-button-group .btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  font-size: 1rem;
+}
+
+.backup-note {
+  font-size: 0.7rem;
+  color: var(--accent-warning);
+  margin-top: 0.75rem;
+}
+
+.backup-info {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.backup-info h5 {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-display);
+}
+
+.backup-info ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.backup-info li {
+  margin-bottom: 0.25rem;
+}
+
+.backup-info code {
+  font-size: 0.7rem;
 }
