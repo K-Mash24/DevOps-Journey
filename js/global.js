@@ -1,6 +1,8 @@
 // ============================================================
 // SHARED GLOBAL UI ENGINE (Runs on all pages)
 // ============================================================
+// Base path for GitHub Pages project site
+const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevOps-Journey' : '.';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -639,7 +641,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
   // --- Service Worker ---
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(err => console.error('SW registration failed:', err)));
+    window.addEventListener('load', () => navigator.serviceWorker.register('/DevOps-Journey/sw.js').catch(err => console.error('SW registration failed:', err)));
   }
 
   // ========== CORE PROGRESS CALCULATIONS ==========
