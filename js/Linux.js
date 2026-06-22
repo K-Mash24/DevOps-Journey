@@ -442,13 +442,13 @@ const FLASHCARDS = [
         '2': 'Section 2 — File & Directory Operations',
         '3': 'Section 3 — Permissions & Ownership',
         '4': 'Section 4 — Users & Groups',
-        '5': 'Section 5 — Processes',
+        '5': 'Section 5 — Processes & Job Control',
         '6': 'Section 6 — Package Management',
-        '7': 'Section 7 — Networking Commands',
-        '8': 'Section 8 — Bash Scripting',
-        '9': 'Section 9 — Systemd & Services',
-        '10': 'Section 10 — Text processing (grep/sed/awk/pipes)', 
-      };
+        '7': 'Section 7 — Bash Scripting',
+        '8': 'Section 8 — Systemd & Services',
+        '9': 'Section 9 — Text Processing (grep, sed, awk)',
+        '10': 'Section 10 — Networking Commands',
+       }; 
       return titles[sectionNum] || `Section ${sectionNum}`;
     }
     

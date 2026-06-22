@@ -77,7 +77,7 @@
       <a class="nav-item" href="#s4">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
         Section 4 — Users & groups
-        <span class="nav-badge soon">Soon</span>
+        <span class="nav-badge">10</span>
       </a>
       <a class="nav-item" href="#s5">
         <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
@@ -996,21 +996,260 @@ sudo chmod 600 /etc/hosts          # modify a system file</pre></div>
         </div>
       </div>
 
-      <!-- ══════════ SECTIONS 4-10 — PLACEHOLDERS ══════════ -->
-      <!-- Section 4 — Processes -->
+      <!-- ====== SECTION 4 — USERS & GROUPS (ACCORDION TABLE) ====== -->
       <div class="section-divider" id="s4">
         <div class="section-number" aria-hidden="true">4</div>
-        <h2>Processes &amp; Job Control</h2>
+        <h2>Users &amp; Groups</h2>
         <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
           <input type="checkbox" class="section-checkbox" data-section="4">
           <span style="font-size: 0.7rem;">Complete</span>
         </label>
       </div>
-      <div class="info-box note" style="margin: 0.5rem 0 1rem;">
-        <strong>🚧 Coming soon</strong>
-        <p>This section will cover viewing processes (ps, top, htop), process signals (kill, killall), job control (&, jobs, fg, bg), and process priorities (nice, renice).</p>
+
+      <!-- 1. What is a user? -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👤</span>What is a user?</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>Every process that runs on Linux runs as a specific user. Every file is owned by a specific user. Users are how Linux tracks who is doing what and enforces permissions.</p>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Root</strong></td><td>The superuser — no restrictions</td><td><code>root</code></td></tr>
+                <tr><td><strong>Regular</strong></td><td>Human users with home directories</td><td><code>codespace</code></td></tr>
+                <tr><td><strong>System</strong></td><td>Created by software, not humans — run background services</td><td><code>www-data</code>, <code>nobody</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box note"><strong>📌 Key insight</strong> The <code>root</code> user has full system access. System users run background services and typically have no login shell (<code>/sbin/nologin</code>).</div>
+        </div>
       </div>
 
+      <!-- 2. What is a group? -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👥</span>What is a group?</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>A group is a collection of users. Instead of setting permissions for each user individually, you put users in a group and set permissions on the group once.</p>
+          <p>Every user has:</p>
+          <ul style="margin-left:1.25rem;margin-bottom:0.75rem;">
+            <li>One <strong>primary group</strong> — assigned at creation, same name as the user by default</li>
+            <li>Zero or more <strong>supplementary groups</strong> — additional groups they belong to</li>
+          </ul>
+          <div class="info-box tip"><strong>💡 Real example</strong> The <code>codespace</code> user belongs to its own primary group, plus supplementary groups created by installed tools — <code>docker</code>, <code>python</code>, <code>golang</code>, <code>nvm</code>, <code>ssh</code>, and more. Each tool creates a group and adds the user to it so commands work without needing <code>sudo</code> every time.</div>
+        </div>
+      </div>
+
+      <!-- 3. Where users and groups are stored -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📂</span>Where users &amp; groups are stored — <code>/etc/passwd</code>, <code>/etc/group</code>, <code>/etc/shadow</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.5rem 0;"><code>/etc/passwd</code> — the user database</h4>
+          <p>Passwords are <strong>not</strong> stored here despite the name. Each line is one user:</p>
+          <div class="code-block"><pre>codespace:x:1000:1000::/home/codespace:/bin/bash
+      │         │ │    │    │ │              └── login shell
+      │         │ │    │    │ └── home directory
+      │         │ │    │    └── comment (usually full name)
+      │         │ │    └── primary group ID (GID)
+      │         │ └── user ID (UID)
+      │         └── password placeholder (x = stored in /etc/shadow)
+      └── username</pre></div>
+
+          <h4 style="font-size:0.95rem;font-weight:600;margin:1.25rem 0 0.5rem 0;"><code>/etc/group</code> — the group database</h4>
+          <div class="code-block"><pre>codespace:x:1000:
+      │         │ │    └── members (comma-separated)
+      │         │ └── group ID (GID)
+      │         └── password placeholder
+      └── group name</pre></div>
+
+          <h4 style="font-size:0.95rem;font-weight:600;margin:1.25rem 0 0.5rem 0;"><code>/etc/shadow</code> — actual passwords</h4>
+          <p>Stores hashed passwords. Only readable by root — this is where real password security lives.</p>
+          <div class="info-box warning"><strong>⚠️ Security note</strong> <code>/etc/shadow</code> is readable only by <code>root</code> (<code>-rw-r-----</code>). This is why passwords are stored there and not in <code>/etc/passwd</code>.</div>
+        </div>
+      </div>
+
+      <!-- 4. Inspecting your own identity -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔍</span>Inspecting your own identity — <code>whoami</code>, <code>id</code>, <code>groups</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Command</th><th>What it does</th><th>Example output</th></tr></thead>
+              <tbody>
+                <tr><td><code>whoami</code></td><td>Prints your username only — deliberately simple, no flags</td><td><code>codespace</code></td></tr>
+                <tr><td><code>id</code></td><td>Prints UID, GID, and every group you belong to in one shot</td><td><code>uid=1000(codespace) gid=1000(codespace) groups=1000(codespace),989(docker),988(golang)</code></td></tr>
+                <tr><td><code>groups</code></td><td>Prints just the group names — a simpler view than <code>id</code></td><td><code>codespace pipx python oryx golang docker</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box tip"><strong>💡 Consistency check</strong> All three commands should agree with what's in <code>/etc/passwd</code> and <code>/etc/group</code> — they're just different views of the same underlying data.</div>
+        </div>
+      </div>
+
+      <!-- 5. Managing users -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🛠️</span>Managing users — <code>useradd</code>, <code>usermod</code>, <code>userdel</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p>All of these require <code>sudo</code> since they affect the whole system.</p>
+
+          <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>useradd</code> — create a new user</h4>
+          <div class="code-block"><pre>sudo useradd newuser                    # minimal — NO home directory created
+      sudo useradd -m newuser                 # create WITH a home directory
+      sudo useradd -m -s /bin/bash newuser    # also set login shell
+      sudo useradd -m -s /bin/bash -G docker devuser   # add to a group at creation</pre></div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>Flag</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td><code>-m</code></td><td>Create a home directory</td></tr>
+                <tr><td><code>-s</code></td><td>Set the login shell</td></tr>
+                <tr><td><code>-g</code></td><td>Set primary group</td></tr>
+                <tr><td><code>-G</code></td><td>Set supplementary groups (comma-separated)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="info-box warning"><strong>⚠️ Without <code>-m</code></strong>, no home directory is created. Almost always use <code>-m</code>.</div>
+
+          <h4 style="font-size:0.95rem;font-weight:600;margin:1.25rem 0 0.25rem 0;"><code>usermod</code> — modify an existing user</h4>
+          <div class="code-block"><pre>sudo usermod -aG docker existinguser    # ADD to the docker group
+      sudo usermod -s /bin/bash existinguser  # change their shell
+      sudo usermod -l newname oldname         # rename the user</pre></div>
+          <div class="info-box warning"><strong>⚠️ <code>-aG</code> vs <code>-G</code></strong> <code>-aG</code> appends to a group. Without <code>-a</code>, <code>-G</code> <strong>replaces</strong> all their supplementary groups instead of adding one — a common mistake. The group must already exist via <code>groupadd</code> before you can add anyone to it.</div>
+
+          <h4 style="font-size:0.95rem;font-weight:600;margin:1.25rem 0 0.25rem 0;"><code>userdel</code> — delete a user</h4>
+          <div class="code-block"><pre>sudo userdel newuser           # delete user, leave home directory behind
+      sudo userdel -r newuser        # delete user AND their home directory</pre></div>
+        </div>
+      </div>
+
+      <!-- 6. Managing groups -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">👪</span>Managing groups — <code>groupadd</code>, <code>groupmod</code>, <code>groupdel</code>, <code>gpasswd</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>sudo groupadd developers          # create a new group
+      sudo groupmod -n newname oldname  # rename a group
+      sudo groupdel developers          # delete a group</pre></div>
+          <div class="info-box warning"><strong>⚠️ Can't delete a group</strong> that is still set as someone's <strong>primary</strong> group — change their primary group first.</div>
+
+          <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Adding / removing a user from a group — two ways</h4>
+          <div class="code-block"><pre>sudo usermod -aG developers testuser    # add via usermod
+      sudo gpasswd -a testuser developers     # add via gpasswd
+      sudo gpasswd -d testuser developers     # remove via gpasswd</pre></div>
+          <div class="info-box tip"><strong>💡 Verify with the source, not a summary.</strong> <code>groups username</code> is a useful quick check, but when in doubt, check <code>/etc/group</code> directly:
+            <div class="code-block" style="margin-top:0.5rem;"><pre>cat /etc/group | grep -E "developers|devteam"</pre></div>
+            <p style="margin-top:0.5rem;">This caught a real typo during practice — a command created a stray group called <code>sevelopers</code> instead of <code>developers</code>. Linux doesn't validate group names against what you "meant" — a typo in a group-creating command silently creates a brand new real group. Always double check with <code>/etc/group</code> if something looks off.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. passwd — setting passwords -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔑</span><code>passwd</code> — setting passwords</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="code-block"><pre>sudo passwd testuser        # set or change testuser's password (as admin)
+      passwd                      # change YOUR OWN password (no sudo needed)
+      sudo passwd -l testuser     # lock the account (disable login)
+      sudo passwd -u testuser     # unlock it
+      sudo passwd -d testuser     # delete the password entirely (risky — no password required to log in)</pre></div>
+          <div class="info-box note"><strong>📌 Note</strong> Typed characters don't show on screen when entering a password — that's normal, not a glitch.</div>
+        </div>
+      </div>
+
+      <!-- 8. Switching users — su -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔄</span>Switching users — <code>su</code> and <code>sudo -i</code></div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <p><code>su</code> stands for <strong>switch user</strong>.</p>
+          <div class="code-block"><pre>su testuser           # switch to testuser, asks for THEIR password
+      su - testuser          # switch AND load their environment (home dir, shell config)
+      exit                   # return to your previous user</pre></div>
+          <div class="info-box warning"><strong>⚠️ The <code>-</code> matters.</strong> Without it, you keep your old environment but act as the new user. Always use <code>su - username</code>.</div>
+
+          <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>sudo -i</code> and <code>sudo -u</code></h4>
+          <div class="code-block"><pre>sudo -i                   # become root entirely, with root's own environment
+      sudo -u testuser whoami   # run ONE command as testuser, then return immediately</pre></div>
+          <div class="info-box tip"><strong>💡 <code>sudo -u</code></strong> is the one used most in real work — running a single command as someone else without fully switching sessions.</div>
+          <div class="info-box note"><strong>📌 Container environments</strong> In a containerized environment like Codespaces, <code>su - user</code> may not behave exactly like a standard Linux server (e.g. <code>pwd</code> may not land in their home directory as expected). The command itself is correct — the container environment is the variable.</div>
+        </div>
+      </div>
+
+      <!-- 9. Quick reference table -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Quick reference — Users &amp; Groups</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead><tr><th>What you want</th><th>Command</th></tr></thead>
+              <tbody>
+                <tr><td>Check your username</td><td><code>whoami</code></td></tr>
+                <tr><td>Check UID/GID/groups</td><td><code>id</code></td></tr>
+                <tr><td>Check group names only</td><td><code>groups</code></td></tr>
+                <tr><td>Create user with home dir</td><td><code>sudo useradd -m -s /bin/bash username</code></td></tr>
+                <tr><td>Add user to a group</td><td><code>sudo usermod -aG groupname username</code></td></tr>
+                <tr><td>Delete user (keep home)</td><td><code>sudo userdel username</code></td></tr>
+                <tr><td>Delete user + home dir</td><td><code>sudo userdel -r username</code></td></tr>
+                <tr><td>Create a group</td><td><code>sudo groupadd groupname</code></td></tr>
+                <tr><td>Rename a group</td><td><code>sudo groupmod -n newname oldname</code></td></tr>
+                <tr><td>Delete a group</td><td><code>sudo groupdel groupname</code></td></tr>
+                <tr><td>Add user to group (alt)</td><td><code>sudo gpasswd -a username groupname</code></td></tr>
+                <tr><td>Remove user from group</td><td><code>sudo gpasswd -d username groupname</code></td></tr>
+                <tr><td>Set/change a password</td><td><code>sudo passwd username</code></td></tr>
+                <tr><td>Lock an account</td><td><code>sudo passwd -l username</code></td></tr>
+                <tr><td>Switch user (full env)</td><td><code>su - username</code></td></tr>
+                <tr><td>Run one command as another user</td><td><code>sudo -u username command</code></td></tr>
+                <tr><td>Become root</td><td><code>sudo -i</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Key mental models -->
+      <div class="accordion" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+          <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🧠</span>Key mental models</div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+        </button>
+        <div class="accordion-body">
+          <ol style="padding-left:1.25rem;margin:0;">
+            <li style="margin-bottom:0.6rem;"><strong><code>/etc/passwd</code></strong> stores user info, <strong>not</strong> passwords. <strong><code>/etc/shadow</code></strong> stores the real (hashed) passwords.</li>
+            <li style="margin-bottom:0.6rem;">Every user has exactly <strong>one</strong> primary group and any number of supplementary groups.</li>
+            <li style="margin-bottom:0.6rem;">A group must exist (<code>groupadd</code>) before you can add anyone to it.</li>
+            <li style="margin-bottom:0.6rem;"><code>usermod -aG</code> appends to groups. Leaving off <code>-a</code> replaces them entirely — a <strong>destructive mistake</strong>.</li>
+            <li style="margin-bottom:0.6rem;">Typos in group names don't error — they silently create new, real groups. Verify against <code>/etc/group</code> when unsure.</li>
+            <li style="margin-bottom:0.6rem;"><code>su - username</code> (with the dash) loads the target user's full environment. Without it, you keep your own.</li>
+            <li style="margin-bottom:0;"><code>sudo -u username command</code> runs a single command as someone else — the most common real-world use case.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- ══════════ SECTIONS 5-10 — PLACEHOLDERS ══════════ -->
       <!-- Section 5 — SSH -->
       <div class="section-divider" id="s5">
         <div class="section-number" aria-hidden="true">5</div>
