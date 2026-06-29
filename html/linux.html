@@ -462,35 +462,44 @@
 
         <!-- Page Body -->
         <main class="page-container" id="mainContent">
-          <!-- Page Header -->
-          <div class="page-header" id="overview">
-            <div class="breadcrumb">
-              <span>Phase 1 — Foundations</span>
-              <span aria-hidden="true">›</span>
-              <span class="crumb-active"
-                >Pillar 2 — Linux &amp; CLI Proficiency</span
-              >
-            </div>
-            <h1>Linux &amp; CLI Proficiency</h1>
-            <div class="page-meta">
-              <span
-                class="meta-badge"
-                style="background: var(--bg-tertiary); color: var(--text-muted)"
-                >In Progress</span
-              >
-              <span
-                class="meta-badge"
-                style="background: var(--bg-tertiary); color: var(--text-muted)"
-                >10 Sections</span
-              >
-              <span
-                class="meta-badge"
-                style="background: var(--bg-tertiary); color: var(--text-muted)"
-                >2 Files (so far)</span
-              >
-            </div>
-          </div>
 
+              <div class="page-header" id="pageHeader">
+                <div class="breadcrumb">
+                  <span>Phase 1 — Foundations</span>
+                  <span class="sep">›</span>
+                  <span class="crumb-active">Pillar 2 — Linux &amp; CLI Proficiency</span>
+                </div>
+                
+                <div class="header-content">
+                    <div class="header-left">
+                      <h1>
+                        Linux &amp; CLI Proficiency
+                      </h1>
+                      <div class="meta-badges" id="metaBadges">
+                        <!-- Populated by JavaScript -->
+                      </div>
+                    </div>
+                    
+                    <div class="completion-ring" id="completionRing">
+                      <svg viewBox="0 0 48 48">
+                        <circle class="ring-bg" cx="24" cy="24" r="20"/>
+                        <circle class="ring-fill" cx="24" cy="24" r="20" 
+                                stroke-dasharray="125.66" 
+                                stroke-dashoffset="125.66"/>
+                      </svg>
+                      <div class="ring-label">
+                        <span class="pct" id="completionPercent">0%</span>
+                      </div>
+                    </div>
+                  </div>
+                      <!-- Subtle decorative dots -->
+                  <div class="header-dots" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
           <!-- ========== OVERVIEW CONTENT ========== -->
           <div class="section-divider" id="overview-divider">
             <div class="section-number" aria-hidden="true">

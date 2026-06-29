@@ -2,7 +2,7 @@
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
 // Error correction dark mode optimizations
 
-const CACHE_NAME = 'devops-journey-2026-06-29-v2';
+const CACHE_NAME = 'devops-journey-2026-06-29-v6';
 
 const urlsToCache = [
   '/DevOps-Journey/',

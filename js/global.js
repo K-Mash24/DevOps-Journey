@@ -1246,9 +1246,9 @@ window.openModalToPillarDetails = openModalToPillarDetails;
             <button class="modal-close" id="closeModalBtn">&times;</button>
           </div>
           <div class="progress-modal-tabs">
-            <button class="tab-button active" data-tab="tab0">Overall</button>
-            <button class="tab-button" data-tab="tab1">Phase 1</button>
-            <button class="tab-button" data-tab="tab2">Phase 2</button>
+            
+            
+            
             <button class="tab-button" data-tab="tab3">Pillar Details</button>
             <button class="tab-button" data-tab="tab4">💾 Backup</button>
           </div>
@@ -2457,3 +2457,482 @@ if (sidebar) {
   console.log('Sidebar display:', styles.display);
   console.log('Sidebar left:', styles.left);
 }
+
+// ============================================================
+// STAR PRESETS - Modal Integration
+// ============================================================
+
+(function() {
+  'use strict';
+
+  // --- Preset Definitions ---
+  const PRESETS = {
+    calm: {
+      name: 'Calm Night',
+      icon: '🌙',
+      desc: 'Gentle, serene',
+      starCount: 150,
+      minSize: 0.8,
+      maxSize: 2.5,
+      twinkleSpeed: 0.008,
+      maxOpacity: 0.9,
+      minOpacity: 0.3,
+      movementSpeed: 0.00001,
+      movementRange: 15,
+      connectStars: true,
+      connectionDistance: 350,
+      connectionOpacity: 0.07,
+      desktopBreakpoint: 800,
+    },
+    active: {
+      name: 'Active',
+      icon: '🌌',
+      desc: 'Lively drift',
+      starCount: 200,
+      minSize: 0.5,
+      maxSize: 3,
+      twinkleSpeed: 0.025,
+      maxOpacity: 1,
+      minOpacity: 0.2,
+      movementSpeed: 0.005,
+      movementRange: 30,
+      connectStars: true,
+      connectionDistance: 200,
+      connectionOpacity: 0.12,
+      desktopBreakpoint: 800,
+    },
+    minimal: {
+      name: 'Minimal',
+      icon: '⭐',
+      desc: 'Clean & simple',
+      starCount: 80,
+      minSize: 1,
+      maxSize: 2,
+      twinkleSpeed: 0.005,
+      maxOpacity: 0.7,
+      minOpacity: 0.4,
+      movementSpeed: 0,
+      movementRange: 0,
+      connectStars: false,
+      connectionDistance: 0,
+      connectionOpacity: 0,
+      desktopBreakpoint: 800,
+    },
+    constellation: {
+      name: 'Constellation',
+      icon: '🔭',
+      desc: 'Rich connections',
+      starCount: 180,
+      minSize: 0.6,
+      maxSize: 2.5,
+      twinkleSpeed: 0.01,
+      maxOpacity: 0.95,
+      minOpacity: 0.25,
+      movementSpeed: 0.0005,
+      movementRange: 10,
+      connectStars: true,
+      connectionDistance: 500,
+      connectionOpacity: 0.15,
+      desktopBreakpoint: 800,
+    },
+    dense: {
+      name: 'Dense',
+      icon: '🌠',
+      desc: 'Full starfield',
+      starCount: 350,
+      minSize: 0.4,
+      maxSize: 2,
+      twinkleSpeed: 0.015,
+      maxOpacity: 0.85,
+      minOpacity: 0.2,
+      movementSpeed: 0.001,
+      movementRange: 20,
+      connectStars: true,
+      connectionDistance: 150,
+      connectionOpacity: 0.08,
+      desktopBreakpoint: 800,
+    },
+    off: {
+      name: 'Off',
+      icon: '🚫',
+      desc: 'Disable stars',
+      starCount: 0,
+      minSize: 0,
+      maxSize: 0,
+      twinkleSpeed: 0,
+      maxOpacity: 0,
+      minOpacity: 0,
+      movementSpeed: 0,
+      movementRange: 0,
+      connectStars: false,
+      connectionDistance: 0,
+      connectionOpacity: 0,
+      desktopBreakpoint: 9999,
+    }
+  };
+
+  // --- Apply Preset ---
+  function applyStarPreset(presetName) {
+    const preset = PRESETS[presetName];
+    if (!preset) {
+      console.warn('⚠️ Preset not found:', presetName);
+      return;
+    }
+
+    // Update global CONFIG if it exists (for stars.js)
+    if (window.CONFIG) {
+      // Copy only the config values (not name, icon, desc)
+      const configValues = { ...preset };
+      delete configValues.name;
+      delete configValues.icon;
+      delete configValues.desc;
+      Object.assign(window.CONFIG, configValues);
+    }
+
+    // Store preference
+    localStorage.setItem('star-preset', presetName);
+
+    // Update UI buttons
+    document.querySelectorAll('.star-preset-btn').forEach(btn => {
+      const isActive = btn.dataset.preset === presetName;
+      btn.classList.toggle('active', isActive);
+      if (isActive) {
+        btn.style.borderColor = 'var(--accent-primary)';
+        btn.style.background = 'var(--pillar-color-light)';
+      } else {
+        btn.style.borderColor = 'var(--border-color)';
+        btn.style.background = 'var(--bg-card)';
+      }
+    });
+
+    // Update slider values
+    updateSliders(preset);
+
+    // Notify star system to reload
+    if (window.reloadStars) {
+      window.reloadStars();
+    } else if (window.updateStarsForSidebar) {
+      window.updateStarsForSidebar();
+    }
+
+    // If preset is 'off', hide the canvas
+    if (presetName === 'off') {
+      const canvas = document.getElementById('starCanvas');
+      if (canvas) {
+        canvas.style.display = 'none';
+        canvas.style.opacity = '0';
+      }
+    } else {
+      // Make sure canvas is visible
+      const canvas = document.getElementById('starCanvas');
+      if (canvas) {
+        canvas.style.display = 'block';
+        canvas.style.opacity = '1';
+      }
+    }
+
+    // Show toast notification
+    showPresetToast(presetName);
+
+    console.log('✨ Star preset applied:', presetName);
+  }
+
+  // --- Update Sliders ---
+  function updateSliders(preset) {
+    const sliderMap = {
+      starCountSlider: 'starCount',
+      twinkleSpeedSlider: 'twinkleSpeed',
+      movementSpeedSlider: 'movementSpeed',
+      connectionDistanceSlider: 'connectionDistance',
+    };
+
+    Object.entries(sliderMap).forEach(([sliderId, key]) => {
+      const slider = document.getElementById(sliderId);
+      const display = document.getElementById(sliderId.replace('Slider', 'Display'));
+      if (slider && preset[key] !== undefined) {
+        slider.value = preset[key];
+        if (display) {
+          if (key === 'movementSpeed') {
+            display.textContent = parseFloat(preset[key]).toFixed(4);
+          } else {
+            display.textContent = preset[key];
+          }
+        }
+      }
+    });
+  }
+
+  // --- Toast Notification ---
+  function showPresetToast(presetName) {
+    const preset = PRESETS[presetName];
+    if (!preset) return;
+
+    // Remove existing toast
+    const existing = document.querySelector('.preset-toast');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'preset-toast coming-soon-toast';
+    toast.textContent = `${preset.icon} ${preset.name} preset applied`;
+    toast.style.background = 'var(--accent-primary)';
+    toast.style.color = 'white';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '40px';
+    toast.style.fontSize = '0.85rem';
+    toast.style.fontWeight = '500';
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.zIndex = '9999';
+    toast.style.animation = 'fadeInUp 0.3s ease';
+    toast.style.boxShadow = 'var(--shadow-md)';
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+  }
+
+  // --- Initialize Star Presets ---
+  function initStarPresets() {
+    console.log('✨ Initializing star presets...');
+
+    // Load saved preset
+    const saved = localStorage.getItem('star-preset') || 'calm';
+    
+    // Find preset buttons
+    const presetBtns = document.querySelectorAll('.star-preset-btn');
+    
+    if (presetBtns.length === 0) {
+      console.log('⏳ No preset buttons found yet, waiting...');
+      // Wait for modal to load
+      const observer = new MutationObserver(function() {
+        const btns = document.querySelectorAll('.star-preset-btn');
+        if (btns.length > 0) {
+          observer.disconnect();
+          setupPresetButtons(btns, saved);
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      return;
+    }
+
+    setupPresetButtons(presetBtns, saved);
+  }
+
+  // --- Setup Preset Buttons ---
+  function setupPresetButtons(buttons, savedPreset) {
+    // Apply saved preset after a small delay
+    setTimeout(() => {
+      applyStarPreset(savedPreset);
+    }, 300);
+
+    // Add click handlers
+    buttons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const preset = this.dataset.preset;
+        if (preset) {
+          applyStarPreset(preset);
+        }
+      });
+    });
+
+    // Setup custom controls
+    setupCustomControls();
+
+    console.log('✅ Star presets UI ready');
+  }
+
+  // --- Setup Custom Controls ---
+  function setupCustomControls() {
+    const applyBtn = document.getElementById('applyCustomStars');
+    if (applyBtn) {
+      applyBtn.addEventListener('click', function() {
+        const custom = {
+          starCount: parseInt(document.getElementById('starCountSlider')?.value || 150),
+          twinkleSpeed: parseFloat(document.getElementById('twinkleSpeedSlider')?.value || 0.008),
+          movementSpeed: parseFloat(document.getElementById('movementSpeedSlider')?.value || 0.00001),
+          connectionDistance: parseInt(document.getElementById('connectionDistanceSlider')?.value || 350),
+          minSize: 0.8,
+          maxSize: 2.5,
+          maxOpacity: 0.9,
+          minOpacity: 0.3,
+          movementRange: 15,
+          connectStars: true,
+          connectionOpacity: 0.07,
+          desktopBreakpoint: 800,
+        };
+
+        // Apply custom
+        if (window.CONFIG) {
+          Object.assign(window.CONFIG, custom);
+        }
+
+        localStorage.setItem('star-preset', 'custom');
+        localStorage.setItem('star-custom', JSON.stringify(custom));
+
+        if (window.reloadStars) {
+          window.reloadStars();
+        }
+
+        showPresetToast('custom');
+      });
+    }
+
+    // Live slider updates
+    document.querySelectorAll('.star-control-group input[type="range"]').forEach(slider => {
+      slider.addEventListener('input', function() {
+        const display = document.getElementById(this.id.replace('Slider', 'Display'));
+        if (display) {
+          if (this.id === 'movementSpeedSlider') {
+            display.textContent = parseFloat(this.value).toFixed(4);
+          } else {
+            display.textContent = this.value;
+          }
+        }
+      });
+    });
+  }
+
+  // --- Load custom preset from localStorage ---
+  function loadCustomPreset() {
+    const custom = localStorage.getItem('star-custom');
+    if (custom) {
+      try {
+        return JSON.parse(custom);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // --- Expose globally ---
+  window.PRESETS = PRESETS;
+  window.applyStarPreset = applyStarPreset;
+  window.loadCustomPreset = loadCustomPreset;
+
+  // --- Auto-init when DOM is ready ---
+  if (document.readyState === 'complete') {
+    initStarPresets();
+  } else {
+    document.addEventListener('DOMContentLoaded', initStarPresets);
+  }
+
+  // Also init when modal tabs are switched (for dynamic loading)
+  document.addEventListener('click', function(e) {
+    const tabBtn = e.target.closest('.tab-button[data-tab="tab5"]');
+    if (tabBtn) {
+      setTimeout(initStarPresets, 100);
+    }
+  });
+
+  console.log('🎨 Star presets system loaded');
+})();
+
+// ============================================================
+// PAGE HEADER - Shared (in global.js)
+// ============================================================
+
+function updatePageHeader(pillarId) {
+  const pillarConfig = {
+    networking: {
+      name: 'Networking Fundamentals',
+      totalSections: 7,
+      sectionPrefix: 'networking-section-',
+      quizKey: 'networking-quiz-passed',
+    },
+    linux: {
+      name: 'Linux & CLI Proficiency',
+      totalSections: 10,
+      sectionPrefix: 'linux-section-',
+      quizKey: 'linux-quiz-passed',
+    },
+    // Add more as needed
+  };
+  
+  const config = pillarConfig[pillarId];
+  if (!config) return;
+  
+  // Calculate completion
+  let completedSections = 0;
+  for (let i = 1; i <= config.totalSections; i++) {
+    if (localStorage.getItem(`${config.sectionPrefix}${i}`) === 'true') {
+      completedSections++;
+    }
+  }
+  
+  const quizPassed = localStorage.getItem(config.quizKey) === 'true';
+  const totalItems = config.totalSections + 1;
+  const completedItems = completedSections + (quizPassed ? 1 : 0);
+  const percent = Math.round((completedItems / totalItems) * 100);
+  
+  // Update ring
+  const ringFill = document.querySelector('#completionRing .ring-fill');
+  const percentDisplay = document.getElementById('completionPercent');
+  if (ringFill && percentDisplay) {
+    const circumference = 2 * Math.PI * 20;
+    const offset = circumference - (percent / 100) * circumference;
+    ringFill.style.strokeDashoffset = offset;
+    percentDisplay.textContent = `${percent}%`;
+  }
+  
+  // Update badges
+  const container = document.getElementById('metaBadges');
+  if (container) {
+    let statusClass, statusIcon, statusText;
+    if (percent === 100) {
+      statusClass = 'status-complete';
+      statusIcon = '✓';
+      statusText = 'Complete';
+    } else if (percent > 0) {
+      statusClass = 'status-progress';
+      statusIcon = '⟳';
+      statusText = 'In Progress';
+    } else {
+      statusClass = 'status-locked';
+      statusIcon = '○';
+      statusText = 'Not Started';
+    }
+    
+    container.innerHTML = `
+      <span class="meta-badge ${statusClass}">
+        <span class="icon">${statusIcon}</span> ${statusText}
+      </span>
+      <span class="meta-badge">
+        <span class="icon">📄</span> ${config.totalSections} sections
+      </span>
+      <span class="meta-badge">
+        <span class="icon">✓</span> ${completedSections}/${config.totalSections}
+      </span>
+      <span class="meta-badge ${quizPassed ? 'quiz-passed' : ''}">
+        <span class="icon">${quizPassed ? '🎯' : '📝'}</span> ${quizPassed ? 'Quiz passed' : 'Quiz pending'}
+      </span>
+    `;
+  }
+}
+
+// Auto-detect pillar page and initialize
+document.addEventListener('DOMContentLoaded', function() {
+  const path = window.location.pathname;
+  let pillarId = null;
+  
+  if (path.includes('networking.html')) pillarId = 'networking';
+  else if (path.includes('linux.html')) pillarId = 'linux';
+  // Add more as needed
+  
+  if (pillarId) {
+    updatePageHeader(pillarId);
+    
+    // Listen for storage changes
+    window.addEventListener('storage', function(e) {
+      if (e.key && e.key.includes(pillarId)) {
+        updatePageHeader(pillarId);
+      }
+    });
+  }
+});
+
+window.updatePageHeader = updatePageHeader;
