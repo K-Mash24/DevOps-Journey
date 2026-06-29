@@ -28,12 +28,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebar = document.getElementById('sidebar');
   const hamburger = document.getElementById('hamburger');
   const overlay = document.getElementById('sidebarOverlay');
+
   if (hamburger && sidebar && overlay) {
-    hamburger.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('show'); });
-    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('show'); });
+    hamburger.addEventListener('click', () => { 
+      sidebar.classList.toggle('open'); 
+      overlay.classList.toggle('show'); 
+      hamburger.classList.toggle('active'); // ADD THIS for animation
+    });
+    overlay.addEventListener('click', () => { 
+      sidebar.classList.remove('open'); 
+      overlay.classList.remove('show');
+      hamburger.classList.remove('active'); // ADD THIS
+    });
   }
+
   document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
-    item.addEventListener('click', () => { sidebar?.classList.remove('open'); overlay?.classList.remove('show'); });
+    item.addEventListener('click', () => { 
+      sidebar?.classList.remove('open'); 
+      overlay?.classList.remove('show');
+      hamburger?.classList.remove('active'); // ADD THIS
+    });
   });
 
   // --- Scroll to Top ---
@@ -2135,3 +2149,311 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   document.addEventListener('visibilitychange', () => { if (!document.hidden) updateAllUI(); });
 
 });
+
+// ============================================================
+// SIDEBAR - Hamburger Syncs with All Toggle Methods
+// ============================================================
+
+const sidebar = document.getElementById('sidebar');
+const hamburger = document.getElementById('hamburger');
+const overlay = document.getElementById('sidebarOverlay');
+const sidebarToggle = document.getElementById('sidebarToggle');
+
+// --- State ---
+let isMobileOpen = false;
+let isSidebarCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+let isTransitioning = false;
+
+// --- Helper: Update hamburger animation based on sidebar state ---
+function updateHamburgerState() {
+  if (!hamburger) return;
+  
+  const isMobile = window.innerWidth <= 768;
+  let isExpanded;
+  
+  if (isMobile) {
+    // Mobile: hamburger shows X when sidebar is OPEN
+    isExpanded = isMobileOpen;
+  } else {
+    // Desktop: hamburger shows X when sidebar is EXPANDED (not collapsed)
+    isExpanded = !isSidebarCollapsed;
+  }
+  
+  // Update hamburger
+  if (isExpanded) {
+    hamburger.classList.add('active');
+    hamburger.setAttribute('aria-expanded', 'true');
+  } else {
+    hamburger.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }
+}
+
+// --- Helper: Update overlay ---
+function updateOverlay(show) {
+  if (!overlay) return;
+  if (show) {
+    overlay.classList.add('show');
+    overlay.style.display = 'block';
+    overlay.style.pointerEvents = 'auto';
+    overlay.style.opacity = '1';
+  } else {
+    overlay.classList.remove('show');
+    overlay.style.display = 'none';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.opacity = '0';
+  }
+}
+
+// --- Helper: Update toggle position ---
+function updateTogglePosition() {
+  if (!sidebarToggle) return;
+  if (window.innerWidth <= 768) {
+    sidebarToggle.style.display = 'none';
+    return;
+  }
+  sidebarToggle.style.display = 'flex';
+  const sidebarWidth = isSidebarCollapsed ? 0 : 260;
+  sidebarToggle.style.left = `${sidebarWidth}px`;
+}
+
+// --- Helper: Sync ALL UI elements ---
+function syncSidebarUI() {
+  const isMobile = window.innerWidth <= 768;
+  
+  if (isMobile) {
+    // Mobile: sync with isMobileOpen
+    sidebar.classList.toggle('open', isMobileOpen);
+    overlay.classList.toggle('show', isMobileOpen);
+    updateOverlay(isMobileOpen);
+  } else {
+    // Desktop: sync with isSidebarCollapsed
+    sidebar.classList.toggle('collapsed', isSidebarCollapsed);
+    updateOverlay(!isSidebarCollapsed);
+    updateTogglePosition();
+  }
+  
+  // ALWAYS update hamburger state after any change
+  updateHamburgerState();
+}
+
+// --- MOBILE TOGGLE (Hamburger) - FORCED ---
+if (hamburger) {
+  hamburger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    const isMobile = window.innerWidth <= 768;
+    console.log('Hamburger clicked. Mobile:', isMobile);
+    
+    if (isMobile) {
+      // Toggle mobile state
+      isMobileOpen = !isMobileOpen;
+      console.log('Setting isMobileOpen to:', isMobileOpen);
+      
+      // FORCE toggle classes
+      if (isMobileOpen) {
+        sidebar.classList.add('open');
+        overlay.classList.add('show');
+        this.classList.add('active');
+        overlay.style.display = 'block';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+      } else {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+        this.classList.remove('active');
+        overlay.style.display = 'none';
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+      }
+      
+      console.log('Sidebar classes:', sidebar.className);
+      console.log('Sidebar transform:', window.getComputedStyle(sidebar).transform);
+    } else {
+      // Desktop: use desktop toggle
+      toggleSidebar();
+    }
+  });
+}
+
+// --- Also make overlay click work ---
+if (overlay) {
+  overlay.addEventListener('click', function() {
+    if (window.innerWidth <= 768 && isMobileOpen) {
+      isMobileOpen = false;
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      overlay.style.display = 'none';
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+      hamburger.classList.remove('active');
+      console.log('Sidebar closed via overlay');
+    }
+  });
+}
+
+// --- DESKTOP TOGGLE (Sidebar Toggle Button) ---
+if (sidebarToggle) {
+  sidebarToggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (window.innerWidth > 768) {
+      toggleSidebar();
+    }
+  });
+}
+
+// --- OVERLAY CLICK ---
+if (overlay) {
+  overlay.addEventListener('click', function() {
+    if (window.innerWidth <= 768 && isMobileOpen) {
+      isMobileOpen = false;
+      syncSidebarUI();
+    } else if (window.innerWidth > 768 && !isSidebarCollapsed) {
+      toggleSidebar(true);
+    }
+  });
+}
+
+// --- NAV ITEMS CLICK (Mobile) ---
+document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    if (window.innerWidth <= 768 && isMobileOpen) {
+      isMobileOpen = false;
+      syncSidebarUI();
+    }
+  });
+});
+
+// --- MAIN TOGGLE FUNCTION (Desktop) ---
+function toggleSidebar(collapse) {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  if (collapse === undefined) {
+    isSidebarCollapsed = !isSidebarCollapsed;
+  } else {
+    isSidebarCollapsed = collapse;
+  }
+  
+  // Save state
+  localStorage.setItem('sidebar-collapsed', isSidebarCollapsed);
+  
+  // Sync all UI (including hamburger)
+  syncSidebarUI();
+  
+  setTimeout(() => {
+    isTransitioning = false;
+  }, 350);
+
+  // Toggle stars visibility
+  const canvas = document.getElementById('starCanvas');
+  if (canvas) {
+    const isCollapsed = sidebar.classList.contains('collapsed');
+    canvas.style.opacity = isCollapsed ? '1' : '0.3';
+    canvas.style.transition = 'opacity 0.5s ease';
+  }
+
+  // Notify stars about sidebar state change
+  if (window.updateStarsForSidebar) {
+    setTimeout(function() {
+      window.updateStarsForSidebar(isSidebarCollapsed);
+    }, 50);
+  }
+}
+
+// --- KEYBOARD SHORTCUT: Ctrl+B ---
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+    e.preventDefault();
+    if (window.innerWidth <= 768) {
+      // Mobile: toggle sidebar
+      isMobileOpen = !isMobileOpen;
+      syncSidebarUI();
+    } else {
+      toggleSidebar();
+    }
+  }
+});
+
+// --- RESIZE HANDLER ---
+let resizeTimeout;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function() {
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      // Switch to mobile mode
+      sidebar.classList.remove('collapsed');
+      if (isSidebarCollapsed) {
+        isSidebarCollapsed = false;
+        localStorage.setItem('sidebar-collapsed', 'false');
+      }
+      // If sidebar was open on desktop, keep it open on mobile
+      if (!isMobileOpen) {
+        isMobileOpen = false;
+      }
+    } else {
+      // Switch to desktop mode
+      sidebar.classList.remove('open');
+      if (isMobileOpen) {
+        isMobileOpen = false;
+      }
+      // Restore desktop state
+      const stored = localStorage.getItem('sidebar-collapsed') === 'true';
+      if (stored !== isSidebarCollapsed) {
+        isSidebarCollapsed = stored;
+      }
+    }
+    
+    // Sync everything (including hamburger)
+    syncSidebarUI();
+  }, 150);
+});
+
+// --- RESTORE STATE ON LOAD ---
+function restoreState() {
+  const isMobile = window.innerWidth <= 768;
+  
+  if (isMobile) {
+    sidebar.classList.remove('open', 'collapsed');
+    isMobileOpen = false;
+  } else {
+    if (isSidebarCollapsed) {
+      sidebar.classList.add('collapsed');
+    } else {
+      sidebar.classList.remove('collapsed');
+    }
+  }
+  
+  // Sync everything
+  syncSidebarUI();
+}
+
+// Run restore
+if (document.readyState === 'complete') {
+  restoreState();
+} else {
+  window.addEventListener('load', restoreState);
+}
+
+console.log('✅ Hamburger syncs with all toggle methods');
+
+// Add this after your DOMContentLoaded to debug
+console.log('=== SIDEBAR DEBUG ===');
+console.log('Sidebar element:', sidebar);
+console.log('Sidebar classes:', sidebar ? sidebar.className : 'NOT FOUND');
+console.log('Hamburger element:', hamburger);
+console.log('Overlay element:', overlay);
+console.log('Window width:', window.innerWidth);
+console.log('isMobileOpen:', isMobileOpen);
+console.log('isSidebarCollapsed:', isSidebarCollapsed);
+
+// Check computed styles
+if (sidebar) {
+  const styles = window.getComputedStyle(sidebar);
+  console.log('Sidebar transform:', styles.transform);
+  console.log('Sidebar display:', styles.display);
+  console.log('Sidebar left:', styles.left);
+}

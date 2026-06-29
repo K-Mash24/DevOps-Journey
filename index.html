@@ -22,10 +22,22 @@
 </head>
 <body>
 
+  <!-- Starry Background Container -->
+<canvas id="starCanvas" aria-hidden="true"></canvas>
+
 <div class="app-shell">
 
   <!-- ======================= SIDEBAR ======================= -->
   <aside class="sidebar" id="sidebar">
+
+    <!-- Sidebar toggle button (on right border) - Always visible -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar (Ctrl+B)">
+      <svg class="toggle-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+      </svg>
+      <span class="toggle-tooltip">Ctrl+B</span>
+    </button>
+
     <div class="sidebar-logo">
       <a href="#home" class="logo-mark" aria-label="Home">
         <div class="logo-icon" aria-hidden="true">
@@ -176,9 +188,16 @@
     <!-- Top Bar (unchanged) -->
     <header class="topbar">
       <div class="topbar-left">
-        <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
-        </button>
+
+           <!-- ✅ ANIMATED HAMBURGER - ALWAYS VISIBLE -->
+          <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+            <span class="hamburger-box">
+              <span class="hamburger-line"></span>
+              <span class="hamburger-line"></span>
+              <span class="hamburger-line"></span>
+            </span>
+          </button>
+
         <div class="search-bar">
           <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
           <input type="text" class="search-input" id="searchInput" placeholder="Jump to pillar or topic..." autocomplete="off" aria-label="Search" />
@@ -553,5 +572,6 @@
 </button>
 
 <script src="js/global.js"></script>
+<script src="js/stars.js"></script>
 </body>
 </html>

@@ -13,6 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preload" href="../style.css" as="style" />
     <link rel="preload" href="../js/global.js" as="script" />
+    <!-- Preload star script -->
+    <link rel="preload" href="js/stars.js" as="script">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- PWA & Mobile -->
     <link rel="manifest" href="/DevOps-Journey/manifest.json" />
@@ -26,9 +28,24 @@
     <link rel="apple-touch-icon" href="/img/Logo.svg" />
   </head>
   <body>
+    
+    <!-- Starry Background Container -->
+    <canvas id="starCanvas" aria-hidden="true"></canvas>
+
     <div class="app-shell">
+
+        
       <!-- ======================= SIDEBAR ======================= -->
       <aside class="sidebar" id="sidebar">
+
+      <!-- ✅ SIDEBAR TOGGLE BUTTON (Desktop) -->
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar (Ctrl+B)">
+        <svg class="toggle-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+        </svg>
+        <span class="toggle-tooltip">Ctrl+B</span>
+      </button>
+
         <div class="sidebar-logo">
           <a href="../index.html" class="logo-mark" aria-label="Home">
             <div class="logo-icon" aria-hidden="true">
@@ -364,25 +381,16 @@
         <!-- Top Bar -->
         <header class="topbar">
           <div class="topbar-left">
-            <button
-              class="hamburger"
-              id="hamburger"
-              aria-label="Toggle sidebar"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+            
+            <!-- ✅ ANIMATED HAMBURGER - ALWAYS VISIBLE -->
+            <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+              <span class="hamburger-box">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+              </span>
             </button>
+
             <div class="search-bar">
               <svg
                 width="16"
@@ -5537,6 +5545,8 @@ renice -n 5 -p 1234              # change niceness of an already-running process
     </button>
 
     <script src="../js/global.js"></script>
+    <script src="..js/stars.js"></script>
     <script src="../js/Linux.js"></script>
+    
   </body>
 </html>
