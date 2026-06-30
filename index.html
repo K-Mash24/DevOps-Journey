@@ -488,6 +488,7 @@
       <button class="tab-button" data-tab="tab3" id="pillarDetailTabBtn">Pillar Details</button>
       <button class="tab-button" data-tab="tab4" id="backupTabBtn">💾 Backup</button>
       <button class="tab-button" data-tab="tab5">✨ Stars</button>
+      <button class="tab-button" data-tab="tab6">🎨 Themes</button>
     </div>
     <!-- Tab 0: Overall Project Progress -->
     <div class="tab-pane active" id="tab0">
@@ -639,6 +640,25 @@
           </div>
         </div>
       </div>
+      <!-- Tab 6: Color Themes -->
+      <div class="tab-pane" id="tab6">
+        <div class="themes-container" style="padding: 0 1rem;">
+          <h4 style="margin-bottom: 0.5rem;">🎨 Color Themes</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Choose a color theme for the entire site. Click a theme to preview, then Apply to save.
+          </p>
+          <div class="theme-grid" id="themeGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; max-height: 350px; overflow-y: auto; padding-right: 0.5rem;">
+            <!-- Theme cards will be rendered by JavaScript -->
+          </div>
+          <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem;">
+            <button id="resetThemeBtn" class="btn btn-secondary btn-sm">Reset to Default</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted); align-self: center;">(Indigo)</span>
+          </div>
+        </div>
+      </div>
+      <div class="progress-modal-footer">
+        <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
+      </div>
   </div>
 </div>
 
@@ -679,5 +699,6 @@
 
 <script src="js/global.js"></script>
 <script src="js/stars.js"></script>
+<script src="js/themes.js"></script>
 </body>
 </html>

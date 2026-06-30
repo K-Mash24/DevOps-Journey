@@ -137,6 +137,58 @@ const CONFIG = {
     }
   }
 
+  // --- Toast Notification (using flexbox container) ---
+  function showPresetToast(presetName) {
+    const preset = PRESETS[presetName];
+    if (!preset) return;
+
+    // Get or create the toast container
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    // Create the toast
+    const toast = document.createElement('div');
+    toast.className = 'toast-item coming-soon-toast';
+    toast.style.background = 'var(--accent-primary)';
+    toast.style.color = 'white';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '40px';
+    toast.style.fontSize = '0.85rem';
+    toast.style.fontWeight = '500';
+    toast.style.boxShadow = 'var(--shadow-md)';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '8px';
+    
+    // Add icon + message
+    const icon = document.createElement('span');
+    icon.textContent = '✅';
+    toast.appendChild(icon);
+    
+    const message = document.createTextNode(` ${preset.icon} ${preset.name} preset applied`);
+    toast.appendChild(message);
+
+    container.appendChild(toast);
+
+    // Auto-dismiss after 2 seconds
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px) scale(0.95)';
+      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      setTimeout(() => {
+        toast.remove();
+        // Remove container if empty
+        if (container.children.length === 0) {
+          container.remove();
+        }
+      }, 300);
+    }, 2000);
+  }
+
   // --- Initialize Stars ---
   function initStars() {
     stars = [];
@@ -320,3 +372,5 @@ const CONFIG = {
 
   console.log("✨ Starry background initialized (responsive)");
 })();
+
+window.showPresetToast = showPresetToast;

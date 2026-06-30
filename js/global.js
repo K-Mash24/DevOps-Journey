@@ -1212,13 +1212,49 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   }
 
   function showComingSoonToast(pillarName) {
-    const existing = document.querySelector('.coming-soon-toast');
-    if (existing) existing.remove();
+    // Get or create the toast container
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    // Create the toast
     const toast = document.createElement('div');
-    toast.className = 'coming-soon-toast';
+    toast.className = 'toast-item coming-soon-toast';
     toast.textContent = `${pillarName} — page coming soon after the previous pillars are complete`;
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
+    toast.style.background = 'var(--accent-primary)';
+    toast.style.color = 'white';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '40px';
+    toast.style.fontSize = '0.8rem';
+    toast.style.fontWeight = '500';
+    toast.style.boxShadow = 'var(--shadow-md)';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '8px';
+
+    // Add a lock icon
+    const icon = document.createElement('span');
+    icon.textContent = '🔒';
+    toast.prepend(icon);
+
+    container.appendChild(toast);
+
+    // Auto-dismiss after 2.5 seconds
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px) scale(0.95)';
+      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      setTimeout(() => {
+        toast.remove();
+        // Remove container if empty
+        if (container.children.length === 0) {
+          container.remove();
+        }
+      }, 300);
+    }, 2500);
   }
 
   function initGlobalKeyboard() {
@@ -1249,6 +1285,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
             <button class="tab-button" data-tab="tab3">Pillar Details</button>
             <button class="tab-button" data-tab="tab4">💾 Backup</button>
             <button class="tab-button" data-tab="tab5">✨ Stars</button>
+            <button class="tab-button" data-tab="tab6">🎨 Themes</button>
           </div>
           <div class="tab-pane active" id="tab0">...</div>
           <div class="tab-pane" id="tab1">...</div>
@@ -1327,6 +1364,22 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                   </div>
                   <button class="btn btn-primary btn-sm" id="applyCustomStars" style="margin-top: 0.75rem;">Apply Custom</button>
                 </details>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="tab6">
+            <div class="themes-container" style="padding: 0 1rem;">
+              <h4 style="margin-bottom: 0.5rem;">🎨 Color Themes</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Choose a color theme for the entire site. Click a theme to preview, then Apply to save.
+              </p>
+              <div class="theme-grid" id="themeGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; max-height: 350px; overflow-y: auto; padding-right: 0.5rem;">
+                <!-- Theme cards will be rendered by JavaScript -->
+              </div>
+              <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem;">
+                <button id="resetThemeBtn" class="btn btn-secondary btn-sm">Reset to Default</button>
+                <span style="font-size: 0.7rem; color: var(--text-muted); align-self: center;">(Indigo)</span>
               </div>
             </div>
           </div>
@@ -1999,21 +2052,38 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   };
 
   function showToast(message, type = 'info') {
-    const existing = document.querySelector('.global-toast');
-    if (existing) existing.remove();
-    
+    // Get or create the toast container
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    // Create the toast
     const toast = document.createElement('div');
-    toast.className = `global-toast ${type}`;
+    toast.className = `toast-item global-toast ${type}`;
     toast.innerHTML = `
       <span class="toast-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
       <span class="toast-message">${message}</span>
     `;
-    document.body.appendChild(toast);
     
+    // Add to container
+    container.appendChild(toast);
+
+    // Auto-dismiss after 2.5 seconds
     setTimeout(() => {
       toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
+      toast.style.transform = 'translateY(-10px) scale(0.95)';
+      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      setTimeout(() => {
+        toast.remove();
+        // Remove container if empty
+        if (container.children.length === 0) {
+          container.remove();
+        }
+      }, 300);
+    }, 2500);
   }
 
   // function setupGistBackup() {
@@ -2731,37 +2801,32 @@ if (sidebar) {
     });
   }
 
-  // --- Toast Notification ---
+  // --- Toast Notification (using global toast system) ---
   function showPresetToast(presetName) {
     const preset = PRESETS[presetName];
     if (!preset) return;
 
-    // Remove existing toast
-    const existing = document.querySelector('.preset-toast');
-    if (existing) existing.remove();
+    // Use the global showToast function (if available)
+    if (typeof window.showToast === 'function') {
+      window.showToast(`${preset.icon} ${preset.name} preset applied`, 'success');
+    } else {
+      // Fallback: create toast manually
+      const existing = document.querySelector('.global-toast');
+      if (existing) existing.remove();
 
-    const toast = document.createElement('div');
-    toast.className = 'preset-toast coming-soon-toast';
-    toast.textContent = `${preset.icon} ${preset.name} preset applied`;
-    toast.style.background = 'var(--accent-primary)';
-    toast.style.color = 'white';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = '40px';
-    toast.style.fontSize = '0.85rem';
-    toast.style.fontWeight = '500';
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.zIndex = '9999';
-    toast.style.animation = 'fadeInUp 0.3s ease';
-    toast.style.boxShadow = 'var(--shadow-md)';
-    document.body.appendChild(toast);
+      const toast = document.createElement('div');
+      toast.className = 'global-toast success';
+      toast.innerHTML = `
+        <span class="toast-icon">✅</span>
+        <span class="toast-message">${preset.icon} ${preset.name} preset applied</span>
+      `;
+      document.body.appendChild(toast);
 
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 300);
-    }, 2000);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
   }
 
   // --- Initialize Star Presets ---
@@ -2812,6 +2877,52 @@ if (sidebar) {
     setupCustomControls();
 
     console.log('✅ Star presets UI ready');
+  }
+
+  function showComingSoonToast(pillarName) {
+    // Get or create the toast container
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+
+    // Create the toast
+    const toast = document.createElement('div');
+    toast.className = 'toast-item coming-soon-toast';
+    toast.textContent = `${pillarName} — page coming soon after the previous pillars are complete`;
+    toast.style.background = 'var(--accent-primary)';
+    toast.style.color = 'white';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '40px';
+    toast.style.fontSize = '0.8rem';
+    toast.style.fontWeight = '500';
+    toast.style.boxShadow = 'var(--shadow-md)';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '8px';
+
+    // Add a lock icon
+    const icon = document.createElement('span');
+    icon.textContent = '🔒';
+    toast.prepend(icon);
+
+    container.appendChild(toast);
+
+    // Auto-dismiss after 2.5 seconds
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px) scale(0.95)';
+      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      setTimeout(() => {
+        toast.remove();
+        // Remove container if empty
+        if (container.children.length === 0) {
+          container.remove();
+        }
+      }, 300);
+    }, 2500);
   }
 
   // --- Setup Custom Controls ---
@@ -3005,3 +3116,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.updatePageHeader = updatePageHeader;
+window.showToast = showToast;
+window.showComingSoonToast = showComingSoonToast;
