@@ -4851,9 +4851,11 @@ pre {
    PERSONALIZATION – DESKTOP ONLY (tab6)
    ============================================================ */
 @media (max-width: 800px) {
+  .tab-button[data-tab="tab5"], 
   .tab-button[data-tab="tab6"] {
     display: none !important;
   }
+  #tab5,
   #tab6 {
     display: none !important;
   }
