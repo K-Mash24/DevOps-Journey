@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- PAGE DESCRIPTION will be replaced per page -->
+    <meta name="description" content="<!-- PAGE DESCRIPTION -->" />
+    <title><!-- PAGE TITLE --> | Great Cheatsheets</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preload" href="style.css" as="style" />
+    <link rel="preload" href="js/global.js" as="script" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- PWA & Mobile -->
+    <link rel="manifest" href="/DevOps-Journey/manifest.json" />
+    <meta name="theme-color" content="#5346d4" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="DevOps Journey" />
+    <link rel="apple-touch-icon" href="/img/Logo.svg" />
+
+    <!-- Favicon (override per pillar if needed) -->
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+  </head>
+  <body>
+    <!-- Starry Background Container -->
+    <canvas id="starCanvas" aria-hidden="true"></canvas>
+
+    <div class="app-shell">
+      <!-- ======================= SIDEBAR ======================= -->
+      <aside class="sidebar" id="sidebar">
+        <!-- Desktop toggle button -->
+        <button
+          class="sidebar-toggle"
+          id="sidebarToggle"
+          aria-label="Toggle sidebar (Ctrl+B)"
+        >
+          <svg class="toggle-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="toggle-tooltip">Ctrl+B</span>
+        </button>
+
+        <div class="sidebar-logo">
+          <a href="index.html" class="logo-mark" aria-label="Home">
+            <div class="logo-icon" aria-hidden="true">
+              <img src="img/Logo.svg" alt="Great Cheatsheets Logo" />
+            </div>
+            <div>
+              <div class="logo-text">Great Cheatsheets</div>
+              <div class="logo-sub">SAA Foundation · DevOps Journey</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="sidebar-section-label">Navigation</div>
+        <nav class="sidebar-nav" aria-label="Primary navigation">
+          <a class="nav-item" href="index.html#home">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 32 32"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="m16 2.672-5.331 5.331V5.87H6.404v6.398l-3.755 3.755.754.754L16 4.18l12.597 12.597.754-.754zM7.47 6.937h2.132v2.132l-2.133 2.133V6.937zM6.404 16.533v12.795h7.464v-7.464h4.265v7.464h7.464V16.533l-9.596-9.596-9.596 9.596zM24.53 28.262h-5.331v-7.464h-6.398v7.464H7.47V16.975L16 8.445l8.53 8.53z"
+              />
+            </svg>
+            Home
+          </a>
+          <a class="nav-item" href="index.html#overview">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M6.5 11.25a.75.75 0 0 1 0-1.5h7a.75.75 0 0 1 0 1.5zm0 3a.75.75 0 0 1 0-1.5h7a.75.75 0 0 1 0 1.5z M11.185.5H4.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7.202a2 2 0 0 0-.526-1.352l-4.315-4.702A2 2 0 0 0 11.185.5M4.5 17.5v-15h6.685L15.5 7.202V17.5z M11.5 6.5h5a1 1 0 1 1 0 2h-6a1 1 0 0 1-1-1v-6a1 1 0 0 1 2 0z"
+              />
+            </svg>
+            Overview
+          </a>
+          <a class="nav-item" href="index.html#resources">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M7.71 3h6.79l.51.5v10l-.5.5h-13l-.5-.5v-11l.5-.5h5l.35.15.85.85zm6.28 10v-1.51l.01-4v-1.5H7.7l-.86.86-.35.15H2v6h11.99zm-6.5-8h6.5l.01-.99H7.5l-.36-.15-.85-.85H2v3h4.28l.86-.86.35-.15zm2.29 4.07L8.42 7.7l.74-.69 2.22 2.22v.71l-2.29 2.21-.7-.72 1.4-1.35H8.42a2 2 0 0 0-1.35.61A1.8 1.8 0 0 0 6.54 12h-1a2.76 2.76 0 0 1 .81-2 3 3 0 0 1 2-.93h1.43z"
+              />
+            </svg>
+            Resources
+          </a>
+        </nav>
+
+        <div class="sidebar-section-label">Phase 1 — Foundations</div>
+        <nav class="sidebar-nav" aria-label="Phase 1 pillars">
+          <a
+            class="nav-item"
+            href="html/networking.html"
+            data-pillar="networking"
+          >
+            <svg
+              class="nav-icon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.05 3.636a1 1 0 010 1.414 7 7 0 000 9.9 1 1 0 11-1.414 1.414 9 9 0 010-12.728 1 1 0 011.414 0zm9.9 0a1 1 0 011.414 0 9 9 0 010 12.728 1 1 0 11-1.414-1.414 7 7 0 000-9.9 1 1 0 010-1.414zM7.879 6.464a1 1 0 010 1.414 3 3 0 000 4.243 1 1 0 11-1.415 1.414 5 5 0 010-7.07 1 1 0 011.415 0zm4.242 0a1 1 0 011.415 0 5 5 0 010 7.072 1 1 0 01-1.415-1.415 3 3 0 000-4.242 1 1 0 010-1.415zM10 9a1 1 0 011 1v.01a1 1 0 11-2 0V10a1 1 0 011-1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Pillar 1 — Networking
+            <span
+              class="pillar-progress-percent"
+              data-pillar-progress="networking"
+              >0%</span
+            >
+          </a>
+          <a class="nav-item" href="html/linux.html" data-pillar="linux">
+            <svg
+              class="nav-icon"
+              viewBox="0 0 32 32"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M27.4,5.5H18.2L16.1,9.7H4.3v4H.5L4.3,26.5H29.5V5.5ZM20.2,7.6h7.1V9.7H19.2Zm5.5,6.1H6.6V11.8H27.4v7.626ZM31,14V31H10V14ZM10.5,14.5v16h20v-16ZM29.54,29.593H11.44V15.407H29.56V29.593ZM13.96,24.527l.68.622L18.5,21.7l-3.92-3.484-.68.6,3.24,2.88Zm4.54,1.031h6v.711h-6Z"
+              />
+            </svg>
+            Pillar 2 — Linux & CLI
+            <span class="pillar-progress-percent" data-pillar-progress="linux"
+              >0%</span
+            >
+          </a>
+          <!-- Add other pillars as they become available -->
+          <span
+            class="nav-item disabled"
+            data-pillar="security"
+            data-disabled="true"
+          >
+            <svg
+              class="nav-icon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Pillar 3 — Security
+            <span
+              class="pillar-progress-percent"
+              data-pillar-progress="security"
+              >0%</span
+            >
+          </span>
+          <!-- ... more -->
+        </nav>
+
+        <!-- Phase 2 (optional) -->
+        <div class="sidebar-section-label">Phase 2 — DevOps</div>
+        <nav class="sidebar-nav" aria-label="Phase 2 pillars">
+          <!-- Placeholder, same as in index.html -->
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-footer-text">
+            <div>github.com/K-Mash24/Great_Cheatsheets</div>
+            <div>github.com/K-Mash24/DevOps-Journey</div>
+            <button
+              id="resetWelcomeBtn"
+              class="btn btn-secondary btn-sm"
+              style="
+                display: flex;
+                background: none;
+                border-width: medium;
+                border-style: none;
+                border-color: currentcolor;
+                border-image: initial;
+                color: var(--text-sidebar-muted);
+                font-size: 0.65rem;
+                cursor: pointer;
+                text-decoration: underline;
+                justify-content: left;
+              "
+            >
+              Reset Welcome Messages
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+      <!-- ======================= MAIN CONTENT ======================= -->
+      <div class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button
+              class="hamburger"
+              id="hamburger"
+              aria-label="Toggle sidebar"
+            >
+              <span class="hamburger-box">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+              </span>
+            </button>
+
+            <div class="search-bar">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <input
+                type="text"
+                class="search-input"
+                id="searchInput"
+                placeholder="Jump to pillar or topic..."
+                autocomplete="off"
+                aria-label="Search"
+              />
+              <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <div class="theme-toggle" role="group" aria-label="Theme toggle">
+              <button
+                class="theme-toggle-btn active"
+                id="lightBtn"
+                aria-label="Light mode"
+                title="Light mode"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <button
+                class="theme-toggle-btn"
+                id="darkBtn"
+                aria-label="Dark mode"
+                title="Dark mode"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Page Body -->
+        <main class="page-container" id="main-content">
+          <!-- ========== PAGE-SPECIFIC CONTENT GOES HERE ========== -->
+          <!-- PAGE SPECIFIC CONTENT -->
+          <!-- ===================================================== -->
+        </main>
+      </div>
+    </div>
+
+    <!-- Floating Global Ring (progress dashboard) -->
+    <div
+      class="global-floating-ring"
+      id="globalFloatingRing"
+      aria-label="Open progress dashboard"
+    >
+      <svg class="global-ring-svg" viewBox="0 0 60 60">
+        <circle
+          class="global-ring-bg"
+          cx="30"
+          cy="30"
+          r="26"
+          fill="none"
+          stroke-width="4"
+        />
+        <circle
+          class="global-ring-fill"
+          cx="30"
+          cy="30"
+          r="26"
+          fill="none"
+          stroke-width="4"
+          stroke-linecap="round"
+        />
+      </svg>
+      <div class="global-ring-percent" id="globalRingPercent">0%</div>
+    </div>
+
+    <!-- Progress Modal (contains all rings + scrollers) -->
+    <div
+      id="progressModal"
+      class="progress-modal"
+      style="display: none"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Global progress dashboard"
+    >
+      <div class="progress-modal-content">
+        <div class="progress-modal-header">
+          <h3>📊 Global Progress Dashboard</h3>
+          <button
+            class="modal-close"
+            id="closeModalBtn"
+            aria-label="Close modal"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="progress-modal-tabs">
+          <button class="tab-button active" data-tab="tab0">Overall</button>
+          <button class="tab-button" data-tab="tab1">Phase 1</button>
+          <button class="tab-button" data-tab="tab2">Phase 2</button>
+          <button class="tab-button" data-tab="tab3">Pillar Details</button>
+          <button class="tab-button" data-tab="tab4">💾 Backup</button>
+          <button class="tab-button" data-tab="tab5">✨ Stars</button>
+        </div>
+        <!-- Tab panes (same as in index.html) -->
+        <div class="tab-pane active" id="tab0">...</div>
+        <div class="tab-pane" id="tab1">...</div>
+        <div class="tab-pane" id="tab2">...</div>
+        <div class="tab-pane" id="tab3">
+          <div id="pillarDetailContainer" style="min-height: 200px">...</div>
+        </div>
+        <div class="tab-pane" id="tab4"><div id="backupContainer"></div></div>
+        <div class="tab-pane" id="tab5">
+          <!-- star presets content (same as index.html) -->
+        </div>
+        <div class="progress-modal-footer">
+          <button class="btn btn-secondary btn-sm" id="modalCloseFooter">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll to top button -->
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
+
+    <!-- Core scripts (shared across all pages) -->
+    <script src="js/global.js"></script>
+    <script src="js/stars.js"></script>
+    <!-- PAGE SPECIFIC SCRIPTS (e.g., networking.js, Linux.js) -->
+    <!-- should be added after the shared scripts -->
+  </body>
+</html>

@@ -631,7 +631,7 @@ pre {
   border-radius: var(--radius-md);
   padding: 0.45rem 0.75rem;
   flex: 1;
-  max-width: 420px;
+  max-width: 70%;
   transition: var(--transition);
 }
 .search-bar:focus-within {
@@ -4204,8 +4204,7 @@ pre {
    RESPONSIVE - MOBILE (max-width: 768px)
    ============================================================ */
 @media (max-width: 768px) {
-  /* --- Sidebar - Hidden by default --- */
-  .sidebar {
+  .sidebar { /* --- Sidebar - Hidden by default --- */
     transform: translateX(-100%) !important;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     width: var(--sidebar-width) !important;
@@ -4267,7 +4266,6 @@ pre {
   .sidebar-toggle {
     display: none !important;
   }
-}
   
   /* --- Page Container --- */
   .page-container {
@@ -4653,6 +4651,7 @@ pre {
     left: 1px;
     top: -2px;
   }
+}
 
 /* ============================================================
    RESPONSIVE - EXTRA SMALL (max-width: 480px)

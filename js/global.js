@@ -1246,11 +1246,9 @@ window.openModalToPillarDetails = openModalToPillarDetails;
             <button class="modal-close" id="closeModalBtn">&times;</button>
           </div>
           <div class="progress-modal-tabs">
-            
-            
-            
             <button class="tab-button" data-tab="tab3">Pillar Details</button>
             <button class="tab-button" data-tab="tab4">💾 Backup</button>
+            <button class="tab-button" data-tab="tab5">✨ Stars</button>
           </div>
           <div class="tab-pane active" id="tab0">...</div>
           <div class="tab-pane" id="tab1">...</div>
@@ -1260,6 +1258,77 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           </div>
           <div class="tab-pane" id="tab4">
             <div id="backupContainer" class="backup-tab-content"></div>
+          </div>
+          <!-- ✨ NEW: Stars tab pane -->
+          <div class="tab-pane" id="tab5">
+            <div class="star-presets-container">
+              <h4 style="margin-bottom: 0.5rem;">✨ Starfield Presets</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Choose a starfield style or customize your own. Changes apply instantly.
+              </p>
+
+              <!-- Preset Buttons -->
+              <div class="star-preset-grid">
+                <button class="star-preset-btn active" data-preset="calm">
+                  <span class="preset-icon">🌙</span>
+                  <span class="preset-name">Calm Night</span>
+                  <span class="preset-desc">Gentle, serene</span>
+                </button>
+                <button class="star-preset-btn" data-preset="active">
+                  <span class="preset-icon">🌌</span>
+                  <span class="preset-name">Active</span>
+                  <span class="preset-desc">Lively drift</span>
+                </button>
+                <button class="star-preset-btn" data-preset="minimal">
+                  <span class="preset-icon">⭐</span>
+                  <span class="preset-name">Minimal</span>
+                  <span class="preset-desc">Clean & simple</span>
+                </button>
+                <button class="star-preset-btn" data-preset="constellation">
+                  <span class="preset-icon">🔭</span>
+                  <span class="preset-name">Constellation</span>
+                  <span class="preset-desc">Rich connections</span>
+                </button>
+                <button class="star-preset-btn" data-preset="dense">
+                  <span class="preset-icon">🌠</span>
+                  <span class="preset-name">Dense</span>
+                  <span class="preset-desc">Full starfield</span>
+                </button>
+                <button class="star-preset-btn" data-preset="off">
+                  <span class="preset-icon">🚫</span>
+                  <span class="preset-name">Off</span>
+                  <span class="preset-desc">Disable stars</span>
+                </button>
+              </div>
+
+              <!-- Custom Controls -->
+              <div class="star-custom-controls">
+                <details>
+                  <summary style="cursor: pointer; font-weight: 500; color: var(--text-primary);">
+                    ⚙️ Customize
+                  </summary>
+                  <div style="margin-top: 0.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div class="star-control-group">
+                      <label style="font-size: 0.75rem;">Star Count: <span id="starCountDisplay">150</span></label>
+                      <input type="range" id="starCountSlider" min="50" max="400" value="150" step="10">
+                    </div>
+                    <div class="star-control-group">
+                      <label style="font-size: 0.75rem;">Twinkle Speed: <span id="twinkleSpeedDisplay">0.008</span></label>
+                      <input type="range" id="twinkleSpeedSlider" min="0" max="0.05" value="0.008" step="0.001">
+                    </div>
+                    <div class="star-control-group">
+                      <label style="font-size: 0.75rem;">Movement Speed: <span id="movementSpeedDisplay">0.00001</span></label>
+                      <input type="range" id="movementSpeedSlider" min="0" max="0.02" value="0.00001" step="0.0001">
+                    </div>
+                    <div class="star-control-group">
+                      <label style="font-size: 0.75rem;">Connection Distance: <span id="connectionDistanceDisplay">350</span></label>
+                      <input type="range" id="connectionDistanceSlider" min="0" max="600" value="350" step="10">
+                    </div>
+                  </div>
+                  <button class="btn btn-primary btn-sm" id="applyCustomStars" style="margin-top: 0.75rem;">Apply Custom</button>
+                </details>
+              </div>
+            </div>
           </div>
           <div class="progress-modal-footer">
             <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
