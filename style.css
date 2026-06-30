@@ -126,6 +126,7 @@
 
 .star-presets-container {
   padding: 1rem;
+  max-width: 800px;
 }
 
 .star-preset-grid {
@@ -2604,6 +2605,7 @@ pre {
 
 .progress-modal-tabs {
   display: flex;
+  flex-wrap: wrap;
   border-bottom: 1px solid var(--border-color);
   padding: 0 1rem;
 }
