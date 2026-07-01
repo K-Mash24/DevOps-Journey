@@ -58,6 +58,12 @@
 
   --logo-bg: #faf7f0;
   --logo-text-color: #1e1b4b;
+
+  /* Sidebar theme-aware variables (light mode defaults) */
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-section-label: #4a5270;
+  --sidebar-active-bg: rgba(83, 70, 212, 0.3);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
 }
 
 /* ── Dark Mode ── */
@@ -92,6 +98,12 @@
 
   --logo-bg: #e8e6f0;
   --logo-text-color: #7c72e8;
+
+  /* Sidebar theme-aware variables (dark mode defaults) */
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-section-label: #4a5270;
+  --sidebar-active-bg: rgba(124, 114, 232, 0.25);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.06);
 }
 
 /* ============================================================
@@ -405,14 +417,10 @@ pre {
   background: transparent;
 }
 .sidebar::-webkit-scrollbar-thumb {
-  background: #2a2a40;
+  background: var(--sidebar-border);
   border-radius: 4px;
 }
 
-.sidebar-logo {
-  padding: 1.25rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
 .logo-mark {
   display: flex;
   align-items: center;
@@ -442,14 +450,18 @@ pre {
   font-weight: 400;
   font-family: var(--font-body);
 }
-
+/* ── Sidebar ── */
+.sidebar-logo {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--sidebar-border);
+}
 .sidebar-section-label {
   padding: 1.25rem 1.25rem 0.4rem;
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #4a5270;
+  color: var(--sidebar-section-label);
   font-family: var(--font-display);
 }
 
@@ -477,11 +489,11 @@ pre {
   text-align: left;
 }
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--sidebar-hover-bg);
   color: var(--text-sidebar-active);
 }
 .nav-item.active {
-  background: rgba(83, 70, 212, 0.3);
+  background: var(--sidebar-active-bg);
   color: var(--text-sidebar-active);
 }
 .nav-icon {
@@ -511,7 +523,7 @@ pre {
 
 .sidebar-footer {
   padding: 1rem 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--sidebar-border);
 }
 .sidebar-footer-text {
   font-size: 0.6rem;
@@ -3328,6 +3340,23 @@ pre {
 }
 .section-complete-checkbox span {
   color: var(--text-secondary);
+}
+
+/* ============================================================
+   MODAL PREVIEW MODE – Transparent
+   ============================================================ */
+
+/* Make the modal background more transparent and blur less */
+#progressModal.modal-preview-mode {
+  background: rgba(0, 0, 0, 0.007) !important;
+  backdrop-filter: blur(1.5px) !important;
+}
+
+/* Dim the modal content (card) */
+#progressModal.modal-preview-mode .progress-modal-content {
+  opacity: 0.05;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 /* ============================================================

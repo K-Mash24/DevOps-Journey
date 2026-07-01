@@ -8,7 +8,7 @@
 // PERSONALIZATION – COLOR THEMES (25 palettes)
 // ============================================================
 const COLOR_THEMES = {
-  // 🔵 Blue / Cyan
+  // 1.🔵 Blue / Cyan
   indigo: {
     name: 'Indigo',
     icon: '🔮',
@@ -30,7 +30,14 @@ const COLOR_THEMES = {
       textPrimary: '#e8e6f0',
       textSecondary: '#a0a8bc',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a5270',
+      activeBg: 'rgba(83, 70, 212, 0.3)',
+      hoverBg: 'rgba(255, 255, 255, 0.06)'
+    }
   },
+  // 2.🌊 Ocean
   ocean: {
     name: 'Ocean',
     icon: '🌊',
@@ -52,7 +59,14 @@ const COLOR_THEMES = {
       textPrimary: '#e2e8f0',
       textSecondary: '#94a3b8',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a7a94',
+      activeBg: 'rgba(0, 150, 220, 0.25)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 3.⚡ Cobalt
   cobalt: {
     name: 'Cobalt',
     icon: '⚡',
@@ -74,7 +88,14 @@ const COLOR_THEMES = {
       textPrimary: '#e2e8f0',
       textSecondary: '#94a3b8',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a6a9a',
+      activeBg: 'rgba(37, 99, 235, 0.25)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 4.☁️ Azure
   azure: {
     name: 'Azure',
     icon: '☁️',
@@ -96,7 +117,14 @@ const COLOR_THEMES = {
       textPrimary: '#e0f2fe',
       textSecondary: '#bae6fd',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a8aaa',
+      activeBg: 'rgba(2, 132, 199, 0.25)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 5.👖 Denim
   denim: {
     name: 'Denim',
     icon: '👖',
@@ -118,7 +146,14 @@ const COLOR_THEMES = {
       textPrimary: '#e2e8f0',
       textSecondary: '#94a3b8',
     },
+    sidebar: {
+       border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a5a6a',
+      activeBg: 'rgba(100, 116, 139, 0.25)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 6.❄️ Frost
   frost: {
     name: 'Frost',
     icon: '❄️',
@@ -140,7 +175,14 @@ const COLOR_THEMES = {
       textPrimary: '#f0f9ff',
       textSecondary: '#bae6fd',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a6a8a',
+      activeBg: 'rgba(14, 165, 233, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 7.🌙 Midnight
   midnight: {
     name: 'Midnight',
     icon: '🌙',
@@ -162,9 +204,15 @@ const COLOR_THEMES = {
       textPrimary: '#e0e7ff',
       textSecondary: '#a5b4fc',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a5a8a',
+      activeBg: 'rgba(129, 140, 248, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
 
-  // 🟣 Purple / Pink
+  //8.🟣 Purple / Pink
   amethyst: {
     name: 'Amethyst',
     icon: '💎',
@@ -186,7 +234,14 @@ const COLOR_THEMES = {
       textPrimary: '#ede9fe',
       textSecondary: '#c4b5fd',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#6a4a8a',
+      activeBg: 'rgba(167, 139, 250, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 9.🌸 Lilac
   lilac: {
     name: 'Lilac',
     icon: '🌸',
@@ -208,7 +263,14 @@ const COLOR_THEMES = {
       textPrimary: '#ede9fe',
       textSecondary: '#c4b5fd',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#6a5a8a',
+      activeBg: 'rgba(139, 92, 246, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 10.🌹 Rose
   rose: {
     name: 'Rose',
     icon: '🌹',
@@ -230,9 +292,15 @@ const COLOR_THEMES = {
       textPrimary: '#fee2e2',
       textSecondary: '#fca5a5',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#8a4a5a',
+      activeBg: 'rgba(244, 114, 182, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
 
-  // 🔴 Red / Coral / Terracotta
+  // 11. 🔴 Red / Coral / Terracotta
   ruby: {
     name: 'Ruby',
     icon: '❤️',
@@ -254,7 +322,14 @@ const COLOR_THEMES = {
       textPrimary: '#fef2f2',
       textSecondary: '#fca5a5',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#8a4a4a',
+      activeBg: 'rgba(248, 113, 113, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 12. 🐠 Coral
   coral: {
     name: 'Coral',
     icon: '🐠',
@@ -276,7 +351,14 @@ const COLOR_THEMES = {
       textPrimary: '#fee2e2',
       textSecondary: '#fca5a5',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#8a4a5a',
+      activeBg: 'rgba(251, 113, 133, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 13. 🩷 Crimson
   crimson: {
     name: 'Crimson',
     icon: '🔴',
@@ -298,7 +380,14 @@ const COLOR_THEMES = {
       textPrimary: '#fef2f2',
       textSecondary: '#f87171',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#8a3a3a',
+      activeBg: 'rgba(239, 68, 68, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 14. 🌋 Scarlet
   scarlet: {
     name: 'Scarlet',
     icon: '🔥',
@@ -320,7 +409,14 @@ const COLOR_THEMES = {
       textPrimary: '#fef2f2',
       textSecondary: '#f87171',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#8a4a3a',
+      activeBg: 'rgba(220, 38, 38, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 15. 🏺 Terracotta
   terracotta: {
     name: 'Terracotta',
     icon: '🏺',
@@ -342,9 +438,15 @@ const COLOR_THEMES = {
       textPrimary: '#fef3c7',
       textSecondary: '#fcd34d',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#7a5a3a',
+      activeBg: 'rgba(234, 88, 12, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
 
-  // 🟠 Orange / Warm
+  // 16. 🟠 Orange / Warm
   sunset: {
     name: 'Sunset',
     icon: '🌅',
@@ -366,9 +468,15 @@ const COLOR_THEMES = {
       textPrimary: '#fef3c7',
       textSecondary: '#fcd34d',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#8a6a3a',
+      activeBg: 'rgba(251, 146, 60, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
 
-  // 🟡 Yellow / Gold / Amber
+  // 17. 🟡 Yellow / Gold / Amber
   gold: {
     name: 'Gold',
     icon: '🏅',
@@ -390,7 +498,14 @@ const COLOR_THEMES = {
       textPrimary: '#fef3c7',
       textSecondary: '#fcd34d',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#7a6a3a',
+      activeBg: 'rgba(245, 158, 11, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 18. 🟡 Amber
   amber: {
     name: 'Amber',
     icon: '🟡',
@@ -412,7 +527,14 @@ const COLOR_THEMES = {
       textPrimary: '#fef3c7',
       textSecondary: '#fcd34d',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#7a6a3a',
+      activeBg: 'rgba(217, 119, 6, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 19. 🌼 Saffron
   saffron: {
     name: 'Saffron',
     icon: '🌼',
@@ -434,9 +556,15 @@ const COLOR_THEMES = {
       textPrimary: '#fef3c7',
       textSecondary: '#fcd34d',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#7a6a3a',
+      activeBg: 'rgba(251, 191, 36, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    } 
   },
 
-  // 🟢 Green / Teal
+  // 20. 🟢 Green / Teal
   forest: {
     name: 'Forest',
     icon: '🌲',
@@ -458,7 +586,14 @@ const COLOR_THEMES = {
       textPrimary: '#d1fae5',
       textSecondary: '#6ee7b7',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#3a6a4a',
+      activeBg: 'rgba(52, 211, 153, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 21. 🌿 Sage
   sage: {
     name: 'Sage',
     icon: '🌿',
@@ -480,7 +615,14 @@ const COLOR_THEMES = {
       textPrimary: '#d1fae5',
       textSecondary: '#6ee7b7',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a6a4a',
+      activeBg: 'rgba(34, 197, 94, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  // 22. 🍃 Moss
   moss: {
     name: 'Moss',
     icon: '🍃',
@@ -502,9 +644,15 @@ const COLOR_THEMES = {
       textPrimary: '#d1fae5',
       textSecondary: '#6ee7b7',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#3a5a4a',
+      activeBg: 'rgba(110, 231, 183, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
 
-  // ⚪ Neutral
+  //23. ⚪ Neutral
   slate: {
     name: 'Slate',
     icon: '🪨',
@@ -526,7 +674,14 @@ const COLOR_THEMES = {
       textPrimary: '#e2e8f0',
       textSecondary: '#94a3b8',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a5a6a',
+      activeBg: 'rgba(148, 163, 184, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  //24. 🖤 Graphite
   graphite: {
     name: 'Graphite',
     icon: '✏️',
@@ -548,7 +703,14 @@ const COLOR_THEMES = {
       textPrimary: '#f3f4f6',
       textSecondary: '#9ca3af',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a5a6a',
+      activeBg: 'rgba(156, 163, 175, 0.2)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
+  //25. 🖤 Charcoal
   charcoal: {
     name: 'Charcoal',
     icon: '🖤',
@@ -570,6 +732,12 @@ const COLOR_THEMES = {
       textPrimary: '#f3f4f6',
       textSecondary: '#9ca3af',
     },
+    sidebar: {
+      border: 'rgba(255, 255, 255, 0.06)',
+      sectionLabel: '#4a5a6a',
+      activeBg: 'rgba(156, 163, 175, 0.15)',
+      hoverBg: 'rgba(255, 255, 255, 0.08)'
+    }
   },
 };
   // --- Apply Theme ---
@@ -580,6 +748,7 @@ const COLOR_THEMES = {
     const isDark =
       document.documentElement.getAttribute("data-theme") === "dark";
     const vars = isDark ? theme.dark : theme.light;
+    const sidebar = theme.sidebar;
 
     document.documentElement.style.setProperty(
       "--accent-primary",
@@ -603,6 +772,14 @@ const COLOR_THEMES = {
       "--text-secondary",
       vars.textSecondary,
     );
+
+    //Apply sidebar styles
+    if (sidebar) {
+      document.documentElement.style.setProperty("--sidebar-border", sidebar.border);
+      document.documentElement.style.setProperty("--sidebar-section-label", sidebar.sectionLabel);
+      document.documentElement.style.setProperty("--sidebar-active-bg", sidebar.activeBg);
+      document.documentElement.style.setProperty("--sidebar-hover-bg", sidebar.hoverBg);
+    }
 
     if (!preview) {
       localStorage.setItem("gc-color-theme", themeName);
@@ -758,6 +935,13 @@ const COLOR_THEMES = {
     document.documentElement.style.removeProperty("--border-color");
     document.documentElement.style.removeProperty("--text-primary");
     document.documentElement.style.removeProperty("--text-secondary");
+
+    //remove sidebar styles
+    document.documentElement.style.removeProperty("--sidebar-border");
+    document.documentElement.style.removeProperty("--sidebar-section-label");
+    document.documentElement.style.removeProperty("--sidebar-active-bg");
+    document.documentElement.style.removeProperty("--sidebar-hover-bg");
+
     localStorage.removeItem("gc-color-theme");
     renderThemeCards();
     showToast("🔄 Theme reset to default (Indigo)", "info");

@@ -1,8 +1,8 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Starry sky completed
+// Integrated JS for the sidebar and styling
 
-const CACHE_NAME = 'devops-journey-2026-06-30-v5';
+const CACHE_NAME = 'devops-journey-2026-07-01-v1';
 
 const urlsToCache = [
   '/DevOps-Journey/',
