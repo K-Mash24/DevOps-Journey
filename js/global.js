@@ -1299,70 +1299,116 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           <!-- ✨ NEW: Stars tab pane -->
           <div class="tab-pane" id="tab5">
             <div class="star-presets-container">
-              <h4 style="margin-bottom: 0.5rem;">✨ Starfield Presets</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-                Choose a starfield style or customize your own. Changes apply instantly.
-              </p>
-
-              <!-- Preset Buttons -->
-              <div class="star-preset-grid">
-                <button class="star-preset-btn active" data-preset="calm">
-                  <span class="preset-icon">🌙</span>
-                  <span class="preset-name">Calm Night</span>
-                  <span class="preset-desc">Gentle, serene</span>
-                </button>
-                <button class="star-preset-btn" data-preset="active">
-                  <span class="preset-icon">🌌</span>
-                  <span class="preset-name">Active</span>
-                  <span class="preset-desc">Lively drift</span>
-                </button>
-                <button class="star-preset-btn" data-preset="minimal">
-                  <span class="preset-icon">⭐</span>
-                  <span class="preset-name">Minimal</span>
-                  <span class="preset-desc">Clean & simple</span>
-                </button>
-                <button class="star-preset-btn" data-preset="constellation">
-                  <span class="preset-icon">🔭</span>
-                  <span class="preset-name">Constellation</span>
-                  <span class="preset-desc">Rich connections</span>
-                </button>
-                <button class="star-preset-btn" data-preset="dense">
-                  <span class="preset-icon">🌠</span>
-                  <span class="preset-name">Dense</span>
-                  <span class="preset-desc">Full starfield</span>
-                </button>
-                <button class="star-preset-btn" data-preset="off">
-                  <span class="preset-icon">🚫</span>
-                  <span class="preset-name">Off</span>
-                  <span class="preset-desc">Disable stars</span>
-                </button>
-              </div>
-
-              <!-- Custom Controls -->
-              <div class="star-custom-controls">
-                <details>
-                  <summary style="cursor: pointer; font-weight: 500; color: var(--text-primary);">
-                    ⚙️ Customize
-                  </summary>
-                  <div style="margin-top: 0.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                    <div class="star-control-group">
-                      <label style="font-size: 0.75rem;">Star Count: <span id="starCountDisplay">150</span></label>
-                      <input type="range" id="starCountSlider" min="50" max="400" value="150" step="10">
-                    </div>
-                    <div class="star-control-group">
-                      <label style="font-size: 0.75rem;">Twinkle Speed: <span id="twinkleSpeedDisplay">0.008</span></label>
-                      <input type="range" id="twinkleSpeedSlider" min="0" max="0.05" value="0.008" step="0.001">
-                    </div>
-                    <div class="star-control-group">
-                      <label style="font-size: 0.75rem;">Movement Speed: <span id="movementSpeedDisplay">0.00001</span></label>
-                      <input type="range" id="movementSpeedSlider" min="0" max="0.02" value="0.00001" step="0.0001">
-                    </div>
-                    <div class="star-control-group">
-                      <label style="font-size: 0.75rem;">Connection Distance: <span id="connectionDistanceDisplay">350</span></label>
-                      <input type="range" id="connectionDistanceSlider" min="0" max="600" value="350" step="10">
-                    </div>
+              <!-- Outer collapsible container (open by default) -->
+              <details class="star-container" open>
+                <summary>✨ Starfield Presets</summary>
+                <div>
+                  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    Choose a starfield style or customize your own. Changes apply instantly.
+                  </p>
+                  <!-- Preset Buttons -->
+                  <div class="star-preset-grid">
+                    <button class="star-preset-btn active" data-preset="calm">
+                      <span class="preset-icon">🌙</span>
+                      <span class="preset-name">Calm Night</span>
+                      <span class="preset-desc">Gentle, serene</span>
+                    </button>
+                    <button class="star-preset-btn" data-preset="active">
+                      <span class="preset-icon">🌌</span>
+                      <span class="preset-name">Active</span>
+                      <span class="preset-desc">Lively drift</span>
+                    </button>
+                    <button class="star-preset-btn" data-preset="minimal">
+                      <span class="preset-icon">⭐</span>
+                      <span class="preset-name">Minimal</span>
+                      <span class="preset-desc">Clean & simple</span>
+                    </button>
+                    <button class="star-preset-btn" data-preset="constellation">
+                      <span class="preset-icon">🔭</span>
+                      <span class="preset-name">Constellation</span>
+                      <span class="preset-desc">Rich connections</span>
+                    </button>
+                    <button class="star-preset-btn" data-preset="dense">
+                      <span class="preset-icon">🌠</span>
+                      <span class="preset-name">Dense</span>
+                      <span class="preset-desc">Full starfield</span>
+                    </button>
+                    <button class="star-preset-btn" data-preset="off">
+                      <span class="preset-icon">🚫</span>
+                      <span class="preset-name">Off</span>
+                      <span class="preset-desc">Disable stars</span>
+                    </button>
                   </div>
-                  <button class="btn btn-primary btn-sm" id="applyCustomStars" style="margin-top: 0.75rem;">Apply Custom</button>
+
+                  <!-- Customize (collapsible, closed by default) -->
+                  <details class="star-customize">
+                    <summary>⚙️ Customize</summary>
+                    <div class="star-custom-controls">
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem;">
+                        <div class="star-control-group">
+                          <label>Star Count: <span id="starCountDisplay">150</span></label>
+                          <input type="range" id="starCountSlider" min="50" max="400" value="150" step="10">
+                        </div>
+                        <div class="star-control-group">
+                          <label>Twinkle Speed: <span id="twinkleSpeedDisplay">0.008</span></label>
+                          <input type="range" id="twinkleSpeedSlider" min="0" max="0.05" value="0.008" step="0.001">
+                        </div>
+                        <div class="star-control-group">
+                          <label>Movement Speed: <span id="movementSpeedDisplay">0.00001</span></label>
+                          <input type="range" id="movementSpeedSlider" min="0" max="0.02" value="0.00001" step="0.0001">
+                        </div>
+                        <div class="star-control-group">
+                          <label>Connection Distance: <span id="connectionDistanceDisplay">350</span></label>
+                          <input type="range" id="connectionDistanceSlider" min="0" max="600" value="350" step="10">
+                        </div>
+                      </div>
+                      <button class="btn btn-primary btn-sm" id="applyCustomStars" style="margin-top: 0.75rem;">Apply Custom</button>
+                    </div>
+                  </details>
+                </div>
+              </details>
+
+              <div class="star-advanced-settings">
+                <!-- Advanced Settings (collapsible, closed by default) -->
+                <details class="advanced-settings-container">
+                  <summary>⚙️ Advanced Settings</summary>
+                  <div class="advanced-settings-content">
+                    <!-- Font Family -->
+                    <div class="setting-group">
+                      <label>
+                        <span class="setting-label">Font Family</span>
+                        <select id="fontFamilySelect">
+                          <option value="Syne">Syne</option>
+                          <option value="DM Sans">DM Sans</option>
+                          <option value="JetBrains Mono">JetBrains Mono</option>
+                          <option value="custom">Custom</option>
+                        </select>
+                      </label>
+                    </div>
+                    <div class="custom-font-input" id="customFontInput" style="display:none;">
+                      <input type="text" id="customFontURL" placeholder="https://fonts.googleapis.com/css2?family=Inter" value="">
+                      <button id="loadCustomFontBtn">Load Font</button>
+                    </div>
+
+                    <!-- Font Size -->
+                    <div class="setting-group">
+                      <label>
+                        <span class="setting-label">Font Size</span>
+                        <input type="range" id="fontSizeSlider" min="12" max="24" value="16">
+                        <span class="setting-value" id="fontSizeDisplay">16px</span>
+                      </label>
+                    </div>
+
+                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1rem 0;">
+
+                    <!-- Import / Export -->
+                    <div class="import-export-buttons">
+                      <button id="exportSettingsBtn" class="btn btn-primary btn-sm">📤 Export Settings</button>
+                      <button id="importSettingsBtn" class="btn btn-secondary btn-sm">📥 Import Settings</button>
+                      <input type="file" id="importFileInput" accept=".json" style="display:none;">
+                    </div>
+                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">Export/Import all your settings (theme, star presets, fonts) as JSON.</p>
+                  </div>
                 </details>
               </div>
             </div>

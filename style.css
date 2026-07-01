@@ -4989,3 +4989,434 @@ pre {
 .theme-grid::-webkit-scrollbar-thumb:hover {
   background: var(--accent-primary);
 }
+
+/* ============================================================
+   STARS TAB – Unified Collapsible Containers
+   ============================================================ */
+
+.star-presets-container {
+  padding: 0.5rem 1rem;
+}
+
+/* --- All details containers inside Stars tab --- */
+.star-presets-container details {
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.star-presets-container details:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.star-presets-container details:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Summary (header) --- */
+.star-presets-container details summary {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  transition: background 0.2s ease;
+  border-radius: var(--radius-sm);
+}
+
+.star-presets-container details summary::-webkit-details-marker {
+  display: none;
+}
+
+.star-presets-container details summary::before {
+  content: "▶";
+  font-size: 0.65rem;
+  transition: transform 0.25s ease;
+  color: var(--text-muted);
+  margin-right: 0.25rem;
+  display: inline-block;
+}
+
+.star-presets-container details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.star-presets-container details summary:hover {
+  background: var(--bg-tertiary);
+}
+
+/* --- Badge (optional) --- */
+.star-presets-container details summary .badge {
+  margin-left: auto;
+  font-size: 0.6rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.star-presets-container details[open] summary .badge {
+  background: var(--pillar-color-light);
+  color: var(--accent-primary);
+}
+
+/* --- Content --- */
+.star-presets-container details > div,
+.star-presets-container details .star-custom-controls,
+.star-presets-container details .advanced-settings-content {
+  padding: 1rem 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+/* --- Special: Outer star-container (should be open by default) --- */
+.star-presets-container .star-container {
+  border-color: var(--accent-primary);
+}
+
+.star-presets-container .star-container summary {
+  font-size: 1rem;
+}
+
+/* --- Special: star-customize (inner, closed by default) --- */
+.star-presets-container .star-customize {
+  margin-top: 0.5rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+}
+
+.star-presets-container .star-customize summary {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+}
+
+.star-presets-container .star-customize summary:hover {
+  background: var(--bg-secondary);
+}
+
+.star-presets-container .star-customize > div {
+  padding: 0.5rem 0.75rem 0.75rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+}
+
+/* --- Special: advanced-settings-container (separate, with wrapper) --- */
+.star-advanced-settings {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.star-advanced-settings .advanced-settings-container {
+  border-color: var(--border-color);
+}
+
+.star-advanced-settings .advanced-settings-container summary {
+  color: var(--accent-primary);
+}
+
+.star-advanced-settings .advanced-settings-container summary .badge {
+  background: var(--pillar-color-light);
+  color: var(--accent-primary);
+}
+
+.star-advanced-settings .advanced-settings-container[open] summary .badge {
+  background: var(--accent-primary);
+  color: white;
+}
+
+/* ============================================================
+   SETTING CONTROLS (inside collapsible content)
+   ============================================================ */
+
+.star-presets-container .setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.star-presets-container .setting-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  flex-wrap: wrap;
+}
+
+.star-presets-container .setting-group .setting-label {
+  min-width: 90px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+}
+
+.star-presets-container .setting-group select {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238896a5' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+.star-presets-container .setting-group select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(83, 70, 212, 0.1);
+}
+
+.star-presets-container .setting-group select:hover {
+  border-color: var(--accent-primary);
+}
+
+.star-presets-container .setting-group input[type="range"] {
+  flex: 1;
+  min-width: 120px;
+  accent-color: var(--accent-primary);
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.star-presets-container .setting-group input[type="range"]:hover {
+  opacity: 0.9;
+}
+
+.star-presets-container .setting-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  border: 2px solid var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease;
+}
+
+.star-presets-container .setting-group input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.star-presets-container .setting-group input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  cursor: pointer;
+  border: 2px solid var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.star-presets-container .setting-value {
+  min-width: 40px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+/* --- Custom Font Input --- */
+.star-presets-container .custom-font-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-left: 90px;
+  flex-wrap: wrap;
+}
+
+.star-presets-container .custom-font-input input {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.star-presets-container .custom-font-input input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(83, 70, 212, 0.1);
+}
+
+.star-presets-container .custom-font-input button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-sm);
+  background: var(--accent-primary);
+  color: white;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.star-presets-container .custom-font-input button:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* --- Divider --- */
+.star-presets-container .settings-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 0.25rem 0;
+}
+
+/* --- Import/Export Buttons --- */
+.star-presets-container .import-export-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.star-presets-container .import-export-buttons .btn {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.9rem;
+}
+
+.star-presets-container .import-export-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   RESPONSIVE – Unified
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .star-presets-container details > div,
+  .star-presets-container details .star-custom-controls,
+  .star-presets-container details .advanced-settings-content {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .star-presets-container .setting-group label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .star-presets-container .setting-group .setting-label {
+    min-width: auto;
+    font-size: 0.75rem;
+  }
+
+  .star-presets-container .setting-group select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .star-presets-container .setting-group input[type="range"] {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .star-presets-container .custom-font-input {
+    margin-left: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .star-presets-container .custom-font-input input {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .star-presets-container .custom-font-input button {
+    width: 100%;
+  }
+
+  .star-presets-container .import-export-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .star-presets-container .import-export-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .star-presets-container details summary {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .star-presets-container details summary .badge {
+    font-size: 0.55rem;
+    padding: 1px 6px;
+  }
+
+  .star-advanced-settings {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .star-presets-container {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .star-presets-container details > div,
+  .star-presets-container details .star-custom-controls,
+  .star-presets-container details .advanced-settings-content {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .star-presets-container .setting-group label {
+    font-size: 0.75rem;
+  }
+
+  .star-presets-container .setting-value {
+    min-width: 32px;
+    font-size: 0.7rem;
+  }
+}

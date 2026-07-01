@@ -371,6 +371,284 @@ const CONFIG = {
   }, 100);
 
   console.log("✨ Starry background initialized (responsive)");
+
+ window.showPresetToast = showPresetToast; 
+
+// ============================================================
+// ADVANCED SETTINGS – Fonts, Import, Export
+// ============================================================
+
+// --- Font Settings ---
+const FONT_DEFAULTS = {
+  family: 'Syne',
+  size: 16,
+  customURL: ''
+};
+
+let fontSettings = { ...FONT_DEFAULTS };
+
+function loadFontSettings() {
+  const saved = localStorage.getItem('gc-font-settings');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      fontSettings = { ...FONT_DEFAULTS, ...parsed };
+    } catch (e) {
+      fontSettings = { ...FONT_DEFAULTS };
+    }
+  } else {
+    fontSettings = { ...FONT_DEFAULTS };
+  }
+  applyFontSettings();
+}
+
+function saveFontSettings() {
+  localStorage.setItem('gc-font-settings', JSON.stringify(fontSettings));
+  applyFontSettings();
+}
+
+function applyFontSettings() {
+  const html = document.documentElement;
+  // Apply font family
+  if (fontSettings.family === 'custom' && fontSettings.customURL) {
+    loadCustomFont(fontSettings.customURL);
+  } else if (fontSettings.family !== 'custom') {
+    html.style.fontFamily = fontSettings.family + ', sans-serif';
+  }
+  // Apply font size
+  html.style.fontSize = fontSettings.size + 'px';
+  // Update UI elements if they exist
+  updateFontUI();
+}
+
+function loadCustomFont(url) {
+  const linkId = 'custom-font-link';
+  let link = document.getElementById(linkId);
+  if (!link) {
+    link = document.createElement('link');
+    link.id = linkId;
+    link.rel = 'stylesheet';
+    link.href = url;
+    document.head.appendChild(link);
+  } else {
+    link.href = url;
+  }
+  link.onload = function() {
+    document.documentElement.style.fontFamily = "'CustomFont', sans-serif";
+    showToast('✅ Custom font loaded successfully', 'success');
+  };
+  link.onerror = function() {
+    showToast('❌ Failed to load custom font', 'error');
+  };
+}
+
+function updateFontUI() {
+  const familySelect = document.getElementById('fontFamilySelect');
+  const customInput = document.getElementById('customFontInput');
+  const customURL = document.getElementById('customFontURL');
+  const sizeSlider = document.getElementById('fontSizeSlider');
+  const sizeDisplay = document.getElementById('fontSizeDisplay');
+
+  if (familySelect) {
+    familySelect.value = fontSettings.family;
+    if (customInput) {
+      customInput.style.display = (fontSettings.family === 'custom') ? 'flex' : 'none';
+    }
+  }
+  if (customURL) {
+    customURL.value = fontSettings.customURL || '';
+  }
+  if (sizeSlider) {
+    sizeSlider.value = fontSettings.size;
+    if (sizeDisplay) sizeDisplay.textContent = fontSettings.size + 'px';
+  }
+}
+
+function attachAdvancedEvents() {
+  // Font Family
+  const familySelect = document.getElementById('fontFamilySelect');
+  const customInput = document.getElementById('customFontInput');
+  const customURL = document.getElementById('customFontURL');
+  const loadCustomBtn = document.getElementById('loadCustomFontBtn');
+  const sizeSlider = document.getElementById('fontSizeSlider');
+  const sizeDisplay = document.getElementById('fontSizeDisplay');
+  const exportBtn = document.getElementById('exportSettingsBtn');
+  const importBtn = document.getElementById('importSettingsBtn');
+  const importFile = document.getElementById('importFileInput');
+
+  if (familySelect) {
+    familySelect.addEventListener('change', function() {
+      const val = this.value;
+      fontSettings.family = val;
+      if (customInput) {
+        customInput.style.display = (val === 'custom') ? 'flex' : 'none';
+      }
+      if (val === 'custom' && customURL && customURL.value.trim()) {
+        loadCustomFont(customURL.value.trim());
+      } else if (val !== 'custom') {
+        saveFontSettings();
+      } else {
+        saveFontSettings();
+      }
+    });
+  }
+
+  if (loadCustomBtn && customURL) {
+    loadCustomBtn.addEventListener('click', function() {
+      const url = customURL.value.trim();
+      if (url) {
+        fontSettings.customURL = url;
+        fontSettings.family = 'custom';
+        saveFontSettings();
+        // Update select to custom
+        if (familySelect) familySelect.value = 'custom';
+        if (customInput) customInput.style.display = 'flex';
+      } else {
+        showToast('Please enter a valid font URL', 'error');
+      }
+    });
+  }
+
+  if (sizeSlider) {
+    sizeSlider.addEventListener('input', function() {
+      const val = parseInt(this.value);
+      if (sizeDisplay) sizeDisplay.textContent = val + 'px';
+      fontSettings.size = val;
+      // Live preview without saving
+      document.documentElement.style.fontSize = val + 'px';
+    });
+    sizeSlider.addEventListener('change', function() {
+      // Save when user releases slider
+      saveFontSettings();
+    });
+  }
+
+  // Export
+  if (exportBtn) {
+    exportBtn.addEventListener('click', exportAllSettings);
+  }
+
+  // Import
+  if (importBtn && importFile) {
+    importBtn.addEventListener('click', function() {
+      importFile.click();
+    });
+    importFile.addEventListener('change', function(e) {
+      if (this.files && this.files[0]) {
+        importAllSettings(this.files[0]);
+        this.value = ''; // reset
+      }
+    });
+  }
+}
+
+// --- Import / Export ---
+function getAllSettings() {
+  return {
+    version: '1.0',
+    exportDate: new Date().toISOString(),
+    settings: {
+      colorTheme: localStorage.getItem('gc-color-theme') || 'indigo',
+      starPreset: localStorage.getItem('star-preset') || 'calm',
+      starCustom: JSON.parse(localStorage.getItem('star-custom') || '{}'),
+      font: JSON.parse(localStorage.getItem('gc-font-settings') || JSON.stringify(FONT_DEFAULTS))
+    }
+  };
+}
+
+function applyAllSettings(data) {
+  if (!data || !data.settings) return;
+  const s = data.settings;
+  // Color theme
+  if (s.colorTheme && window.COLOR_THEMES && window.COLOR_THEMES[s.colorTheme]) {
+    localStorage.setItem('gc-color-theme', s.colorTheme);
+    if (typeof window.applyTheme === 'function') {
+      window.applyTheme(s.colorTheme, false);
+    }
+  }
+  // Star preset
+  if (s.starPreset) {
+    localStorage.setItem('star-preset', s.starPreset);
+    if (typeof window.applyStarPreset === 'function') {
+      window.applyStarPreset(s.starPreset);
+    }
+  }
+  // Star custom
+  if (s.starCustom && Object.keys(s.starCustom).length > 0) {
+    localStorage.setItem('star-custom', JSON.stringify(s.starCustom));
+    if (typeof window.reloadStars === 'function') {
+      window.reloadStars();
+    }
+  }
+  // Font settings
+  if (s.font) {
+    localStorage.setItem('gc-font-settings', JSON.stringify(s.font));
+    fontSettings = { ...FONT_DEFAULTS, ...s.font };
+    applyFontSettings();
+  }
+  showToast('✅ All settings imported successfully', 'success');
+  // Reload page to refresh UI (optional, but ensures everything is applied)
+  setTimeout(() => location.reload(), 1500);
+}
+
+function exportAllSettings() {
+  const data = getAllSettings();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `devops-journey-settings-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📤 Settings exported successfully', 'success');
+}
+
+function importAllSettings(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.settings) {
+        showToast('❌ Invalid settings file', 'error');
+        return;
+      }
+      applyAllSettings(data);
+    } catch (err) {
+      showToast('❌ Failed to parse settings file', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// --- Initialize ---
+loadFontSettings();
+
+// Attach events when DOM is ready
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  attachAdvancedEvents();
+} else {
+  document.addEventListener('DOMContentLoaded', attachAdvancedEvents);
+}
+
+// Also re-attach when modal is opened (for dynamically created elements)
+document.addEventListener('click', function(e) {
+  const tabBtn = e.target.closest('.tab-button[data-tab="tab5"]');
+  if (tabBtn) {
+    setTimeout(attachAdvancedEvents, 100);
+  }
+});
+
+// Expose functions globally
+window.fontSettings = fontSettings;
+window.loadFontSettings = loadFontSettings;
+window.saveFontSettings = saveFontSettings;
+window.applyFontSettings = applyFontSettings;
+window.exportAllSettings = exportAllSettings;
+window.importAllSettings = importAllSettings;
+window.getAllSettings = getAllSettings;
+window.applyAllSettings = applyAllSettings; 
 })();
 
-window.showPresetToast = showPresetToast;

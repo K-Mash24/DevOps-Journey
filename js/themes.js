@@ -615,6 +615,140 @@ const COLOR_THEMES = {
     }
   }
 
+
+  function renderThemeCards() {
+    const container = document.getElementById("themeGrid");
+    if (!container) return;
+
+    const savedTheme = localStorage.getItem("gc-color-theme") || "indigo";
+
+    container.innerHTML = Object.entries(COLOR_THEMES)
+      .map(([key, theme]) => {
+        const isActive = key === savedTheme;
+        return `
+          <div class="theme-card ${isActive ? "active" : ""}" data-theme="${key}">
+            <div class="theme-icon">${theme.icon}</div>
+            <div class="theme-name">${theme.name}</div>
+            <div class="theme-swatches">
+              <span class="theme-swatch" style="background: ${theme.light.primary};" title="Light primary"></span>
+              <span class="theme-swatch" style="background: ${theme.light.secondary};" title="Light secondary"></span>
+              <span class="theme-swatch" style="background: ${theme.dark.primary};" title="Dark primary"></span>
+              <span class="theme-swatch" style="background: ${theme.dark.secondary};" title="Dark secondary"></span>
+            </div>
+            <div class="theme-actions">
+              <button class="theme-preview-btn" data-theme="${key}" title="Preview this theme (modal will become transparent)">Preview</button>
+              <button class="theme-apply-btn" data-theme="${key}" title="Apply and save this theme">Apply</button>
+            </div>
+          </div>
+        `;
+      })
+      .join("");
+
+    // Use event delegation for theme card actions
+    container.addEventListener('click', handleThemeClick);
+  }
+
+  function handleThemeClick(e) {
+    const container = document.getElementById("themeGrid");
+    if (!container) return;
+    if (!container.contains(e.target)) return;
+
+    // Preview button
+    const previewBtn = e.target.closest('.theme-preview-btn');
+    if (previewBtn) {
+      e.stopPropagation();
+      const theme = previewBtn.dataset.theme;
+      if (theme) {
+        // Apply theme as preview (preview mode = true)
+        applyTheme(theme, true);
+        // Set modal to preview mode (transparent)
+        const modal = document.getElementById('progressModal');
+        if (modal) {
+          modal.classList.add('modal-preview-mode');
+        }
+        // Store the previewed theme to revert if cancelled
+        previewThemeName = theme;
+        showToast(`👁️ Previewing "${COLOR_THEMES[theme].name}" theme (click outside to cancel)`, 'info');
+      }
+      return;
+    }
+
+    // Apply button
+    const applyBtn = e.target.closest('.theme-apply-btn');
+    if (applyBtn) {
+      e.stopPropagation();
+      const theme = applyBtn.dataset.theme;
+      if (theme) {
+        applyTheme(theme, false);
+        // Ensure preview mode is off
+        const modal = document.getElementById('progressModal');
+        if (modal) {
+          modal.classList.remove('modal-preview-mode');
+        }
+        previewThemeName = null;
+      }
+      return;
+    }
+
+    // Click on card body -> apply (if not clicking on buttons)
+    const card = e.target.closest('.theme-card');
+    if (card && !e.target.closest('button')) {
+      const theme = card.dataset.theme;
+      if (theme) {
+        applyTheme(theme, false);
+        const modal = document.getElementById('progressModal');
+        if (modal) {
+          modal.classList.remove('modal-preview-mode');
+        }
+        previewThemeName = null;
+      }
+    }
+  }
+
+  // Variable to track preview state
+  let previewThemeName = null;
+  let previewSavedTheme = null;
+
+  // Override applyTheme to handle preview mode separately
+  // We'll keep applyTheme as is, but we'll add logic to cancel preview on outside click
+
+  function cancelPreview() {
+    const modal = document.getElementById('progressModal');
+    if (!modal) return;
+    modal.classList.remove('modal-preview-mode');
+    // Revert to saved theme
+    const saved = localStorage.getItem('gc-color-theme');
+    if (saved && COLOR_THEMES[saved]) {
+      applyTheme(saved, false);
+    } else {
+      applyTheme('indigo', false);
+    }
+    previewThemeName = null;
+    showToast('👁️ Preview cancelled', 'info');
+  }
+
+  // Attach click outside modal to cancel preview
+  document.addEventListener('click', function(e) {
+    const modal = document.getElementById('progressModal');
+    if (!modal) return;
+    if (!modal.classList.contains('modal-preview-mode')) return;
+    // If click is outside the modal content, cancel
+    const content = modal.querySelector('.progress-modal-content');
+    if (content && !content.contains(e.target)) {
+      cancelPreview();
+    }
+  });
+
+  // Also listen for Escape key to cancel preview
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('progressModal');
+      if (modal && modal.classList.contains('modal-preview-mode')) {
+        cancelPreview();
+      }
+    }
+  });
+
   // --- Reset Theme ---
   function resetTheme() {
     document.documentElement.style.removeProperty("--accent-primary");
@@ -637,67 +771,7 @@ const COLOR_THEMES = {
     }
   }
 
-  // --- Render Theme Cards ---
-  function renderThemeCards() {
-    const container = document.getElementById("themeGrid");
-    if (!container) return;
-
-    const savedTheme = localStorage.getItem("gc-color-theme") || "indigo";
-
-    container.innerHTML = Object.entries(COLOR_THEMES)
-      .map(([key, theme]) => {
-        const isActive = key === savedTheme;
-        return `
-        <div class="theme-card ${isActive ? "active" : ""}" data-theme="${key}">
-          <div class="theme-icon">${theme.icon}</div>
-          <div class="theme-name">${theme.name}</div>
-          <div class="theme-swatches">
-            <span class="theme-swatch" style="background: ${theme.light.primary};" title="Light primary"></span>
-            <span class="theme-swatch" style="background: ${theme.light.secondary};" title="Light secondary"></span>
-            <span class="theme-swatch" style="background: ${theme.dark.primary};" title="Dark primary"></span>
-            <span class="theme-swatch" style="background: ${theme.dark.secondary};" title="Dark secondary"></span>
-          </div>
-          <div class="theme-actions">
-            <button class="theme-preview-btn" data-theme="${key}">Preview</button>
-            <button class="theme-apply-btn" data-theme="${key}">Apply</button>
-          </div>
-        </div>
-      `;
-      })
-      .join("");
-
-    // Attach event listeners directly to buttons (like stars.js does)
-    container.querySelectorAll(".theme-preview-btn").forEach((btn) => {
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const theme = this.dataset.theme;
-        if (theme) {
-          applyTheme(theme, true);
-        }
-      });
-    });
-
-    container.querySelectorAll(".theme-apply-btn").forEach((btn) => {
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        const theme = this.dataset.theme;
-        if (theme) {
-          applyTheme(theme, false);
-        }
-      });
-    });
-
-    // Click on card body = apply
-    container.querySelectorAll(".theme-card").forEach((card) => {
-      card.addEventListener("click", function (e) {
-        if (e.target.closest("button")) return;
-        const theme = this.dataset.theme;
-        if (theme) {
-          applyTheme(theme, false);
-        }
-      });
-    });
-  }
+  
 
   // --- Toast Helper ---
   function showToast(message, type = "info") {
