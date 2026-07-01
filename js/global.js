@@ -1378,8 +1378,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                 <!-- Theme cards will be rendered by JavaScript -->
               </div>
               <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem;">
-                <button id="resetThemeBtn" class="btn btn-secondary btn-sm">Reset to Default</button>
-                <span style="font-size: 0.7rem; color: var(--text-muted); align-self: center;">(Indigo)</span>
+                <button id="resetThemeBtn" class="btn btn-secondary btn-sm" title="Reset to Indigo Theme">Reset to Default</button>
               </div>
             </div>
           </div>

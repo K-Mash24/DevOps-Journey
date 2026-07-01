@@ -4925,7 +4925,7 @@ pre {
 
 .theme-card .theme-apply-btn {
   border: 1px solid var(--accent-primary);
-  background: var(--accent-primary);
+  background: var(--accent-secondary);
   color: white;
 }
 
