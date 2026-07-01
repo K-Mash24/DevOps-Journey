@@ -1286,6 +1286,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
             <button class="tab-button" data-tab="tab4">💾 Backup</button>
             <button class="tab-button" data-tab="tab5">✨ Stars</button>
             <button class="tab-button" data-tab="tab6">🎨 Themes</button>
+            <button class="tab-button" data-tab="tab7" style="display:none;">🎨 Custom Color</button>
           </div>
           <div class="tab-pane active" id="tab0">...</div>
           <div class="tab-pane" id="tab1">...</div>
@@ -1425,6 +1426,22 @@ window.openModalToPillarDetails = openModalToPillarDetails;
               </div>
               <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem;">
                 <button id="resetThemeBtn" class="btn btn-secondary btn-sm" title="Reset to Indigo Theme">Reset to Default</button>
+                <button id="openCustomColorBtn" class="btn btn-secondary btn-sm" title="Create your own custom color theme">🎨 Custom Color</button>
+              </div>
+            </div>
+          </div>
+          <!-- Tab 7: Custom Color Editor (hidden from tabs, accessed via button) -->
+          <div class="tab-pane" id="tab7">
+            <div class="custom-color-editor" id="customColorEditor">
+              <!-- Content rendered by JavaScript -->
+              <div id="customColorEditorContent">
+                <div class="editor-header">
+                  <h4>🎨 Custom Color Editor</h4>
+                  <button id="closeCustomColorBtn" class="btn btn-secondary btn-sm" title="Back to Themes">← Back to Themes</button>
+                </div>
+                <div id="colorEditorBody">
+                  <!-- Loaded by JavaScript -->
+                </div>
               </div>
             </div>
           </div>
@@ -3055,7 +3072,7 @@ if (sidebar) {
   });
 
   console.log('🎨 Star presets system loaded');
-})();
+
 
 // ============================================================
 // PAGE HEADER - Shared (in global.js)
@@ -3163,3 +3180,5 @@ document.addEventListener('DOMContentLoaded', function() {
 window.updatePageHeader = updatePageHeader;
 window.showToast = showToast;
 window.showComingSoonToast = showComingSoonToast;
+
+})();

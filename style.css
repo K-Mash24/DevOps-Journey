@@ -3164,11 +3164,11 @@ pre {
 }
 .path-item.complete .path-dot {
   background: var(--accent-secondary);
-  color: white;
+  color: black;
 }
 .path-item.in-progress .path-dot {
   background: var(--accent-primary);
-  color: white;
+  color: black;
   box-shadow: 0 0 0 4px rgba(83, 70, 212, 0.15);
 }
 .path-item.locked-path .path-dot {
