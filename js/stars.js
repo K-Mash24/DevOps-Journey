@@ -409,36 +409,66 @@ function saveFontSettings() {
 
 function applyFontSettings() {
   const html = document.documentElement;
+  const body = document.body;
+  
   // Apply font family
   if (fontSettings.family === 'custom' && fontSettings.customURL) {
     loadCustomFont(fontSettings.customURL);
   } else if (fontSettings.family !== 'custom') {
+    // Apply to both html and body for maximum coverage
     html.style.fontFamily = fontSettings.family + ', sans-serif';
+    body.style.fontFamily = fontSettings.family + ', sans-serif';
   }
+  
   // Apply font size
   html.style.fontSize = fontSettings.size + 'px';
+  body.style.fontSize = fontSettings.size + 'px';
+  
+  // Also set a CSS custom property for other elements to inherit
+  html.style.setProperty('--font-body', fontSettings.family + ', sans-serif');
+  html.style.setProperty('--font-size-base', fontSettings.size + 'px');
+  
   // Update UI elements if they exist
   updateFontUI();
 }
 
 function loadCustomFont(url) {
+  // Clean the URL - remove quotes and whitespace
+  let cleanUrl = url.trim().replace(/^['"]|['"]$/g, '');
+  
+  // If it's a full URL, use it directly
+  // If it's just a font name, assume it's from Google Fonts
+  let fontUrl = cleanUrl;
+  if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+    // Assume it's a font name from Google Fonts
+    fontUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(cleanUrl)}:wght@400;500;600;700&display=swap`;
+  }
+  
   const linkId = 'custom-font-link';
   let link = document.getElementById(linkId);
+  
   if (!link) {
     link = document.createElement('link');
     link.id = linkId;
     link.rel = 'stylesheet';
-    link.href = url;
+    link.href = fontUrl;
     document.head.appendChild(link);
   } else {
-    link.href = url;
+    link.href = fontUrl;
   }
+  
   link.onload = function() {
-    document.documentElement.style.fontFamily = "'CustomFont', sans-serif";
-    showToast('✅ Custom font loaded successfully', 'success');
+    // Extract font name from URL for display
+    let fontName = cleanUrl;
+    if (cleanUrl.includes('family=')) {
+      fontName = cleanUrl.split('family=')[1].split('&')[0];
+    }
+    document.documentElement.style.fontFamily = `'${fontName}', sans-serif`;
+    showToast(`✅ Font "${fontName}" loaded successfully`, 'success');
   };
+  
   link.onerror = function() {
-    showToast('❌ Failed to load custom font', 'error');
+    showToast('❌ Failed to load custom font. Please check the URL.', 'error');
   };
 }
 
@@ -495,16 +525,33 @@ function attachAdvancedEvents() {
 
   if (loadCustomBtn && customURL) {
     loadCustomBtn.addEventListener('click', function() {
-      const url = customURL.value.trim();
+      let url = customURL.value.trim();
       if (url) {
+        // Remove any quotes the user might have typed
+        url = url.replace(/^['"]|['"]$/g, '');
+        
+        // Validate it's a proper URL
+        if (!url.startsWith('http://') && !url.startsWith('https://') && !url.includes('fonts.googleapis.com')) {
+          // If it looks like just a font name, build the Google Fonts URL
+          if (!url.includes(' ')) {
+            url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(url)}:wght@400;500;600;700&display=swap`;
+          }
+        }
+        
         fontSettings.customURL = url;
         fontSettings.family = 'custom';
         saveFontSettings();
+        
         // Update select to custom
+        const familySelect = document.getElementById('fontFamilySelect');
         if (familySelect) familySelect.value = 'custom';
+        const customInput = document.getElementById('customFontInput');
         if (customInput) customInput.style.display = 'flex';
+        
+        // Load the font
+        loadCustomFont(url);
       } else {
-        showToast('Please enter a valid font URL', 'error');
+        showToast('Please enter a valid font URL or font name', 'error');
       }
     });
   }
@@ -650,5 +697,315 @@ window.exportAllSettings = exportAllSettings;
 window.importAllSettings = importAllSettings;
 window.getAllSettings = getAllSettings;
 window.applyAllSettings = applyAllSettings; 
+
+// ============================================================
+// EXPANDED ADVANCED SETTINGS
+// ============================================================
+
+// --- Appearance Settings ---
+const APPEARANCE_DEFAULTS = {
+  accentIntensity: 100,
+  borderRadius: 8,
+  shadowIntensity: 100,
+  reducedMotion: false,
+  highContrast: false,
+  defaultTheme: 'indigo'
+};
+
+let appearanceSettings = { ...APPEARANCE_DEFAULTS };
+
+function loadAppearanceSettings() {
+  const saved = localStorage.getItem('gc-appearance-settings');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      appearanceSettings = { ...APPEARANCE_DEFAULTS, ...parsed };
+    } catch (e) {
+      appearanceSettings = { ...APPEARANCE_DEFAULTS };
+    }
+  } else {
+    appearanceSettings = { ...APPEARANCE_DEFAULTS };
+  }
+  applyAppearanceSettings();
+}
+
+function saveAppearanceSettings() {
+  localStorage.setItem('gc-appearance-settings', JSON.stringify(appearanceSettings));
+  applyAppearanceSettings();
+}
+
+function applyAppearanceSettings() {
+  const html = document.documentElement;
+  
+  // Accent Intensity (affects accent colors via filter)
+  const intensity = appearanceSettings.accentIntensity / 100;
+  html.style.setProperty('--accent-intensity', intensity);
+  // We'll use this to adjust accent colors if needed
+  
+  // Border Radius
+  const radius = appearanceSettings.borderRadius;
+  html.style.setProperty('--radius-sm', `${radius * 0.75}px`);
+  html.style.setProperty('--radius-md', `${radius}px`);
+  html.style.setProperty('--radius-lg', `${radius * 1.5}px`);
+  html.style.setProperty('--radius-xl', `${radius * 2.5}px`);
+  
+  // Shadow Intensity
+  const shadow = appearanceSettings.shadowIntensity / 100;
+  const shadowSm = `0 1px 3px rgba(0,0,0,${0.06 * shadow}), 0 1px 2px rgba(0,0,0,${0.04 * shadow})`;
+  const shadowMd = `0 4px 12px rgba(0,0,0,${0.08 * shadow}), 0 2px 4px rgba(0,0,0,${0.04 * shadow})`;
+  const shadowLg = `0 10px 30px rgba(0,0,0,${0.1 * shadow}), 0 4px 8px rgba(0,0,0,${0.06 * shadow})`;
+  html.style.setProperty('--shadow-sm', shadowSm);
+  html.style.setProperty('--shadow-md', shadowMd);
+  html.style.setProperty('--shadow-lg', shadowLg);
+  
+  // Reduced Motion
+  if (appearanceSettings.reducedMotion) {
+    html.classList.add('reduced-motion');
+    html.style.setProperty('--transition', '0s');
+    html.style.setProperty('--animation-duration', '0s');
+  } else {
+    html.classList.remove('reduced-motion');
+    html.style.removeProperty('--transition');
+    html.style.removeProperty('--animation-duration');
+  }
+  
+  // High Contrast
+  if (appearanceSettings.highContrast) {
+    html.classList.add('high-contrast');
+  } else {
+    html.classList.remove('high-contrast');
+  }
+  
+  updateAppearanceUI();
+}
+
+function renderAdvancedSettings() {
+  const container = document.querySelector('.advanced-settings-content');
+  if (!container) return;
+  
+  // Check if appearance settings already exist
+  if (container.querySelector('.appearance-settings')) return;
+  
+  const html = `
+    <div class="appearance-settings">
+      <h5 style="margin: 0.5rem 0 0.75rem; font-family: var(--font-display); font-size: 0.9rem;">🎨 Appearance Settings</h5>
+      
+      <div class="setting-group">
+        <label>
+          <span class="setting-label">Accent Intensity</span>
+          <input type="range" id="accentIntensitySlider" min="0" max="100" value="${appearanceSettings.accentIntensity}">
+          <span class="setting-value" id="accentIntensityDisplay">${appearanceSettings.accentIntensity}%</span>
+        </label>
+      </div>
+      
+      <div class="setting-group">
+        <label>
+          <span class="setting-label">Border Radius</span>
+          <input type="range" id="borderRadiusSlider" min="0" max="20" value="${appearanceSettings.borderRadius}">
+          <span class="setting-value" id="borderRadiusDisplay">${appearanceSettings.borderRadius}px</span>
+        </label>
+      </div>
+      
+      <div class="setting-group">
+        <label>
+          <span class="setting-label">Shadow Intensity</span>
+          <input type="range" id="shadowIntensitySlider" min="0" max="100" value="${appearanceSettings.shadowIntensity}">
+          <span class="setting-value" id="shadowIntensityDisplay">${appearanceSettings.shadowIntensity}%</span>
+        </label>
+      </div>
+      
+      <hr class="settings-divider">
+      
+      <h5 style="margin: 0.5rem 0 0.75rem; font-family: var(--font-display); font-size: 0.9rem;">♿ Accessibility</h5>
+      
+      <div class="setting-group" style="flex-direction: row; align-items: center; gap: 0.75rem;">
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+          <input type="checkbox" id="reducedMotionToggle" ${appearanceSettings.reducedMotion ? 'checked' : ''}>
+          <span>Reduced Motion</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+          <input type="checkbox" id="highContrastToggle" ${appearanceSettings.highContrast ? 'checked' : ''}>
+          <span>High Contrast</span>
+        </label>
+      </div>
+      
+      <hr class="settings-divider">
+      
+      <h5 style="margin: 0.5rem 0 0.75rem; font-family: var(--font-display); font-size: 0.9rem;">🔧 Default Settings</h5>
+      
+      <div class="select-group">
+        <label for="defaultThemeSelect">Default Theme:</label>
+        <select id="defaultThemeSelect" class="styled-select">
+        <option value="">— Select a theme —</option>
+          ${Object.entries(COLOR_THEMES).map(([key, theme]) => `
+            <option value="${key}" ${appearanceSettings.defaultTheme === key ? 'selected' : ''}>
+              ${theme.icon} ${theme.name}
+            </option>
+          `).join('')}
+        </select>
+        <span class="hint">(Load and select as default 📺)</span>
+      </div>
+      
+      <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap;">
+        <button id="applyAppearanceBtn" class="btn btn-primary btn-sm">Apply All</button>
+        <button id="resetAppearanceBtn" class="btn btn-secondary btn-sm">Reset All</button>
+      </div>
+    </div>
+  `;
+  
+  container.insertAdjacentHTML('beforeend', html);
+  attachAppearanceEvents();
+}
+
+function attachAppearanceEvents() {
+  // Accent Intensity
+  const accentSlider = document.getElementById('accentIntensitySlider');
+  const accentDisplay = document.getElementById('accentIntensityDisplay');
+  if (accentSlider) {
+    accentSlider.addEventListener('input', function() {
+      const val = parseInt(this.value);
+      if (accentDisplay) accentDisplay.textContent = val + '%';
+      appearanceSettings.accentIntensity = val;
+      applyAppearanceSettings();
+    });
+  }
+  
+  // Border Radius
+  const radiusSlider = document.getElementById('borderRadiusSlider');
+  const radiusDisplay = document.getElementById('borderRadiusDisplay');
+  if (radiusSlider) {
+    radiusSlider.addEventListener('input', function() {
+      const val = parseInt(this.value);
+      if (radiusDisplay) radiusDisplay.textContent = val + 'px';
+      appearanceSettings.borderRadius = val;
+      applyAppearanceSettings();
+    });
+  }
+  
+  // Shadow Intensity
+  const shadowSlider = document.getElementById('shadowIntensitySlider');
+  const shadowDisplay = document.getElementById('shadowIntensityDisplay');
+  if (shadowSlider) {
+    shadowSlider.addEventListener('input', function() {
+      const val = parseInt(this.value);
+      if (shadowDisplay) shadowDisplay.textContent = val + '%';
+      appearanceSettings.shadowIntensity = val;
+      applyAppearanceSettings();
+    });
+  }
+  
+  // Reduced Motion
+  const motionToggle = document.getElementById('reducedMotionToggle');
+  if (motionToggle) {
+    motionToggle.addEventListener('change', function() {
+      appearanceSettings.reducedMotion = this.checked;
+      saveAppearanceSettings();
+      showToast(`♿ Reduced Motion ${this.checked ? 'enabled' : 'disabled'}`, 'info');
+    });
+  }
+  
+  // High Contrast
+  const contrastToggle = document.getElementById('highContrastToggle');
+  if (contrastToggle) {
+    contrastToggle.addEventListener('change', function() {
+      appearanceSettings.highContrast = this.checked;
+      saveAppearanceSettings();
+      showToast(`👁️ High Contrast ${this.checked ? 'enabled' : 'disabled'}`, 'info');
+    });
+  }
+  
+  // Default Theme
+  const themeSelect = document.getElementById('defaultThemeSelect');
+  if (themeSelect) {
+    themeSelect.addEventListener('change', function() {
+      appearanceSettings.defaultTheme = this.value;
+      saveAppearanceSettings();
+      showToast(`🔧 Default theme set to ${COLOR_THEMES[this.value].name}`, 'info');
+    });
+  }
+  
+  // Apply All
+  const applyBtn = document.getElementById('applyAppearanceBtn');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', function() {
+      saveAppearanceSettings();
+      showToast('✅ Appearance settings applied', 'success');
+    });
+  }
+  
+  // Reset All
+  const resetBtn = document.getElementById('resetAppearanceBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+      appearanceSettings = { ...APPEARANCE_DEFAULTS };
+      saveAppearanceSettings();
+      // Re-render the advanced settings UI to update values
+      const container = document.querySelector('.advanced-settings-content');
+      if (container) {
+        const existing = container.querySelector('.appearance-settings');
+        if (existing) existing.remove();
+        renderAdvancedSettings();
+      }
+      showToast('🔄 Appearance settings reset to default', 'info');
+    });
+  }
+}
+
+function updateAppearanceUI() {
+  // Update any UI elements if they exist
+  const accentSlider = document.getElementById('accentIntensitySlider');
+  const accentDisplay = document.getElementById('accentIntensityDisplay');
+  const radiusSlider = document.getElementById('borderRadiusSlider');
+  const radiusDisplay = document.getElementById('borderRadiusDisplay');
+  const shadowSlider = document.getElementById('shadowIntensitySlider');
+  const shadowDisplay = document.getElementById('shadowIntensityDisplay');
+  const motionToggle = document.getElementById('reducedMotionToggle');
+  const contrastToggle = document.getElementById('highContrastToggle');
+  const themeSelect = document.getElementById('defaultThemeSelect');
+  
+  if (accentSlider) accentSlider.value = appearanceSettings.accentIntensity;
+  if (accentDisplay) accentDisplay.textContent = appearanceSettings.accentIntensity + '%';
+  if (radiusSlider) radiusSlider.value = appearanceSettings.borderRadius;
+  if (radiusDisplay) radiusDisplay.textContent = appearanceSettings.borderRadius + 'px';
+  if (shadowSlider) shadowSlider.value = appearanceSettings.shadowIntensity;
+  if (shadowDisplay) shadowDisplay.textContent = appearanceSettings.shadowIntensity + '%';
+  if (motionToggle) motionToggle.checked = appearanceSettings.reducedMotion;
+  if (contrastToggle) contrastToggle.checked = appearanceSettings.highContrast;
+  if (themeSelect) themeSelect.value = appearanceSettings.defaultTheme;
+}
+
+// Load appearance settings
+loadAppearanceSettings();
+
+// Expose appearance functions
+window.appearanceSettings = appearanceSettings;
+window.loadAppearanceSettings = loadAppearanceSettings;
+window.saveAppearanceSettings = saveAppearanceSettings;
+window.applyAppearanceSettings = applyAppearanceSettings;
+window.renderAdvancedSettings = renderAdvancedSettings;
+window.attachAppearanceEvents = attachAppearanceEvents;
+
+// Also render advanced settings after DOM ready
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  renderAdvancedSettings();
+} else {
+  document.addEventListener('DOMContentLoaded', renderAdvancedSettings);
+}
+
+// Re-render when tab5 is opened
+document.addEventListener('click', function(e) {
+  const tabBtn = e.target.closest('.tab-button[data-tab="tab5"]');
+  if (tabBtn) {
+    setTimeout(renderAdvancedSettings, 150);
+  }
+});
+
+// Also when advanced settings container is opened (details)
+document.addEventListener('click', function(e) {
+  const details = e.target.closest('.advanced-settings-container');
+  if (details && details.open) {
+    setTimeout(renderAdvancedSettings, 100);
+  }
+});
 })();
 

@@ -489,6 +489,7 @@
       <button class="tab-button" data-tab="tab4" id="backupTabBtn">💾 Backup</button>
       <button class="tab-button" data-tab="tab5">✨ Stars</button>
       <button class="tab-button" data-tab="tab6">🎨 Themes</button>
+      <button class="tab-button" data-tab="tab7" style="display:none;">🎨 Custom Color</button>
     </div>
     <!-- Tab 0: Overall Project Progress -->
     <div class="tab-pane active" id="tab0">
@@ -646,17 +647,16 @@
             <details class="advanced-settings-container">
               <summary>⚙️ Advanced Settings</summary>
               <div class="advanced-settings-content">
-                <!-- Font Family -->
-                <div class="setting-group">
-                  <label>
-                    <span class="setting-label">Font Family</span>
-                    <select id="fontFamilySelect">
-                      <option value="Syne">Syne</option>
-                      <option value="DM Sans">DM Sans</option>
-                      <option value="JetBrains Mono">JetBrains Mono</option>
-                      <option value="custom">Custom</option>
-                    </select>
-                  </label>
+                <!-- Font Family Dropdown - MATCHES Load Theme styling -->
+                <div class="select-group">
+                  <label for="fontFamilySelect">Font Family:</label>
+                  <select id="fontFamilySelect" class="styled-select">
+                    <option value="Syne">Syne</option>
+                    <option value="DM Sans">DM Sans</option>
+                    <option value="JetBrains Mono">JetBrains Mono</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                  <span class="hint">(Choose your preferred font)</span>
                 </div>
                 <div class="custom-font-input" id="customFontInput" style="display:none;">
                   <input type="text" id="customFontURL" placeholder="https://fonts.googleapis.com/css2?family=Inter" value="">
@@ -698,6 +698,22 @@
           </div>
           <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem;">
             <button id="resetThemeBtn" class="btn btn-secondary btn-sm" title="Reset to Indigo Theme">Reset to Default</button>
+            <button id="openCustomColorBtn" class="btn btn-secondary btn-sm" title="Create your own custom color theme">🎨 Custom Color</button>
+          </div>
+        </div>
+      </div>
+      <!-- Tab 7: Custom Color Editor (hidden from tabs, accessed via button) -->
+      <div class="tab-pane" id="tab7">
+        <div class="custom-color-editor" id="customColorEditor">
+          <div id="customColorEditorContent">
+            <div class="editor-header">
+              <h4>🎨 Custom Color Editor</h4>
+              <button id="closeCustomColorBtn" class="btn btn-secondary btn-sm" title="Back to Themes">← Back to Themes</button>
+            </div>
+            <div id="colorEditorBody">
+              <!-- Loaded by JavaScript -->
+              <p style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading color editor...</p>
+            </div>
           </div>
         </div>
       </div>

@@ -998,6 +998,18 @@ const COLOR_THEMES = {
       });
     });
 
+    // Attach Custom Color button
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('#openCustomColorBtn');
+      if (btn) {
+        e.preventDefault();
+        openCustomColorEditor();
+      }
+    });
+
+    // Also attach when tab6 is loaded dynamically
+    document.getElementById('openCustomColorBtn')?.addEventListener('click', openCustomColorEditor);
+
     console.log("✅ Themes initialized");
   }
 
@@ -1021,4 +1033,519 @@ const COLOR_THEMES = {
   window.resetTheme = resetTheme;
   window.renderThemeCards = renderThemeCards;
   window.COLOR_THEMES = COLOR_THEMES;
+
+// ============================================================
+// CUSTOM COLOR EDITOR (tab7)
+// ============================================================
+
+// --- Default Colors ---
+const DEFAULT_CUSTOM_COLORS = {
+  light: {
+    primary: '#1e1b4b',
+    secondary: '#14b8a6',
+    bgPrimary: '#f0efe8',
+    bgSecondary: '#faf9f6',
+    border: '#e2ddd6',
+    textPrimary: '#1e1b4b',
+    textSecondary: '#4a5568'
+  },
+  dark: {
+    primary: '#7c72e8',
+    secondary: '#2dd4bf',
+    bgPrimary: '#0a0a14',
+    bgSecondary: '#141428',
+    border: '#2a2a40',
+    textPrimary: '#e8e6f0',
+    textSecondary: '#a0a8bc'
+  }
+};
+
+// --- Current custom colors ---
+let customColors = { ...DEFAULT_CUSTOM_COLORS };
+
+function loadCustomColors() {
+  const saved = localStorage.getItem('gc-custom-theme');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      customColors = { ...DEFAULT_CUSTOM_COLORS, ...parsed };
+    } catch (e) {
+      customColors = { ...DEFAULT_CUSTOM_COLORS };
+    }
+  } else {
+    customColors = { ...DEFAULT_CUSTOM_COLORS };
+  }
+  return customColors;
+}
+
+function saveCustomColors(colors) {
+  localStorage.setItem('gc-custom-theme', JSON.stringify(colors));
+  customColors = colors;
+}
+
+function applyCustomTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const vars = isDark ? customColors.dark : customColors.light;
+  
+  document.documentElement.style.setProperty('--accent-primary', vars.primary);
+  document.documentElement.style.setProperty('--accent-secondary', vars.secondary);
+  document.documentElement.style.setProperty('--bg-primary', vars.bgPrimary);
+  document.documentElement.style.setProperty('--bg-secondary', vars.bgSecondary);
+  document.documentElement.style.setProperty('--border-color', vars.border);
+  document.documentElement.style.setProperty('--text-primary', vars.textPrimary);
+  document.documentElement.style.setProperty('--text-secondary', vars.textSecondary);
+  
+  localStorage.setItem('gc-color-theme', 'custom');
+  showToast('🎨 Custom theme applied!', 'success');
+}
+
+function resetCustomTheme() {
+  customColors = { ...DEFAULT_CUSTOM_COLORS };
+  localStorage.removeItem('gc-custom-theme');
+  // Reset to Indigo
+  applyTheme('indigo', false);
+  renderCustomColorEditor();
+  showToast('🔄 Custom theme reset to default', 'info');
+}
+
+// --- Color Conversion Helpers ---
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(c => {
+    const hex = c.toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }).join('');
+}
+
+function hexToHsl(hex) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return { h: 0, s: 0, l: 0 };
+  const r = rgb.r / 255;
+  const g = rgb.g / 255;
+  const b = rgb.b / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+  if (max === min) {
+    h = s = 0;
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+
+function hslToHex(h, s, l) {
+  s /= 100;
+  l /= 100;
+  const k = n => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
+  const toHex = x => Math.round(255 * f(x)).toString(16).padStart(2, '0');
+  return `#${toHex(0)}${toHex(8)}${toHex(4)}`;
+}
+
+function isValidHex(hex) {
+  return /^#?([a-f\d]{3}|[a-f\d]{6})$/i.test(hex);
+}
+
+// --- Render Custom Color Editor ---
+function renderCustomColorEditor() {
+  const container = document.getElementById('colorEditorBody');
+  if (!container) return;
+  
+  const colors = loadCustomColors();
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const vars = isDark ? colors.dark : colors.light;
+  
+  // Get HSL values for each color
+  const hslVars = {};
+  Object.keys(vars).forEach(key => {
+    hslVars[key] = hexToHsl(vars[key]);
+  });
+  
+  container.innerHTML = `
+    <!-- Theme Loader Dropdown -->
+    <div class="select-group theme-loader">
+      <label for="loadThemeSelect">Load Theme:</label>
+      <select id="loadThemeSelect" class="styled-select">
+        <option value="">— Select a theme —</option>
+        ${Object.entries(COLOR_THEMES).map(([key, theme]) => `
+          <option value="${key}">${theme.icon} ${theme.name}</option>
+        `).join('')}
+      </select>
+      <span class="hint">(Load and customize)</span>
+    </div>
+    
+    <div class="color-editor-grid">
+      ${Object.keys(vars).map(key => `
+        <div class="color-control-group" data-key="${key}">
+          <label class="color-label">
+            <span class="color-name">${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+            <div class="color-control-row">
+              <input type="color" class="color-picker" value="${vars[key]}" data-key="${key}">
+              <input type="text" class="color-hex-input" value="${vars[key]}" data-key="${key}" placeholder="#000000" maxlength="7">
+              <span class="color-preview" style="background: ${vars[key]};"></span>
+            </div>
+            <div class="color-sliders" style="display:none;">
+              <div class="slider-group">
+                <label>Hue: <span class="hsl-value" id="hue-${key}">${hslVars[key].h}</span></label>
+                <input type="range" class="hue-slider" min="0" max="360" value="${hslVars[key].h}" data-key="${key}">
+              </div>
+              <div class="slider-group">
+                <label>Saturation: <span class="hsl-value" id="sat-${key}">${hslVars[key].s}</span>%</label>
+                <input type="range" class="sat-slider" min="0" max="100" value="${hslVars[key].s}" data-key="${key}">
+              </div>
+              <div class="slider-group">
+                <label>Lightness: <span class="hsl-value" id="lig-${key}">${hslVars[key].l}</span>%</label>
+                <input type="range" class="lig-slider" min="0" max="100" value="${hslVars[key].l}" data-key="${key}">
+              </div>
+            </div>
+            <button class="toggle-sliders-btn btn btn-sm btn-secondary" data-key="${key}">Show Sliders</button>
+          </label>
+        </div>
+      `).join('')}
+    </div>
+    
+    <!-- Preset Colors -->
+    <div class="preset-colors">
+      <label>Quick Presets:</label>
+      <div class="preset-grid">
+        ${getPresetColors().map(color => `
+          <button class="preset-color-btn" data-color="${color}" style="background: ${color};" title="${color}"></button>
+        `).join('')}
+      </div>
+    </div>
+    
+    <div class="editor-actions">
+      <button id="applyCustomThemeBtn" class="btn btn-primary">Apply Custom Theme</button>
+      <button id="resetCustomThemeBtn" class="btn btn-secondary">Reset to Default</button>
+      <button id="closeCustomColorBtn2" class="btn btn-secondary">← Back to Themes</button>
+    </div>
+  `;
+  
+  // Attach events
+  attachColorEditorEvents();
+}
+function getPresetColors() {
+  return [
+    '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#1abc9c',
+    '#3498db', '#2980b9', '#8e44ad', '#9b59b6', '#34495e',
+    '#e91e63', '#ff5722', '#ffc107', '#4caf50', '#00bcd4',
+    '#2196f3', '#3f51b5', '#9c27b0', '#607d8b', '#795548'
+  ];
+}
+
+function attachColorEditorEvents() {
+  const container = document.getElementById('colorEditorBody');
+  if (!container) return;
+  
+  // --- Theme Loader Dropdown ---
+  const loadThemeSelect = document.getElementById('loadThemeSelect');
+  if (loadThemeSelect) {
+    loadThemeSelect.addEventListener('change', function() {
+      const themeName = this.value;
+      if (!themeName) return;
+      
+      const theme = COLOR_THEMES[themeName];
+      if (!theme) return;
+      
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const vars = isDark ? theme.dark : theme.light;
+      
+      // Update all color controls with the theme's colors
+      Object.keys(vars).forEach(key => {
+        const color = vars[key];
+        const picker = container.querySelector(`.color-picker[data-key="${key}"]`);
+        const hexInput = container.querySelector(`.color-hex-input[data-key="${key}"]`);
+        const preview = container.querySelector(`.color-preview[data-key="${key}"]`);
+        
+        if (picker) picker.value = color;
+        if (hexInput) hexInput.value = color;
+        if (preview) preview.style.background = color;
+        
+        // Update custom colors object
+        const colors = loadCustomColors();
+        const target = isDark ? colors.dark : colors.light;
+        target[key] = color;
+        saveCustomColors(colors);
+        
+        // Update HSL sliders
+        updateHSLSliders(key, color);
+      });
+      
+      // Apply the theme immediately for preview
+      applyCustomTheme();
+      
+      showToast(`📥 Loaded "${theme.name}" theme for customization`, 'success');
+      
+      // Reset dropdown to default state
+      this.value = '';
+    });
+  }
+   
+  // Color pickers
+  container.querySelectorAll('.color-picker').forEach(input => {
+    input.addEventListener('input', function() {
+      const key = this.dataset.key;
+      const color = this.value;
+      const hexInput = container.querySelector(`.color-hex-input[data-key="${key}"]`);
+      const preview = container.querySelector(`.color-preview[data-key="${key}"]`);
+      if (hexInput) hexInput.value = color;
+      if (preview) preview.style.background = color;
+      updateCustomColorValue(key, color);
+    });
+  });
+  
+  // Hex inputs
+  container.querySelectorAll('.color-hex-input').forEach(input => {
+    input.addEventListener('input', function() {
+      const key = this.dataset.key;
+      const color = this.value;
+      if (isValidHex(color)) {
+        const picker = container.querySelector(`.color-picker[data-key="${key}"]`);
+        const preview = container.querySelector(`.color-preview[data-key="${key}"]`);
+        if (picker) picker.value = color;
+        if (preview) preview.style.background = color;
+        updateCustomColorValue(key, color);
+        // Update HSL sliders
+        updateHSLSliders(key, color);
+      }
+    });
+    input.addEventListener('blur', function() {
+      const key = this.dataset.key;
+      let color = this.value;
+      if (!isValidHex(color)) {
+        // Revert to current value
+        const current = getCustomColorValue(key);
+        this.value = current;
+        const picker = container.querySelector(`.color-picker[data-key="${key}"]`);
+        const preview = container.querySelector(`.color-preview[data-key="${key}"]`);
+        if (picker) picker.value = current;
+        if (preview) preview.style.background = current;
+      }
+    });
+  });
+  
+  // Toggle sliders
+  container.querySelectorAll('.toggle-sliders-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const key = this.dataset.key;
+      const sliders = container.querySelector(`.color-sliders[data-key="${key}"]`);
+      if (sliders) {
+        const isHidden = sliders.style.display === 'none';
+        sliders.style.display = isHidden ? 'block' : 'none';
+        this.textContent = isHidden ? 'Hide Sliders' : 'Show Sliders';
+      }
+    });
+  });
+  
+  // HSL Sliders
+  container.querySelectorAll('.hue-slider, .sat-slider, .lig-slider').forEach(slider => {
+    slider.addEventListener('input', function() {
+      const key = this.dataset.key;
+      const type = this.classList.contains('hue-slider') ? 'hue' : 
+                   this.classList.contains('sat-slider') ? 'sat' : 'lig';
+      const value = parseInt(this.value);
+      const display = container.querySelector(`#${type}-${key}`);
+      if (display) display.textContent = value + (type !== 'hue' ? '%' : '');
+      
+      // Get current HSL values
+      const hue = parseInt(container.querySelector(`.hue-slider[data-key="${key}"]`).value);
+      const sat = parseInt(container.querySelector(`.sat-slider[data-key="${key}"]`).value);
+      const lig = parseInt(container.querySelector(`.lig-slider[data-key="${key}"]`).value);
+      
+      // Convert to hex
+      const hex = hslToHex(hue, sat, lig);
+      const picker = container.querySelector(`.color-picker[data-key="${key}"]`);
+      const hexInput = container.querySelector(`.color-hex-input[data-key="${key}"]`);
+      const preview = container.querySelector(`.color-preview[data-key="${key}"]`);
+      
+      if (picker) picker.value = hex;
+      if (hexInput) hexInput.value = hex;
+      if (preview) preview.style.background = hex;
+      updateCustomColorValue(key, hex);
+    });
+  });
+  
+  // Preset colors
+  container.querySelectorAll('.preset-color-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const color = this.dataset.color;
+      // Apply to all active color controls
+      container.querySelectorAll('.color-picker').forEach(picker => {
+        const key = picker.dataset.key;
+        const hexInput = container.querySelector(`.color-hex-input[data-key="${key}"]`);
+        const preview = container.querySelector(`.color-preview[data-key="${key}"]`);
+        if (picker) picker.value = color;
+        if (hexInput) hexInput.value = color;
+        if (preview) preview.style.background = color;
+        updateCustomColorValue(key, color);
+        updateHSLSliders(key, color);
+      });
+    });
+  });
+  
+  // Apply button
+  const applyBtn = document.getElementById('applyCustomThemeBtn');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', function() {
+      // Collect all color values
+      const colors = getCustomColorValues();
+      saveCustomColors(colors);
+      applyCustomTheme();
+      // Update theme cards
+      renderThemeCards();
+      // Switch back to tab6
+      switchToTab6();
+    });
+  }
+  
+  // Reset button
+  const resetBtn = document.getElementById('resetCustomThemeBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+      if (confirm('Reset all custom colors to default?')) {
+        resetCustomTheme();
+      }
+    });
+  }
+  
+  // Close buttons
+  const closeBtn1 = document.getElementById('closeCustomColorBtn');
+  const closeBtn2 = document.getElementById('closeCustomColorBtn2');
+  [closeBtn1, closeBtn2].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', switchToTab6);
+    }
+  });
+}
+
+function getCustomColorValue(key) {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const colors = loadCustomColors();
+  const vars = isDark ? colors.dark : colors.light;
+  return vars[key] || '#000000';
+}
+
+function updateCustomColorValue(key, color) {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const colors = loadCustomColors();
+  const target = isDark ? colors.dark : colors.light;
+  target[key] = color;
+  saveCustomColors(colors);
+  // Live preview
+  applyCustomTheme();
+}
+
+function getCustomColorValues() {
+  const colors = loadCustomColors();
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const vars = isDark ? colors.dark : colors.light;
+  const result = {};
+  document.querySelectorAll('.color-picker').forEach(picker => {
+    const key = picker.dataset.key;
+    result[key] = picker.value;
+  });
+  return result;
+}
+
+function updateHSLSliders(key, hex) {
+  const hsl = hexToHsl(hex);
+  const container = document.getElementById('colorEditorBody');
+  if (!container) return;
+  const hueSlider = container.querySelector(`.hue-slider[data-key="${key}"]`);
+  const satSlider = container.querySelector(`.sat-slider[data-key="${key}"]`);
+  const ligSlider = container.querySelector(`.lig-slider[data-key="${key}"]`);
+  const hueDisplay = container.querySelector(`#hue-${key}`);
+  const satDisplay = container.querySelector(`#sat-${key}`);
+  const ligDisplay = container.querySelector(`#lig-${key}`);
+  if (hueSlider) hueSlider.value = hsl.h;
+  if (satSlider) satSlider.value = hsl.s;
+  if (ligSlider) ligSlider.value = hsl.l;
+  if (hueDisplay) hueDisplay.textContent = hsl.h;
+  if (satDisplay) satDisplay.textContent = hsl.s + '%';
+  if (ligDisplay) ligDisplay.textContent = hsl.l + '%';
+}
+
+function switchToTab6() {
+  const modal = document.getElementById('progressModal');
+  if (!modal) return;
+  
+  const tab6Btn = modal.querySelector('.tab-button[data-tab="tab6"]');
+  const tab6Pane = document.getElementById('tab6');
+  
+  if (!tab6Btn || !tab6Pane) {
+    console.warn('Tab6 not found');
+    return;
+  }
+  
+  const tabButtons = modal.querySelectorAll('.tab-button');
+  const tabPanes = modal.querySelectorAll('.tab-pane');
+  tabButtons.forEach(b => b.classList.remove('active'));
+  tabPanes.forEach(p => p.classList.remove('active'));
+  tab6Btn.classList.add('active');
+  tab6Pane.classList.add('active');
+  
+  // Re-render theme cards
+  renderThemeCards();
+}
+
+function openCustomColorEditor() {
+  const modal = document.getElementById('progressModal');
+  if (!modal) {
+    console.warn('Modal not found');
+    return;
+  }
+  
+  // Find tab7 button and pane
+  const tab7Btn = modal.querySelector('.tab-button[data-tab="tab7"]');
+  const tab7Pane = document.getElementById('tab7');
+  
+  if (!tab7Btn || !tab7Pane) {
+    console.warn('Tab7 not found in modal');
+    showToast('❌ Custom Color Editor not available', 'error');
+    return;
+  }
+  
+  // Switch to tab7
+  const tabButtons = modal.querySelectorAll('.tab-button');
+  const tabPanes = modal.querySelectorAll('.tab-pane');
+  tabButtons.forEach(b => b.classList.remove('active'));
+  tabPanes.forEach(p => p.classList.remove('active'));
+  tab7Btn.classList.add('active');
+  tab7Pane.classList.add('active');
+  
+  // Render the color editor
+  renderCustomColorEditor();
+}
+
+// --- Expose functions ---
+window.customColors = customColors;
+window.loadCustomColors = loadCustomColors;
+window.saveCustomColors = saveCustomColors;
+window.applyCustomTheme = applyCustomTheme;
+window.resetCustomTheme = resetCustomTheme;
+window.renderCustomColorEditor = renderCustomColorEditor;
+window.openCustomColorEditor = openCustomColorEditor;
+window.switchToTab6 = switchToTab6;
+window.hexToRgb = hexToRgb;
+window.rgbToHex = rgbToHex;
+window.hexToHsl = hexToHsl;
+window.hslToHex = hslToHex;
+window.isValidHex = isValidHex;
+
 })();

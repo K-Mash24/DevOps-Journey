@@ -1375,16 +1375,15 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                   <summary>⚙️ Advanced Settings</summary>
                   <div class="advanced-settings-content">
                     <!-- Font Family -->
-                    <div class="setting-group">
-                      <label>
-                        <span class="setting-label">Font Family</span>
-                        <select id="fontFamilySelect">
-                          <option value="Syne">Syne</option>
-                          <option value="DM Sans">DM Sans</option>
-                          <option value="JetBrains Mono">JetBrains Mono</option>
-                          <option value="custom">Custom</option>
-                        </select>
-                      </label>
+                    <div class="select-group">
+                      <label for="fontFamilySelect">Font Family:</label>
+                      <select id="fontFamilySelect" class="styled-select">
+                        <option value="Syne">Syne</option>
+                        <option value="DM Sans">DM Sans</option>
+                        <option value="JetBrains Mono">JetBrains Mono</option>
+                        <option value="custom">Custom</option>
+                      </select>
+                      <span class="hint">(Choose your preferred font)</span>
                     </div>
                     <div class="custom-font-input" id="customFontInput" style="display:none;">
                       <input type="text" id="customFontURL" placeholder="https://fonts.googleapis.com/css2?family=Inter" value="">
@@ -1433,7 +1432,6 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           <!-- Tab 7: Custom Color Editor (hidden from tabs, accessed via button) -->
           <div class="tab-pane" id="tab7">
             <div class="custom-color-editor" id="customColorEditor">
-              <!-- Content rendered by JavaScript -->
               <div id="customColorEditorContent">
                 <div class="editor-header">
                   <h4>🎨 Custom Color Editor</h4>
@@ -1441,6 +1439,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                 </div>
                 <div id="colorEditorBody">
                   <!-- Loaded by JavaScript -->
+                  <p style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading color editor...</p>
                 </div>
               </div>
             </div>
