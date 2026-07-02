@@ -24,13 +24,35 @@ This project is a **structured, self‑paced study roadmap** that builds genuine
 
 ## 🚀 Features
 
+### Core Learning Features
 - **Interactive progress tracking** – rings, checkboxes, and sidebars update automatically from `localStorage`.
 - **Modal dashboard** – view overall, phase‑level, and pillar‑level progress (with detailed checklists).
-- **Flashcards & self‑grading quizzes** – test your knowledge immediately.
+- **Flashcards & self‑grading quizzes** – test your knowledge immediately with 3 quiz sets per pillar.
 - **Floating progress rings** – quick access to the dashboard from any page.
 - **Image lightbox** – click any diagram to zoom and pan.
 - **Dark / light theme** – respects system preference or manual toggle.
 - **Offline support** – service worker caches static assets (HTML, CSS, JS, images).
+
+### 🎨 Personalization & Appearance (New)
+- **25 Color Themes** – choose from curated palettes (Indigo, Ocean, Cobalt, Crimson, etc.) with light/dark variants.
+- **Theme Preview** – preview a theme live with a transparent modal.
+- **Custom Color Editor** – create your own color theme using hex inputs, color pickers, and HSL sliders.
+- **Font Settings** – choose font family (Syne, DM Sans, JetBrains Mono) and font size (12‑24px).
+- **Custom Font Loading** – load any Google Font or custom web font URL.
+- **Appearance Controls** – adjust accent intensity, border radius, and shadow intensity.
+- **Accessibility** – toggle reduced motion and high contrast modes.
+- **Default Theme** – set your preferred theme as the default on page load.
+- **Import/Export** – backup and restore all personalization settings as JSON.
+
+### Stars Tab (Background Animation)
+- **Starfield Presets** – 6 presets (Calm, Active, Minimal, Constellation, Dense, Off).
+- **Customize** – adjust star count, twinkle speed, movement speed, and connection distance.
+- **Advanced Settings** – font controls, import/export (above).
+
+### 🧩 Pillar Details
+- **Phase 1 & Phase 2** – both displayed with progress rings and scroller chips.
+- **Detailed Checklists** – click any pillar chip to see section‑by‑section progress.
+- **Checkbox Tracking** – mark sections complete; rings update instantly.
 
 ---
 
@@ -39,20 +61,20 @@ This project is a **structured, self‑paced study roadmap** that builds genuine
 ```bash
 DevOps-Journey/
 ├── index.html            – Homepage (roadmap, cards, modal)
+├── style.css             – Global styles (themes, modal, lightbox, personalization)
+├── sw.js                 – Service worker (versioned cache)
+├── img/                  – Icons, logos, wiring diagrams
 ├── html/
 │   ├── networking.html   – Pillar 1 content (complete)
-│   ├── linux.html        – Pillar 2 content (completed eventually)
-├── style.css             – Global styles (themes, modal, lightbox)
-├── sw.js                 – Service worker (versioned cache)
+│   └── linux.html        – Pillar 2 content (complete)
 ├── js/
-│   ├── global.js         – Shared logic (rings, modal, search)
+│   ├── global.js         – Shared logic (rings, modal, search, toast)
+│   ├── stars.js          – Starfield animation + Advanced Settings (fonts, import/export)
+│   ├── themes.js         – 25 color themes + Custom Color Editor (tab7)
 │   ├── networking.js     – Pillar‑specific flashcards & quiz
 │   └── Linux.js          – Linux‑specific flashcards & quiz
-├── img/                  – Icons, logos, wiring diagrams
 └── README.md             – This file
 ```
-
-> Other pillars (security, scripting, databases) are planned but not yet built.
 
 ---
 
@@ -80,6 +102,17 @@ All progress is stored in the browser’s `localStorage`. The following keys are
 
 > Topic keys are used in the **Pillar Details** modal. The binary key is automatically set to `true` when all topics are checked.
 
+### Personalization & Appearance (New)
+
+| Setting | Storage Key | Description |
+|---------|-------------|-------------|
+| Color Theme | `gc-color-theme` | Selected theme name (e.g., `ocean`) |
+| Custom Theme | `gc-custom-theme` | Custom color values (light/dark modes) |
+| Font Settings | `gc-font-settings` | Font family, size, custom URL |
+| Appearance | `gc-appearance-settings` | Accent intensity, border radius, shadow intensity, reduced motion, high contrast, default theme |
+| Star Preset | `star-preset` | Selected star preset |
+| Star Custom | `star-custom` | Custom star values |
+
 ---
 
 ## 🧩 Key JavaScript Modules
@@ -96,18 +129,45 @@ All progress is stored in the browser’s `localStorage`. The following keys are
 | `updateFloatingRings()` | Updates the homepage’s Phase1, Phase2, Overall, and floating global rings |
 | `renderPhase1ModalScroller()` / `renderPhase2ModalScroller()` | Builds chip lists in the modal’s Phase1 and Phase2 tabs |
 | `initModalAndFloatingRing()` | Sets up click handlers for the floating ring and modal close |
+| `showToast()` | Displays toast messages in a flexbox container |
+| `ensureModalExists()` | Injects the modal into pillar pages (dynamic modal) |
+
+### `stars.js` – Starfield + Advanced Settings
+
+| Component | Purpose |
+|-----------|---------|
+| **Starfield** | Canvas-based star animation with twinkle, drift, and connections |
+| **Presets** | 6 preset configurations (Calm, Active, Minimal, Constellation, Dense, Off) |
+| **Customize** | Sliders for star count, twinkle speed, movement speed, connection distance |
+| **Advanced Settings** | Font family (Syne, DM Sans, JetBrains Mono, Custom), font size, import/export |
+| **Appearance Controls** | Accent intensity, border radius, shadow intensity |
+| **Accessibility** | Reduced motion toggle, high contrast toggle |
+| **Default Theme** | Dropdown to set default theme on page load |
+
+### `themes.js` – Color Themes & Custom Color Editor
+
+| Component | Purpose |
+|-----------|---------|
+| **25 Themes** | Predefined color palettes with light/dark variants |
+| **Theme Cards** | Grid display with icons, names, color swatches, preview/apply buttons |
+| **Theme Preview** | Applies theme with transparent modal; click outside to cancel |
+| **Custom Color Editor (tab7)** | Hex inputs, color pickers, and HSL sliders for all CSS variables |
+| **Preset Colors** | Quick color selection grid |
+| **Apply/Reset** | Save custom theme or reset to default |
+| **Theme Loader** | Load any existing theme into the custom color editor |
 
 ### Pillar‑specific files (`networking.js`, `linux.js`)
 
-- Flashcards data and rendering
-- Quiz data, submission, and reset (including mastery flag)
+- Flashcards data and rendering (25+ cards per pillar)
+- Quiz data, submission, and reset (including mastery flag for 3 quiz sets)
 - Floating ring creation and click handler (calls `window.openModalToPillarDetails`)
+- Image lightbox implementation
 
 ---
 
 ## 🖼️ Modal Dashboard
 
-A single modal (`#progressModal`) with four tabs:
+A single modal (`#progressModal`) with **seven** tabs:
 
 | Tab | Content |
 |-----|---------|
@@ -115,6 +175,10 @@ A single modal (`#progressModal`) with four tabs:
 | **Phase 1** | Phase1 ring + horizontal scroller with pillar chips. Clicking a chip opens **Pillar Details** tab. |
 | **Phase 2** | Phase2 ring + scroller with phase chips. Clicking a chip opens **Pillar Details** tab with topic‑based checklist. |
 | **Pillar Details** | Dynamic ring + checklist for the selected pillar. Checkboxes sync with `localStorage` and update the ring instantly. |
+| **💾 Backup** | GitHub Gist backup/restore for study progress (token and Gist ID). |
+| **✨ Stars** | Starfield presets, customization, and Advanced Settings (fonts, appearance, import/export). |
+| **🎨 Themes** | 25 color themes with preview/apply, reset to default, and Custom Color Editor button. |
+| **🎨 Custom Color Editor** | Hidden tab (accessible via button in Themes tab). Full color customization with hex inputs, color pickers, HSL sliders, and preset colors. |
 
 The modal is opened by:
 - Clicking the floating global ring (homepage) – shows **Overall** tab.
@@ -150,19 +214,27 @@ Implemented identically in `networking.js` and `linux.js`.
 
 ---
 
-## 🧭 Current Status (June 2026)
+## 🧭 Current Status (July 2026)
 
 | Component | Status |
 |-----------|--------|
-| **Networking pillar** | ✅ Complete – 7 sections, flashcards, quiz, floating ring, lightbox |
-| **Linux pillar** | ✅ Complete – 10 sections, flashcards, quiz, floating ring, lightbox |
+| **Networking pillar** | ✅ Complete – 7 sections, 38 flashcards, 3 quiz sets, floating ring, lightbox |
+| **Linux pillar** | ✅ Complete – 10 sections, 25 flashcards, 3 quiz sets, floating ring, lightbox |
 | **Security / Scripting / Databases** | 🔒 Locked – placeholders only |
 | **Phase 2 pillars** | 🔒 Locked – binary completion via modal; no study content yet |
-| **Homepage modal** | ✅ Fully functional |
+| **Homepage modal** | ✅ Fully functional with 7 tabs |
 | **Progress rings** | ✅ Phase1, Phase2, Overall, floating rings update correctly |
 | **Sidebar progress** | ✅ Shows completion % for Networking & Linux |
 | **Roadmap & cards** | ✅ Dynamically generated |
 | **Lightbox** | ✅ Works on both pillar pages |
+| **Toast System** | ✅ Flexbox container with multiple toast support |
+| **Color Themes** | ✅ 25 themes with preview, apply, and reset |
+| **Custom Color Editor** | ✅ Tab7 with hex inputs, color pickers, HSL sliders, presets |
+| **Font Settings** | ✅ Font family, font size, custom font loading |
+| **Appearance Controls** | ✅ Accent intensity, border radius, shadow intensity |
+| **Accessibility** | ✅ Reduced motion toggle, high contrast toggle |
+| **Import/Export** | ✅ Full settings backup/restore as JSON |
+| **Stars Advanced Settings** | ✅ Font controls, appearance controls, import/export, accessibility |
 
 ---
 
@@ -218,4 +290,3 @@ MIT – feel free to use, modify, and share.
 
 **Happy learning!**  
 🚀 *Build foundations first, then conquer the cloud.*
-
