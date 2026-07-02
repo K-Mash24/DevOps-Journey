@@ -5128,49 +5128,478 @@ renice -n 5 -p 1234              # change niceness of an already-running process
               </div>
             </div>
 
-          <!-- ══════════ SECTIONS 7-10 — PLACEHOLDERS ══════════ -->
-          <!-- Section 7 — Bash Scripting -->
-          <div class="section-divider" id="s7">
-            <div class="section-number" aria-hidden="true">
-              <svg 
-                class="nav-icon" 
-                viewBox="0 0 20 20" 
-                fill="currentColor" 
-                aria-hidden="true"
-              >
-                <path 
-                  fill-rule="evenodd" 
-                  d="M5.05 3.636a1 1 0 010 1.414 7 7 0 000 9.9 1 1 0 11-1.414 1.414 9 9 0 010-12.728 1 1 0 011.414 0zm9.9 0a1 1 0 011.414 0 9 9 0 010 12.728 1 1 0 11-1.414-1.414 7 7 0 000-9.9 1 1 0 010-1.414zM7.879 6.464a1 1 0 010 1.414 3 3 0 000 4.243 1 1 0 11-1.415 1.414 5 5 0 010-7.07 1 1 0 011.415 0zm4.242 0a1 1 0 011.415 0 5 5 0 010 7.072 1 1 0 01-1.415-1.415 3 3 0 000-4.242 1 1 0 010-1.415zM10 9a1 1 0 011 1v.01a1 1 0 11-2 0V10a1 1 0 011-1z" 
-                  clip-rule="evenodd"/>
-              </svg>
+            <!-- ====== SECTION 7 — NETWORKING COMMANDS ====== -->
+            <div class="section-divider" id="s7">
+              <div class="section-number" aria-hidden="true">
+                <svg 
+                  class="nav-icon" 
+                  viewBox="0 0 20 20" 
+                  fill="currentColor" 
+                  aria-hidden="true"
+                >
+                  <path 
+                    fill-rule="evenodd" 
+                    d="M5.05 3.636a1 1 0 010 1.414 7 7 0 000 9.9 1 1 0 11-1.414 1.414 9 9 0 010-12.728 1 1 0 011.414 0zm9.9 0a1 1 0 011.414 0 9 9 0 010 12.728 1 1 0 11-1.414-1.414 7 7 0 000-9.9 1 1 0 010-1.414zM7.879 6.464a1 1 0 010 1.414 3 3 0 000 4.243 1 1 0 11-1.415 1.414 5 5 0 010-7.07 1 1 0 011.415 0zm4.242 0a1 1 0 011.415 0 5 5 0 010 7.072 1 1 0 01-1.415-1.415 3 3 0 000-4.242 1 1 0 010-1.415zM10 9a1 1 0 011 1v.01a1 1 0 11-2 0V10a1 1 0 011-1z" 
+                    clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <h2>Networking Commands</h2>
+              <label class="section-complete-checkbox" style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+                <input type="checkbox" class="section-checkbox" data-section="7">
+                <span style="font-size: 0.7rem;">Complete</span>
+              </label>
             </div>
-            <h2>Bash Scripting</h2>
-            <label
-              class="section-complete-checkbox"
-              style="
-                margin-left: auto;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-              "
-            >
-              <input
-                type="checkbox"
-                class="section-checkbox"
-                data-section="7"
-              />
-              <span style="font-size: 0.7rem">Complete</span>
-            </label>
-          </div>
-          <div class="info-box note" style="margin: 0.5rem 0 1rem">
-            <strong>🚧 Coming soon</strong>
-            <p>
-              This section will cover shebang, variables, conditionals
-              (if/else), loops (for, while), functions, exit codes, and
-              debugging.
-            </p>
-          </div>
 
+            <!-- 1. Checking network configuration -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔍</span>Checking network configuration — <code>ip addr</code>, <code>ip link</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;"><code>ip addr</code> — show IP addresses and interfaces</h4>
+                <div class="code-block"><pre>ip addr
+            ip addr show eth0      # show one specific interface</pre></div>
+                <div class="code-block"><pre>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt;
+                link/loopback 00:00:00:00:00:00
+                inet 127.0.0.1/8
+
+            2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+                link/ether ab:cd:ef:12:34:56
+                inet 10.0.2.15/24</pre></div>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>lo</code></td><td>Loopback interface — the machine talking to itself. Always <code>127.0.0.1</code></td></tr>
+                      <tr><td><code>eth0</code></td><td>First Ethernet interface — your actual network connection</td></tr>
+                      <tr><td><code>inet</code></td><td>IPv4 address assigned to that interface</td></tr>
+                      <tr><td><code>/24</code></td><td>Subnet mask in CIDR notation</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>ip link</code> — show interface status only</h4>
+                <div class="code-block"><pre>ip link
+            ip link show eth0</pre></div>
+                <p>Shows whether each interface is <code>UP</code> or <code>DOWN</code> without IP address detail. Useful for quickly checking if a network interface is active.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Quick IP address — <code>hostname -I</code></h4>
+                <div class="code-block"><pre>hostname -I               # show all IP addresses assigned to the machine</pre></div>
+                <p>Quick way to see your machine's IP(s) without sifting through <code>ip addr</code> output.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">The old command — <code>ifconfig</code></h4>
+                <div class="info-box note"><strong>📌 Replaced by <code>ip addr</code></strong> on modern Linux but still appears in older tutorials. Know it exists, prefer <code>ip addr</code>.</div>
+              </div>
+            </div>
+
+            <!-- 2. Viewing the routing table -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🗺️</span>Viewing the routing table — <code>ip route</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <div class="code-block"><pre>ip route
+            ip route show default    # show default gateway only</pre></div>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>default via</code></td><td>Your default gateway (where traffic goes by default)</td></tr>
+                      <tr><td><code>dev eth0</code></td><td>Which interface the route uses</td></tr>
+                      <tr><td><code>src</code></td><td>Source IP address used for outgoing traffic</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="info-box tip"><strong>💡 Why it matters</strong> Knowing your routing table is essential for understanding how traffic leaves your machine and diagnosing connectivity issues.</div>
+              </div>
+            </div>
+
+            <!-- 3. ARP and neighbour tables -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔗</span>ARP and neighbour tables — <code>arp</code>, <code>ip neigh</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;"><code>arp</code> — show IP → MAC mappings</h4>
+                <div class="code-block"><pre>arp -n                    # show ARP table (IP → MAC mappings)
+            arp -d 192.168.1.1        # delete an ARP entry</pre></div>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>Address</code></td><td>IP address</td></tr>
+                      <tr><td><code>HWaddress</code></td><td>MAC address</td></tr>
+                      <tr><td><code>Iface</code></td><td>Interface the device is on</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>ip neigh</code> — modern ARP replacement</h4>
+                <div class="code-block"><pre>ip neigh                  # show neighbour table (ARP cache)
+            ip neigh flush dev eth0   # clear ARP cache on an interface</pre></div>
+                <div class="info-box tip"><strong>💡 <code>ip neigh</code></strong> is the modern replacement for <code>arp</code>. It shows the same information but with more consistent syntax with other <code>ip</code> commands. ARP tables show which MAC addresses are associated with which IPs on your local network — essential for diagnosing layer 2 issues.</div>
+              </div>
+            </div>
+
+            <!-- 4. Testing connectivity -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📡</span>Testing connectivity — <code>ping</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <p><code>ping</code> sends a small packet to a target and measures whether a response comes back and how long it takes. Uses the <strong>ICMP</strong> (Internet Control Message Protocol) protocol.</p>
+                <div class="code-block"><pre>ping google.com           # ping until Ctrl+C
+            ping -c 4 google.com      # send exactly 4 packets then stop
+            ping 127.0.0.1            # ping yourself — tests networking stack is alive
+            ping 8.8.8.8              # ping Google's DNS server by IP</pre></div>
+                <div class="code-block"><pre>PING google.com (142.250.80.46): 56 bytes
+            64 bytes from 142.250.80.46: icmp_seq=0 ttl=115 time=12.4 ms
+            64 bytes from 142.250.80.46: icmp_seq=1 ttl=115 time=11.8 ms
+
+            --- google.com ping statistics ---
+            4 packets transmitted, 4 received, 0% packet loss</pre></div>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>time=12.4 ms</code></td><td>Round-trip time — how long the packet took to go and return</td></tr>
+                      <tr><td><code>ttl=115</code></td><td>Time to Live — how many router hops the packet can survive</td></tr>
+                      <tr><td><code>0% packet loss</code></td><td>All packets arrived — connection is clean</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="info-box warning"><strong>⚠️ <code>ping</code> failing doesn't always mean a host is down.</strong> Many servers and firewalls deliberately block ICMP to prevent network mapping. A non-response to <code>ping</code> is not conclusive.</div>
+              </div>
+            </div>
+
+            <!-- 5. DNS lookups -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🌐</span>DNS lookups — <code>dig</code>, <code>nslookup</code>, <code>whois</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <p>These commands query DNS (Domain Name System) directly — resolving hostnames to IPs, checking what DNS servers return, and debugging DNS issues.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>dig</code> — the primary DNS lookup tool</h4>
+                <div class="code-block"><pre>dig google.com                  # full DNS query output
+            dig google.com +short           # just the IP address(es)
+            dig google.com MX +short        # look up mail servers (MX records)
+            dig google.com NS +short        # look up nameservers
+            dig @8.8.8.8 google.com         # query a specific DNS server (Google's)</pre></div>
+                <div class="code-block"><pre>;; ANSWER SECTION:
+            google.com.     300    IN    A    142.250.80.46
+
+            ;; Query time: 8 msec
+            ;; SERVER: 127.0.0.53#53</pre></div>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>A</code></td><td>Record type — maps a hostname to an IPv4 address</td></tr>
+                      <tr><td><code>300</code></td><td>TTL in seconds — how long this answer can be cached</td></tr>
+                      <tr><td><code>SERVER</code></td><td>Which DNS server answered the query</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>nslookup</code> — simpler alternative</h4>
+                <div class="code-block"><pre>nslookup google.com
+            nslookup google.com 8.8.8.8     # query a specific DNS server</pre></div>
+                <p><code>dig</code> gives more detail and control. <code>nslookup</code> is quicker for simple lookups. Both appear in the wild.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>whois</code> — domain ownership lookup</h4>
+                <div class="code-block"><pre>whois example.com         # show domain registration info</pre></div>
+                <div class="info-box tip"><strong>💡 Useful for</strong> investigating domain ownership and DNS troubleshooting.</div>
+              </div>
+            </div>
+
+            <!-- 6. Tracing routes -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🛤️</span>Tracing routes — <code>traceroute</code>, <code>tracepath</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <p>Shows every router hop between you and a destination — the path a packet takes across the network.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;"><code>traceroute</code> — classic tool</h4>
+                <div class="code-block"><pre>traceroute google.com</pre></div>
+                <div class="code-block"><pre>1  10.0.2.1       0.5 ms   ← your default gateway (first hop)
+            2  192.168.1.1    2.1 ms   ← your ISP's router
+            3  *  *  *                  ← hop that doesn't respond (firewall)
+            4  142.250.80.46  12.4 ms  ← destination</pre></div>
+                <p>Each row is one router hop. <code>* * *</code> means that hop didn't respond — common, not always a problem.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>tracepath</code> — no root required</h4>
+                <div class="code-block"><pre>tracepath google.com      # similar to traceroute, no root required</pre></div>
+                <div class="info-box tip"><strong>💡 <code>tracepath</code></strong> doesn't require root privileges and is often available where <code>traceroute</code> isn't. Good fallback. Useful for diagnosing where a connection breaks down. If a server is unreachable, <code>tracepath</code>/<code>traceroute</code> shows how far packets actually get.</div>
+              </div>
+            </div>
+
+            <!-- 7. Checking connections and open ports -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔌</span>Checking connections &amp; open ports — <code>ss</code>, <code>netstat</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <p>These commands show active network connections and which ports are listening for incoming traffic.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;"><code>ss</code> — the modern tool</h4>
+                <div class="code-block"><pre>ss -tuln
+            ss -tunlp                 # -p shows which process is using the port
+            ss -tun state established  # show only established connections</pre></div>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>Flag</th><th>Meaning</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>-t</code></td><td>TCP connections</td></tr>
+                      <tr><td><code>-u</code></td><td>UDP connections</td></tr>
+                      <tr><td><code>-l</code></td><td>Listening sockets only</td></tr>
+                      <tr><td><code>-n</code></td><td>Show port numbers, not service names</td></tr>
+                      <tr><td><code>-p</code></td><td>Show process using the socket</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="code-block"><pre>Netid  State   Local Address:Port
+            tcp    LISTEN  0.0.0.0:22         ← SSH listening on all interfaces (port 22)
+            tcp    LISTEN  127.0.0.1:5432     ← PostgreSQL listening locally only</pre></div>
+                <p><code>0.0.0.0</code> = accessible from outside. <code>127.0.0.1</code> = local only.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>netstat</code> — the older equivalent</h4>
+                <div class="code-block"><pre>netstat -tuln     # same flags, same output style</pre></div>
+                <div class="info-box note"><strong>📌 <code>ss</code></strong> is the modern replacement and is faster, but <code>netstat</code> still appears everywhere. Know both.</div>
+              </div>
+            </div>
+
+            <!-- 8. Transferring data -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📥</span>Transferring data — <code>curl</code>, <code>wget</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;"><code>curl</code> — transfer data to/from a URL</h4>
+                <div class="code-block"><pre>curl https://example.com                                      # print page HTML to screen
+            curl -o file.html https://example.com                         # save output to a file
+            curl -I https://example.com                                   # show HTTP headers only
+            curl -X POST -d '{"key":"value"}' https://api.example.com    # send a POST request
+            curl -L https://example.com                                   # follow redirects
+            curl -H "Header: value" URL                                   # add custom headers
+            curl -s https://api.example                                   # silent mode
+            curl -v https://example.com                                   # verbose output (debugging)
+            curl --max-time 10 URL                                        # timeout after 10 seconds</pre></div>
+                <p>The Swiss army knife of HTTP from the command line — used constantly for testing APIs, downloading files, and debugging web requests.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>wget</code> — download files</h4>
+                <div class="code-block"><pre>wget https://example.com/file.zip                   # download a file
+            wget -O output.zip https://example.com/file.zip     # download with a custom filename
+            wget -q https://example.com/file.zip                # quiet mode, no progress output
+            wget -r https://example.com                         # recursive download</pre></div>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>Tool</th><th>Best for</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>curl</code></td><td>API testing, inspecting HTTP responses, sending data</td></tr>
+                      <tr><td><code>wget</code></td><td>Downloading files, recursive site downloads</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- 9. SSH -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔑</span>SSH — connecting to remote machines</div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <p><strong>SSH</strong> (Secure Shell) is how you connect to and control a remote Linux machine securely over a network.</p>
+                <div class="code-block"><pre>ssh user@hostname            # connect to a remote machine
+            ssh user@192.168.1.10        # connect by IP address
+            ssh -p 2222 user@hostname    # connect on a non-standard port
+            exit                         # disconnect from the remote session</pre></div>
+                <p>On first connection, SSH asks you to confirm the remote machine's fingerprint — verifying the server's identity. Type <code>yes</code> to accept.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">SSH keys — the right way to authenticate</h4>
+                <p>Passwords work but SSH keys are the standard in practice — more secure, no typing a password every time.</p>
+                <div class="code-block"><pre>ssh-keygen -t ed25519 -C "your@email.com"    # generate a key pair
+            ssh-copy-id user@hostname                     # copy your public key to the remote server</pre></div>
+                <p>Once the public key is on the server, SSH authenticates automatically.</p>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Key files</h4>
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>~/.ssh/id_ed25519</code></td><td>Your <strong>private</strong> key — never share this</td></tr>
+                      <tr><td><code>~/.ssh/id_ed25519.pub</code></td><td>Your <strong>public</strong> key — goes on remote servers</td></tr>
+                      <tr><td><code>~/.ssh/known_hosts</code></td><td>Fingerprints of servers you've connected to before</td></tr>
+                      <tr><td><code>~/.ssh/config</code></td><td>Shortcuts for SSH connections</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>~/.ssh/config</code> — connection shortcuts</h4>
+                <div class="code-block"><pre>Host myserver
+                HostName 192.168.1.10
+                User codespace
+                Port 22
+                IdentityFile ~/.ssh/id_ed25519</pre></div>
+                <p>With this saved, <code>ssh myserver</code> replaces the full command. Essential when managing multiple servers.</p>
+              </div>
+            </div>
+
+            <!-- 10. Network service management -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">⚡</span>Network service management — <code>systemctl</code></div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <p>When network changes don't take effect, restarting the networking service is often the solution.</p>
+                <div class="code-block"><pre>systemctl restart networking    # restart networking service
+            systemctl status NetworkManager # check NetworkManager status</pre></div>
+                <div class="info-box tip"><strong>💡 Quick fix</strong> If network changes aren't applied after editing config files, restarting the service usually resolves the issue.</div>
+              </div>
+            </div>
+
+            <!-- 11. Quick reference -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">📋</span>Quick reference — Networking Commands</div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body">
+                <div class="table-wrapper">
+                  <table class="data-table">
+                    <thead><tr><th>What you want</th><th>Command</th></tr></thead>
+                    <tbody>
+                      <tr><td>Show IP addresses</td><td><code>ip addr</code></td></tr>
+                      <tr><td>Show interface status</td><td><code>ip link</code></td></tr>
+                      <tr><td>Quick IP address(es)</td><td><code>hostname -I</code></td></tr>
+                      <tr><td>Show routing table</td><td><code>ip route</code></td></tr>
+                      <tr><td>Show default gateway</td><td><code>ip route show default</code></td></tr>
+                      <tr><td>Show ARP table</td><td><code>arp -n</code> or <code>ip neigh</code></td></tr>
+                      <tr><td>Clear ARP cache</td><td><code>ip neigh flush dev eth0</code></td></tr>
+                      <tr><td>Test connectivity</td><td><code>ping -c 4 hostname</code></td></tr>
+                      <tr><td>DNS lookup (full)</td><td><code>dig hostname</code></td></tr>
+                      <tr><td>DNS lookup (quick)</td><td><code>dig hostname +short</code></td></tr>
+                      <tr><td>Query specific DNS server</td><td><code>dig @8.8.8.8 hostname</code></td></tr>
+                      <tr><td>Domain ownership lookup</td><td><code>whois domain.com</code></td></tr>
+                      <tr><td>Trace route to host</td><td><code>traceroute hostname</code></td></tr>
+                      <tr><td>Trace route (no root)</td><td><code>tracepath hostname</code></td></tr>
+                      <tr><td>Show listening ports</td><td><code>ss -tuln</code></td></tr>
+                      <tr><td>Show listening ports + processes</td><td><code>ss -tulnp</code></td></tr>
+                      <tr><td>Show all connections</td><td><code>ss -tun</code></td></tr>
+                      <tr><td>Download/test URL</td><td><code>curl https://url</code></td></tr>
+                      <tr><td>Save HTTP response</td><td><code>curl -o file https://url</code></td></tr>
+                      <tr><td>Show HTTP headers only</td><td><code>curl -I https://url</code></td></tr>
+                      <tr><td>Follow redirects</td><td><code>curl -L https://url</code></td></tr>
+                      <tr><td>Download a file</td><td><code>wget https://url</code></td></tr>
+                      <tr><td>Connect via SSH</td><td><code>ssh user@hostname</code></td></tr>
+                      <tr><td>Generate SSH key pair</td><td><code>ssh-keygen -t ed25519</code></td></tr>
+                      <tr><td>Copy public key to server</td><td><code>ssh-copy-id user@hostname</code></td></tr>
+                      <tr><td>Restart networking service</td><td><code>systemctl restart networking</code></td></tr>
+                      <tr><td>Check NetworkManager status</td><td><code>systemctl status NetworkManager</code></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- 12. Key mental models -->
+            <div class="accordion" data-searchable>
+              <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+                <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🧠</span>Key mental models</div>
+                <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+              </button>
+              <div class="accordion-body accordion-body-cards">
+                <div class="mental-model-grid">
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">📡</span>
+                      <span class="mental-title">IP & Interface Basics</span>
+                    </div>
+                    <div class="mental-card-body"><code>ip addr</code> shows interfaces and IPs. <code>ip link</code> shows interface status only. <code>ifconfig</code> is the old equivalent. <code>hostname -I</code> gives quick IPs.</div>
+                  </div>
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">🗺️</span>
+                      <span class="mental-title">Routing & ARP</span>
+                    </div>
+                    <div class="mental-card-body"><code>ip route</code> shows where traffic goes. The default gateway is where all outbound traffic is sent. <code>arp</code>/<code>ip neigh</code> shows IP → MAC mappings for devices on your local network.</div>
+                  </div>
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">📡</span>
+                      <span class="mental-title">Testing Reachability</span>
+                    </div>
+                    <div class="mental-card-body"><code>ping</code> tests reachability using ICMP — but a non-response doesn't prove a host is down. Firewalls block ICMP routinely.</div>
+                  </div>
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">🌐</span>
+                      <span class="mental-title">DNS Debugging</span>
+                    </div>
+                    <div class="mental-card-body"><code>dig</code> is the right tool for DNS debugging. <code>nslookup</code> is the simpler alternative. <code>whois</code> shows domain ownership.</div>
+                  </div>
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">🛤️</span>
+                      <span class="mental-title">Tracing Paths</span>
+                    </div>
+                    <div class="mental-card-body"><code>traceroute</code> shows the path packets take hop by hop — used to diagnose where connectivity breaks. <code>tracepath</code> is the no-root alternative.</div>
+                  </div>
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">🔌</span>
+                      <span class="mental-title">Ports & Processes</span>
+                    </div>
+                    <div class="mental-card-body"><code>ss -tuln</code> shows what's listening on which ports. <code>0.0.0.0</code> = external, <code>127.0.0.1</code> = local only. Add <code>-p</code> to see which process owns the port.</div>
+                  </div>
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">📥</span>
+                      <span class="mental-title">curl vs wget</span>
+                    </div>
+                    <div class="mental-card-body"><code>curl</code> is for interacting with URLs and APIs. <code>wget</code> is for downloading files. <code>curl -v</code> is your best friend for debugging HTTP issues.</div>
+                  </div>
+                  
+                  <div class="mental-card">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">🔑</span>
+                      <span class="mental-title">SSH Keys</span>
+                    </div>
+                    <div class="mental-card-body">SSH keys are the standard authentication method — private key stays on your machine, public key goes on the server. <code>~/.ssh/config</code> saves you from typing long commands.</div>
+                  </div>
+                  
+                  <div class="mental-card mental-card-full">
+                    <div class="mental-card-header">
+                      <span class="mental-icon">⚡</span>
+                      <span class="mental-title">Service Troubleshooting</span>
+                    </div>
+                    <div class="mental-card-body">When network changes don't take effect, <code>systemctl restart networking</code> or <code>systemctl restart NetworkManager</code> often resolves the issue.</div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
+          <!-- ══════════ SECTIONS 8-10 — PLACEHOLDERS ══════════ -->
           <!-- Section 8 — Systemd -->
           <div class="section-divider" id="s8">
             <div class="section-number" aria-hidden="true">8</div>
