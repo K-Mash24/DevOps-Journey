@@ -3064,7 +3064,7 @@ pre {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-color);
-  max-width: 600px;
+  max-width: 70%;
   width: 90%;
   max-height: 85vh;
   overflow-y: auto;

@@ -580,9 +580,9 @@
       const toast = document.createElement("div");
       toast.className = "toast-item global-toast";
       toast.innerHTML = `<span class="toast-message">${message}</span>`;
-      toast.style.cssText = `
-        // 
-      `;
+      // toast.style.cssText = `
+      //   // 
+      // `;
       document.body.appendChild(toast);
       setTimeout(() => {
         toast.style.opacity = "0";
@@ -911,7 +911,7 @@
 
   console.log("✨ Starry background initialized (responsive)");
 
-  window.showPresetToast = showPresetToast;
+  // window.showPresetToast = showPresetToast;
 
   // ============================================================
   // ADVANCED SETTINGS – Fonts, Import, Export
@@ -919,68 +919,95 @@
 
   // --- Font Settings ---
   const FONT_DEFAULTS = {
-    family: "Syne",
+    family: 'Syne',
     size: 16,
-    customURL: "",
+    customURL: '',
   };
 
   let fontSettings = { ...FONT_DEFAULTS };
 
+  // --- Helper: Format font name (auto-capitalize) ---
+  function formatFontName(name) {
+    return name
+      .split(/\s+/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  // --- Load Font Settings ---
   function loadFontSettings() {
-    const saved = localStorage.getItem("gc-font-settings");
-    if (saved) {
-      try {
+    try {
+      const saved = localStorage.getItem('gc-font-settings');
+      if (saved) {
         const parsed = JSON.parse(saved);
         fontSettings = { ...FONT_DEFAULTS, ...parsed };
-      } catch (e) {
+      } else {
         fontSettings = { ...FONT_DEFAULTS };
       }
-    } else {
+    } catch (e) {
       fontSettings = { ...FONT_DEFAULTS };
     }
     applyFontSettings();
   }
 
+  // --- Save Font Settings ---
   function saveFontSettings() {
-    localStorage.setItem("gc-font-settings", JSON.stringify(fontSettings));
-    applyFontSettings();
+    try {
+      localStorage.setItem('gc-font-settings', JSON.stringify(fontSettings));
+    } catch (e) {
+      console.warn('Failed to save font settings:', e);
+    }
   }
 
+  // --- Apply Font Settings ---
   function applyFontSettings() {
     const html = document.documentElement;
     const body = document.body;
 
-    if (fontSettings.family === "custom" && fontSettings.customURL) {
+    if (fontSettings.family === 'custom' && fontSettings.customURL) {
       loadCustomFont(fontSettings.customURL);
-    } else if (fontSettings.family !== "custom") {
-      html.style.fontFamily = fontSettings.family + ", sans-serif";
-      body.style.fontFamily = fontSettings.family + ", sans-serif";
+    } else if (fontSettings.family !== 'custom') {
+      html.style.fontFamily = fontSettings.family + ', sans-serif';
+      body.style.fontFamily = fontSettings.family + ', sans-serif';
+      html.style.setProperty('--font-body', fontSettings.family + ', sans-serif');
     }
 
-    html.style.fontSize = fontSettings.size + "px";
-    body.style.fontSize = fontSettings.size + "px";
-
-    html.style.setProperty("--font-body", fontSettings.family + ", sans-serif");
-    html.style.setProperty("--font-size-base", fontSettings.size + "px");
+    html.style.fontSize = fontSettings.size + 'px';
+    body.style.fontSize = fontSettings.size + 'px';
+    html.style.setProperty('--font-size-base', fontSettings.size + 'px');
 
     updateFontUI();
   }
 
+  // --- Load Custom Font ---
   function loadCustomFont(url) {
-    let cleanUrl = url.trim().replace(/^['"]|['"]$/g, "");
+    let cleanUrl = url.trim().replace(/^['"]|['"]$/g, '');
+
+    // Auto-capitalize single font name
+    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://') && !cleanUrl.includes(' ')) {
+      const formatted = cleanUrl
+        .split(/\s+/)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('+');
+      if (formatted !== cleanUrl) {
+        const displayName = formatted.replace(/\+/g, ' ');
+        showToast(`🔤 Auto-corrected to "${displayName}"`, 'info');
+      }
+      cleanUrl = formatted;
+    }
 
     let fontUrl = cleanUrl;
-    if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
       fontUrl = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(cleanUrl)}:wght@400;500;600;700&display=swap`;
     }
 
-    const linkId = "custom-font-link";
+    const linkId = 'custom-font-link';
     let link = document.getElementById(linkId);
 
     if (!link) {
-      link = document.createElement("link");
+      link = document.createElement('link');
       link.id = linkId;
-      link.rel = "stylesheet";
+      link.rel = 'stylesheet';
       link.href = fontUrl;
       document.head.appendChild(link);
     } else {
@@ -989,146 +1016,219 @@
 
     link.onload = function () {
       let fontName = cleanUrl;
-      if (cleanUrl.includes("family=")) {
-        fontName = cleanUrl.split("family=")[1].split("&")[0];
+      if (cleanUrl.includes('family=')) {
+        fontName = cleanUrl.split('family=')[1].split('&')[0];
       }
+      fontName = fontName.replace(/\+/g, ' ');
       document.documentElement.style.fontFamily = `'${fontName}', sans-serif`;
-      showToast(`✅ Font "${fontName}" loaded successfully`, "success");
+      showToast(`✅ Font "${fontName}" loaded successfully`, 'success');
     };
 
     link.onerror = function () {
-      showToast(
-        "❌ Failed to load custom font. Please check the URL.",
-        "error",
-      );
+      showToast('❌ Failed to load custom font. Please check the URL or font name.', 'error');
     };
   }
 
+  // --- Update Font UI ---
   function updateFontUI() {
-    const familySelect = document.getElementById("fontFamilySelect");
-    const customInput = document.getElementById("customFontInput");
-    const customURL = document.getElementById("customFontURL");
-    const sizeSlider = document.getElementById("fontSizeSlider");
-    const sizeDisplay = document.getElementById("fontSizeDisplay");
+    const familySelect = document.getElementById('fontFamilySelect');
+    const customInput = document.getElementById('customFontInput');
+    const customURL = document.getElementById('customFontURL');
+    const sizeSlider = document.getElementById('fontSizeSlider');
+    const sizeDisplay = document.getElementById('fontSizeDisplay');
 
     if (familySelect) {
-      familySelect.value = fontSettings.family;
-      if (customInput) {
-        customInput.style.display =
-          fontSettings.family === "custom" ? "flex" : "none";
-      }
+      familySelect.value = fontSettings.family || 'Syne';
+    }
+    if (customInput) {
+      customInput.style.display = fontSettings.family === 'custom' ? 'flex' : 'none';
     }
     if (customURL) {
-      customURL.value = fontSettings.customURL || "";
+      customURL.value = fontSettings.customURL || '';
     }
     if (sizeSlider) {
-      sizeSlider.value = fontSettings.size;
-      if (sizeDisplay) sizeDisplay.textContent = fontSettings.size + "px";
+      sizeSlider.value = fontSettings.size || 16;
+    }
+    if (sizeDisplay) {
+      sizeDisplay.textContent = (fontSettings.size || 16) + 'px';
     }
   }
 
+  // --- Attach Advanced Events ---
   function attachAdvancedEvents() {
-    const familySelect = document.getElementById("fontFamilySelect");
-    const customInput = document.getElementById("customFontInput");
-    const customURL = document.getElementById("customFontURL");
-    const loadCustomBtn = document.getElementById("loadCustomFontBtn");
-    const sizeSlider = document.getElementById("fontSizeSlider");
-    const sizeDisplay = document.getElementById("fontSizeDisplay");
-    const exportBtn = document.getElementById("exportSettingsBtn");
-    const importBtn = document.getElementById("importSettingsBtn");
-    const importFile = document.getElementById("importFileInput");
+    const familySelect = document.getElementById('fontFamilySelect');
+    const customInput = document.getElementById('customFontInput');
+    const customURL = document.getElementById('customFontURL');
+    const loadCustomBtn = document.getElementById('loadCustomFontBtn');
+    const sizeSlider = document.getElementById('fontSizeSlider');
+    const sizeDisplay = document.getElementById('fontSizeDisplay');
+    const exportBtn = document.getElementById('exportSettingsBtn');
+    const importBtn = document.getElementById('importSettingsBtn');
+    const importFile = document.getElementById('importFileInput');
 
+    // --- Font Family Dropdown ---
     if (familySelect) {
-      familySelect.addEventListener("change", function () {
-        const val = this.value;
-        fontSettings.family = val;
-        if (customInput) {
-          customInput.style.display = val === "custom" ? "flex" : "none";
-        }
-        if (val === "custom" && customURL && customURL.value.trim()) {
-          loadCustomFont(customURL.value.trim());
-        } else if (val !== "custom") {
-          saveFontSettings();
-        } else {
-          saveFontSettings();
-        }
-      });
+      // Remove old listeners to prevent duplicates
+      familySelect.removeEventListener('change', handleFamilyChange);
+      familySelect.addEventListener('change', handleFamilyChange);
     }
 
+    function handleFamilyChange() {
+      const val = this.value;
+      fontSettings.family = val;
+      if (customInput) {
+        customInput.style.display = val === 'custom' ? 'flex' : 'none';
+      }
+      if (val === 'custom' && customURL && customURL.value.trim()) {
+        loadCustomFont(customURL.value.trim());
+      }
+      saveFontSettings();
+      applyFontSettings();
+    }
+
+    // --- Load Custom Font Button ---
     if (loadCustomBtn && customURL) {
-      loadCustomBtn.addEventListener("click", function () {
-        let url = customURL.value.trim();
-        if (url) {
-          url = url.replace(/^['"]|['"]$/g, "");
-
-          if (
-            !url.startsWith("http://") &&
-            !url.startsWith("https://") &&
-            !url.includes("fonts.googleapis.com")
-          ) {
-            if (!url.includes(" ")) {
-              url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(url)}:wght@400;500;600;700&display=swap`;
-            }
-          }
-
-          fontSettings.customURL = url;
-          fontSettings.family = "custom";
-          saveFontSettings();
-
-          const familySelect = document.getElementById("fontFamilySelect");
-          if (familySelect) familySelect.value = "custom";
-          const customInput = document.getElementById("customFontInput");
-          if (customInput) customInput.style.display = "flex";
-
-          loadCustomFont(url);
-        } else {
-          showToast("Please enter a valid font URL or font name", "error");
-        }
-      });
+      loadCustomBtn.removeEventListener('click', handleLoadCustom);
+      loadCustomBtn.addEventListener('click', handleLoadCustom);
     }
 
+    function handleLoadCustom() {
+      let url = customURL.value.trim();
+      if (!url) {
+        showToast('Please enter a font URL or font name', 'error');
+        return;
+      }
+      url = url.replace(/^['"]|['"]$/g, '');
+
+      // Auto-capitalize single font name
+      if (!url.startsWith('http://') && !url.startsWith('https://') && !url.includes(' ')) {
+        const formatted = url
+          .split(/\s+/)
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join('+');
+        if (formatted !== url) {
+          const displayName = formatted.replace(/\+/g, ' ');
+          showToast(`🔤 Auto-corrected to "${displayName}"`, 'info');
+        }
+        url = formatted;
+      }
+
+      // Auto-switch to Custom
+      if (familySelect) {
+        familySelect.value = 'custom';
+      }
+      if (customInput) {
+        customInput.style.display = 'flex';
+      }
+
+      fontSettings.customURL = url;
+      fontSettings.family = 'custom';
+      saveFontSettings();
+      loadCustomFont(url);
+    }
+
+    // --- Enter Key Support on Custom URL ---
+    if (customURL) {
+      customURL.removeEventListener('keydown', handleURLEnter);
+      customURL.addEventListener('keydown', handleURLEnter);
+    }
+
+    function handleURLEnter(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (loadCustomBtn) {
+          loadCustomBtn.click();
+        }
+      }
+    }
+
+    // --- Font Size Slider ---
     if (sizeSlider) {
-      sizeSlider.addEventListener("input", function () {
+      sizeSlider.removeEventListener('input', handleSizeInput);
+      sizeSlider.removeEventListener('change', handleSizeChange);
+      sizeSlider.addEventListener('input', handleSizeInput);
+      sizeSlider.addEventListener('change', handleSizeChange);
+    }
+
+    function handleSizeInput() {
+      const val = parseInt(this.value);
+      if (sizeDisplay) {
+        sizeDisplay.textContent = val + 'px';
+      }
+      fontSettings.size = val;
+      document.documentElement.style.fontSize = val + 'px';
+    }
+
+    function handleSizeChange() {
+      const val = parseInt(this.value);
+      fontSettings.size = val;
+      saveFontSettings();
+      applyFontSettings();
+      showToast(`✅ Font size set to ${val}px`, 'success');
+    }
+
+    // --- Enter Key Support on Size Slider ---
+    if (sizeSlider) {
+      sizeSlider.removeEventListener('keydown', handleSizeEnter);
+      sizeSlider.addEventListener('keydown', handleSizeEnter);
+    }
+
+    function handleSizeEnter(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
         const val = parseInt(this.value);
-        if (sizeDisplay) sizeDisplay.textContent = val + "px";
         fontSettings.size = val;
-        document.documentElement.style.fontSize = val + "px";
-      });
-      sizeSlider.addEventListener("change", function () {
         saveFontSettings();
-      });
-    }
-
-    if (exportBtn) {
-      exportBtn.addEventListener("click", exportAllSettings);
-    }
-
-    if (importBtn && importFile) {
-      importBtn.addEventListener("click", function () {
-        importFile.click();
-      });
-      importFile.addEventListener("change", function (e) {
-        if (this.files && this.files[0]) {
-          importAllSettings(this.files[0]);
-          this.value = "";
+        applyFontSettings();
+        if (sizeDisplay) {
+          sizeDisplay.textContent = val + 'px';
         }
-      });
+        showToast(`✅ Font size set to ${val}px`, 'success');
+      }
     }
+
+    // --- Export Settings ---
+    if (exportBtn) {
+      exportBtn.removeEventListener('click', exportAllSettings);
+      exportBtn.addEventListener('click', exportAllSettings);
+    }
+
+    // --- Import Settings ---
+    if (importBtn && importFile) {
+      importBtn.removeEventListener('click', handleImportClick);
+      importBtn.addEventListener('click', handleImportClick);
+
+      importFile.removeEventListener('change', handleImportFile);
+      importFile.addEventListener('change', handleImportFile);
+    }
+
+    function handleImportClick() {
+      if (importFile) {
+        importFile.click();
+      }
+    }
+
+    function handleImportFile(e) {
+      if (this.files && this.files[0]) {
+        importAllSettings(this.files[0]);
+        this.value = '';
+      }
+    }
+
+    // --- Initial UI Sync ---
+    updateFontUI();
   }
 
-  // --- Import / Export ---
+  // --- Import / Export Functions ---
   function getAllSettings() {
     return {
-      version: "1.0",
+      version: '1.0',
       exportDate: new Date().toISOString(),
       settings: {
-        colorTheme: localStorage.getItem("gc-color-theme") || "indigo",
-        starPreset: localStorage.getItem("star-preset") || "calm",
-        starCustom: JSON.parse(localStorage.getItem("star-custom") || "{}"),
-        font: JSON.parse(
-          localStorage.getItem("gc-font-settings") ||
-            JSON.stringify(FONT_DEFAULTS),
-        ),
+        colorTheme: localStorage.getItem('gc-color-theme') || 'indigo',
+        starPreset: localStorage.getItem('star-preset') || 'calm',
+        starCustom: JSON.parse(localStorage.getItem('star-custom') || '{}'),
+        font: fontSettings,
       },
     };
   }
@@ -1136,50 +1236,53 @@
   function applyAllSettings(data) {
     if (!data || !data.settings) return;
     const s = data.settings;
-    if (
-      s.colorTheme &&
-      window.COLOR_THEMES &&
-      window.COLOR_THEMES[s.colorTheme]
-    ) {
-      localStorage.setItem("gc-color-theme", s.colorTheme);
-      if (typeof window.applyTheme === "function") {
+
+    if (s.colorTheme && window.COLOR_THEMES && window.COLOR_THEMES[s.colorTheme]) {
+      localStorage.setItem('gc-color-theme', s.colorTheme);
+      if (typeof window.applyTheme === 'function') {
         window.applyTheme(s.colorTheme, false);
       }
     }
-    if (s.starPreset) {
-      localStorage.setItem("star-preset", s.starPreset);
-      if (typeof window.applyStarPreset === "function") {
-        window.applyStarPreset(s.starPreset);
-      }
+
+    if (s.starPreset && typeof window.applyStarPreset === 'function') {
+      window.applyStarPreset(s.starPreset);
     }
+
     if (s.starCustom && Object.keys(s.starCustom).length > 0) {
-      localStorage.setItem("star-custom", JSON.stringify(s.starCustom));
-      if (typeof window.reloadStars === "function") {
+      localStorage.setItem('star-custom', JSON.stringify(s.starCustom));
+      if (typeof window.reloadStars === 'function') {
         window.reloadStars();
       }
     }
+
     if (s.font) {
-      localStorage.setItem("gc-font-settings", JSON.stringify(s.font));
       fontSettings = { ...FONT_DEFAULTS, ...s.font };
+      localStorage.setItem('gc-font-settings', JSON.stringify(fontSettings));
       applyFontSettings();
     }
-    showToast("✅ All settings imported successfully", "success");
+
+    showToast('✅ All settings imported successfully', 'success');
     setTimeout(() => location.reload(), 1500);
   }
 
   function exportAllSettings() {
-    const data = getAllSettings();
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `devops-journey-settings-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast("📤 Settings exported successfully", "success");
+    try {
+      const data = getAllSettings();
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `devops-journey-settings-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('📤 Settings exported successfully', 'success');
+    } catch (e) {
+      showToast('❌ Failed to export settings', 'error');
+      console.error(e);
+    }
   }
 
   function importAllSettings(file) {
@@ -1188,37 +1291,44 @@
       try {
         const data = JSON.parse(e.target.result);
         if (!data.settings) {
-          showToast("❌ Invalid settings file", "error");
+          showToast('❌ Invalid settings file', 'error');
           return;
         }
         applyAllSettings(data);
       } catch (err) {
-        showToast("❌ Failed to parse settings file", "error");
+        showToast('❌ Failed to parse settings file', 'error');
+        console.error(err);
       }
     };
     reader.readAsText(file);
   }
 
-  // --- Initialize Fonts ---
-  loadFontSettings();
+  // --- Initialize Advanced Settings ---
+  function initAdvancedSettings() {
+    loadFontSettings();
 
-  if (
-    document.readyState === "complete" ||
-    document.readyState === "interactive"
-  ) {
+    // Try to attach events immediately
     attachAdvancedEvents();
-  } else {
-    document.addEventListener("DOMContentLoaded", attachAdvancedEvents);
+
+    // Also re-attach when tab5 is opened
+    document.addEventListener('click', function (e) {
+      const tabBtn = e.target.closest('.tab-button[data-tab="tab5"]');
+      if (tabBtn) {
+        setTimeout(function () {
+          attachAdvancedEvents();
+        }, 150);
+      }
+    });
   }
 
-  document.addEventListener("click", function (e) {
-    const tabBtn = e.target.closest('.tab-button[data-tab="tab5"]');
-    if (tabBtn) {
-      setTimeout(attachAdvancedEvents, 100);
-    }
-  });
+  // --- Initialize ---
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initAdvancedSettings();
+  } else {
+    document.addEventListener('DOMContentLoaded', initAdvancedSettings);
+  }
 
-  // Expose font functions globally
+  // --- Expose Advanced Settings Globally ---
   window.fontSettings = fontSettings;
   window.loadFontSettings = loadFontSettings;
   window.saveFontSettings = saveFontSettings;
@@ -1227,6 +1337,9 @@
   window.importAllSettings = importAllSettings;
   window.getAllSettings = getAllSettings;
   window.applyAllSettings = applyAllSettings;
+  window.initAdvancedSettings = initAdvancedSettings;
+  window.attachAdvancedEvents = attachAdvancedEvents;
+  window.formatFontName = formatFontName;
 
   // ============================================================
   // EXPANDED ADVANCED SETTINGS
@@ -1699,7 +1812,7 @@
       window.reloadStars();
     }
     
-    showPresetToast(presetName);
+    // showPresetToast(presetName);
     console.log('✨ Star preset applied:', presetName);
   }
 
@@ -1832,7 +1945,7 @@
           window.reloadStars();
         }
 
-        showPresetToast("custom");
+        // showPresetToast("custom");
       });
     }
 
