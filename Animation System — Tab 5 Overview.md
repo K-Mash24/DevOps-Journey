@@ -1,6 +1,3 @@
-# 📄 Animation System — Tab 5 Overview
-
-```markdown
 # 🎨 Animation System — Tab 5 Overview
 
 ## 📋 Table of Contents
