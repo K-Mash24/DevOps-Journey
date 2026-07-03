@@ -1271,6 +1271,59 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     }
   }
 
+  // ============================================================
+  // KEYBOARD SHORTCUTS – Pillar Page Navigation (1-9, 0)
+  // ============================================================
+
+  function initPillarKeyboardShortcuts() {
+    // Only run on pages that have section navigation (pillar pages)
+    // Check for the existence of #s1 or #overview which are unique to pillar pages
+    const hasSections = document.getElementById('s1') || document.getElementById('overview');
+    if (!hasSections) return;
+
+    document.addEventListener('keydown', function(e) {
+      // Ignore if the user is typing in an input, textarea, or select
+      const tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+        return;
+      }
+
+      const key = e.key;
+
+      // Check for number keys 1-9 → scroll to #s1 ... #s9
+      if (key >= '1' && key <= '9') {
+        const targetId = `s${key}`;
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Optional: highlight the section briefly
+          targetElement.style.transition = 'background 0.3s ease';
+          targetElement.style.background = 'var(--pillar-color-light)';
+          setTimeout(() => {
+            targetElement.style.background = '';
+          }, 1500);
+        }
+        return;
+      }
+
+      // Check for '0' key → go to overview
+      if (key === '0') {
+        const targetElement = document.getElementById('overview');
+        if (targetElement) {
+          e.preventDefault();
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Optional: highlight the section briefly
+          targetElement.style.transition = 'background 0.3s ease';
+          targetElement.style.background = 'var(--pillar-color-light)';
+          setTimeout(() => {
+            targetElement.style.background = '';
+          }, 1500);
+        }
+      }
+    });
+  }
+
   function ensureModalExists() {
     if (document.getElementById('progressModal')) return;
     
@@ -2344,6 +2397,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   renderPhase1ModalScroller();
   renderPhase2ModalScroller();
   initModalAndFloatingRing();
+  initPillarKeyboardShortcuts();
 
   window.addEventListener('storage', () => { updateAllUI(); renderPhase1ModalScroller(); renderPhase2ModalScroller(); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) updateAllUI(); });
