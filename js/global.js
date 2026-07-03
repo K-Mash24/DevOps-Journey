@@ -1350,17 +1350,29 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           <div class="tab-pane" id="tab4">
             <div id="backupContainer" class="backup-tab-content"></div>
           </div>
-          <!-- ✨ NEW: Stars tab pane -->
+          <!-- ============================================================ -->
+          <!-- TAB 5: STARS, SNOW CUSTOMIZATION & ADVANCED SETTINGS         -->
+          <!-- ============================================================ -->
           <div class="tab-pane" id="tab5">
-            <div class="star-presets-container">
-              <!-- Outer collapsible container (open by default) -->
+            <div class="stars-tab-container">
+              
+              <!-- 🎯 Animation Mode Selector (Top) -->
+              <div class="mode-selector-top">
+                <label for="snowModeSelect">🎯 Animation Mode:</label>
+                <select id="snowModeSelect">
+                  <option value="stars">✨ Stars Only</option>
+                  <option value="snow">❄️ Snow Only</option>
+                  <option value="both">🌌 Both</option>
+                </select>
+                <span class="mode-hint">Choose what shows on the background</span>
+              </div>
+
+              <!-- ✨ Starfield Section -->
               <details class="star-container" open>
                 <summary>✨ Starfield Presets</summary>
-                <div>
-                  <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-                    Choose a starfield style or customize your own. Changes apply instantly.
-                  </p>
-                  <!-- Preset Buttons -->
+                <div class="star-content">
+                  <p class="star-description">Choose a starfield style or customize your own. Changes apply instantly.</p>
+                  
                   <div class="star-preset-grid">
                     <button class="star-preset-btn active" data-preset="calm">
                       <span class="preset-icon">🌙</span>
@@ -1394,11 +1406,10 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                     </button>
                   </div>
 
-                  <!-- Customize (collapsible, closed by default) -->
                   <details class="star-customize">
                     <summary>⚙️ Customize</summary>
                     <div class="star-custom-controls">
-                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem;">
+                      <div class="custom-controls-grid">
                         <div class="star-control-group">
                           <label>Star Count: <span id="starCountDisplay">150</span></label>
                           <input type="range" id="starCountSlider" min="50" max="400" value="150" step="10">
@@ -1415,23 +1426,92 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                           <label>Connection Distance: <span id="connectionDistanceDisplay">350</span></label>
                           <input type="range" id="connectionDistanceSlider" min="0" max="600" value="350" step="10">
                         </div>
-                        <div class="star-control-group">
-                          <label style="font-size: 0.75rem;">Brightness: <span id="brightnessDisplay">100%</span></label>
+                        <div class="star-control-group full-width">
+                          <label>Brightness: <span id="brightnessDisplay">100%</span></label>
                           <input type="range" id="brightnessSlider" min="20" max="200" value="100" step="1">
                         </div>
                       </div>
-                      <button class="btn btn-primary btn-sm" id="applyCustomStars" style="margin-top: 0.75rem;">Apply Custom</button>
+                      <button class="btn btn-primary btn-sm" id="applyCustomStars">Apply Custom</button>
                     </div>
                   </details>
                 </div>
               </details>
 
+              <!-- ❄️ Snowfield Section -->
+              <details class="snow-container">
+                <summary>❄️ Snowfield Presets</summary>
+                <div class="snow-content">
+                  <p class="snow-description">Choose a snow style or customize your own. Changes apply instantly.</p>
+                  
+                  <div class="snow-preset-grid">
+                    <button class="snow-preset-btn" data-snow-preset="lightFlurry">
+                      <span class="preset-icon">❄️</span>
+                      <span class="preset-name">Light Flurry</span>
+                      <span class="preset-desc">Gentle flakes</span>
+                    </button>
+                    <button class="snow-preset-btn" data-snow-preset="gentle">
+                      <span class="preset-icon">🌨️</span>
+                      <span class="preset-name">Gentle</span>
+                      <span class="preset-desc">Soft falling</span>
+                    </button>
+                    <button class="snow-preset-btn active" data-snow-preset="moderate">
+                      <span class="preset-icon">❄️</span>
+                      <span class="preset-name">Moderate</span>
+                      <span class="preset-desc">Steady snow</span>
+                    </button>
+                    <button class="snow-preset-btn" data-snow-preset="heavy">
+                      <span class="preset-icon">🌨️</span>
+                      <span class="preset-name">Heavy</span>
+                      <span class="preset-desc">Dense fall</span>
+                    </button>
+                    <button class="snow-preset-btn" data-snow-preset="blizzard">
+                      <span class="preset-icon">❄️</span>
+                      <span class="preset-name">Blizzard</span>
+                      <span class="preset-desc">Intense</span>
+                    </button>
+                    <button class="snow-preset-btn" data-snow-preset="off">
+                      <span class="preset-icon">🚫</span>
+                      <span class="preset-name">Off</span>
+                      <span class="preset-desc">Disable snow</span>
+                    </button>
+                  </div>
+
+                  <details class="snow-customize">
+                    <summary>⚙️ Customize Snow</summary>
+                    <div class="snow-custom-controls">
+                      <div class="custom-controls-grid">
+                        <div class="snow-control-group">
+                          <label>Snowflake Count: <span id="snowCountDisplay">200</span></label>
+                          <input type="range" id="snowCountSlider" min="20" max="500" value="200" step="10">
+                        </div>
+                        <div class="snow-control-group">
+                          <label>Fall Speed: <span id="snowSpeedDisplay">1.0</span></label>
+                          <input type="range" id="snowSpeedSlider" min="0.1" max="3.0" value="1.0" step="0.1">
+                        </div>
+                        <div class="snow-control-group">
+                          <label>Snowflake Size: <span id="snowSizeDisplay">3</span></label>
+                          <input type="range" id="snowSizeSlider" min="1" max="8" value="3" step="0.5">
+                        </div>
+                        <div class="snow-control-group">
+                          <label>Wind Strength: <span id="snowWindDisplay">0.5</span></label>
+                          <input type="range" id="snowWindSlider" min="0" max="2.0" value="0.5" step="0.1">
+                        </div>
+                        <div class="snow-control-group full-width">
+                          <label>Opacity: <span id="snowOpacityDisplay">0.9</span></label>
+                          <input type="range" id="snowOpacitySlider" min="0.1" max="1.0" value="0.9" step="0.05">
+                        </div>
+                      </div>
+                      <button class="btn btn-primary btn-sm" id="snowApplyBtn">Apply Snow Settings</button>
+                    </div>
+                  </details>
+                </div>
+              </details>
+
+              <!-- ⚙️ Advanced Settings -->
               <div class="star-advanced-settings">
-                <!-- Advanced Settings (collapsible, closed by default) -->
                 <details class="advanced-settings-container">
                   <summary>⚙️ Advanced Settings</summary>
                   <div class="advanced-settings-content">
-                    <!-- Font Family -->
                     <div class="select-group">
                       <label for="fontFamilySelect">Font Family:</label>
                       <select id="fontFamilySelect" class="styled-select">
@@ -1442,12 +1522,11 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                       </select>
                       <span class="hint">(Choose your preferred font)</span>
                     </div>
-                    <div class="custom-font-input" id="customFontInput" style="display:none;">
-                      <input type="text" id="customFontURL" placeholder="https://fonts.googleapis.com/css2?family=Inter" value="">
+                    <div class="custom-font-input" id="customFontInput">
+                      <input type="text" id="customFontURL" placeholder="https://fonts.googleapis.com/css2?family=Inter">
                       <button id="loadCustomFontBtn">Load Font</button>
                     </div>
 
-                    <!-- Font Size -->
                     <div class="setting-group">
                       <label>
                         <span class="setting-label">Font Size</span>
@@ -1456,21 +1535,20 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                       </label>
                     </div>
 
-                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1rem 0;">
+                    <hr class="settings-divider">
 
-                    <!-- Import / Export -->
                     <div class="import-export-buttons">
                       <button id="exportSettingsBtn" class="btn btn-primary btn-sm">📤 Export Settings</button>
                       <button id="importSettingsBtn" class="btn btn-secondary btn-sm">📥 Import Settings</button>
-                      <input type="file" id="importFileInput" accept=".json" style="display:none;">
+                      <input type="file" id="importFileInput" accept=".json">
                     </div>
-                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem;">Export/Import all your settings (theme, star presets, fonts) as JSON.</p>
+                    <p class="import-export-note">Export/Import all your settings (theme, star presets, fonts) as JSON.</p>
                   </div>
                 </details>
               </div>
+
             </div>
-          </div>
-          
+          </div>          
           <div class="tab-pane" id="tab6">
             <div class="themes-container" style="padding: 0 1rem;">
               <h4 style="margin-bottom: 0.5rem;">🎨 Color Themes</h4>
