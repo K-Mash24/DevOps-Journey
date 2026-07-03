@@ -159,53 +159,53 @@
   }
 
   // --- Toast Notification ---
-  function showPresetToast(presetName) {
-    const preset = PRESETS[presetName];
-    if (!preset) return;
+  // function showPresetToast(presetName) {
+  //   const preset = PRESETS[presetName];
+  //   if (!preset) return;
 
-    let container = document.querySelector(".toast-container");
-    if (!container) {
-      container = document.createElement("div");
-      container.className = "toast-container";
-      document.body.appendChild(container);
-    }
+  //   let container = document.querySelector(".toast-container");
+  //   if (!container) {
+  //     container = document.createElement("div");
+  //     container.className = "toast-container";
+  //     document.body.appendChild(container);
+  //   }
 
-    const toast = document.createElement("div");
-    toast.className = "toast-item coming-soon-toast";
-    toast.style.background = "var(--accent-primary)";
-    toast.style.color = "white";
-    toast.style.padding = "10px 20px";
-    toast.style.borderRadius = "40px";
-    toast.style.fontSize = "0.85rem";
-    toast.style.fontWeight = "500";
-    toast.style.boxShadow = "var(--shadow-md)";
-    toast.style.display = "flex";
-    toast.style.alignItems = "center";
-    toast.style.gap = "8px";
+  //   const toast = document.createElement("div");
+  //   toast.className = "toast-item coming-soon-toast";
+  //   toast.style.background = "var(--accent-primary)";
+  //   toast.style.color = "white";
+  //   toast.style.padding = "10px 20px";
+  //   toast.style.borderRadius = "40px";
+  //   toast.style.fontSize = "0.85rem";
+  //   toast.style.fontWeight = "500";
+  //   toast.style.boxShadow = "var(--shadow-md)";
+  //   toast.style.display = "flex";
+  //   toast.style.alignItems = "center";
+  //   toast.style.gap = "8px";
 
-    const icon = document.createElement("span");
-    icon.textContent = "✅";
-    toast.appendChild(icon);
+  //   const icon = document.createElement("span");
+  //   icon.textContent = "✅";
+  //   toast.appendChild(icon);
 
-    const message = document.createTextNode(
-      ` ${preset.icon} ${preset.name} preset applied`,
-    );
-    toast.appendChild(message);
+  //   const message = document.createTextNode(
+  //     ` ${preset.icon} ${preset.name} preset applied`,
+  //   );
+  //   toast.appendChild(message);
 
-    container.appendChild(toast);
+  //   container.appendChild(toast);
 
-    setTimeout(() => {
-      toast.style.opacity = "0";
-      toast.style.transform = "translateY(-10px) scale(0.95)";
-      toast.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-      setTimeout(() => {
-        toast.remove();
-        if (container.children.length === 0) {
-          container.remove();
-        }
-      }, 300);
-    }, 2000);
-  }
+  //   setTimeout(() => {
+  //     toast.style.opacity = "0";
+  //     toast.style.transform = "translateY(-10px) scale(0.95)";
+  //     toast.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+  //     setTimeout(() => {
+  //       toast.remove();
+  //       if (container.children.length === 0) {
+  //         container.remove();
+  //       }
+  //     }, 300);
+  //   }, 2000);
+  // }
 
   // --- Initialize Stars ---
   function initStars() {
@@ -581,11 +581,7 @@
       toast.className = "toast-item global-toast";
       toast.innerHTML = `<span class="toast-message">${message}</span>`;
       toast.style.cssText = `
-        position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-        background: var(--bg-card); padding: 10px 20px;
-        border-radius: 40px; box-shadow: var(--shadow-md);
-        z-index: 9999; font-size: 0.85rem; border: 1px solid var(--border-color);
-        animation: fadeInUp 0.3s ease;
+        // 
       `;
       document.body.appendChild(toast);
       setTimeout(() => {

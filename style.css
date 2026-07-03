@@ -4030,6 +4030,76 @@ pre {
 }
 
 /* ============================================================
+   PILLAR DETAILS — STACK BELOW 800px (Ring Top, Content Below)
+   ============================================================ */
+
+@media (max-width: 600px) {
+  
+  /* ── Pillar Details Container ── */
+  #pillarDetailContainer > div[style*="display: flex"] {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.5rem !important;
+  }
+
+  /* ── Ring Wrapper ── */
+  #pillarDetailContainer .pillar-ring-wrapper {
+    width: 180px !important;
+    height: 180px !important;
+    margin: 0 auto !important;
+  }
+
+  #pillarDetailContainer .pillar-ring-wrapper svg {
+    width: 180px !important;
+    height: 180px !important;
+  }
+
+  #pillarDetailContainer .pillar-ring-percent {
+    font-size: 1.2rem !important;
+  }
+
+  /* ── Checklist ── */
+  #pillarDetailContainer .pillar-checklist {
+    width: 100% !important;
+    max-height: 250px !important;
+    overflow-y: auto !important;
+  }
+
+  #pillarDetailContainer .pillar-checklist-item {
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  #pillarDetailContainer .pillar-detail-cb {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  #pillarDetailContainer .pillar-detail-cb:checked::after {
+    font-size: 10px !important;
+    left: 1px !important;
+    top: -2px !important;
+  }
+
+  /* ── Progress Text ── */
+  #pillarDetailContainer > div[style*="margin-top"] {
+    text-align: center !important;
+    font-size: 0.75rem !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  /* ── Flex container override ── */
+  #pillarDetailContainer .pillar-detail-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+}
+
+/* ============================================================
    MENTAL MODEL CARDS
    ============================================================ */
 .accordion-body-cards {
@@ -4592,7 +4662,7 @@ pre {
 
 .global-toast {
   position: fixed;
-  bottom: 100px;
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
   background: var(--bg-card);
@@ -4602,9 +4672,9 @@ pre {
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   z-index: 10001;
-  animation: toastSlideIn 0.3s ease;
+  animation: toastSlideIn 0.2s ease;
   font-size: 0.85rem;
   color: var(--text-primary);
 }
@@ -4622,78 +4692,6 @@ pre {
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
-  }
-}
-
-/* ============================================================
-   TOAST CONTAINER – Flexbox for multiple toasts
-   ============================================================ */
-
-.toast-container {
-  /* position: fixed;
-  bottom: 18px; */
-  left: 10%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-  z-index: 10001;
-  max-width: 90vw;
-  pointer-events: none;
-}
-
-.toast-item {
-  pointer-events: auto;
-  animation: toastSlideIn 0.3s ease;
-  flex-shrink: 0;
-}
-
-/* Responsive: stack vertically on mobile */
-@media (max-width: 640px) {
-  .toast-container {
-    flex-direction: column;
-    bottom: 16px;
-    gap: 8px;
-    max-width: 95vw;
-  }
-  .toast-item {
-    width: 100%;
-    max-width: 400px;
-  }
-}
-
-/* Toast types (reuse existing styles but remove position/fixed) */
-.toast-item.coming-soon-toast {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  transform: none;
-  z-index: auto;
-  animation: toastSlideIn 0.3s ease;
-}
-
-.toast-item.global-toast {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  transform: none;
-  z-index: auto;
-  animation: toastSlideIn 0.3s ease;
-}
-
-/* Keep the original styles as fallback (but they'll be overridden by .toast-item) */
-
-/* Ensure smooth animation when multiple toasts appear */
-@keyframes toastSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }
 

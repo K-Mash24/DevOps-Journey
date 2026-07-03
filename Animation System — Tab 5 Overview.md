@@ -293,6 +293,3 @@ Snowfield presets modify the **snow** animation parameters:
 ---
 
 *Documentation generated for the DevOps Journey project.*
-```
-
----

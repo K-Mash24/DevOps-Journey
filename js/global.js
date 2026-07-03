@@ -1797,123 +1797,6 @@ window.openModalToPillarDetails = openModalToPillarDetails;
       showToast('❌ Restore failed. Check your token and Gist ID.', 'error');
     }
   }
-
-  // // ============================================================
-  // // WELCOME LIGHTBOX all three languages (First-time visitors per pillar)
-  // // ============================================================
-  
-  // function initWelcomeLightbox() {
-  //   const lightbox = document.getElementById('welcomeLightbox');
-  //   const closeBtn = document.getElementById('closeWelcomeLightbox');
-  //   const startBtn = document.getElementById('startLearningBtn');
-  //   const dontShowCheckbox = document.getElementById('dontShowAgain');
-    
-  //   if (!lightbox) return;
-    
-  //   // Determine current page/pillar from URL or body class
-  //   let pageKey = '';
-  //   if (window.location.pathname.includes('networking.html')) {
-  //     pageKey = 'networking-pillar-welcome-seen';
-  //   } else if (window.location.pathname.includes('linux.html')) {
-  //     pageKey = 'linux-pillar-welcome-seen';
-  //   } else if (window.location.pathname.includes('security.html')) {
-  //     pageKey = 'security-pillar-welcome-seen';
-  //   } else {
-  //     // Default for home page or unknown – don't show welcome lightbox
-  //     return;
-  //   }
-    
-  //   // Check if user has seen the welcome message for this pillar
-  //   const hasSeenWelcome = localStorage.getItem(pageKey);
-    
-  //   if (!hasSeenWelcome) {
-  //     // Customize content based on pillar
-  //     customizeWelcomeContent(pageKey);
-  //     // Show lightbox after a short delay
-  //     setTimeout(() => {
-  //       lightbox.style.display = 'flex';
-  //     }, 500);
-  //   }
-    
-  //   // Customize the welcome message based on which pillar
-  //   function customizeWelcomeContent(pageKey) {
-  //     const iconSpan = document.querySelector('.welcome-icon');
-  //     const titleEl = document.querySelector('.welcome-lightbox-header h2');
-  //     const listEl = document.querySelector('.welcome-lightbox-body ul');
-      
-  //     if (!iconSpan || !titleEl || !listEl) return;
-      
-  //     if (pageKey === 'networking-pillar-welcome-seen') {
-  //       iconSpan.textContent = '🌐';
-  //       titleEl.textContent = 'Welcome to Networking Fundamentals';
-  //       listEl.innerHTML = `
-  //         <li>📡 OSI & TCP/IP models</li>
-  //         <li>📍 IP addressing & subnetting</li>
-  //         <li>🔀 Routing & switching</li>
-  //         <li>🌍 DNS resolution</li>
-  //         <li>📦 TCP vs UDP protocols</li>
-  //         <li>🔒 Network security basics</li>
-  //       `;
-  //     } else if (pageKey === 'linux-pillar-welcome-seen') {
-  //       iconSpan.textContent = '🐧';
-  //       titleEl.textContent = 'Welcome to Linux & CLI Proficiency';
-  //       listEl.innerHTML = `
-  //         <li>📁 Filesystem navigation & structure</li>
-  //         <li>📄 File operations (create, copy, move, delete)</li>
-  //         <li>🔐 Permissions & ownership (chmod, chown, sudo)</li>
-  //         <li>⚙️ Process management (ps, kill, top)</li>
-  //         <li>📦 Package management (apt, yum, dnf)</li>
-  //         <li>🖥️ Bash scripting fundamentals</li>
-  //         <li>📊 Text processing (grep, sed, awk)</li>
-  //         <li>🌐 Networking commands (ssh, curl, netstat)</li>
-  //       `;
-  //     }
-  //     // Add more pillars as needed
-  //   }
-    
-  //   // Function to close lightbox
-  //   function closeLightbox() {
-  //     lightbox.style.display = 'none';
-  //   }
-    
-  //   // Save preference and close
-  //   function saveAndClose() {
-  //     if (dontShowCheckbox && dontShowCheckbox.checked) {
-  //       localStorage.setItem(pageKey, 'true');
-  //     }
-  //     closeLightbox();
-  //   }
-    
-  //   // Close button handler
-  //   if (closeBtn) {
-  //     closeBtn.addEventListener('click', saveAndClose);
-  //   }
-    
-  //   // Start learning button handler
-  //   if (startBtn) {
-  //     startBtn.addEventListener('click', saveAndClose);
-  //   }
-    
-  //   // Close when clicking outside
-  //   const overlay = lightbox.querySelector('.welcome-lightbox-overlay');
-  //   if (overlay) {
-  //     overlay.addEventListener('click', saveAndClose);
-  //   }
-    
-  //   // Close with Escape key
-  //   document.addEventListener('keydown', (e) => {
-  //     if (e.key === 'Escape' && lightbox.style.display === 'flex') {
-  //       saveAndClose();
-  //     }
-  //   });
-  // }
-  
-  // // Call the function (add to your existing initialisers)
-  // initWelcomeLightbox();
-
-  // ============================================================
-  // WELCOME MESSAGE SYSTEM JS specific (Shows once per pillar/page)
-  // ============================================================
   
   function showWelcomeMessage(pageKey, title, messageLines, icon = '📘') {
     // Check if this welcome message has been shown before
@@ -2237,7 +2120,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     });
   }
 
-    // ============================================================
+  // ============================================================
   // GITHUB GIST BACKUP & SYNC
   // ============================================================
   
@@ -2248,69 +2131,26 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   };
 
   function showToast(message, type = 'info') {
-    // Get or create the toast container
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-      container = document.createElement('div');
-      container.className = 'toast-container';
-      document.body.appendChild(container);
-    }
+    // Remove any existing toast
+    const existing = document.querySelector('.global-toast');
+    if (existing) existing.remove();
 
-    // Create the toast
     const toast = document.createElement('div');
-    toast.className = `toast-item global-toast ${type}`;
+    toast.className = `global-toast ${type}`;
     toast.innerHTML = `
       <span class="toast-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
       <span class="toast-message">${message}</span>
     `;
-    
-    // Add to container
-    container.appendChild(toast);
+    document.body.appendChild(toast);
 
-    // Auto-dismiss after 2.5 seconds
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(-10px) scale(0.95)';
-      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-      setTimeout(() => {
-        toast.remove();
-        // Remove container if empty
-        if (container.children.length === 0) {
-          container.remove();
-        }
-      }, 300);
-    }, 2500);
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
   }
 
   // Expose showToast globally so stars.js can use it
   window.showToast = showToast;
-
-  // function setupGistBackup() {
-  //   const footer = document.querySelector('.sidebar-footer');
-  //   if (!footer) return;
-
-  //   // Don't add duplicate
-  //   if (footer.querySelector('.gist-backup-container')) return;
-
-  //   const container = document.createElement('div');
-  //   container.className = 'gist-backup-container';
-  //   container.innerHTML = `
-  //     <button id="gistBackupBtn" class="btn-gist" title="Backup to GitHub Gist">📤 Backup</button>
-  //     <button id="gistRestoreBtn" class="btn-gist" title="Restore from GitHub Gist">📥 Restore</button>
-  //     <button id="gistSettingsBtn" class="btn-gist" title="GitHub Settings">⚙️</button>
-  //   `;
-  //   footer.appendChild(container);
-
-  //   // Load saved config from localStorage
-  //   const savedToken = localStorage.getItem('github-token');
-  //   const savedGistId = localStorage.getItem('github-gist-id');
-  //   if (savedToken) GIST_CONFIG.token = savedToken;
-  //   if (savedGistId) GIST_CONFIG.gistId = savedGistId;
-
-  //   document.getElementById('gistBackupBtn')?.addEventListener('click', backupToGist);
-  //   document.getElementById('gistRestoreBtn')?.addEventListener('click', restoreFromGist);
-  //   document.getElementById('gistSettingsBtn')?.addEventListener('click', showGistSettings);
-  // }
 
   async function backupToGist() {
     if (!GIST_CONFIG.token) {
@@ -3240,6 +3080,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
     console.log('🎨 Star presets system loaded');
 
+  })();
 
   // ============================================================
   // PAGE HEADER - Shared (in global.js)
@@ -3344,4 +3185,3 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     }
   });
   
-})();
