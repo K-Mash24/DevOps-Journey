@@ -1415,6 +1415,10 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                           <label>Connection Distance: <span id="connectionDistanceDisplay">350</span></label>
                           <input type="range" id="connectionDistanceSlider" min="0" max="600" value="350" step="10">
                         </div>
+                        <div class="star-control-group">
+                          <label style="font-size: 0.75rem;">Brightness: <span id="brightnessDisplay">100%</span></label>
+                          <input type="range" id="brightnessSlider" min="20" max="200" value="100" step="1">
+                        </div>
                       </div>
                       <button class="btn btn-primary btn-sm" id="applyCustomStars" style="margin-top: 0.75rem;">Apply Custom</button>
                     </div>
@@ -2200,6 +2204,9 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     }, 2500);
   }
 
+  // Expose showToast globally so stars.js can use it
+  window.showToast = showToast;
+
   // function setupGistBackup() {
   //   const footer = document.querySelector('.sidebar-footer');
   //   if (!footer) return;
@@ -2381,857 +2388,882 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   }
 
    // --- Initialisation ---
-  initWelcomeMessage();  // Call the welcome message initinializer on page load
-  // setupGistBackup();   // Call setupGistBackup
-  initGlobalSearch();
-  initGlobalScrollSpy();
-  initResourcePulse();
-  initGlobalKeyboard();
-  initCopyButtons();
-  fetchLastUpdated();
-  addResetButton();
-  restoreAccordionStates();
-  initClickableHeadings();
-  initOfflineIndicator();
-  updateAllUI();
-  renderPhase1ModalScroller();
-  renderPhase2ModalScroller();
-  initModalAndFloatingRing();
-  initPillarKeyboardShortcuts();
+    initWelcomeMessage();  // Call the welcome message initinializer on page load
+    // setupGistBackup();   // Call setupGistBackup
+    initGlobalSearch();
+    initGlobalScrollSpy();
+    initResourcePulse();
+    initGlobalKeyboard();
+    initCopyButtons();
+    fetchLastUpdated();
+    addResetButton();
+    restoreAccordionStates();
+    initClickableHeadings();
+    initOfflineIndicator();
+    updateAllUI();
+    renderPhase1ModalScroller();
+    renderPhase2ModalScroller();
+    initModalAndFloatingRing();
+    initPillarKeyboardShortcuts();
 
-  window.addEventListener('storage', () => { updateAllUI(); renderPhase1ModalScroller(); renderPhase2ModalScroller(); });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) updateAllUI(); });
+    window.addEventListener('storage', () => { updateAllUI(); renderPhase1ModalScroller(); renderPhase2ModalScroller(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) updateAllUI(); });
 
-});
+  });
 
-// ============================================================
-// SIDEBAR - Hamburger Syncs with All Toggle Methods
-// ============================================================
+  // ============================================================
+  // SIDEBAR - Hamburger Syncs with All Toggle Methods
+  // ============================================================
 
-const sidebar = document.getElementById('sidebar');
-const hamburger = document.getElementById('hamburger');
-const overlay = document.getElementById('sidebarOverlay');
-const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  const hamburger = document.getElementById('hamburger');
+  const overlay = document.getElementById('sidebarOverlay');
+  const sidebarToggle = document.getElementById('sidebarToggle');
 
-// --- State ---
-let isMobileOpen = false;
-let isSidebarCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
-let isTransitioning = false;
+  // --- State ---
+  let isMobileOpen = false;
+  let isSidebarCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+  let isTransitioning = false;
 
-// --- Helper: Update hamburger animation based on sidebar state ---
-function updateHamburgerState() {
-  if (!hamburger) return;
-  
-  const isMobile = window.innerWidth <= 768;
-  let isExpanded;
-  
-  if (isMobile) {
-    // Mobile: hamburger shows X when sidebar is OPEN
-    isExpanded = isMobileOpen;
-  } else {
-    // Desktop: hamburger shows X when sidebar is EXPANDED (not collapsed)
-    isExpanded = !isSidebarCollapsed;
-  }
-  
-  // Update hamburger
-  if (isExpanded) {
-    hamburger.classList.add('active');
-    hamburger.setAttribute('aria-expanded', 'true');
-  } else {
-    hamburger.classList.remove('active');
-    hamburger.setAttribute('aria-expanded', 'false');
-  }
-}
-
-// --- Helper: Update overlay ---
-function updateOverlay(show) {
-  if (!overlay) return;
-  if (show) {
-    overlay.classList.add('show');
-    overlay.style.display = 'block';
-    overlay.style.pointerEvents = 'auto';
-    overlay.style.opacity = '1';
-  } else {
-    overlay.classList.remove('show');
-    overlay.style.display = 'none';
-    overlay.style.pointerEvents = 'none';
-    overlay.style.opacity = '0';
-  }
-}
-
-// --- Helper: Update toggle position ---
-function updateTogglePosition() {
-  if (!sidebarToggle) return;
-  if (window.innerWidth <= 768) {
-    sidebarToggle.style.display = 'none';
-    return;
-  }
-  sidebarToggle.style.display = 'flex';
-  const sidebarWidth = isSidebarCollapsed ? 0 : 260;
-  sidebarToggle.style.left = `${sidebarWidth}px`;
-}
-
-// --- Helper: Sync ALL UI elements ---
-function syncSidebarUI() {
-  const isMobile = window.innerWidth <= 768;
-  
-  if (isMobile) {
-    // Mobile: sync with isMobileOpen
-    sidebar.classList.toggle('open', isMobileOpen);
-    overlay.classList.toggle('show', isMobileOpen);
-    updateOverlay(isMobileOpen);
-  } else {
-    // Desktop: sync with isSidebarCollapsed
-    sidebar.classList.toggle('collapsed', isSidebarCollapsed);
-    updateOverlay(!isSidebarCollapsed);
-    updateTogglePosition();
-  }
-  
-  // ALWAYS update hamburger state after any change
-  updateHamburgerState();
-}
-
-// --- MOBILE TOGGLE (Hamburger) - FORCED ---
-if (hamburger) {
-  hamburger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    e.preventDefault();
+  // --- Helper: Update hamburger animation based on sidebar state ---
+  function updateHamburgerState() {
+    if (!hamburger) return;
     
     const isMobile = window.innerWidth <= 768;
-    console.log('Hamburger clicked. Mobile:', isMobile);
+    let isExpanded;
     
     if (isMobile) {
-      // Toggle mobile state
-      isMobileOpen = !isMobileOpen;
-      console.log('Setting isMobileOpen to:', isMobileOpen);
+      // Mobile: hamburger shows X when sidebar is OPEN
+      isExpanded = isMobileOpen;
+    } else {
+      // Desktop: hamburger shows X when sidebar is EXPANDED (not collapsed)
+      isExpanded = !isSidebarCollapsed;
+    }
+    
+    // Update hamburger
+    if (isExpanded) {
+      hamburger.classList.add('active');
+      hamburger.setAttribute('aria-expanded', 'true');
+    } else {
+      hamburger.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  // --- Helper: Update overlay ---
+  function updateOverlay(show) {
+    if (!overlay) return;
+    if (show) {
+      overlay.classList.add('show');
+      overlay.style.display = 'block';
+      overlay.style.pointerEvents = 'auto';
+      overlay.style.opacity = '1';
+    } else {
+      overlay.classList.remove('show');
+      overlay.style.display = 'none';
+      overlay.style.pointerEvents = 'none';
+      overlay.style.opacity = '0';
+    }
+  }
+
+  // --- Helper: Update toggle position ---
+  function updateTogglePosition() {
+    if (!sidebarToggle) return;
+    if (window.innerWidth <= 768) {
+      sidebarToggle.style.display = 'none';
+      return;
+    }
+    sidebarToggle.style.display = 'flex';
+    const sidebarWidth = isSidebarCollapsed ? 0 : 260;
+    sidebarToggle.style.left = `${sidebarWidth}px`;
+  }
+
+  // --- Helper: Sync ALL UI elements ---
+  function syncSidebarUI() {
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      // Mobile: sync with isMobileOpen
+      sidebar.classList.toggle('open', isMobileOpen);
+      overlay.classList.toggle('show', isMobileOpen);
+      updateOverlay(isMobileOpen);
+    } else {
+      // Desktop: sync with isSidebarCollapsed
+      sidebar.classList.toggle('collapsed', isSidebarCollapsed);
+      updateOverlay(!isSidebarCollapsed);
+      updateTogglePosition();
+    }
+    
+    // ALWAYS update hamburger state after any change
+    updateHamburgerState();
+  }
+
+  // --- MOBILE TOGGLE (Hamburger) - FORCED ---
+  if (hamburger) {
+    hamburger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
       
-      // FORCE toggle classes
-      if (isMobileOpen) {
-        sidebar.classList.add('open');
-        overlay.classList.add('show');
-        this.classList.add('active');
-        overlay.style.display = 'block';
-        overlay.style.opacity = '1';
-        overlay.style.pointerEvents = 'auto';
+      const isMobile = window.innerWidth <= 768;
+      console.log('Hamburger clicked. Mobile:', isMobile);
+      
+      if (isMobile) {
+        // Toggle mobile state
+        isMobileOpen = !isMobileOpen;
+        console.log('Setting isMobileOpen to:', isMobileOpen);
+        
+        // FORCE toggle classes
+        if (isMobileOpen) {
+          sidebar.classList.add('open');
+          overlay.classList.add('show');
+          this.classList.add('active');
+          overlay.style.display = 'block';
+          overlay.style.opacity = '1';
+          overlay.style.pointerEvents = 'auto';
+        } else {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('show');
+          this.classList.remove('active');
+          overlay.style.display = 'none';
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+        }
+        
+        console.log('Sidebar classes:', sidebar.className);
+        console.log('Sidebar transform:', window.getComputedStyle(sidebar).transform);
       } else {
+        // Desktop: use desktop toggle
+        toggleSidebar();
+      }
+    });
+  }
+
+  // --- Also make overlay click work ---
+  if (overlay) {
+    overlay.addEventListener('click', function() {
+      if (window.innerWidth <= 768 && isMobileOpen) {
+        isMobileOpen = false;
         sidebar.classList.remove('open');
         overlay.classList.remove('show');
-        this.classList.remove('active');
         overlay.style.display = 'none';
         overlay.style.opacity = '0';
         overlay.style.pointerEvents = 'none';
+        hamburger.classList.remove('active');
+        console.log('Sidebar closed via overlay');
+      }
+    });
+  }
+
+  // --- DESKTOP TOGGLE (Sidebar Toggle Button) ---
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (window.innerWidth > 768) {
+        toggleSidebar();
+      }
+    });
+  }
+
+  // --- OVERLAY CLICK ---
+  if (overlay) {
+    overlay.addEventListener('click', function() {
+      if (window.innerWidth <= 768 && isMobileOpen) {
+        isMobileOpen = false;
+        syncSidebarUI();
+      } else if (window.innerWidth > 768 && !isSidebarCollapsed) {
+        toggleSidebar(true);
+      }
+    });
+  }
+
+  // --- NAV ITEMS CLICK (Mobile) ---
+  document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+      if (window.innerWidth <= 768 && isMobileOpen) {
+        isMobileOpen = false;
+        syncSidebarUI();
+      }
+    });
+  });
+
+  // --- MAIN TOGGLE FUNCTION (Desktop) ---
+  function toggleSidebar(collapse) {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    
+    if (collapse === undefined) {
+      isSidebarCollapsed = !isSidebarCollapsed;
+    } else {
+      isSidebarCollapsed = collapse;
+    }
+    
+    // Save state
+    localStorage.setItem('sidebar-collapsed', isSidebarCollapsed);
+    
+    // Sync all UI (including hamburger)
+    syncSidebarUI();
+    
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 350);
+
+    // Toggle stars visibility
+    const canvas = document.getElementById('starCanvas');
+    if (canvas) {
+      const isCollapsed = sidebar.classList.contains('collapsed');
+      canvas.style.opacity = isCollapsed ? '1' : '0.3';
+      canvas.style.transition = 'opacity 0.5s ease';
+    }
+
+    // Notify stars about sidebar state change
+    if (window.updateStarsForSidebar) {
+      setTimeout(function() {
+        window.updateStarsForSidebar(isSidebarCollapsed);
+      }, 50);
+    }
+  }
+
+  // --- KEYBOARD SHORTCUT: Ctrl+B ---
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+      e.preventDefault();
+      if (window.innerWidth <= 768) {
+        // Mobile: toggle sidebar
+        isMobileOpen = !isMobileOpen;
+        syncSidebarUI();
+      } else {
+        toggleSidebar();
+      }
+    }
+  });
+
+  // --- RESIZE HANDLER ---
+  let resizeTimeout;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function() {
+      const isMobile = window.innerWidth <= 768;
+      
+      if (isMobile) {
+        // Switch to mobile mode
+        sidebar.classList.remove('collapsed');
+        if (isSidebarCollapsed) {
+          isSidebarCollapsed = false;
+          localStorage.setItem('sidebar-collapsed', 'false');
+        }
+        // If sidebar was open on desktop, keep it open on mobile
+        if (!isMobileOpen) {
+          isMobileOpen = false;
+        }
+      } else {
+        // Switch to desktop mode
+        sidebar.classList.remove('open');
+        if (isMobileOpen) {
+          isMobileOpen = false;
+        }
+        // Restore desktop state
+        const stored = localStorage.getItem('sidebar-collapsed') === 'true';
+        if (stored !== isSidebarCollapsed) {
+          isSidebarCollapsed = stored;
+        }
       }
       
-      console.log('Sidebar classes:', sidebar.className);
-      console.log('Sidebar transform:', window.getComputedStyle(sidebar).transform);
-    } else {
-      // Desktop: use desktop toggle
-      toggleSidebar();
-    }
-  });
-}
-
-// --- Also make overlay click work ---
-if (overlay) {
-  overlay.addEventListener('click', function() {
-    if (window.innerWidth <= 768 && isMobileOpen) {
-      isMobileOpen = false;
-      sidebar.classList.remove('open');
-      overlay.classList.remove('show');
-      overlay.style.display = 'none';
-      overlay.style.opacity = '0';
-      overlay.style.pointerEvents = 'none';
-      hamburger.classList.remove('active');
-      console.log('Sidebar closed via overlay');
-    }
-  });
-}
-
-// --- DESKTOP TOGGLE (Sidebar Toggle Button) ---
-if (sidebarToggle) {
-  sidebarToggle.addEventListener('click', function(e) {
-    e.stopPropagation();
-    if (window.innerWidth > 768) {
-      toggleSidebar();
-    }
-  });
-}
-
-// --- OVERLAY CLICK ---
-if (overlay) {
-  overlay.addEventListener('click', function() {
-    if (window.innerWidth <= 768 && isMobileOpen) {
-      isMobileOpen = false;
+      // Sync everything (including hamburger)
       syncSidebarUI();
-    } else if (window.innerWidth > 768 && !isSidebarCollapsed) {
-      toggleSidebar(true);
-    }
+    }, 150);
   });
-}
 
-// --- NAV ITEMS CLICK (Mobile) ---
-document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
-  item.addEventListener('click', function() {
-    if (window.innerWidth <= 768 && isMobileOpen) {
-      isMobileOpen = false;
-      syncSidebarUI();
-    }
-  });
-});
-
-// --- MAIN TOGGLE FUNCTION (Desktop) ---
-function toggleSidebar(collapse) {
-  if (isTransitioning) return;
-  isTransitioning = true;
-  
-  if (collapse === undefined) {
-    isSidebarCollapsed = !isSidebarCollapsed;
-  } else {
-    isSidebarCollapsed = collapse;
-  }
-  
-  // Save state
-  localStorage.setItem('sidebar-collapsed', isSidebarCollapsed);
-  
-  // Sync all UI (including hamburger)
-  syncSidebarUI();
-  
-  setTimeout(() => {
-    isTransitioning = false;
-  }, 350);
-
-  // Toggle stars visibility
-  const canvas = document.getElementById('starCanvas');
-  if (canvas) {
-    const isCollapsed = sidebar.classList.contains('collapsed');
-    canvas.style.opacity = isCollapsed ? '1' : '0.3';
-    canvas.style.transition = 'opacity 0.5s ease';
-  }
-
-  // Notify stars about sidebar state change
-  if (window.updateStarsForSidebar) {
-    setTimeout(function() {
-      window.updateStarsForSidebar(isSidebarCollapsed);
-    }, 50);
-  }
-}
-
-// --- KEYBOARD SHORTCUT: Ctrl+B ---
-document.addEventListener('keydown', function(e) {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-    e.preventDefault();
-    if (window.innerWidth <= 768) {
-      // Mobile: toggle sidebar
-      isMobileOpen = !isMobileOpen;
-      syncSidebarUI();
-    } else {
-      toggleSidebar();
-    }
-  }
-});
-
-// --- RESIZE HANDLER ---
-let resizeTimeout;
-window.addEventListener('resize', function() {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(function() {
+  // --- RESTORE STATE ON LOAD ---
+  function restoreState() {
     const isMobile = window.innerWidth <= 768;
     
     if (isMobile) {
-      // Switch to mobile mode
-      sidebar.classList.remove('collapsed');
-      if (isSidebarCollapsed) {
-        isSidebarCollapsed = false;
-        localStorage.setItem('sidebar-collapsed', 'false');
-      }
-      // If sidebar was open on desktop, keep it open on mobile
-      if (!isMobileOpen) {
-        isMobileOpen = false;
-      }
+      sidebar.classList.remove('open', 'collapsed');
+      isMobileOpen = false;
     } else {
-      // Switch to desktop mode
-      sidebar.classList.remove('open');
-      if (isMobileOpen) {
-        isMobileOpen = false;
-      }
-      // Restore desktop state
-      const stored = localStorage.getItem('sidebar-collapsed') === 'true';
-      if (stored !== isSidebarCollapsed) {
-        isSidebarCollapsed = stored;
+      if (isSidebarCollapsed) {
+        sidebar.classList.add('collapsed');
+      } else {
+        sidebar.classList.remove('collapsed');
       }
     }
     
-    // Sync everything (including hamburger)
+    // Sync everything
     syncSidebarUI();
-  }, 150);
-});
+  }
 
-// --- RESTORE STATE ON LOAD ---
-function restoreState() {
-  const isMobile = window.innerWidth <= 768;
-  
-  if (isMobile) {
-    sidebar.classList.remove('open', 'collapsed');
-    isMobileOpen = false;
+  // Run restore
+  if (document.readyState === 'complete') {
+    restoreState();
   } else {
-    if (isSidebarCollapsed) {
-      sidebar.classList.add('collapsed');
-    } else {
-      sidebar.classList.remove('collapsed');
-    }
-  }
-  
-  // Sync everything
-  syncSidebarUI();
-}
-
-// Run restore
-if (document.readyState === 'complete') {
-  restoreState();
-} else {
-  window.addEventListener('load', restoreState);
-}
-
-console.log('✅ Hamburger syncs with all toggle methods');
-
-// Add this after your DOMContentLoaded to debug
-console.log('=== SIDEBAR DEBUG ===');
-console.log('Sidebar element:', sidebar);
-console.log('Sidebar classes:', sidebar ? sidebar.className : 'NOT FOUND');
-console.log('Hamburger element:', hamburger);
-console.log('Overlay element:', overlay);
-console.log('Window width:', window.innerWidth);
-console.log('isMobileOpen:', isMobileOpen);
-console.log('isSidebarCollapsed:', isSidebarCollapsed);
-
-// Check computed styles
-if (sidebar) {
-  const styles = window.getComputedStyle(sidebar);
-  console.log('Sidebar transform:', styles.transform);
-  console.log('Sidebar display:', styles.display);
-  console.log('Sidebar left:', styles.left);
-}
-
-// ============================================================
-// STAR PRESETS - Modal Integration
-// ============================================================
-
-(function() {
-  'use strict';
-
-  // --- Preset Definitions ---
-  const PRESETS = {
-    calm: {
-      name: 'Calm Night',
-      icon: '🌙',
-      desc: 'Gentle, serene',
-      starCount: 150,
-      minSize: 0.8,
-      maxSize: 2.5,
-      twinkleSpeed: 0.008,
-      maxOpacity: 0.9,
-      minOpacity: 0.3,
-      movementSpeed: 0.00001,
-      movementRange: 15,
-      connectStars: true,
-      connectionDistance: 350,
-      connectionOpacity: 0.07,
-      desktopBreakpoint: 800,
-    },
-    active: {
-      name: 'Active',
-      icon: '🌌',
-      desc: 'Lively drift',
-      starCount: 200,
-      minSize: 0.5,
-      maxSize: 3,
-      twinkleSpeed: 0.025,
-      maxOpacity: 1,
-      minOpacity: 0.2,
-      movementSpeed: 0.005,
-      movementRange: 30,
-      connectStars: true,
-      connectionDistance: 200,
-      connectionOpacity: 0.12,
-      desktopBreakpoint: 800,
-    },
-    minimal: {
-      name: 'Minimal',
-      icon: '⭐',
-      desc: 'Clean & simple',
-      starCount: 80,
-      minSize: 1,
-      maxSize: 2,
-      twinkleSpeed: 0.005,
-      maxOpacity: 0.7,
-      minOpacity: 0.4,
-      movementSpeed: 0,
-      movementRange: 0,
-      connectStars: false,
-      connectionDistance: 0,
-      connectionOpacity: 0,
-      desktopBreakpoint: 800,
-    },
-    constellation: {
-      name: 'Constellation',
-      icon: '🔭',
-      desc: 'Rich connections',
-      starCount: 180,
-      minSize: 0.6,
-      maxSize: 2.5,
-      twinkleSpeed: 0.01,
-      maxOpacity: 0.95,
-      minOpacity: 0.25,
-      movementSpeed: 0.0005,
-      movementRange: 10,
-      connectStars: true,
-      connectionDistance: 500,
-      connectionOpacity: 0.15,
-      desktopBreakpoint: 800,
-    },
-    dense: {
-      name: 'Dense',
-      icon: '🌠',
-      desc: 'Full starfield',
-      starCount: 350,
-      minSize: 0.4,
-      maxSize: 2,
-      twinkleSpeed: 0.015,
-      maxOpacity: 0.85,
-      minOpacity: 0.2,
-      movementSpeed: 0.001,
-      movementRange: 20,
-      connectStars: true,
-      connectionDistance: 150,
-      connectionOpacity: 0.08,
-      desktopBreakpoint: 800,
-    },
-    off: {
-      name: 'Off',
-      icon: '🚫',
-      desc: 'Disable stars',
-      starCount: 0,
-      minSize: 0,
-      maxSize: 0,
-      twinkleSpeed: 0,
-      maxOpacity: 0,
-      minOpacity: 0,
-      movementSpeed: 0,
-      movementRange: 0,
-      connectStars: false,
-      connectionDistance: 0,
-      connectionOpacity: 0,
-      desktopBreakpoint: 9999,
-    }
-  };
-
-  // --- Apply Preset ---
-  function applyStarPreset(presetName) {
-    const preset = PRESETS[presetName];
-    if (!preset) {
-      console.warn('⚠️ Preset not found:', presetName);
-      return;
-    }
-
-    // Update global CONFIG if it exists (for stars.js)
-    if (window.CONFIG) {
-      // Copy only the config values (not name, icon, desc)
-      const configValues = { ...preset };
-      delete configValues.name;
-      delete configValues.icon;
-      delete configValues.desc;
-      Object.assign(window.CONFIG, configValues);
-    }
-
-    // Store preference
-    localStorage.setItem('star-preset', presetName);
-
-    // Update UI buttons
-    document.querySelectorAll('.star-preset-btn').forEach(btn => {
-      const isActive = btn.dataset.preset === presetName;
-      btn.classList.toggle('active', isActive);
-      if (isActive) {
-        btn.style.borderColor = 'var(--accent-primary)';
-        btn.style.background = 'var(--pillar-color-light)';
-      } else {
-        btn.style.borderColor = 'var(--border-color)';
-        btn.style.background = 'var(--bg-card)';
-      }
-    });
-
-    // Update slider values
-    updateSliders(preset);
-
-    // Notify star system to reload
-    if (window.reloadStars) {
-      window.reloadStars();
-    } else if (window.updateStarsForSidebar) {
-      window.updateStarsForSidebar();
-    }
-
-    // If preset is 'off', hide the canvas
-    if (presetName === 'off') {
-      const canvas = document.getElementById('starCanvas');
-      if (canvas) {
-        canvas.style.display = 'none';
-        canvas.style.opacity = '0';
-      }
-    } else {
-      // Make sure canvas is visible
-      const canvas = document.getElementById('starCanvas');
-      if (canvas) {
-        canvas.style.display = 'block';
-        canvas.style.opacity = '1';
-      }
-    }
-
-    // Show toast notification
-    showPresetToast(presetName);
-
-    console.log('✨ Star preset applied:', presetName);
+    window.addEventListener('load', restoreState);
   }
 
-  // --- Update Sliders ---
-  function updateSliders(preset) {
-    const sliderMap = {
-      starCountSlider: 'starCount',
-      twinkleSpeedSlider: 'twinkleSpeed',
-      movementSpeedSlider: 'movementSpeed',
-      connectionDistanceSlider: 'connectionDistance',
+  console.log('✅ Hamburger syncs with all toggle methods');
+
+  // Add this after your DOMContentLoaded to debug
+  console.log('=== SIDEBAR DEBUG ===');
+  console.log('Sidebar element:', sidebar);
+  console.log('Sidebar classes:', sidebar ? sidebar.className : 'NOT FOUND');
+  console.log('Hamburger element:', hamburger);
+  console.log('Overlay element:', overlay);
+  console.log('Window width:', window.innerWidth);
+  console.log('isMobileOpen:', isMobileOpen);
+  console.log('isSidebarCollapsed:', isSidebarCollapsed);
+
+  // Check computed styles
+  if (sidebar) {
+    const styles = window.getComputedStyle(sidebar);
+    console.log('Sidebar transform:', styles.transform);
+    console.log('Sidebar display:', styles.display);
+    console.log('Sidebar left:', styles.left);
+  }
+
+  // ============================================================
+  // STAR PRESETS - Modal Integration
+  // ============================================================
+
+  (function() {
+    'use strict';
+
+    // --- Preset Definitions ---
+    const PRESETS = {
+      calm: {
+        name: 'Calm Night',
+        icon: '🌙',
+        desc: 'Gentle, serene',
+        starCount: 150,
+        minSize: 0.8,
+        maxSize: 2.5,
+        twinkleSpeed: 0.008,
+        maxOpacity: 0.9,
+        minOpacity: 0.3,
+        movementSpeed: 0.00001,
+        movementRange: 15,
+        connectStars: true,
+        connectionDistance: 350,
+        connectionOpacity: 0.07,
+        desktopBreakpoint: 800,
+      },
+      active: {
+        name: 'Active',
+        icon: '🌌',
+        desc: 'Lively drift',
+        starCount: 200,
+        minSize: 0.5,
+        maxSize: 3,
+        twinkleSpeed: 0.025,
+        maxOpacity: 1,
+        minOpacity: 0.2,
+        movementSpeed: 0.005,
+        movementRange: 30,
+        connectStars: true,
+        connectionDistance: 200,
+        connectionOpacity: 0.12,
+        desktopBreakpoint: 800,
+      },
+      minimal: {
+        name: 'Minimal',
+        icon: '⭐',
+        desc: 'Clean & simple',
+        starCount: 80,
+        minSize: 1,
+        maxSize: 2,
+        twinkleSpeed: 0.005,
+        maxOpacity: 0.7,
+        minOpacity: 0.4,
+        movementSpeed: 0,
+        movementRange: 0,
+        connectStars: false,
+        connectionDistance: 0,
+        connectionOpacity: 0,
+        desktopBreakpoint: 800,
+      },
+      constellation: {
+        name: 'Constellation',
+        icon: '🔭',
+        desc: 'Rich connections',
+        starCount: 180,
+        minSize: 0.6,
+        maxSize: 2.5,
+        twinkleSpeed: 0.01,
+        maxOpacity: 0.95,
+        minOpacity: 0.25,
+        movementSpeed: 0.0005,
+        movementRange: 10,
+        connectStars: true,
+        connectionDistance: 500,
+        connectionOpacity: 0.15,
+        desktopBreakpoint: 800,
+      },
+      dense: {
+        name: 'Dense',
+        icon: '🌠',
+        desc: 'Full starfield',
+        starCount: 350,
+        minSize: 0.4,
+        maxSize: 2,
+        twinkleSpeed: 0.015,
+        maxOpacity: 0.85,
+        minOpacity: 0.2,
+        movementSpeed: 0.001,
+        movementRange: 20,
+        connectStars: true,
+        connectionDistance: 150,
+        connectionOpacity: 0.08,
+        desktopBreakpoint: 800,
+      },
+      off: {
+        name: 'Off',
+        icon: '🚫',
+        desc: 'Disable stars',
+        starCount: 0,
+        minSize: 0,
+        maxSize: 0,
+        twinkleSpeed: 0,
+        maxOpacity: 0,
+        minOpacity: 0,
+        movementSpeed: 0,
+        movementRange: 0,
+        connectStars: false,
+        connectionDistance: 0,
+        connectionOpacity: 0,
+        desktopBreakpoint: 9999,
+      }
     };
 
-    Object.entries(sliderMap).forEach(([sliderId, key]) => {
-      const slider = document.getElementById(sliderId);
-      const display = document.getElementById(sliderId.replace('Slider', 'Display'));
-      if (slider && preset[key] !== undefined) {
-        slider.value = preset[key];
-        if (display) {
-          if (key === 'movementSpeed') {
-            display.textContent = parseFloat(preset[key]).toFixed(4);
-          } else {
-            display.textContent = preset[key];
-          }
+    // --- Apply Preset ---
+    function applyStarPreset(presetName) {
+      const preset = PRESETS[presetName];
+      if (!preset) {
+        console.warn('⚠️ Preset not found:', presetName);
+        return;
+      }
+
+      // Update global CONFIG if it exists (for stars.js)
+      if (window.CONFIG) {
+        // Copy only the config values (not name, icon, desc)
+        const configValues = { ...preset };
+        delete configValues.name;
+        delete configValues.icon;
+        delete configValues.desc;
+        Object.assign(window.CONFIG, configValues);
+      }
+
+      // Store preference
+      localStorage.setItem('star-preset', presetName);
+
+      // Update UI buttons
+      document.querySelectorAll('.star-preset-btn').forEach(btn => {
+        const isActive = btn.dataset.preset === presetName;
+        btn.classList.toggle('active', isActive);
+        if (isActive) {
+          btn.style.borderColor = 'var(--accent-primary)';
+          btn.style.background = 'var(--pillar-color-light)';
+        } else {
+          btn.style.borderColor = 'var(--border-color)';
+          btn.style.background = 'var(--bg-card)';
+        }
+      });
+
+      // Update slider values
+      updateSliders(preset);
+
+      // Notify star system to reload
+      if (window.reloadStars) {
+        window.reloadStars();
+      } else if (window.updateStarsForSidebar) {
+        window.updateStarsForSidebar();
+      }
+
+      // If preset is 'off', hide the canvas
+      if (presetName === 'off') {
+        const canvas = document.getElementById('starCanvas');
+        if (canvas) {
+          canvas.style.display = 'none';
+          canvas.style.opacity = '0';
+        }
+      } else {
+        // Make sure canvas is visible
+        const canvas = document.getElementById('starCanvas');
+        if (canvas) {
+          canvas.style.display = 'block';
+          canvas.style.opacity = '1';
         }
       }
-    });
-  }
 
-  // --- Toast Notification (using global toast system) ---
-  function showPresetToast(presetName) {
-    const preset = PRESETS[presetName];
-    if (!preset) return;
+      // Show toast notification
+      showPresetToast(presetName);
 
-    // Use the global showToast function (if available)
-    if (typeof window.showToast === 'function') {
-      window.showToast(`${preset.icon} ${preset.name} preset applied`, 'success');
-    } else {
-      // Fallback: create toast manually
-      const existing = document.querySelector('.global-toast');
-      if (existing) existing.remove();
+      console.log('✨ Star preset applied:', presetName);
+    }
 
+    // --- Update Sliders ---
+    function updateSliders(preset) {
+      const sliderMap = {
+        starCountSlider: 'starCount',
+        twinkleSpeedSlider: 'twinkleSpeed',
+        movementSpeedSlider: 'movementSpeed',
+        connectionDistanceSlider: 'connectionDistance',
+      };
+
+      Object.entries(sliderMap).forEach(([sliderId, key]) => {
+        const slider = document.getElementById(sliderId);
+        const display = document.getElementById(sliderId.replace('Slider', 'Display'));
+        if (slider && preset[key] !== undefined) {
+          slider.value = preset[key];
+          if (display) {
+            if (key === 'movementSpeed') {
+              display.textContent = parseFloat(preset[key]).toFixed(4);
+            } else {
+              display.textContent = preset[key];
+            }
+          }
+        }
+      });
+    }
+
+    // --- Toast Notification (using global toast system) ---
+    function showPresetToast(presetName) {
+      const preset = PRESETS[presetName];
+      if (!preset) return;
+
+      // Use the global showToast function (if available)
+      if (typeof window.showToast === 'function') {
+        window.showToast(`${preset.icon} ${preset.name} preset applied`, 'success');
+      } else {
+        // Fallback: create toast manually
+        const existing = document.querySelector('.global-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'global-toast success';
+        toast.innerHTML = `
+          <span class="toast-icon">✅</span>
+          <span class="toast-message">${preset.icon} ${preset.name} preset applied</span>
+        `;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    }
+
+    // --- Initialize Star Presets ---
+    function initStarPresets() {
+      console.log('✨ Initializing star presets...');
+
+      // Load saved preset
+      const saved = localStorage.getItem('star-preset') || 'calm';
+      
+      // Find preset buttons
+      const presetBtns = document.querySelectorAll('.star-preset-btn');
+      
+      if (presetBtns.length === 0) {
+        console.log('⏳ No preset buttons found yet, waiting...');
+        // Wait for modal to load
+        const observer = new MutationObserver(function() {
+          const btns = document.querySelectorAll('.star-preset-btn');
+          if (btns.length > 0) {
+            observer.disconnect();
+            setupPresetButtons(btns, saved);
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        return;
+      }
+
+      setupPresetButtons(presetBtns, saved);
+    }
+
+    // --- Setup Preset Buttons ---
+    function setupPresetButtons(buttons, savedPreset) {
+      // Apply saved preset after a small delay
+      setTimeout(() => {
+        applyStarPreset(savedPreset);
+      }, 300);
+
+      // Add click handlers
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const preset = this.dataset.preset;
+          if (preset) {
+            applyStarPreset(preset);
+          }
+        });
+      });
+
+      // Setup custom controls
+      setupCustomControls();
+
+      console.log('✅ Star presets UI ready');
+    }
+
+    function showComingSoonToast(pillarName) {
+      // Get or create the toast container
+      let container = document.querySelector('.toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+      }
+
+      // Create the toast
       const toast = document.createElement('div');
-      toast.className = 'global-toast success';
-      toast.innerHTML = `
-        <span class="toast-icon">✅</span>
-        <span class="toast-message">${preset.icon} ${preset.name} preset applied</span>
-      `;
-      document.body.appendChild(toast);
+      toast.className = 'toast-item coming-soon-toast';
+      toast.textContent = `${pillarName} — page coming soon after the previous pillars are complete`;
+      toast.style.background = 'var(--accent-primary)';
+      toast.style.color = 'white';
+      toast.style.padding = '10px 20px';
+      toast.style.borderRadius = '40px';
+      toast.style.fontSize = '0.8rem';
+      toast.style.fontWeight = '500';
+      toast.style.boxShadow = 'var(--shadow-md)';
+      toast.style.display = 'flex';
+      toast.style.alignItems = 'center';
+      toast.style.gap = '8px';
 
+      // Add a lock icon
+      const icon = document.createElement('span');
+      icon.textContent = '🔒';
+      toast.prepend(icon);
+
+      container.appendChild(toast);
+
+      // Auto-dismiss after 2.5 seconds
       setTimeout(() => {
         toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-  }
-
-  // --- Initialize Star Presets ---
-  function initStarPresets() {
-    console.log('✨ Initializing star presets...');
-
-    // Load saved preset
-    const saved = localStorage.getItem('star-preset') || 'calm';
-    
-    // Find preset buttons
-    const presetBtns = document.querySelectorAll('.star-preset-btn');
-    
-    if (presetBtns.length === 0) {
-      console.log('⏳ No preset buttons found yet, waiting...');
-      // Wait for modal to load
-      const observer = new MutationObserver(function() {
-        const btns = document.querySelectorAll('.star-preset-btn');
-        if (btns.length > 0) {
-          observer.disconnect();
-          setupPresetButtons(btns, saved);
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
-      return;
-    }
-
-    setupPresetButtons(presetBtns, saved);
-  }
-
-  // --- Setup Preset Buttons ---
-  function setupPresetButtons(buttons, savedPreset) {
-    // Apply saved preset after a small delay
-    setTimeout(() => {
-      applyStarPreset(savedPreset);
-    }, 300);
-
-    // Add click handlers
-    buttons.forEach(btn => {
-      btn.addEventListener('click', function() {
-        const preset = this.dataset.preset;
-        if (preset) {
-          applyStarPreset(preset);
-        }
-      });
-    });
-
-    // Setup custom controls
-    setupCustomControls();
-
-    console.log('✅ Star presets UI ready');
-  }
-
-  function showComingSoonToast(pillarName) {
-    // Get or create the toast container
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-      container = document.createElement('div');
-      container.className = 'toast-container';
-      document.body.appendChild(container);
-    }
-
-    // Create the toast
-    const toast = document.createElement('div');
-    toast.className = 'toast-item coming-soon-toast';
-    toast.textContent = `${pillarName} — page coming soon after the previous pillars are complete`;
-    toast.style.background = 'var(--accent-primary)';
-    toast.style.color = 'white';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = '40px';
-    toast.style.fontSize = '0.8rem';
-    toast.style.fontWeight = '500';
-    toast.style.boxShadow = 'var(--shadow-md)';
-    toast.style.display = 'flex';
-    toast.style.alignItems = 'center';
-    toast.style.gap = '8px';
-
-    // Add a lock icon
-    const icon = document.createElement('span');
-    icon.textContent = '🔒';
-    toast.prepend(icon);
-
-    container.appendChild(toast);
-
-    // Auto-dismiss after 2.5 seconds
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(-10px) scale(0.95)';
-      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-      setTimeout(() => {
-        toast.remove();
-        // Remove container if empty
-        if (container.children.length === 0) {
-          container.remove();
-        }
-      }, 300);
-    }, 2500);
-  }
-
-  // --- Setup Custom Controls ---
-  function setupCustomControls() {
-    const applyBtn = document.getElementById('applyCustomStars');
-    if (applyBtn) {
-      applyBtn.addEventListener('click', function() {
-        const custom = {
-          starCount: parseInt(document.getElementById('starCountSlider')?.value || 150),
-          twinkleSpeed: parseFloat(document.getElementById('twinkleSpeedSlider')?.value || 0.008),
-          movementSpeed: parseFloat(document.getElementById('movementSpeedSlider')?.value || 0.00001),
-          connectionDistance: parseInt(document.getElementById('connectionDistanceSlider')?.value || 350),
-          minSize: 0.8,
-          maxSize: 2.5,
-          maxOpacity: 0.9,
-          minOpacity: 0.3,
-          movementRange: 15,
-          connectStars: true,
-          connectionOpacity: 0.07,
-          desktopBreakpoint: 800,
-        };
-
-        // Apply custom
-        if (window.CONFIG) {
-          Object.assign(window.CONFIG, custom);
-        }
-
-        localStorage.setItem('star-preset', 'custom');
-        localStorage.setItem('star-custom', JSON.stringify(custom));
-
-        if (window.reloadStars) {
-          window.reloadStars();
-        }
-
-        showPresetToast('custom');
-      });
-    }
-
-    // Live slider updates
-    document.querySelectorAll('.star-control-group input[type="range"]').forEach(slider => {
-      slider.addEventListener('input', function() {
-        const display = document.getElementById(this.id.replace('Slider', 'Display'));
-        if (display) {
-          if (this.id === 'movementSpeedSlider') {
-            display.textContent = parseFloat(this.value).toFixed(4);
-          } else {
-            display.textContent = this.value;
+        toast.style.transform = 'translateY(-10px) scale(0.95)';
+        toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        setTimeout(() => {
+          toast.remove();
+          // Remove container if empty
+          if (container.children.length === 0) {
+            container.remove();
           }
-        }
-      });
-    });
-  }
+        }, 300);
+      }, 2500);
+    }
 
-  // --- Load custom preset from localStorage ---
-  function loadCustomPreset() {
-    const custom = localStorage.getItem('star-custom');
-    if (custom) {
-      try {
-        return JSON.parse(custom);
-      } catch (e) {
-        return null;
+    // --- Setup Custom Controls ---
+    function setupCustomControls() {
+      const applyBtn = document.getElementById('applyCustomStars');
+      if (applyBtn) {
+        applyBtn.addEventListener('click', function() {
+          const custom = {
+            starCount: parseInt(document.getElementById('starCountSlider')?.value || 150),
+            twinkleSpeed: parseFloat(document.getElementById('twinkleSpeedSlider')?.value || 0.008),
+            movementSpeed: parseFloat(document.getElementById('movementSpeedSlider')?.value || 0.00001),
+            connectionDistance: parseInt(document.getElementById('connectionDistanceSlider')?.value || 350),
+            minSize: 0.8,
+            maxSize: 2.5,
+            maxOpacity: 0.9,
+            minOpacity: 0.3,
+            movementRange: 15,
+            connectStars: true,
+            connectionOpacity: 0.07,
+            desktopBreakpoint: 800,
+          };
+
+          // Apply custom
+          if (window.CONFIG) {
+            Object.assign(window.CONFIG, custom);
+          }
+
+          localStorage.setItem('star-preset', 'custom');
+          localStorage.setItem('star-custom', JSON.stringify(custom));
+
+          if (window.reloadStars) {
+            window.reloadStars();
+          }
+
+          showPresetToast('custom');
+        });
+      }
+
+      // Live slider updates
+      document.querySelectorAll('.star-control-group input[type="range"]').forEach(slider => {
+        slider.addEventListener('input', function() {
+          const display = document.getElementById(this.id.replace('Slider', 'Display'));
+          if (display) {
+            if (this.id === 'movementSpeedSlider') {
+              display.textContent = parseFloat(this.value).toFixed(4);
+            } else {
+              display.textContent = this.value;
+            }
+          }
+        });
+      });
+      // --- NEW: Brightness slider ---
+      const brightnessSlider = document.getElementById('brightnessSlider');
+      const brightnessDisplay = document.getElementById('brightnessDisplay');
+
+      if (brightnessSlider) {
+        // Load saved value into slider
+        const saved = localStorage.getItem('star-brightness');
+        if (saved !== null) {
+          const val = parseInt(saved);
+          brightnessSlider.value = val;
+          CONFIG.brightness = val / 100;
+          if (brightnessDisplay) brightnessDisplay.textContent = val + '%';
+        } else {
+          brightnessSlider.value = 200;
+          CONFIG.brightness = 1.0;
+          if (brightnessDisplay) brightnessDisplay.textContent = '100%';
+        }
+        
+        // Live update on input
+        brightnessSlider.addEventListener('input', function() {
+          const val = parseInt(this.value);
+          const normalized = val / 100;
+          CONFIG.brightness = Math.max(0.2, Math.min(2.0, normalized));
+          if (brightnessDisplay) brightnessDisplay.textContent = val + '%';
+          
+          // Save to localStorage
+          localStorage.setItem('star-brightness', val);
+        });
       }
     }
-    return null;
+
+    // --- Load custom preset from localStorage ---
+    function loadCustomPreset() {
+      const custom = localStorage.getItem('star-custom');
+      if (custom) {
+        try {
+          return JSON.parse(custom);
+        } catch (e) {
+          return null;
+        }
+      }
+      return null;
+    }
+
+    // --- Expose globally ---
+    window.PRESETS = PRESETS;
+    window.applyStarPreset = applyStarPreset;
+    window.loadCustomPreset = loadCustomPreset;
+
+    // --- Auto-init when DOM is ready ---
+    if (document.readyState === 'complete') {
+      initStarPresets();
+    } else {
+      document.addEventListener('DOMContentLoaded', initStarPresets);
+    }
+
+    // Also init when modal tabs are switched (for dynamic loading)
+    document.addEventListener('click', function(e) {
+      const tabBtn = e.target.closest('.tab-button[data-tab="tab5"]');
+      if (tabBtn) {
+        setTimeout(initStarPresets, 100);
+      }
+    });
+
+    console.log('🎨 Star presets system loaded');
+
+
+  // ============================================================
+  // PAGE HEADER - Shared (in global.js)
+  // ============================================================
+
+  function updatePageHeader(pillarId) {
+    const pillarConfig = {
+      networking: {
+        name: 'Networking Fundamentals',
+        totalSections: 7,
+        sectionPrefix: 'networking-section-',
+        quizKey: 'networking-quiz-passed',
+      },
+      linux: {
+        name: 'Linux & CLI Proficiency',
+        totalSections: 10,
+        sectionPrefix: 'linux-section-',
+        quizKey: 'linux-quiz-passed',
+      },
+      // Add more as needed
+    };
+    
+    const config = pillarConfig[pillarId];
+    if (!config) return;
+    
+    // Calculate completion
+    let completedSections = 0;
+    for (let i = 1; i <= config.totalSections; i++) {
+      if (localStorage.getItem(`${config.sectionPrefix}${i}`) === 'true') {
+        completedSections++;
+      }
+    }
+    
+    const quizPassed = localStorage.getItem(config.quizKey) === 'true';
+    const totalItems = config.totalSections + 1;
+    const completedItems = completedSections + (quizPassed ? 1 : 0);
+    const percent = Math.round((completedItems / totalItems) * 100);
+    
+    // Update ring
+    const ringFill = document.querySelector('#completionRing .ring-fill');
+    const percentDisplay = document.getElementById('completionPercent');
+    if (ringFill && percentDisplay) {
+      const circumference = 2 * Math.PI * 20;
+      const offset = circumference - (percent / 100) * circumference;
+      ringFill.style.strokeDashoffset = offset;
+      percentDisplay.textContent = `${percent}%`;
+    }
+    
+    // Update badges
+    const container = document.getElementById('metaBadges');
+    if (container) {
+      let statusClass, statusIcon, statusText;
+      if (percent === 100) {
+        statusClass = 'status-complete';
+        statusIcon = '✓';
+        statusText = 'Complete';
+      } else if (percent > 0) {
+        statusClass = 'status-progress';
+        statusIcon = '⟳';
+        statusText = 'In Progress';
+      } else {
+        statusClass = 'status-locked';
+        statusIcon = '○';
+        statusText = 'Not Started';
+      }
+      
+      container.innerHTML = `
+        <span class="meta-badge ${statusClass}">
+          <span class="icon">${statusIcon}</span> ${statusText}
+        </span>
+        <span class="meta-badge">
+          <span class="icon">📄</span> ${config.totalSections} sections
+        </span>
+        <span class="meta-badge">
+          <span class="icon">✓</span> ${completedSections}/${config.totalSections}
+        </span>
+        <span class="meta-badge ${quizPassed ? 'quiz-passed' : ''}">
+          <span class="icon">${quizPassed ? '🎯' : '📝'}</span> ${quizPassed ? 'Quiz passed' : 'Quiz pending'}
+        </span>
+      `;
+    }
   }
 
-  // --- Expose globally ---
-  window.PRESETS = PRESETS;
-  window.applyStarPreset = applyStarPreset;
-  window.loadCustomPreset = loadCustomPreset;
-
-  // --- Auto-init when DOM is ready ---
-  if (document.readyState === 'complete') {
-    initStarPresets();
-  } else {
-    document.addEventListener('DOMContentLoaded', initStarPresets);
-  }
-
-  // Also init when modal tabs are switched (for dynamic loading)
-  document.addEventListener('click', function(e) {
-    const tabBtn = e.target.closest('.tab-button[data-tab="tab5"]');
-    if (tabBtn) {
-      setTimeout(initStarPresets, 100);
+  // Auto-detect pillar page and initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    const path = window.location.pathname;
+    let pillarId = null;
+    
+    if (path.includes('networking.html')) pillarId = 'networking';
+    else if (path.includes('linux.html')) pillarId = 'linux';
+    // Add more as needed
+    
+    if (pillarId) {
+      updatePageHeader(pillarId);
+      
+      // Listen for storage changes
+      window.addEventListener('storage', function(e) {
+        if (e.key && e.key.includes(pillarId)) {
+          updatePageHeader(pillarId);
+        }
+      });
     }
   });
-
-  console.log('🎨 Star presets system loaded');
-
-
-// ============================================================
-// PAGE HEADER - Shared (in global.js)
-// ============================================================
-
-function updatePageHeader(pillarId) {
-  const pillarConfig = {
-    networking: {
-      name: 'Networking Fundamentals',
-      totalSections: 7,
-      sectionPrefix: 'networking-section-',
-      quizKey: 'networking-quiz-passed',
-    },
-    linux: {
-      name: 'Linux & CLI Proficiency',
-      totalSections: 10,
-      sectionPrefix: 'linux-section-',
-      quizKey: 'linux-quiz-passed',
-    },
-    // Add more as needed
-  };
   
-  const config = pillarConfig[pillarId];
-  if (!config) return;
-  
-  // Calculate completion
-  let completedSections = 0;
-  for (let i = 1; i <= config.totalSections; i++) {
-    if (localStorage.getItem(`${config.sectionPrefix}${i}`) === 'true') {
-      completedSections++;
-    }
-  }
-  
-  const quizPassed = localStorage.getItem(config.quizKey) === 'true';
-  const totalItems = config.totalSections + 1;
-  const completedItems = completedSections + (quizPassed ? 1 : 0);
-  const percent = Math.round((completedItems / totalItems) * 100);
-  
-  // Update ring
-  const ringFill = document.querySelector('#completionRing .ring-fill');
-  const percentDisplay = document.getElementById('completionPercent');
-  if (ringFill && percentDisplay) {
-    const circumference = 2 * Math.PI * 20;
-    const offset = circumference - (percent / 100) * circumference;
-    ringFill.style.strokeDashoffset = offset;
-    percentDisplay.textContent = `${percent}%`;
-  }
-  
-  // Update badges
-  const container = document.getElementById('metaBadges');
-  if (container) {
-    let statusClass, statusIcon, statusText;
-    if (percent === 100) {
-      statusClass = 'status-complete';
-      statusIcon = '✓';
-      statusText = 'Complete';
-    } else if (percent > 0) {
-      statusClass = 'status-progress';
-      statusIcon = '⟳';
-      statusText = 'In Progress';
-    } else {
-      statusClass = 'status-locked';
-      statusIcon = '○';
-      statusText = 'Not Started';
-    }
-    
-    container.innerHTML = `
-      <span class="meta-badge ${statusClass}">
-        <span class="icon">${statusIcon}</span> ${statusText}
-      </span>
-      <span class="meta-badge">
-        <span class="icon">📄</span> ${config.totalSections} sections
-      </span>
-      <span class="meta-badge">
-        <span class="icon">✓</span> ${completedSections}/${config.totalSections}
-      </span>
-      <span class="meta-badge ${quizPassed ? 'quiz-passed' : ''}">
-        <span class="icon">${quizPassed ? '🎯' : '📝'}</span> ${quizPassed ? 'Quiz passed' : 'Quiz pending'}
-      </span>
-    `;
-  }
-}
-
-// Auto-detect pillar page and initialize
-document.addEventListener('DOMContentLoaded', function() {
-  const path = window.location.pathname;
-  let pillarId = null;
-  
-  if (path.includes('networking.html')) pillarId = 'networking';
-  else if (path.includes('linux.html')) pillarId = 'linux';
-  // Add more as needed
-  
-  if (pillarId) {
-    updatePageHeader(pillarId);
-    
-    // Listen for storage changes
-    window.addEventListener('storage', function(e) {
-      if (e.key && e.key.includes(pillarId)) {
-        updatePageHeader(pillarId);
-      }
-    });
-  }
-});
-
-window.updatePageHeader = updatePageHeader;
-window.showToast = showToast;
-window.showComingSoonToast = showComingSoonToast;
-
 })();
