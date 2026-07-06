@@ -2,7 +2,7 @@
 // Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
 // Integrated JS for the sidebar and styling
 
-const CACHE_NAME = 'devops-journey-2026-07-06-v1';  // Update this version string with each deployment
+const CACHE_NAME = 'devops-journey-2026-07-06-v1.2';  // Update this version string with each deployment
 
 const urlsToCache = [
   '/DevOps-Journey/',
@@ -11,8 +11,6 @@ const urlsToCache = [
   '/DevOps-Journey/html/linux.html',
   '/DevOps-Journey/style.css',
   '/DevOps-Journey/js/global.js',
-  '/DevOps-Journey/js/networking.js',
-  '/DevOps-Journey/js/linux.js',
   '/DevOps-Journey/img/favicon.svg',
   '/DevOps-Journey/img/Logo.svg'
 ];

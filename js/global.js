@@ -96,7 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
       quizKey: 'linux-quiz-passed',
       sectionPrefix: 'linux-section-'
     },
-    security: { placeholder: true, name: 'Security' },
+    security: { 
+      sections: 10, 
+      quiz: true, 
+      titles: [
+        'Section 1 — Cryptography', 
+        'Section 2 — Hashing', 
+        'Section 3 — TLS & Handshake', 
+        'Section 4 — PKI & CAs', 
+        'Section 5 — AuthN vs AuthZ', 
+        'Section 6 — Least Privilege', 
+        'Section 7 — OWASP Top 10 (1)', 
+        'Section 8 — OWASP Top 10 (2)', 
+        'Section 9 — Passwords & Secrets', 
+        'Section 10 — Network Hardening'
+      ], 
+      quizKey: 'security-quiz-passed', 
+      sectionPrefix: 'security-section-' 
+    },
     scripting: { placeholder: true, name: 'Scripting' },
     databases: { placeholder: true, name: 'Databases' }
   };
@@ -628,6 +645,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         ['gc-score-networking','gc-score-linux','gc-score-security','gc-score-scripting','gc-score-databases',
          ...Array.from({length:7}, (_,i)=>`networking-section-${i+1}`), 'networking-quiz-passed',
          ...Array.from({length:10}, (_,i)=>`linux-section-${i+1}`), 'linux-quiz-passed',
+          ...Array.from({length:10}, (_,i)=>`security-section-${i+1}`), 'security-quiz-passed',
          'phase2-docker','phase2-cicd','phase2-kubernetes','phase2-terraform','phase2-monitoring'
         ].forEach(key => localStorage.removeItem(key));
         updateAllUI();
@@ -677,7 +695,13 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         for (let i=1; i<=10; i++) if (localStorage.getItem(`linux-section-${i}`) === 'true') lcount++;
         if (localStorage.getItem('linux-quiz-passed') === 'true') lcount++;
         return lcount / 11;
-      case 'security': return 0;
+      case 'security':
+        let secCount = 0;
+        for (let i = 1; i <= 10; i++) {
+          if (localStorage.getItem(`security-section-${i}`) === 'true') secCount++;
+        }
+        if (localStorage.getItem('security-quiz-passed') === 'true') secCount++;
+        return secCount / 11; // 10 sections + quiz
       case 'scripting': return 0;
       case 'databases': return 0;
       default: return 0;
@@ -1579,13 +1603,9 @@ window.openModalToPillarDetails = openModalToPillarDetails;
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     `;
-          // <div class="progress-modal-footer">
-          //   <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
-          // </div>
 
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     initModalAndFloatingRing();

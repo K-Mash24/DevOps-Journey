@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Security Concepts pillar of the DevOps Journey. Covers cryptography, hashing, TLS, PKI, authentication, authorization, OWASP Top 10, and network hardening."
+    />
+    <title>Pillar 3 — Security Concepts | Great Cheatsheets</title>
+    <link rel="icon" type="image/svg+xml" href="../img/security-icon.svg" />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preload" href="../style.css" as="style" />
+    <link rel="preload" href="../js/global.js" as="script" />
+    <link rel="preload" href="../js/stars.js" as="script" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- PWA & Mobile -->
+    <link rel="manifest" href="/DevOps-Journey/manifest.json" />
+    <meta name="theme-color" content="#5346d4" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="DevOps Journey" />
+    <link rel="apple-touch-icon" href="/img/Logo.svg" />
+  </head>
+  <body>
+    <!-- Starry Background -->
+    <canvas id="starCanvas" aria-hidden="true"></canvas>
+
+    <div class="app-shell">
+
+      <!-- ======================= SIDEBAR ======================= -->
+      <aside class="sidebar" id="sidebar">
+        <!-- Desktop toggle button -->
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar (Ctrl+B)">
+          <svg class="toggle-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+          <span class="toggle-tooltip">Ctrl+B</span>
+        </button>
+
+        <div class="sidebar-logo">
+          <a href="../index.html" class="logo-mark" aria-label="Home">
+            <div class="logo-icon" aria-hidden="true">
+              <img src="../img/security-icon.svg" alt="Great Cheatsheets Logo" />
+            </div>
+            <div>
+              <div class="logo-text">Great Cheatsheets</div>
+              <div class="logo-sub">SAA Foundation · Phase 1</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="sidebar-section-label">Navigation</div>
+        <nav class="sidebar-nav" aria-label="Primary navigation">
+          <a class="nav-item" href="../index.html">
+            <svg class="nav-icon" viewBox="0 0 30 30" fill="currentColor" aria-hidden="true">
+              <path d="m16 2.672-5.331 5.331V5.87H6.404v6.398l-3.755 3.755.754.754L16 4.18l12.597 12.597.754-.754zM7.47 6.937h2.132v2.132l-2.133 2.133V6.937zM6.404 16.533v12.795h7.464v-7.464h4.265v7.464h7.464V16.533l-9.596-9.596-9.596 9.596zM24.53 28.262h-5.331v-7.464h-6.398v7.464H7.47V16.975L16 8.445l8.53 8.53z"/>
+            </svg>
+            Home
+          </a>
+          <a class="nav-item" href="#resources">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M7.71 3h6.79l.51.5v10l-.5.5h-13l-.5-.5v-11l.5-.5h5l.35.15.85.85zm6.28 10v-1.51l.01-4v-1.5H7.7l-.86.86-.35.15H2v6h11.99zm-6.5-8h6.5l.01-.99H7.5l-.36-.15-.85-.85H2v3h4.28l.86-.86.35-.15zm2.29 4.07L8.42 7.7l.74-.69 2.22 2.22v.71l-2.29 2.21-.7-.72 1.4-1.35H8.42a2 2 0 0 0-1.35.61A1.8 1.8 0 0 0 6.54 12h-1a2.76 2.76 0 0 1 .81-2 3 3 0 0 1 2-.93h1.43z"/>
+            </svg>
+            Resources
+          </a>
+          <a class="nav-item" href="../html/networking.html" aria-label="Go back to Networking Fundamentals pillar">
+            <svg class="nav-icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+              <path d="M70.72168,128.3916c.22412-.273.46289-.53271.71-.78467.02881-.02978.05322-.0625.083-.09228l24-24a12.0001,12.0001,0,0,1,16.9707,16.9707L108.9707,124H164V104a12,12,0,0,1,24,0v32a12.0006,12.0006,0,0,1-12,12H108.9707l3.51465,3.51465a12.0001,12.0001,0,0,1-16.9707,16.9707l-24-24c-.02979-.02978-.0542-.0625-.083-.09228-.24707-.252-.48584-.51172-.71-.78467-.12354-.15039-.23145-.30908-.34668-.46387-.11816-.15869-.24121-.31348-.35156-.478-.12012-.18017-.2251-.3667-.335-.55127-.08985-.15185-.18555-.2998-.269-.45605-.10009-.18652-.18505-.37842-.27441-.56885-.07715-.16455-.15967-.32617-.22949-.49463-.07666-.18554-.13916-.375-.20606-.56347-.06494-.18164-.13476-.35987-.19092-.54541-.05712-.189-.0996-.38135-.14746-.57325-.04687-.188-.10009-.374-.13818-.56543-.044-.22168-.07031-.44482-.10156-.668-.02344-.165-.05518-.32666-.07129-.49366a12.042,12.042,0,0,1,0-2.373c.01611-.167.04785-.32862.07129-.49366.03125-.22314.05761-.44628.10156-.668.03809-.19141.09131-.37745.13818-.56543.04786-.1919.09034-.38428.14746-.57373.05616-.18506.126-.36329.19092-.54493.0669-.18847.1294-.37793.20606-.56347.06982-.16846.15234-.33008.23-.49463.08887-.19043.17383-.38233.27392-.56885.0835-.15625.1792-.3042.269-.45605.10986-.18457.21484-.3711.335-.55127.11035-.16455.2334-.31934.35156-.478C70.49023,128.70068,70.59814,128.542,70.72168,128.3916ZM236,56V200a20.02229,20.02229,0,0,1-20,20H40a20.02229,20.02229,0,0,1-20-20V56A20.02229,20.02229,0,0,1,40,36H216A20.02229,20.02229,0,0,1,236,56Zm-24,4H44V196H212Z"/>
+            </svg>
+            Back to Networking
+          </a>
+          <a class="nav-item" href="../html/linux.html" aria-label="Go back to Linux & CLI Proficiency pillar">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M1,19 L23,19 L23,1 L1,1 L1,19 Z M5,23 L19,23 L5,23 Z M8,23 L16,23 L16,19 L8,19 L8,23 Z M7.757,5.757 L9.879,7.879 L7.757,5.757 Z M9,10 L6,10 L9,10 Z M9.879,12.121 L7.757,14.243 L9.879,12.121 Z M12,13 L12,16 L12,13 Z M14.121,12.121 L16.243,14.243 L14.121,12.121 Z M18,10 L15,10 L18,10 Z M16.243,5.757 L14.121,7.879 L16.243,5.757 Z M12,7 L12,4 L12,7 Z M12,7 C10.343,7 9,8.343 9,10 C9,11.657 10.343,13 12,13 C13.657,13 15,11.657 15,10 C15,8.343 13.657,7 12,7 L12,7 Z"/>
+            </svg>
+            Back to Linux
+          </a>
+        </nav>
+
+        <div class="sidebar-section-label">Phase 1 — Foundations (Security)</div>
+        <nav class="sidebar-nav" aria-label="Security sections">
+          <!-- Overview -->
+          <a class="nav-item" href="#overview-divider">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M6.5 11.25a.75.75 0 0 1 0-1.5h7a.75.75 0 0 1 0 1.5zm0 3a.75.75 0 0 1 0-1.5h7a.75.75 0 0 1 0 1.5z M11.185.5H4.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7.202a2 2 0 0 0-.526-1.352l-4.315-4.702A2 2 0 0 0 11.185.5M4.5 17.5v-15h6.685L15.5 7.202V17.5z M11.5 6.5h5a1 1 0 1 1 0 2h-6a1 1 0 0 1-1-1v-6a1 1 0 0 1 2 0z"/>
+            </svg>
+            Overview
+          </a>
+
+          <!-- Section 1 — Cryptography -->
+          <a class="nav-item" href="#s1">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 10l-3 3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Section 1 — Cryptography
+            <span class="nav-badge">8</span>
+          </a>
+
+          <!-- Section 2 — Hashing -->
+          <a class="nav-item" href="#s2">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 7L10 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M4 12L14 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M4 17L12 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="16" y="4" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="16" y="14" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M19 10L19 14" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            Section 2 — Hashing
+            <span class="nav-badge">7</span>
+          </a>
+
+          <!-- Section 3 — TLS/SSL -->
+          <a class="nav-item" href="#s3">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12 18L12 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M4.93 4.93L7.76 7.76" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M16.24 16.24L19.07 19.07" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M2 12L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M18 12L22 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M4.93 19.07L7.76 16.24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M16.24 7.76L19.07 4.93" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            Section 3 — TLS/SSL & Handshake
+            <span class="nav-badge">10</span>
+          </a>
+
+          <!-- Section 4 — PKI & CAs -->
+          <a class="nav-item" href="#s4">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.3"/>
+            </svg>
+            Section 4 — PKI & Certificate Authorities
+            <span class="nav-badge">9</span>
+          </a>
+
+          <!-- Section 5 — AuthN vs AuthZ -->
+          <a class="nav-item" href="#s5">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M16 21L16 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M16 15L16 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Section 5 — AuthN vs AuthZ
+            <span class="nav-badge">8</span>
+          </a>
+
+          <!-- Section 6 — Least Privilege -->
+          <a class="nav-item" href="#s6">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M12 8L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="12" cy="15" r="1" fill="currentColor"/>
+            </svg>
+            Section 6 — Least Privilege & Access Control
+            <span class="nav-badge">7</span>
+          </a>
+
+          <!-- Section 7 — OWASP Top 10 (Part 1) -->
+          <a class="nav-item" href="#s7">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            Section 7 — OWASP Top 10 (Part 1)
+            <span class="nav-badge">12</span>
+          </a>
+
+          <!-- Section 8 — OWASP Top 10 (Part 2) -->
+          <a class="nav-item" href="#s8">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="2" fill="currentColor" opacity="0.3"/>
+            </svg>
+            Section 8 — OWASP Top 10 (Part 2)
+            <span class="nav-badge">10</span>
+          </a>
+
+          <!-- Section 9 — Password & Secrets -->
+          <a class="nav-item" href="#s9">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
+              <path d="M12 16L12 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Section 9 — Password & Secrets Security
+            <span class="nav-badge">9</span>
+          </a>
+
+          <!-- Section 10 — Network Hardening -->
+          <a class="nav-item" href="#s10">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 9h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M8 13l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 17L8 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            Section 10 — Network Hardening
+            <span class="nav-badge">8</span>
+          </a>
+
+          <!-- Flashcards -->
+          <a class="nav-item" href="#flashcards">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 10.2798V17.4298C18.97 20.2798 18.19 20.9998 15.22 20.9998H5.78003C2.76003 20.9998 2 20.2498 2 17.2698V10.2798C2 7.5798 2.63 6.7098 5 6.5698C5.24 6.5598 5.50003 6.5498 5.78003 6.5498H15.22C18.24 6.5498 19 7.2998 19 10.2798ZM22 6.73V13.72C22 16.42 21.37 17.29 19 17.43V10.28C19 7.3 18.24 6.55 15.22 6.55H5.78003C5.50003 6.55 5.24 6.56 5 6.57C5.03 3.72 5.81003 3 8.78003 3H18.22C21.24 3 22 3.75 22 6.73ZM6.96027 18.5601H5.24023C4.83023 18.5601 4.49023 18.2201 4.49023 17.8101C4.49023 17.4001 4.83023 17.0601 5.24023 17.0601H6.96027C7.37027 17.0601 7.71027 17.4001 7.71027 17.8101C7.71027 18.2201 7.38027 18.5601 6.96027 18.5601ZM12.5494 18.5601H9.10938C8.69938 18.5601 8.35938 18.2201 8.35938 17.8101C8.35938 17.4001 8.69938 17.0601 9.10938 17.0601H12.5494C12.9594 17.0601 13.2994 17.4001 13.2994 17.8101C13.2994 18.2201 12.9694 18.5601 12.5494 18.5601ZM19 11.8599H2V13.3599H19V11.8599Z"/>
+            </svg>
+            Flashcards
+          </a>
+
+          <!-- Quiz -->
+          <a class="nav-item" href="#quiz">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M8 10l-3 3 3 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 16h4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+            Self-Test Quiz
+          </a>
+        </nav>
+
+        <div class="sidebar-section-label">Coming Next</div>
+        <nav class="sidebar-nav" aria-label="Next pillar">
+          <a class="nav-item" href="#" style="opacity:0.4; cursor:not-allowed" aria-disabled="true">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M7.71 3h6.79l.51.5v10l-.5.5h-13l-.5-.5v-11l.5-.5h5l.35.15.85.85zm6.28 10v-1.51l.01-4v-1.5H7.7l-.86.86-.35.15H2v6h11.99zm-6.5-8h6.5l.01-.99H7.5l-.36-.15-.85-.85H2v3h4.28l.86-.86.35-.15zm2.29 4.07L8.42 7.7l.74-.69 2.22 2.22v.71l-2.29 2.21-.7-.72 1.4-1.35H8.42a2 2 0 0 0-1.35.61A1.8 1.8 0 0 0 6.54 12h-1a2.76 2.76 0 0 1 .81-2 3 3 0 0 1 2-.93h1.43z"/>
+            </svg>
+            Pillar 4 — Scripting & Automation
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-footer-text">
+            <div>github.com/K-Mash24/Great_Cheatsheets</div>
+            <div>github.com/K-Mash24/DevOps-Journey</div>
+            <button
+              id="resetWelcomeBtn"
+              class="btn btn-secondary btn-sm"
+              style="display:flex;background:none;border:none;color:var(--text-sidebar-muted);font-size:0.65rem;cursor:pointer;text-decoration:underline;justify-content:left;"
+            >
+              Reset Welcome Messages
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+      <!-- ======================= MAIN CONTENT ======================= -->
+      <div class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
+              <span class="hamburger-box">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+              </span>
+            </button>
+
+            <div class="search-bar">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+              </svg>
+              <input type="text" class="search-input" id="searchInput" placeholder="Search security concepts..." autocomplete="off" aria-label="Search" />
+              <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <div class="theme-toggle" role="group" aria-label="Theme toggle">
+              <button class="theme-toggle-btn active" id="lightBtn" aria-label="Light mode" title="Light mode">
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
+              </button>
+              <button class="theme-toggle-btn" id="darkBtn" aria-label="Dark mode" title="Dark mode">
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- ========== PAGE BODY ========== -->
+        <main class="page-container" id="mainContent">
+
+          <!-- Page Header -->
+          <div class="page-header" id="pageHeader">
+            <div class="breadcrumb">
+              <span>Phase 1 — Foundations</span>
+              <span class="sep">›</span>
+              <span class="crumb-active">Pillar 3 — Security Concepts</span>
+            </div>
+            <div class="header-content">
+              <div class="header-left">
+                <h1>Security Concepts</h1>
+                <div class="meta-badges" id="metaBadges">
+                  <!-- Populated by JavaScript -->
+                </div>
+              </div>
+              <div class="completion-ring" id="completionRing">
+                <svg viewBox="0 0 48 48">
+                  <circle class="ring-bg" cx="24" cy="24" r="20"/>
+                  <circle class="ring-fill" cx="24" cy="24" r="20" stroke-dasharray="125.66" stroke-dashoffset="125.66"/>
+                </svg>
+                <div class="ring-label">
+                  <span class="pct" id="completionPercent">0%</span>
+                </div>
+              </div>
+            </div>
+            <div class="header-dots" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+
+          <!-- ===== OVERVIEW ===== -->
+          <div class="section-divider" id="overview-divider">
+            <div class="section-number" aria-hidden="true">📌</div>
+            <h2>Pillar Overview</h2>
+          </div>
+
+          <div class="overview-content" style="margin-bottom: 2rem">
+            <!-- Purpose -->
+            <div class="info-box note" style="margin-bottom: 1.5rem">
+              <strong>📌 Purpose</strong>
+              <p>
+                Security is the pillar that explains <em>why</em> every other pillar behaves the way it does. Networking taught you how data moves; Linux taught you how systems are controlled; Security teaches you how to keep both from being abused. This is studied entirely from first principles — no AWS IAM, KMS, Security Groups, or ACM references unless you bring them up. The goal is to understand encryption, trust, identity, and common attack patterns well enough that when you eventually see AWS's security services, they read as "oh, that's just [concept] with a managed wrapper" rather than new magic.
+              </p>
+              <p style="margin-top: 0.5rem">
+                This also directly underpins Phase 2 (DevOps): container image scanning, secrets management, TLS in CI/CD pipelines, and Kubernetes RBAC all lean on these fundamentals.
+              </p>
+            </div>
+
+            <!-- Learning Objectives -->
+            <div class="info-box tip" style="margin-bottom: 1.5rem">
+              <strong>🎯 Learning objectives</strong>
+              <ul style="margin-top: 0.5rem; padding-left: 1.2rem">
+                <li>Explain symmetric vs asymmetric encryption and identify which one solves which problem</li>
+                <li>Explain what a hash function is, why it's one-way, and where hashing is used (passwords, integrity checks, blockchains)</li>
+                <li>Trace a full TLS/SSL handshake step by step, including certificate exchange and key negotiation</li>
+                <li>Explain what a PKI (Public Key Infrastructure) is, what a Certificate Authority does, and how trust chains work</li>
+                <li>Explain the difference between authentication and authorization, and give real examples of each</li>
+                <li>Define the principle of least privilege and explain why it matters operationally</li>
+                <li>Walk through the OWASP Top 10 and explain the mechanism behind each vulnerability class (not just the name)</li>
+                <li>Explain common attack types: SQL injection, XSS, CSRF, and how each is mitigated</li>
+                <li>Explain the difference between encryption at rest and encryption in transit</li>
+                <li>Describe basic network hardening practices (firewalls revisited through a security lens, port hygiene, disabling unused services)</li>
+              </ul>
+            </div>
+
+            <!-- Key Concepts -->
+            <div class="info-box warning" style="margin-bottom: 2rem">
+              <strong>🔁 Key concepts to revise</strong>
+              <dl class="key-concepts-list">
+                <dt>Symmetric vs asymmetric encryption</dt>
+                <dd>Foundation for everything else in this pillar</dd>
+
+                <dt>Hashing vs encryption</dt>
+                <dd>Commonly confused — one is reversible, one isn't</dd>
+
+                <dt>TLS handshake</dt>
+                <dd>Core of "how does HTTPS actually work"</dd>
+
+                <dt>PKI & Certificate Authorities</dt>
+                <dd>Trust model underlying the entire internet</dd>
+
+                <dt>AuthN vs AuthZ</dt>
+                <dd>Distinct concepts constantly conflated in real systems</dd>
+
+                <dt>Least privilege</dt>
+                <dd>A design principle, not just a security checkbox</dd>
+
+                <dt>OWASP Top 10</dt>
+                <dd>Industry-standard vulnerability taxonomy</dd>
+
+                <dt>SQLi / XSS / CSRF</dt>
+                <dd>The three most common web attack classes</dd>
+
+                <dt>Encryption at rest vs in transit</dt>
+                <dd>Two different problems, two different solutions</dd>
+
+                <dt>Salting & password storage</dt>
+                <dd>Why plain hashing isn't enough for passwords</dd>
+              </dl>
+            </div>
+
+            <!-- Summary Statistics -->
+            <div class="table-wrapper" style="margin-bottom: 1rem">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Sections</strong></td>
+                    <td>10 total (0 complete)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Topics covered</strong></td>
+                    <td>20+</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Estimated time</strong></td>
+                    <td>~15–17 hours</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Difficulty range</strong></td>
+                    <td>🟡 Intermediate → 🟠 Advanced</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Status</strong></td>
+                    <td>🔜 Not started</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="info-box note">
+              <strong>📖 Detailed notes</strong>
+              <p style="margin-top: 0.25rem">
+                All markdown notes are committed to
+                <a href="https://github.com/K-Mash24/Great_Cheatsheets/tree/Master/saa-foundation/03-security" target="_blank" style="color: var(--accent-secondary)">Great_Cheatsheets/saa-foundation/03-security/</a>.
+                Section notes will be added as they are completed.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 1 — Cryptography fundamentals ===== -->
+          <div class="section-divider" id="s1">
+            <div class="section-number" aria-hidden="true">1</div>
+            <h2>Section 1 — Cryptography Fundamentals</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="1">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔑</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 2 — Hashing ===== -->
+          <div class="section-divider" id="s2">
+            <div class="section-number" aria-hidden="true">2</div>
+            <h2>Section 2 — Hashing</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="2">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔐</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 3 — TLS/SSL & handshake ===== -->
+          <div class="section-divider" id="s3">
+            <div class="section-number" aria-hidden="true">3</div>
+            <h2>Section 3 — TLS/SSL &amp; the Handshake</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="3">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔒</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 4 — PKI & CAs ===== -->
+          <div class="section-divider" id="s4">
+            <div class="section-number" aria-hidden="true">4</div>
+            <h2>Section 4 — PKI &amp; Certificate Authorities</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="4">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🏛️</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 5 — AuthN vs AuthZ ===== -->
+          <div class="section-divider" id="s5">
+            <div class="section-number" aria-hidden="true">5</div>
+            <h2>Section 5 — Authentication vs Authorization</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="5">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🆔</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 6 — Least privilege & access control ===== -->
+          <div class="section-divider" id="s6">
+            <div class="section-number" aria-hidden="true">6</div>
+            <h2>Section 6 — Least Privilege &amp; Access Control Models</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="6">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🛡️</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 7 — OWASP Top 10 (Part 1) ===== -->
+          <div class="section-divider" id="s7">
+            <div class="section-number" aria-hidden="true">7</div>
+            <h2>Section 7 — OWASP Top 10 (Part 1)</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="7">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">⚠️</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 8 — OWASP Top 10 (Part 2) ===== -->
+          <div class="section-divider" id="s8">
+            <div class="section-number" aria-hidden="true">8</div>
+            <h2>Section 8 — OWASP Top 10 (Part 2)</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="8">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🌐</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 9 — Password & secrets security ===== -->
+          <div class="section-divider" id="s9">
+            <div class="section-number" aria-hidden="true">9</div>
+            <h2>Section 9 — Password &amp; Secrets Security</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="9">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🔑</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== SECTION 10 — Network hardening ===== -->
+          <div class="section-divider" id="s10">
+            <div class="section-number" aria-hidden="true">10</div>
+            <h2>Section 10 — Network Hardening &amp; Security Posture</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="10">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+          <div class="accordion" data-searchable>
+            <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+              <div class="accordion-title"><span class="acc-icon" aria-hidden="true">🛡️</span>Content coming soon</div>
+              <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            </button>
+            <div class="accordion-body">
+              <p><!-- Content will be added here --></p>
+            </div>
+          </div>
+
+          <!-- ===== FLASHCARDS ===== -->
+          <div class="section-divider" id="flashcards">
+            <div class="section-number" aria-hidden="true">★</div>
+            <h2>Flashcards</h2>
+            <div class="flashcard-nav-buttons">
+              <button class="flashcard-nav" id="flashcardPrev" aria-label="Previous flashcards">‹</button>
+              <button class="flashcard-nav" id="flashcardNext" aria-label="Next flashcards">›</button>
+            </div>
+            <span class="flashcard-count" id="flashcardCount">0 cards</span>
+          </div>
+          <div class="flashcard-scroller-container">
+            <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Click any card to reveal the answer.</p>
+            <div class="flashcard-scroller" id="flashcardScroller">
+              <div class="flashcard-track" id="flashcardTrack">
+                <!-- JS will render -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== QUIZ ===== -->
+          <div class="section-divider" id="quiz">
+            <div class="section-number" aria-hidden="true">✓</div>
+            <h2>Self-Test Quiz</h2>
+            <div class="quiz-set-selector" style="display:flex;gap:0.5rem;flex-wrap:wrap;padding:0.5rem;">
+              <button id="set1Btn" class="btn-set">📘 Set 1 – Core Concepts</button>
+              <button id="set2Btn" class="btn-set">📙 Set 2 – Attacks &amp; Defenses</button>
+              <button id="set3Btn" class="btn-set">📕 Set 3 – Advanced Topics</button>
+              <button id="resetAllBtn" class="btn-set">🗑️ Reset All Sets</button>
+            </div>
+          </div>
+          <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">
+            Select an answer for each question, then click Submit to grade yourself.
+          </p>
+
+          <div class="quiz-container">
+            <div class="quiz-header">
+              <div>
+                <h3>Security Concepts Quiz</h3>
+                <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="quiz-body" id="quizBody">
+              <!-- JS will render -->
+            </div>
+            <div class="quiz-footer">
+              <div class="quiz-feedback" id="quizFeedback"></div>
+              <div style="display:flex;gap:8px;margin-left:auto;">
+                <button class="btn btn-secondary btn-sm" onclick="resetSecurityQuiz()">Reset</button>
+                <button class="btn btn-primary btn-sm" onclick="submitSecurityQuiz()">Submit Quiz</button>
+              </div>
+            </div>
+            <div class="quiz-score" id="quizScore">
+              <div class="score-circle">
+                <div class="score-number" id="scoreNum">0/5</div>
+                <div class="score-label">score</div>
+              </div>
+              <div class="score-message" id="scoreMsg"></div>
+              <button class="btn btn-primary btn-sm" onclick="resetSecurityQuiz()">Try Again</button>
+            </div>
+          </div>
+
+          <!-- ===== RESOURCES ===== -->
+          <div class="section-divider" id="resources">
+            <div class="section-number" aria-hidden="true">📚</div>
+            <h2>Resources &amp; Further Reading</h2>
+          </div>
+
+          <div class="github-cta">
+            <div class="github-repos">
+              <div class="github-repo-row">
+                <div class="github-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                </div>
+                <div class="github-cta-text">
+                  <div class="cta-title">K-Mash24 / Great_Cheatsheets</div>
+                  <div class="cta-sub">branch: Master · raw study notes · saa-foundation/03-security/</div>
+                </div>
+              </div>
+              <div class="github-cta-divider" aria-hidden="true"></div>
+              <div class="github-repo-row">
+                <div class="github-icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                </div>
+                <div class="github-cta-text">
+                  <div class="cta-title">K-Mash24 / DevOps-Journey</div>
+                  <div class="cta-sub">branch: main · published site · built per pillar</div>
+                </div>
+              </div>
+            </div>
+            <div class="github-cta-buttons">
+              <a href="https://github.com/K-Mash24/Great_Cheatsheets" target="_blank" class="btn-github">Notes Repo</a>
+              <a href="https://github.com/K-Mash24/DevOps-Journey" target="_blank" class="btn-github">Site Repo</a>
+            </div>
+          </div>
+
+          <!-- No results -->
+          <div class="no-results" id="noResults" aria-live="polite">
+            <svg width="40" height="40" viewBox="0 0 20 20" fill="currentColor" style="margin-bottom:0.75rem;color:var(--text-muted)" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+            <p>No results found for your search.</p>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Scroll to top -->
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+    </button>
+
+    <!-- Scripts -->
+    <script src="../js/global.js"></script>
+    <script src="../js/stars.js"></script>
+    <script src="../js/themes.js"></script>
+    <script src="../js/security.js"></script>
+  </body>
+</html>
