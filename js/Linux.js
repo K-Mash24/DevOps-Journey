@@ -3,44 +3,79 @@
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ----- FLASHCARDS DATA (25 flashcards total) -----
-const FLASHCARDS = [
-  { term: "Absolute vs relative path", answer: "Absolute starts with / (from root). Relative starts from current directory. Example: /home/user/file.txt (absolute) vs ./file.txt (relative)" },
-  { term: "Create nested directories in one command", answer: "mkdir -p parent/child/grandchild" },
-  { term: "Difference between > and >>", answer: "> overwrites entire file. >> appends to end. Use >> to preserve existing content." },
-  { term: "Delete a non-empty directory", answer: "rm -r directory_name (or rm -rf for force, no confirmation)" },
-  { term: "View file with scrolling", answer: "less filename (Space=down, b=up, /search, q=quit)" },
-  { term: "Wildcard for single character", answer: "? matches exactly one character. Example: file-?.txt matches file-1.txt, file-a.txt" },
-  { term: "Wildcard for any characters", answer: "* matches zero or more characters. Example: *.log deletes all .log files" },
-  { term: "Copy directory recursively", answer: "cp -r source_dir destination_dir" },
-  { term: "Hidden file prefix", answer: "Dot (.) prefix hides files/directories. Use ls -a to see them." },
-  { term: "Watch log file in real time", answer: "tail -f /var/log/syslog (or any log file)" },
-  { term: "Display file permissions in octal", answer: "stat -c '%a %n' filename (e.g., 644 for rw-r--r--)" },
-  { term: "Change file permissions (numeric)", answer: "chmod 755 script.sh (rwxr-xr-x) or chmod 644 file.txt (rw-r--r--)" },
-  { term: "Change file permissions (symbolic)", answer: "chmod u+x file.sh (add execute for user), chmod go-w file.txt (remove write from group and others)" },
-  { term: "Change file owner", answer: "sudo chown newowner filename (requires sudo)" },
-  { term: "Change file owner and group", answer: "sudo chown user:group filename (e.g., sudo chown alice:developers script.sh)" },
-  { term: "Change group ownership only", answer: "chgrp groupname filename" },
-  { term: "Display running processes", answer: "ps aux (all processes), top (interactive), htop (colorful interactive)" },
-  { term: "Kill a process by PID", answer: "kill -9 PID (force kill), kill -15 PID (graceful termination)" },
-  { term: "Kill a process by name", answer: "pkill process_name (e.g., pkill firefox), killall process_name" },
-  { term: "Display disk usage", answer: "df -h (human-readable filesystem disk usage), du -sh directory (size of directory)" },
-  { term: "Search within files using grep", answer: "grep 'pattern' filename (e.g., grep 'error' /var/log/syslog)" },
-  { term: "Search recursively in directories", answer: "grep -r 'pattern' /path/to/dir (recursive search)" },
-  { term: "Stream editor for text replacement", answer: "sed 's/old/new/g' filename (replace all occurrences of 'old' with 'new')" },
-  { term: "Print first N lines of a file", answer: "head -n 20 filename (first 20 lines)" },
-  { term: "Print last N lines of a file", answer: "tail -n 20 filename (last 20 lines)" }
-];
+  
+  // ----- FLASHCARDS DATA (50 flashcards – all 10 sections) -----
+  const FLASHCARDS = [
+    // SECTION 1 — Filesystem Structure & Navigation
+    { term: "Absolute vs relative path", answer: "Absolute starts with / (from root). Relative starts from current directory. Example: /home/user/file.txt (absolute) vs ./file.txt (relative)" },
+    { term: "Create nested directories in one command", answer: "mkdir -p parent/child/grandchild" },
+    { term: "Wildcard for single character", answer: "? matches exactly one character. Example: file-?.txt matches file-1.txt, file-a.txt" },
+    { term: "Wildcard for any characters", answer: "* matches zero or more characters. Example: *.log deletes all .log files" },
+    { term: "Hidden file prefix", answer: "Dot (.) prefix hides files/directories. Use ls -a to see them." },
 
-// Total: 25 flashcards covering:
+    // SECTION 2 — File & Directory Operations
+    { term: "Create empty file", answer: "touch filename.txt" },
+    { term: "Difference between > and >>", answer: "> overwrites entire file. >> appends to end. Use >> to preserve existing content." },
+    { term: "Delete a non-empty directory", answer: "rm -r directory_name (or rm -rf for force, no confirmation)" },
+    { term: "Copy directory recursively", answer: "cp -r source_dir destination_dir" },
+    { term: "View file with scrolling", answer: "less filename (Space=down, b=up, /search, q=quit)" },
 
-// - Navigation (paths, wildcards, hidden files)
-// -File operations (mkdir, cp, rm, mv, redirections)
-// - Permissions & ownership (chmod, chown, chgrp, stat)
-// - Process management (ps, kill, pkill)
-// - Disk usage (df, du)
-// - Text processing (grep, sed)
-// - File viewing (head, tail, less, tail -f)
+    // SECTION 3 — Permissions & Ownership
+    { term: "Display file permissions in octal", answer: "stat -c '%a %n' filename (e.g., 644 for rw-r--r--)" },
+    { term: "Change file permissions (numeric)", answer: "chmod 755 script.sh (rwxr-xr-x) or chmod 644 file.txt (rw-r--r--)" },
+    { term: "Change file permissions (symbolic)", answer: "chmod u+x file.sh (add execute for user), chmod go-w file.txt (remove write from group and others)" },
+    { term: "Change file owner", answer: "sudo chown newowner filename (requires sudo)" },
+    { term: "Change file owner and group", answer: "sudo chown user:group filename (e.g., sudo chown alice:developers script.sh)" },
+
+    // SECTION 4 — Users & Groups
+    { term: "Which file stores user accounts?", answer: "/etc/passwd — stores username, UID, GID, home directory, shell. Passwords are in /etc/shadow." },
+    { term: "Add user to a supplementary group", answer: "sudo usermod -aG groupname username (always use -a to append)" },
+    { term: "Create a user with home directory", answer: "sudo useradd -m -s /bin/bash username" },
+    { term: "Delete user AND their home directory", answer: "sudo userdel -r username" },
+    { term: "Switch user with full environment", answer: "su - username (the dash loads the target user's environment)" },
+
+    // SECTION 5 — Processes & Job Control
+    { term: "Display running processes", answer: "ps aux (all processes), top (interactive), htop (colorful interactive)" },
+    { term: "Kill a process by PID (graceful)", answer: "kill PID (SIGTERM — polite request to terminate)" },
+    { term: "Kill a process by PID (force)", answer: "kill -9 PID (SIGKILL — immediate, no cleanup)" },
+    { term: "Kill a process by name", answer: "pkill process_name (e.g., pkill firefox), killall process_name" },
+    { term: "Run a command in the background", answer: "command & — use jobs to list, fg to bring to foreground" },
+
+    // SECTION 6 — Package Management
+    { term: "Refresh package list from repositories", answer: "sudo apt update" },
+    { term: "Install a package", answer: "sudo apt install package-name -y" },
+    { term: "Remove a package but keep config files", answer: "sudo apt remove package-name" },
+    { term: "Remove a package AND its config files", answer: "sudo apt purge package-name" },
+    { term: "Clean up unused dependencies", answer: "sudo apt autoremove" },
+
+    // SECTION 7 — Networking Commands
+    { term: "Show IP addresses and interfaces", answer: "ip addr (or ip a) — shows all IP addresses assigned to interfaces" },
+    { term: "Show interface status (UP/DOWN)", answer: "ip link — shows whether each interface is UP or DOWN" },
+    { term: "Test connectivity to a host", answer: "ping -c 4 google.com — sends 4 ICMP packets" },
+    { term: "DNS lookup (full)", answer: "dig google.com — shows detailed DNS query response" },
+    { term: "Show listening ports", answer: "ss -tuln — shows TCP/UDP listening ports with numbers" },
+
+    // SECTION 8 — Bash Scripting
+    { term: "Script shebang line", answer: "#!/bin/bash — tells the OS which interpreter to use" },
+    { term: "Command substitution", answer: "result=$(command) — captures command output into a variable" },
+    { term: "Read user input", answer: "read -p 'Prompt: ' variable — shows a prompt and stores input" },
+    { term: "If condition with spaces", answer: "if [ condition ]; then ... fi — spaces inside [ ] are REQUIRED" },
+    { term: "Function definition", answer: "funcname() { echo $1; } — $1 is the first argument to the function" },
+
+    // SECTION 9 — systemd & Services
+    { term: "Start a systemd service", answer: "sudo systemctl start service-name" },
+    { term: "Enable a service at boot", answer: "sudo systemctl enable service-name" },
+    { term: "Check service status", answer: "systemctl status service-name — shows state and recent logs" },
+    { term: "View logs for a specific service", answer: "journalctl -u service-name — shows all logs for that service" },
+    { term: "Follow logs in real time", answer: "journalctl -u service-name -f — follows new log entries (like tail -f)" },
+
+    // SECTION 10 — Text Processing
+    { term: "Search for pattern in a file", answer: "grep 'pattern' filename — prints matching lines" },
+    { term: "Invert match (exclude pattern)", answer: "grep -v 'pattern' file — prints lines that do NOT match" },
+    { term: "Replace all occurrences in a file", answer: "sed -i 's/old/new/g' file.txt — edits file in place (g = global)" },
+    { term: "Print specific column from a delimited file", answer: "awk -F: '{print $1}' /etc/passwd — extracts the first field using : as delimiter" },
+    { term: "Count lines in a file", answer: "wc -l file.txt — prints only the line count" }
+  ];
 
   function renderFlashcards() {
     const track = document.getElementById('flashcardTrack');
@@ -144,15 +179,17 @@ const FLASHCARDS = [
     });
   }
 
-  // Remember to look at networking.js to look at the new ways of rendering quizes when i am done
-  // ----- QUIZ DATA -----
+  // ============================================================
+  // QUIZ DATA – 3 SETS
+  // ============================================================
   const QUIZ_SETS = {
+    // ----- SET 1: General Linux (Original) -----
     1: [
       {
-          q: "Which command shows your current directory location?",
-          options: ["ls", "cd", "pwd", "dir"],
-          correct: 2,
-          explain: "pwd = Print Working Directory. Shows the full absolute path of your current location."
+        q: "Which command shows your current directory location?",
+        options: ["ls", "cd", "pwd", "dir"],
+        correct: 2,
+        explain: "pwd = Print Working Directory. Shows the full absolute path of your current location."
       },
       {
         q: "What does `cd -` do?",
@@ -174,31 +211,228 @@ const FLASHCARDS = [
       },
       {
         q: "What is the difference between `rmdir` and `rm -r`?",
-        options: ["Nothing, they are the same", "rmdir deletes empty directories only, rm -r deletes directories with contents", "rmdir works on files, rm -r works on directories", "rmdir requires sudo, rm -r doesn't"],
+        options: [
+          "Nothing, they are the same",
+          "rmdir deletes empty directories only, rm -r deletes directories with contents",
+          "rmdir works on files, rm -r works on directories",
+          "rmdir requires sudo, rm -r doesn't"
+        ],
         correct: 1,
         explain: "rmdir only removes empty directories. rm -r recursively deletes directories and all contents."
+      }
+    ],
+
+    // ----- SET 2: System Administration (Users, Groups, Permissions, Processes, Packages) -----
+    2: [
+      {
+        q: "Which file stores user account information (but NOT passwords)?",
+        options: ["/etc/shadow", "/etc/passwd", "/etc/group", "/etc/sudoers"],
+        correct: 1,
+        explain: "/etc/passwd stores username, UID, GID, home directory, shell — but passwords are stored in /etc/shadow."
+      },
+      {
+        q: "How do you add a user to an existing supplementary group?",
+        options: [
+          "sudo usermod -G group user",
+          "sudo usermod -aG group user",
+          "sudo usermod -g group user",
+          "sudo usermod +group user"
+        ],
+        correct: 1,
+        explain: "The -aG flag appends the user to the group. Without -a, -G replaces all supplementary groups."
+      },
+      {
+        q: "What numeric permission value corresponds to `rwxr-xr-x`?",
+        options: ["644", "755", "777", "700"],
+        correct: 1,
+        explain: "rwx = 7 (4+2+1), r-x = 5 (4+0+1), r-x = 5 → 755. Common for scripts and directories."
+      },
+      {
+        q: "Which command changes the owner of a file (requires sudo)?",
+        options: ["chmod", "chown", "chgrp", "usermod"],
+        correct: 1,
+        explain: "chown changes the user owner (and optionally group) of a file. Only root can transfer ownership."
+      },
+      {
+        q: "How do you politely stop a running process by PID?",
+        options: ["kill -9 PID", "kill PID", "pkill PID", "killall PID"],
+        correct: 1,
+        explain: "kill PID sends SIGTERM (graceful termination). kill -9 sends SIGKILL (force kill)."
+      },
+      {
+        q: "Which command refreshes the package list from repositories?",
+        options: ["sudo apt upgrade", "sudo apt update", "sudo apt install", "sudo apt autoremove"],
+        correct: 1,
+        explain: "apt update refreshes the package list. apt upgrade actually installs newer versions."
+      },
+      {
+        q: "What does `sudo apt purge nginx` do?",
+        options: [
+          "Removes nginx but keeps config files",
+          "Removes nginx AND its config files",
+          "Upgrades nginx to the latest version",
+          "Installs nginx"
+        ],
+        correct: 1,
+        explain: "purge removes the package AND its configuration files. remove keeps config files behind."
+      },
+      {
+        q: "Which command shows all running processes in a detailed list?",
+        options: ["ps", "ps aux", "top", "pgrep"],
+        correct: 1,
+        explain: "ps aux shows all processes (a = all users, u = user-friendly format, x = processes without a terminal)."
+      },
+      {
+        q: "What is the purpose of `sudo apt autoremove`?",
+        options: [
+          "Removes all installed packages",
+          "Removes packages that were installed as dependencies but are no longer needed",
+          "Upgrades all packages",
+          "Clears the package cache"
+        ],
+        correct: 1,
+        explain: "autoremove cleans up orphaned dependencies that were installed automatically but are no longer required by any package."
+      },
+      {
+        q: "Which file stores group information on a Linux system?",
+        options: ["/etc/passwd", "/etc/group", "/etc/shadow", "/etc/groups"],
+        correct: 1,
+        explain: "/etc/group stores group names, GIDs, and member lists. Each line represents one group."
+      }
+    ],
+
+    // ----- SET 3: Advanced Tools (Networking, Bash, systemd, Text Processing) -----
+    3: [
+      {
+        q: "Which command tests network connectivity to a host?",
+        options: ["ping", "traceroute", "dig", "ss"],
+        correct: 0,
+        explain: "ping sends ICMP echo requests to test reachability. Note that firewalls may block ICMP."
+      },
+      {
+        q: "What does `grep -v` do?",
+        options: [
+          "Shows only matching lines",
+          "Shows lines that do NOT match the pattern",
+          "Shows line numbers with matches",
+          "Shows matching filenames only"
+        ],
+        correct: 1,
+        explain: "grep -v inverts the match — it prints all lines that do NOT contain the pattern."
+      },
+      {
+        q: "Which command replaces all occurrences of 'old' with 'new' in a file?",
+        options: [
+          "grep 'old' file.txt",
+          "sed 's/old/new/' file.txt",
+          "sed 's/old/new/g' file.txt",
+          "awk 's/old/new/g' file.txt"
+        ],
+        correct: 2,
+        explain: "sed 's/old/new/g' replaces all occurrences (g = global). Without g, only the first per line is replaced."
+      },
+      {
+        q: "Which command extracts the second column from a colon-separated file?",
+        options: [
+          "cut -d: -f2 file.txt",
+          "awk -F: '{print $2}' file.txt",
+          "Both cut and awk can do this",
+          "Neither — use grep instead"
+        ],
+        correct: 2,
+        explain: "Both cut -d: -f2 and awk -F: '{print $2}' extract the second column. cut is simpler; awk is more powerful."
+      },
+      {
+        q: "What does `systemctl start nginx` do?",
+        options: [
+          "Stops the nginx service",
+          "Starts the nginx service now",
+          "Configures nginx to start at boot",
+          "Reloads nginx configuration"
+        ],
+        correct: 1,
+        explain: "systemctl start starts a service immediately. Enable configures it to start at boot."
+      },
+      {
+        q: "Which command shows logs for a specific systemd service?",
+        options: [
+          "journalctl -u nginx",
+          "systemctl logs nginx",
+          "tail -f /var/log/nginx",
+          "grep nginx /var/log/syslog"
+        ],
+        correct: 0,
+        explain: "journalctl -u nginx shows all logs for the nginx service. The journal is systemd's centralised logging system."
+      },
+      {
+        q: "Which SSH key file should never be shared?",
+        options: [
+          "~/.ssh/id_ed25519.pub",
+          "~/.ssh/id_ed25519",
+          "~/.ssh/known_hosts",
+          "~/.ssh/config"
+        ],
+        correct: 1,
+        explain: "The private key (~/.ssh/id_ed25519) must never be shared. The public key (.pub) goes on remote servers."
+      },
+      {
+        q: "What does `journalctl -u nginx -f` do?",
+        options: [
+          "Shows all logs for nginx once",
+          "Shows logs for nginx and follows new entries in real time",
+          "Shows only error logs for nginx",
+          "Shows logs from the last 50 lines"
+        ],
+        correct: 1,
+        explain: "-f follows new log entries in real time, similar to tail -f. Essential for debugging services."
+      },
+      {
+        q: "Which command counts the number of lines in a file?",
+        options: [
+          "wc -l file.txt",
+          "wc -w file.txt",
+          "wc -c file.txt",
+          "sort file.txt | uniq"
+        ],
+        correct: 0,
+        explain: "wc -l counts lines. wc -w counts words. wc -c counts bytes/characters."
+      },
+      {
+        q: "What is the purpose of `ssh-copy-id`?",
+        options: [
+          "Copies files to a remote server",
+          "Copies your public key to a remote server for passwordless SSH",
+          "Copies your private key to a remote server",
+          "Connects to a remote server"
+        ],
+        correct: 1,
+        explain: "ssh-copy-id copies your public key to the remote server's authorized_keys file, enabling passwordless authentication."
       }
     ]
   };
 
-  // After defining QUIZ_SETS
+  // ============================================================
+  // QUIZ ENGINE – Multi-set Support
+  // ============================================================
+
   let currentSet = 1;
   let currentQuestions = QUIZ_SETS[currentSet];
   let userAnswers = new Array(currentQuestions.length).fill(null);
 
-  // Function to load a specific set (to be called by set selector buttons)
+  // --- Load a specific set ---
   function loadQuizSet(setNumber) {
     if (!QUIZ_SETS[setNumber]) return;
     currentSet = setNumber;
     currentQuestions = QUIZ_SETS[currentSet];
     userAnswers = new Array(currentQuestions.length).fill(null);
     renderQuiz();
-    //Reset progress
+    // Reset progress UI
     document.getElementById('quizProgressFill').style.width = '0%';
     document.getElementById('quizScore').classList.remove('show');
     document.getElementById('quizFeedback').style.display = 'none';
   }
 
+  // --- Render current quiz ---
   function renderQuiz() {
     const body = document.getElementById('quizBody');
     if (!body) return;
@@ -218,6 +452,7 @@ const FLASHCARDS = [
     `).join('');
   }
 
+  // --- Select an option ---
   window.selectLinuxOption = function(qi, oi) {
     userAnswers[qi] = oi;
     document.querySelectorAll(`#qq${qi} .quiz-option`).forEach((opt, i) => {
@@ -228,6 +463,7 @@ const FLASHCARDS = [
     if (fill) fill.style.width = (answered / currentQuestions.length * 100) + '%';
   };
 
+  // --- Submit quiz ---
   window.submitLinuxQuiz = function() {
     const answered = userAnswers.filter(a => a !== null).length;
     if (answered < currentQuestions.length) {
@@ -293,6 +529,7 @@ const FLASHCARDS = [
     document.getElementById('quizScore').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
+  // --- Reset current quiz ---
   window.resetLinuxQuiz = function() {
     userAnswers = new Array(currentQuestions.length).fill(null);
     document.getElementById('quizScore').classList.remove('show');
@@ -314,13 +551,8 @@ const FLASHCARDS = [
     if (window.updateFloatingRing) window.updateFloatingRing();
   };
 
-  document.getElementById('set1Btn')?.addEventListener('click', () => loadQuizSet(1));
-  document.getElementById('set2Btn')?.addEventListener('click', () => loadQuizSet(2));
-  document.getElementById('set3Btn')?.addEventListener('click', () => loadQuizSet(3));
-  document.getElementById('resetAllBtn')?.addEventListener('click', resetAllQuizProgress);
-
+  // --- Check if any set is mastered ---
   function isQuizMastered() {
-    // Check if any of the three quiz sets have been passed
     for (let i = 1; i <= 3; i++) {
       if (localStorage.getItem(`linux-quiz-set-${i}-passed`) === 'true') {
         return true;
@@ -329,6 +561,7 @@ const FLASHCARDS = [
     return false;
   }
 
+  // --- Reset ALL quiz progress ---
   function resetAllQuizProgress() {
     for (let i = 1; i <= 3; i++) {
       localStorage.removeItem(`linux-quiz-set-${i}-passed`);
@@ -336,7 +569,13 @@ const FLASHCARDS = [
     localStorage.removeItem('linux-quiz-passed');
     if (window.updateFloatingRing) window.updateFloatingRing();
   }
-  // ============================================
+
+  // ----- Set button event listeners -----
+  document.getElementById('set1Btn')?.addEventListener('click', () => loadQuizSet(1));
+  document.getElementById('set2Btn')?.addEventListener('click', () => loadQuizSet(2));
+  document.getElementById('set3Btn')?.addEventListener('click', () => loadQuizSet(3));
+  document.getElementById('resetAllBtn')?.addEventListener('click', resetAllQuizProgress);
+  
 
   // ----- FLOATING PROGRESS RING & MODAL -----
   function initFloatingProgressRing() {
@@ -522,11 +761,6 @@ const FLASHCARDS = [
   if (document.querySelector('.section-checkbox')) {
     initFloatingProgressRing();
   }
-
-  renderFlashcards();
-  renderQuiz();
-
-    // ... existing code (renderFlashcards, renderQuiz, etc.) ...
 
   renderFlashcards();
   renderQuiz();

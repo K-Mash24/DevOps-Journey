@@ -3,9 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- PAGE DESCRIPTION will be replaced per page -->
+    
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- 🔴 PAGE-SPECIFIC: Replace these for each pillar    -->
+    <!-- ════════════════════════════════════════════════════ -->
     <meta name="description" content="<!-- PAGE DESCRIPTION -->" />
     <title><!-- PAGE TITLE --> | Great Cheatsheets</title>
+    <!-- ════════════════════════════════════════════════════ -->
 
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,35 +21,394 @@
     <link rel="manifest" href="/DevOps-Journey/manifest.json" />
     <meta name="theme-color" content="#5346d4" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="DevOps Journey" />
     <link rel="apple-touch-icon" href="/img/Logo.svg" />
 
-    <!-- Favicon (override per pillar if needed) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
   </head>
   <body>
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- 📋 PILLAR PAGE CREATION CHECKLIST — REMOVE BEFORE PUBLISHING  -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- 
+      🟢 This section serves as a reminder for what needs to be done 
+          when adding a new pillar page to the site.
+      
+      🔴 TO DO BEFORE PUBLISHING:
+          1. Replace this entire section with actual pillar content
+          2. Remove this comment block
+          3. The checklist below is for your reference only
+    -->
+
+    <!-- ================================================================ -->
+    <!-- 📌 PILLAR PAGE CHECKLIST — Quick Reference                       -->
+    <!-- ================================================================ -->
+
+    <details class="pillar-checklist-accordion" style="margin: 2rem 0; background: var(--bg-card); border: 2px solid var(--accent-secondary); border-radius: var(--radius-lg); padding: 0;">
+      <summary style="cursor: pointer; padding: 1rem 1.5rem; font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--accent-primary); list-style: none; display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 1.5rem;">📋</span>
+        PILLAR PAGE CREATION CHECKLIST
+        <span style="margin-left: auto; font-size: 0.7rem; font-weight: 400; color: var(--text-muted);">click to expand</span>
+      </summary>
+      
+      <div style="padding: 0 1.5rem 1.5rem;">
+        
+        <!-- ============================================================ -->
+        <!-- STEP 1: Create the HTML Page                                  -->
+        <!-- ============================================================ -->
+        <div style="margin-bottom: 1.5rem; border-left: 3px solid var(--accent-primary); padding-left: 1rem;">
+          <h4 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">
+            🔴 STEP 1: Create the HTML Page
+          </h4>
+          
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Copy <code>base.html</code> and rename it to <code>your-pillar.html</code> in the <code>html/</code> folder.
+          </p>
+          
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; font-family: var(--font-mono); overflow-x: auto;">
+            <pre style="margin: 0; white-space: pre-wrap; word-break: break-all;">
+    cp base.html html/your-pillar.html
+            </pre>
+          </div>
+          
+          <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <span style="background: rgba(20, 184, 166, 0.1); color: var(--accent-secondary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">✅ Replace PAGE TITLE</span>
+            <span style="background: rgba(20, 184, 166, 0.1); color: var(--accent-secondary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">✅ Replace PAGE DESCRIPTION</span>
+            <span style="background: rgba(20, 184, 166, 0.1); color: var(--accent-secondary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">✅ Replace PILLAR NAME</span>
+            <span style="background: rgba(20, 184, 166, 0.1); color: var(--accent-secondary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">✅ Replace PILLAR-SPECIFIC-JS</span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- STEP 2: Add Accordion Sections                                -->
+        <!-- ============================================================ -->
+        <div style="margin-bottom: 1.5rem; border-left: 3px solid var(--accent-secondary); padding-left: 1rem;">
+          <h4 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-secondary);">
+            📝 STEP 2: Add Accordion Sections
+          </h4>
+          
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Replace the placeholder section with your actual accordion content.
+          </p>
+          
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; font-family: var(--font-mono); overflow-x: auto;">
+            <pre style="margin: 0; white-space: pre-wrap; word-break: break-all;">
+    &lt;!-- Each section needs: --&gt;
+    &lt;div class="section-divider" id="sX"&gt;
+      &lt;div class="section-number" aria-hidden="true"&gt;X&lt;/div&gt;
+      &lt;h2&gt;Section Title&lt;/h2&gt;
+      &lt;label class="section-complete-checkbox"&gt;
+        &lt;input type="checkbox" class="section-checkbox" data-section="X"&gt;
+        &lt;span&gt;Complete&lt;/span&gt;
+      &lt;/label&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Each accordion: --&gt;
+    &lt;div class="accordion" data-searchable&gt;
+      &lt;button type="button" class="accordion-header" onclick="toggleAccordion(this)"&gt;
+        &lt;div class="accordion-title"&gt;&lt;span class="acc-icon"&gt;📁&lt;/span&gt; Topic&lt;/div&gt;
+        &lt;svg class="accordion-chevron"&gt;...&lt;/svg&gt;
+      &lt;/button&gt;
+      &lt;div class="accordion-body"&gt;
+        &lt;!-- Content --&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+            </pre>
+          </div>
+          
+          <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <span style="background: rgba(30, 27, 75, 0.08); color: var(--accent-primary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📌 Section dividers use <code>data-section="X"</code></span>
+            <span style="background: rgba(30, 27, 75, 0.08); color: var(--accent-primary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">🔍 Accordions use <code>data-searchable</code></span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- STEP 3: Update the Sidebar                                   -->
+        <!-- ============================================================ -->
+        <div style="margin-bottom: 1.5rem; border-left: 3px solid var(--accent-warning); padding-left: 1rem;">
+          <h4 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-warning);">
+            📌 STEP 3: Update the Sidebar
+          </h4>
+          
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Add your new pillar to the sidebar navigation in <strong>ALL</strong> pages (index.html, base.html, and each pillar page).
+          </p>
+          
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; font-family: var(--font-mono); overflow-x: auto;">
+            <pre style="margin: 0; white-space: pre-wrap; word-break: break-all;">
+    &lt;!-- In sidebar-nav (Phase 1 section) --&gt;
+    &lt;a class="nav-item" href="html/your-pillar.html" data-pillar="your-pillar"&gt;
+      &lt;svg class="nav-icon"&gt;...&lt;/svg&gt;
+      Pillar X — Your Pillar Name
+      &lt;span class="pillar-progress-percent" data-pillar-progress="your-pillar"&gt;0%&lt;/span&gt;
+    &lt;/a&gt;
+            </pre>
+          </div>
+          
+          <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <span style="background: rgba(230, 126, 34, 0.1); color: var(--accent-warning); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">⚠️ Update ALL pages with sidebar</span>
+            <span style="background: rgba(230, 126, 34, 0.1); color: var(--accent-warning); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📊 <code>data-pillar</code> must match JS config</span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- STEP 4: Update index.html                                    -->
+        <!-- ============================================================ -->
+        <div style="margin-bottom: 1.5rem; border-left: 3px solid var(--accent-primary); padding-left: 1rem;">
+          <h4 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">
+            🏠 STEP 4: Update index.html
+          </h4>
+          
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Add your pillar to the homepage progress tracking system.
+          </p>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.75rem;">
+              <strong>In <code>global.js</code>:</strong>
+              <pre style="margin: 0.25rem 0 0 0; font-size: 0.7rem; white-space: pre-wrap;">
+    phase1PillarData.yourPillar = {
+      sections: X,
+      quiz: true,
+      titles: ['Section 1', 'Section 2', ...],
+      quizKey: 'your-pillar-quiz-passed',
+      sectionPrefix: 'your-pillar-section-'
+    };
+              </pre>
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.75rem;">
+              <strong>In index.html hero:</strong>
+              <pre style="margin: 0.25rem 0 0 0; font-size: 0.7rem; white-space: pre-wrap;">
+    &lt;span class="method-badge" id="methodBadgeYourPillar"&gt;🔒 Your Pillar&lt;/span&gt;
+              </pre>
+            </div>
+          </div>
+          
+          <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <span style="background: rgba(83, 70, 212, 0.1); color: var(--accent-primary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📊 Update <code>phase1PillarData</code></span>
+            <span style="background: rgba(83, 70, 212, 0.1); color: var(--accent-primary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">🎯 Update <code>updateMethodBadges()</code></span>
+            <span style="background: rgba(83, 70, 212, 0.1); color: var(--accent-primary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📈 Update <code>updatePhase1RoadmapAndCards()</code></span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- STEP 5: Create the JavaScript File                           -->
+        <!-- ============================================================ -->
+        <div style="margin-bottom: 1.5rem; border-left: 3px solid var(--accent-secondary); padding-left: 1rem;">
+          <h4 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-secondary);">
+            ⚡ STEP 5: Create the JavaScript File
+          </h4>
+          
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Create <code>js/your-pillar.js</code> with the following structure:
+          </p>
+          
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; font-family: var(--font-mono); overflow-x: auto;">
+            <pre style="margin: 0; white-space: pre-wrap; word-break: break-all;">
+    // ============================================================
+    // YOUR-PILLAR.JS — Configuration for base.js
+    // ============================================================
+
+    // 1. Define FLASHCARDS array
+    const FLASHCARDS = [
+      { term: "Term", answer: "Answer" },
+      // ...
+    ];
+
+    // 2. Define QUIZ_SETS
+    const QUIZ_SETS = {
+      1: [ { q: "Question", options: ["A","B","C"], correct: 0, explain: "..." } ],
+      2: [ /* System Admin questions */ ],
+      3: [ /* Advanced questions */ ]
+    };
+
+    // 3. Define PILLAR_CONFIG
+    window.PILLAR_CONFIG = {
+      id: 'your-pillar',
+      name: 'Your Pillar Name',
+      totalSections: X,
+      sectionPrefix: 'your-pillar-section-',
+      quizKey: 'your-pillar-quiz-passed',
+      quizSetPrefix: 'your-pillar-quiz-set-',
+      congratsKey: 'your-pillar-100-congrats-shown',
+      scoreKey: 'gc-score-your-pillar',
+      flashcardData: FLASHCARDS,
+      quizSets: QUIZ_SETS
+    };
+
+    // base.js will handle everything else!
+    console.log('✅ Your Pillar loaded');
+            </pre>
+          </div>
+          
+          <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <span style="background: rgba(20, 184, 166, 0.1); color: var(--accent-secondary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📦 Define <code>FLASHCARDS</code></span>
+            <span style="background: rgba(20, 184, 166, 0.1); color: var(--accent-secondary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📝 Define <code>QUIZ_SETS</code></span>
+            <span style="background: rgba(20, 184, 166, 0.1); color: var(--accent-secondary); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">🔧 Define <code>window.PILLAR_CONFIG</code></span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- STEP 6: Update global.js Progress Tracking                   -->
+        <!-- ============================================================ -->
+        <div style="margin-bottom: 1.5rem; border-left: 3px solid var(--accent-danger); padding-left: 1rem;">
+          <h4 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-danger);">
+            🔄 STEP 6: Update global.js Progress Tracking
+          </h4>
+          
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+            Add your pillar to the global progress calculations in <code>global.js</code>.
+          </p>
+          
+          <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; font-family: var(--font-mono); overflow-x: auto;">
+            <pre style="margin: 0; white-space: pre-wrap; word-break: break-all;">
+    // In getPhase1PillarCompletion()
+    case 'your-pillar':
+      let count = 0;
+      for (let i=1; i<=X; i++) {
+        if (localStorage.getItem(`your-pillar-section-${i}`) === 'true') count++;
+      }
+      if (localStorage.getItem('your-pillar-quiz-passed') === 'true') count++;
+      return count / (X + 1);
+
+    // In updateAllUI() — add your-pillar
+    const pillars = ['networking', 'linux', 'your-pillar', ...];
+
+    // In updateSidebarProgress() — add your-pillar
+    'your-pillar': { progress: getPhase1PillarCompletion('your-pillar'), ... }
+            </pre>
+          </div>
+          
+          <div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <span style="background: rgba(231, 76, 60, 0.1); color: var(--accent-danger); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📊 Update <code>getPhase1PillarCompletion()</code></span>
+            <span style="background: rgba(231, 76, 60, 0.1); color: var(--accent-danger); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📈 Update <code>updateAllUI()</code></span>
+            <span style="background: rgba(231, 76, 60, 0.1); color: var(--accent-danger); padding: 0.15rem 0.6rem; border-radius: 12px; font-size: 0.7rem;">📊 Update <code>updateSidebarProgress()</code></span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- STEP 7: Testing Checklist                                   -->
+        <!-- ============================================================ -->
+        <div style="margin-bottom: 0.5rem; border-left: 3px solid var(--accent-primary); padding-left: 1rem;">
+          <h4 style="font-family: var(--font-display); font-weight: 600; margin-bottom: 0.25rem; color: var(--accent-primary);">
+            ✅ STEP 7: Testing Checklist
+          </h4>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Page loads without errors
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Sidebar navigation works
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Section checkboxes save state
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Progress ring updates correctly
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Flashcards render and flip
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Quiz sets load and submit
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Progress shows on homepage
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1rem;">⬜</span> Search finds content
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Quick Reference: File Structure                              -->
+        <!-- ============================================================ -->
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px dashed var(--border-strong);">
+          <h5 style="font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--text-muted);">📁 FILES TO UPDATE / CREATE</h5>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 1rem; font-size: 0.75rem; font-family: var(--font-mono);">
+            <span style="color: var(--accent-primary);">html/your-pillar.html</span>
+            <span style="color: var(--text-muted);">← NEW from base.html</span>
+            <span style="color: var(--accent-secondary);">js/your-pillar.js</span>
+            <span style="color: var(--text-muted);">← NEW (defines FLASHCARDS, QUIZ_SETS, PILLAR_CONFIG)</span>
+            <span style="color: var(--accent-warning);">js/global.js</span>
+            <span style="color: var(--text-muted);">← UPDATE (phase1PillarData, getPhase1PillarCompletion, updateAllUI)</span>
+            <span style="color: var(--accent-warning);">index.html</span>
+            <span style="color: var(--text-muted);">← UPDATE (sidebar, method badges, progress cards)</span>
+            <span style="color: var(--accent-warning);">networking.html</span>
+            <span style="color: var(--text-muted);">← UPDATE (sidebar)</span>
+            <span style="color: var(--accent-warning);">linux.html</span>
+            <span style="color: var(--text-muted);">← UPDATE (sidebar)</span>
+            <span style="color: var(--accent-warning);">base.html</span>
+            <span style="color: var(--text-muted);">← UPDATE (sidebar, this checklist)</span>
+          </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- Common Mistakes                                               -->
+        <!-- ============================================================ -->
+        <div style="margin-top: 1rem; padding: 1rem; background: rgba(231, 76, 60, 0.05); border-radius: var(--radius-md); border-left: 3px solid var(--accent-danger);">
+          <h5 style="font-family: var(--font-display); font-size: 0.85rem; margin-bottom: 0.25rem; color: var(--accent-danger);">⚠️ Common Mistakes</h5>
+          <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.8rem; color: var(--text-secondary);">
+            <li><strong>Mismatched IDs:</strong> <code>data-pillar</code> must match the <code>id</code> in <code>PILLAR_CONFIG</code></li>
+            <li><strong>Wrong section prefix:</strong> <code>sectionPrefix</code> must match the <code>data-section</code> values</li>
+            <li><strong>Missing quiz keys:</strong> <code>quizKey</code> and <code>quizSetPrefix</code> must be unique</li>
+            <li><strong>Forgotten sidebar update:</strong> All pages with sidebar need the new link</li>
+            <li><strong>Script order:</strong> <code>global.js</code> → <code>stars.js</code> → <code>base.js</code> → <code>your-pillar.js</code></li>
+          </ul>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- 🟢 END OF CHECKLIST                                             -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+
+    <style>
+      /* --- Checklist Accordion Styling --- */
+      .pillar-checklist-accordion summary::-webkit-details-marker {
+        display: none;
+      }
+      
+      .pillar-checklist-accordion summary::after {
+        content: '▼';
+        margin-left: 0.5rem;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        transition: transform 0.2s ease;
+      }
+      
+      .pillar-checklist-accordion[open] summary::after {
+        transform: rotate(180deg);
+      }
+      
+      .pillar-checklist-accordion code {
+        background: var(--pillar-color-light);
+        color: var(--pillar-color);
+        padding: 0.05rem 0.3rem;
+        border-radius: 3px;
+        font-size: 0.7rem;
+      }
+    </style>
+
     <!-- Starry Background Container -->
     <canvas id="starCanvas" aria-hidden="true"></canvas>
 
     <div class="app-shell">
+
       <!-- ======================= SIDEBAR ======================= -->
+      <!-- ═════════════════════════════════════════════════════════ -->
+      <!-- 🟢 No changes needed — shared across all pages          -->
+      <!-- ═════════════════════════════════════════════════════════ -->
       <aside class="sidebar" id="sidebar">
         <!-- Desktop toggle button -->
-        <button
-          class="sidebar-toggle"
-          id="sidebarToggle"
-          aria-label="Toggle sidebar (Ctrl+B)"
-        >
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar (Ctrl+B)">
           <svg class="toggle-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              fill-rule="evenodd"
-              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-              clip-rule="evenodd"
-            />
+            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
           <span class="toggle-tooltip">Ctrl+B</span>
         </button>
@@ -64,148 +427,41 @@
 
         <div class="sidebar-section-label">Navigation</div>
         <nav class="sidebar-nav" aria-label="Primary navigation">
-          <a class="nav-item" href="index.html#home">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 32 32"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                d="m16 2.672-5.331 5.331V5.87H6.404v6.398l-3.755 3.755.754.754L16 4.18l12.597 12.597.754-.754zM7.47 6.937h2.132v2.132l-2.133 2.133V6.937zM6.404 16.533v12.795h7.464v-7.464h4.265v7.464h7.464V16.533l-9.596-9.596-9.596 9.596zM24.53 28.262h-5.331v-7.464h-6.398v7.464H7.47V16.975L16 8.445l8.53 8.53z"
-              />
-            </svg>
-            Home
-          </a>
-          <a class="nav-item" href="index.html#overview">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                d="M6.5 11.25a.75.75 0 0 1 0-1.5h7a.75.75 0 0 1 0 1.5zm0 3a.75.75 0 0 1 0-1.5h7a.75.75 0 0 1 0 1.5z M11.185.5H4.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7.202a2 2 0 0 0-.526-1.352l-4.315-4.702A2 2 0 0 0 11.185.5M4.5 17.5v-15h6.685L15.5 7.202V17.5z M11.5 6.5h5a1 1 0 1 1 0 2h-6a1 1 0 0 1-1-1v-6a1 1 0 0 1 2 0z"
-              />
-            </svg>
-            Overview
-          </a>
-          <a class="nav-item" href="index.html#resources">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M7.71 3h6.79l.51.5v10l-.5.5h-13l-.5-.5v-11l.5-.5h5l.35.15.85.85zm6.28 10v-1.51l.01-4v-1.5H7.7l-.86.86-.35.15H2v6h11.99zm-6.5-8h6.5l.01-.99H7.5l-.36-.15-.85-.85H2v3h4.28l.86-.86.35-.15zm2.29 4.07L8.42 7.7l.74-.69 2.22 2.22v.71l-2.29 2.21-.7-.72 1.4-1.35H8.42a2 2 0 0 0-1.35.61A1.8 1.8 0 0 0 6.54 12h-1a2.76 2.76 0 0 1 .81-2 3 3 0 0 1 2-.93h1.43z"
-              />
-            </svg>
-            Resources
-          </a>
+          <a class="nav-item" href="index.html#home">🏠 Home</a>
+          <a class="nav-item" href="index.html#overview">📖 Overview</a>
+          <a class="nav-item" href="index.html#resources">📚 Resources</a>
         </nav>
 
         <div class="sidebar-section-label">Phase 1 — Foundations</div>
         <nav class="sidebar-nav" aria-label="Phase 1 pillars">
-          <a
-            class="nav-item"
-            href="html/networking.html"
-            data-pillar="networking"
-          >
-            <svg
-              class="nav-icon"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.05 3.636a1 1 0 010 1.414 7 7 0 000 9.9 1 1 0 11-1.414 1.414 9 9 0 010-12.728 1 1 0 011.414 0zm9.9 0a1 1 0 011.414 0 9 9 0 010 12.728 1 1 0 11-1.414-1.414 7 7 0 000-9.9 1 1 0 010-1.414zM7.879 6.464a1 1 0 010 1.414 3 3 0 000 4.243 1 1 0 11-1.415 1.414 5 5 0 010-7.07 1 1 0 011.415 0zm4.242 0a1 1 0 011.415 0 5 5 0 010 7.072 1 1 0 01-1.415-1.415 3 3 0 000-4.242 1 1 0 010-1.415zM10 9a1 1 0 011 1v.01a1 1 0 11-2 0V10a1 1 0 011-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Pillar 1 — Networking
-            <span
-              class="pillar-progress-percent"
-              data-pillar-progress="networking"
-              >0%</span
-            >
+          <a class="nav-item" href="html/networking.html" data-pillar="networking">
+            🌐 Pillar 1 — Networking
+            <span class="pillar-progress-percent" data-pillar-progress="networking">0%</span>
           </a>
           <a class="nav-item" href="html/linux.html" data-pillar="linux">
-            <svg
-              class="nav-icon"
-              viewBox="0 0 32 32"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                d="M27.4,5.5H18.2L16.1,9.7H4.3v4H.5L4.3,26.5H29.5V5.5ZM20.2,7.6h7.1V9.7H19.2Zm5.5,6.1H6.6V11.8H27.4v7.626ZM31,14V31H10V14ZM10.5,14.5v16h20v-16ZM29.54,29.593H11.44V15.407H29.56V29.593ZM13.96,24.527l.68.622L18.5,21.7l-3.92-3.484-.68.6,3.24,2.88Zm4.54,1.031h6v.711h-6Z"
-              />
-            </svg>
-            Pillar 2 — Linux & CLI
-            <span class="pillar-progress-percent" data-pillar-progress="linux"
-              >0%</span
-            >
+            🐧 Pillar 2 — Linux & CLI
+            <span class="pillar-progress-percent" data-pillar-progress="linux">0%</span>
           </a>
-          <!-- Add other pillars as they become available -->
-          <span
-            class="nav-item disabled"
-            data-pillar="security"
-            data-disabled="true"
-          >
-            <svg
-              class="nav-icon"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Pillar 3 — Security
-            <span
-              class="pillar-progress-percent"
-              data-pillar-progress="security"
-              >0%</span
-            >
+          <span class="nav-item disabled" data-pillar="security" data-disabled="true">
+            🔒 Pillar 3 — Security
+            <span class="pillar-progress-percent" data-pillar-progress="security">0%</span>
           </span>
-          <!-- ... more -->
+          <!-- Add more pillars as needed -->
         </nav>
 
-        <!-- Phase 2 (optional) -->
         <div class="sidebar-section-label">Phase 2 — DevOps</div>
         <nav class="sidebar-nav" aria-label="Phase 2 pillars">
-          <!-- Placeholder, same as in index.html -->
+          <span class="nav-item disabled" data-disabled="true">🐳 Docker</span>
+          <span class="nav-item disabled" data-disabled="true">🔁 CI/CD</span>
+          <span class="nav-item disabled" data-disabled="true">☸️ Kubernetes</span>
+          <!-- Add more as needed -->
         </nav>
 
         <div class="sidebar-footer">
           <div class="sidebar-footer-text">
             <div>github.com/K-Mash24/Great_Cheatsheets</div>
             <div>github.com/K-Mash24/DevOps-Journey</div>
-            <button
-              id="resetWelcomeBtn"
-              class="btn btn-secondary btn-sm"
-              style="
-                display: flex;
-                background: none;
-                border-width: medium;
-                border-style: none;
-                border-color: currentcolor;
-                border-image: initial;
-                color: var(--text-sidebar-muted);
-                font-size: 0.65rem;
-                cursor: pointer;
-                text-decoration: underline;
-                justify-content: left;
-              "
-            >
-              Reset Welcome Messages
-            </button>
+            <button id="resetWelcomeBtn" class="btn btn-secondary btn-sm" style="display:flex;background:none;border:none;color:var(--text-sidebar-muted);font-size:0.65rem;cursor:pointer;text-decoration:underline;justify-content:left;">Reset Welcome Messages</button>
           </div>
         </div>
       </aside>
@@ -214,14 +470,11 @@
 
       <!-- ======================= MAIN CONTENT ======================= -->
       <div class="main-content">
+
         <!-- Top Bar -->
         <header class="topbar">
           <div class="topbar-left">
-            <button
-              class="hamburger"
-              id="hamburger"
-              aria-label="Toggle sidebar"
-            >
+            <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">
               <span class="hamburger-box">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
@@ -230,131 +483,165 @@
             </button>
 
             <div class="search-bar">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clip-rule="evenodd"
-                />
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
               </svg>
-              <input
-                type="text"
-                class="search-input"
-                id="searchInput"
-                placeholder="Jump to pillar or topic..."
-                autocomplete="off"
-                aria-label="Search"
-              />
+              <input type="text" class="search-input" id="searchInput" placeholder="Jump to pillar or topic..." autocomplete="off" aria-label="Search" />
               <kbd class="search-shortcut" aria-hidden="true">/</kbd>
             </div>
           </div>
 
           <div class="topbar-right">
             <div class="theme-toggle" role="group" aria-label="Theme toggle">
-              <button
-                class="theme-toggle-btn active"
-                id="lightBtn"
-                aria-label="Light mode"
-                title="Light mode"
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
+              <button class="theme-toggle-btn active" id="lightBtn" aria-label="Light mode" title="Light mode">
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
               </button>
-              <button
-                class="theme-toggle-btn"
-                id="darkBtn"
-                aria-label="Dark mode"
-                title="Dark mode"
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
-                  />
-                </svg>
+              <button class="theme-toggle-btn" id="darkBtn" aria-label="Dark mode" title="Dark mode">
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
               </button>
             </div>
           </div>
         </header>
 
-        <!-- Page Body -->
+        <!-- ======================= PAGE BODY ======================= -->
+        <!-- ════════════════════════════════════════════════════════════ -->
+        <!-- 🔴 PAGE-SPECIFIC: All content below this line changes      -->
+        <!-- ════════════════════════════════════════════════════════════ -->
         <main class="page-container" id="main-content">
-          <!-- ========== PAGE-SPECIFIC CONTENT GOES HERE ========== -->
-          <!-- PAGE SPECIFIC CONTENT -->
-          <!-- ===================================================== -->
-        </main>
-      </div>
-    </div>
 
-    <!-- Floating Global Ring (progress dashboard) -->
-    <div
-      class="global-floating-ring"
-      id="globalFloatingRing"
-      aria-label="Open progress dashboard"
-    >
+          <!-- ========== PAGE HEADER (with progress ring) ========== -->
+          <!-- 🔴 PAGE-SPECIFIC: Update the page title and metadata -->
+          <div class="page-header" id="pageHeader">
+            <div class="breadcrumb">
+              <span>Phase 1 — Foundations</span>
+              <span class="sep">›</span>
+              <span class="crumb-active"><!-- PILLAR NAME --></span>
+            </div>
+            
+            <div class="header-content">
+              <div class="header-left">
+                <h1><!-- PILLAR NAME --></h1>
+                <div class="meta-badges" id="metaBadges">
+                  <!-- Populated by JavaScript -->
+                </div>
+              </div>
+              
+              <div class="header-right">
+                <div class="completion-ring" id="completionRing">
+                  <svg viewBox="0 0 48 48">
+                    <circle class="ring-bg" cx="24" cy="24" r="20"/>
+                    <circle class="ring-fill" cx="24" cy="24" r="20" stroke-dasharray="125.66" stroke-dashoffset="125.66"/>
+                  </svg>
+                  <div class="ring-label">
+                    <span class="pct" id="completionPercent">0%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== SECTION 1 — Filesystem Structure ========== -->
+          <!-- 🔴 PAGE-SPECIFIC: Replace with actual section accordions -->
+          <!-- See linux.html for full accordion structure -->
+          
+          <div class="section-divider" id="s1">
+            <div class="section-number" aria-hidden="true">1</div>
+            <h2>Section 1 — Topic</h2>
+            <label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;">
+              <input type="checkbox" class="section-checkbox" data-section="1">
+              <span style="font-size:0.7rem;">Complete</span>
+            </label>
+          </div>
+
+          <!-- Add accordions here... -->
+
+          <!-- ========== SECTION 2, 3, ... ========== -->
+          <!-- Repeat for each section -->
+
+          <!-- ========== FLASHCARDS ========== -->
+          <div class="section-divider" id="flashcards">
+            <div class="section-number" aria-hidden="true">★</div>
+            <h2>Flashcards</h2>
+            <div class="flashcard-nav-buttons">
+              <button class="flashcard-nav" id="flashcardPrev" aria-label="Previous flashcards">‹</button>
+              <button class="flashcard-nav" id="flashcardNext" aria-label="Next flashcards">›</button>
+            </div>
+            <span class="flashcard-count" id="flashcardCount">0 cards</span>
+          </div>
+          <div class="flashcard-scroller-container">
+            <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">Click any card to reveal the answer.</p>
+            <div class="flashcard-scroller" id="flashcardScroller">
+              <div class="flashcard-track" id="flashcardTrack">
+                <!-- JS will render flashcards here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== QUIZ ========== -->
+          <div class="section-divider" id="quiz">
+            <div class="section-number" aria-hidden="true">✓</div>
+            <h2>Self-Test Quiz</h2>
+            <div class="quiz-set-selector" style="display:flex;gap:0.5rem;flex-wrap:wrap;padding:0.5rem;">
+              <button id="set1Btn" class="btn-set">📘 Set 1 – Core</button>
+              <button id="set2Btn" class="btn-set">📙 Set 2 – Advanced</button>
+              <button id="set3Btn" class="btn-set">📕 Set 3 – Expert</button>
+              <button id="resetAllBtn" class="btn-set">🗑️ Reset All Sets</button>
+            </div>
+          </div>
+          <p style="margin-bottom:1rem;color:var(--text-muted);font-size:0.875rem;">
+            Select an answer for each question, then click Submit to grade yourself.
+          </p>
+
+          <div class="quiz-container">
+            <div class="quiz-header">
+              <div>
+                <h3><!-- PILLAR NAME --> Quiz</h3>
+                <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="quiz-body" id="quizBody">
+              <!-- JS will render questions -->
+            </div>
+            <div class="quiz-footer">
+              <div class="quiz-feedback" id="quizFeedback"></div>
+              <div style="display:flex;gap:8px;margin-left:auto;">
+                <button class="btn btn-secondary btn-sm" onclick="resetPillarQuiz()">Reset</button>
+                <button class="btn btn-primary btn-sm" onclick="submitPillarQuiz()">Submit Quiz</button>
+              </div>
+            </div>
+            <div class="quiz-score" id="quizScore">
+              <div class="score-circle">
+                <div class="score-number" id="scoreNum">0/10</div>
+                <div class="score-label">score</div>
+              </div>
+              <div class="score-message" id="scoreMsg"></div>
+              <button class="btn btn-primary btn-sm" onclick="resetPillarQuiz()">Try Again</button>
+            </div>
+          </div>
+
+        </main>
+        <!-- ════════════════════════════════════════════════════════════ -->
+        <!-- 🔴 END OF PAGE-SPECIFIC CONTENT                            -->
+        <!-- ════════════════════════════════════════════════════════════ -->
+
+      </div> <!-- /main-content -->
+    </div> <!-- /app-shell -->
+
+    <!-- Floating Global Ring -->
+    <div class="global-floating-ring" id="globalFloatingRing" aria-label="Open progress dashboard">
       <svg class="global-ring-svg" viewBox="0 0 60 60">
-        <circle
-          class="global-ring-bg"
-          cx="30"
-          cy="30"
-          r="26"
-          fill="none"
-          stroke-width="4"
-        />
-        <circle
-          class="global-ring-fill"
-          cx="30"
-          cy="30"
-          r="26"
-          fill="none"
-          stroke-width="4"
-          stroke-linecap="round"
-        />
+        <circle class="global-ring-bg" cx="30" cy="30" r="26" fill="none" stroke-width="4"/>
+        <circle class="global-ring-fill" cx="30" cy="30" r="26" fill="none" stroke-width="4" stroke-linecap="round"/>
       </svg>
       <div class="global-ring-percent" id="globalRingPercent">0%</div>
     </div>
 
-    <!-- Progress Modal (contains all rings + scrollers) -->
-    <div
-      id="progressModal"
-      class="progress-modal"
-      style="display: none"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Global progress dashboard"
-    >
+    <!-- Progress Modal -->
+    <div id="progressModal" class="progress-modal" style="display:none" role="dialog" aria-modal="true" aria-label="Global progress dashboard">
       <div class="progress-modal-content">
         <div class="progress-modal-header">
           <h3>📊 Global Progress Dashboard</h3>
-          <button
-            class="modal-close"
-            id="closeModalBtn"
-            aria-label="Close modal"
-          >
-            &times;
-          </button>
+          <button class="modal-close" id="closeModalBtn" aria-label="Close modal">&times;</button>
         </div>
         <div class="progress-modal-tabs">
           <button class="tab-button active" data-tab="tab0">Overall</button>
@@ -364,46 +651,39 @@
           <button class="tab-button" data-tab="tab4">💾 Backup</button>
           <button class="tab-button" data-tab="tab5">✨ Stars</button>
         </div>
-        <!-- Tab panes (same as in index.html) -->
         <div class="tab-pane active" id="tab0">...</div>
         <div class="tab-pane" id="tab1">...</div>
         <div class="tab-pane" id="tab2">...</div>
         <div class="tab-pane" id="tab3">
-          <div id="pillarDetailContainer" style="min-height: 200px">...</div>
+          <div id="pillarDetailContainer" style="min-height:200px">...</div>
         </div>
         <div class="tab-pane" id="tab4"><div id="backupContainer"></div></div>
-        <div class="tab-pane" id="tab5">
-          <!-- star presets content (same as index.html) -->
-        </div>
+        <div class="tab-pane" id="tab5"><!-- Star presets --></div>
         <div class="progress-modal-footer">
-          <button class="btn btn-secondary btn-sm" id="modalCloseFooter">
-            Close
-          </button>
+          <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
         </div>
       </div>
     </div>
 
     <!-- Scroll to top button -->
     <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-          clip-rule="evenodd"
-        />
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
       </svg>
     </button>
 
-    <!-- Core scripts (shared across all pages) -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- 🔴 PAGE-SPECIFIC: Scripts - Order matters!                    -->
+    <!-- 1. global.js  → 2. base.js  → 3. pillar-specific.js           -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
     <script src="js/global.js"></script>
     <script src="js/stars.js"></script>
-    <!-- PAGE SPECIFIC SCRIPTS (e.g., networking.js, Linux.js) -->
-    <!-- should be added after the shared scripts -->
+    <script src="js/base.js"></script>
+    
+    <!-- 🔴 PAGE-SPECIFIC: Replace with the correct pillar script -->
+    <!-- Example: <script src="js/linux.js"></script> -->
+    <script src="js/<!-- PILLAR-SPECIFIC-JS -->"></script>
+    <!-- ════════════════════════════════════════════════════════════════ -->
+
   </body>
 </html>
