@@ -996,7 +996,7 @@ pre {
 .nav-item.soon {
   opacity: 0.5;
   cursor: not-allowed;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 .sidebar-footer {

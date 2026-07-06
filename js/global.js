@@ -4,6 +4,33 @@
 // Base path for GitHub Pages project site
 const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevOps-Journey' : '.';
 
+// ============================================================
+// SHOW COMING SOON TOAST FOR PILLAR (called from onclick)
+// ============================================================
+
+function showComingSoonForPillar(element) {
+  // Extract the pillar name from the element
+  let name = element.textContent.trim();
+  // Remove percentage and icons
+  name = name.replace(/[0-9%]/g, '').replace(/[🌐🐧🔒⚙️🗄️🐳🔁☸️🏗️📊]/g, '').trim();
+  // Remove "Pillar X — " prefix
+  name = name.replace(/Pillar\s*\d+\s*[—\-]\s*/, '').trim();
+  
+  // Check if it's Phase 2
+  if (element.closest('[data-phase2]') || 
+      element.closest('.sidebar-nav')?.previousElementSibling?.textContent?.includes('Phase 2')) {
+    name = 'Phase 2 — ' + name;
+  }
+  
+  if (name && name !== '') {
+    showComingSoonToast(name);
+  } else {
+    showComingSoonToast('This pillar');
+  }
+  
+  return false; // Prevent any default behavior
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // --- Theme Toggle ---
@@ -97,19 +124,18 @@ document.addEventListener('DOMContentLoaded', () => {
       sectionPrefix: 'linux-section-'
     },
     security: { 
-      sections: 10, 
+      sections: 9, 
       quiz: true, 
       titles: [
-        'Section 1 — Cryptography', 
-        'Section 2 — Hashing', 
-        'Section 3 — TLS & Handshake', 
-        'Section 4 — PKI & CAs', 
-        'Section 5 — AuthN vs AuthZ', 
-        'Section 6 — Least Privilege', 
+        'Section 1 — Cryptography fundamentals',
+        'Section 2 — Hashing & password security',
+        'Section 3 — TLS/SSL & the handshake',
+        'Section 4 — PKI & Certificate Authorities',
+        'Section 5 — Authentication vs Authorization',
+        'Section 6 — Least Privilege & Access Control Models',
         'Section 7 — OWASP Top 10 (1)', 
         'Section 8 — OWASP Top 10 (2)', 
-        'Section 9 — Passwords & Secrets', 
-        'Section 10 — Network Hardening'
+        'Section 9 — Network & system hardening Hardening'
       ], 
       quizKey: 'security-quiz-passed', 
       sectionPrefix: 'security-section-' 
@@ -196,6 +222,183 @@ document.addEventListener('DOMContentLoaded', () => {
       topicPrefix: 'phase2-monitoring-topic-'
     }
   };
+
+  // ============================================================
+  // STUDY PATH CONFIGURATION – Used for the timeline on index.html
+  // ============================================================
+
+  const STUDY_PATH = [
+    {
+      id: 'networking',
+      icon: '✓',
+      status: 'complete',
+      name: 'Pillar 1 — Networking Fundamentals',
+      sub: '7 sections · OSI, IP, subnetting, routing, DNS, TCP/UDP, security, RJ45 · 11 files committed',
+      link: 'html/networking.html'
+    },
+    {
+      id: 'linux',
+      icon: '→',
+      status: 'in-progress',
+      name: 'Pillar 2 — Linux & CLI Proficiency',
+      sub: '10 sections · File system, permissions, processes, SSH, package management, bash scripting, systemd, text processing, networking commands',
+      link: 'html/linux.html',
+      highlight: '← YOU ARE HERE'
+    },
+    {
+      id: 'security',
+      icon: '3',
+      status: 'locked',
+      name: 'Pillar 3 — Security Concepts',
+      sub: '9 sections · Cryptography fundamentals, Hashing & password security, TLS/SSL & the handshake, PKI & Certificate Authorities, Authentication vs Authorization, Network & system hardening',
+      link: 'html/security.html'
+    },
+    {
+      id: 'scripting',
+      icon: '4',
+      status: 'locked',
+      name: 'Pillar 4 — Scripting & Automation',
+      sub: 'Python fundamentals, Bash, REST APIs, JSON',
+      link: '#'
+    },
+    {
+      id: 'databases',
+      icon: '5',
+      status: 'locked',
+      name: 'Pillar 5 — Databases & Storage',
+      sub: 'SQL, NoSQL, ACID, indexing, caching, CAP theorem',
+      link: '#'
+    },
+    {
+      id: 'Solutions Architect Associate (SAA)',
+      icon: '★',
+      status: 'locked',
+      name: 'AWS Solutions Architect Associate (SAA)',
+      sub: 'Begins after all 5 pillars complete. AWS restrictions lift here.',
+      link: '#'
+    },
+    {
+      id: 'phase2',
+      icon: '∞',
+      status: 'locked',
+      name: 'Phase 2 — roadmap.sh DevOps Roadmap',
+      sub: 'Docker → CI/CD → Kubernetes → Terraform → Monitoring. Full DevOps engineer path.',
+      link: '#'
+    }
+  ];
+
+  // ============================================================
+  // RENDER STUDY PATH TIMELINE (Dynamic – auto-updates status)
+  // ============================================================
+
+  function renderStudyPath() {
+    const container = document.getElementById('studyPathTimeline');
+    if (!container) return;
+
+    // If there's no data, show a placeholder
+    if (!STUDY_PATH || STUDY_PATH.length === 0) {
+      container.innerHTML = `<div class="path-item locked-path"><div class="path-content"><div class="path-name">Loading study path...</div></div></div>`;
+      return;
+    }
+
+    // Create a dynamic copy with real-time statuses
+    const dynamicPath = STUDY_PATH.map(item => {
+      const newItem = { ...item };
+
+      // --- Phase 1 Pillars: Check real progress ---
+      if (['networking', 'linux', 'security', 'scripting', 'databases'].includes(item.id)) {
+        const progress = getPhase1PillarCompletion(item.id);
+        
+        if (progress >= 0.8) {
+          newItem.status = 'complete';
+          newItem.icon = '✓';
+          newItem.highlight = ''; // Remove "YOU ARE HERE" if complete
+        } else if (progress > 0) {
+          newItem.status = 'in-progress';
+          newItem.icon = '→';
+          // Add "YOU ARE HERE" to the first in-progress pillar
+          // (only if it's not already set)
+          if (!newItem.highlight) {
+            newItem.highlight = '← CURRENTLY HERE';
+          }
+        } else {
+          newItem.status = 'locked';
+          newItem.icon = item.icon || '🔒'; // Keep original icon or fallback
+          newItem.highlight = ''; // Remove any highlight
+        }
+      }
+
+      // --- Special case: SAA unlocks after all Phase 1 pillars are complete ---
+      if (item.id === 'saa') {
+        const phase1Pillars = ['networking', 'linux', 'security', 'scripting', 'databases'];
+        let allComplete = true;
+        phase1Pillars.forEach(p => {
+          if (getPhase1PillarCompletion(p) < 0.8) allComplete = false;
+        });
+        if (allComplete) {
+          newItem.status = 'complete';
+          newItem.icon = '✓';
+        } else {
+          newItem.status = 'locked';
+          newItem.icon = '★';
+        }
+      }
+
+      // --- Special case: Phase 2 unlocks after SAA is complete ---
+      if (item.id === 'phase2') {
+        // Check if SAA is complete (we'll use the same logic)
+        const phase1Pillars = ['networking', 'linux', 'security', 'scripting', 'databases'];
+        let allComplete = true;
+        phase1Pillars.forEach(p => {
+          if (getPhase1PillarCompletion(p) < 0.8) allComplete = false;
+        });
+        if (allComplete) {
+          newItem.status = 'in-progress';
+          newItem.icon = '→';
+        } else {
+          newItem.status = 'locked';
+          newItem.icon = '∞';
+        }
+      }
+
+      // --- Determine if the link should be clickable ---
+      const isClickable = newItem.link && newItem.link !== '#' && newItem.status !== 'locked';
+
+      // Build the link wrapper
+      let linkWrapper = '';
+      if (isClickable) {
+        linkWrapper = `<a href="${newItem.link}" style="text-decoration:none;display:contents;">`;
+      } else {
+        linkWrapper = `<span style="display:contents;">`;
+      }
+      const linkClose = isClickable ? '</a>' : '</span>';
+
+      // Build the highlight HTML
+      let highlightHtml = '';
+      if (newItem.highlight && newItem.status !== 'complete') {
+        highlightHtml = `<span style="font-size:0.7rem;color:var(--accent-primary);font-family:var(--font-mono);margin-left:6px;">${newItem.highlight}</span>`;
+      }
+
+      return `
+        <div class="path-item ${newItem.status}">
+          <div class="path-dot-wrap">
+            <div class="path-dot" aria-hidden="true">${newItem.icon}</div>
+          </div>
+          <div class="path-content">
+            <div class="path-name">
+              ${linkWrapper}
+              ${newItem.name}
+              ${highlightHtml}
+              ${linkClose}
+            </div>
+            <div class="path-sub">${newItem.sub}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = dynamicPath;
+  }
 
   function showPillarDetail(pillarId, phase = 'phase1') {
     const container = document.getElementById('pillarDetailContainer');
@@ -697,11 +900,11 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         return lcount / 11;
       case 'security':
         let secCount = 0;
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 9; i++) {
           if (localStorage.getItem(`security-section-${i}`) === 'true') secCount++;
         }
         if (localStorage.getItem('security-quiz-passed') === 'true') secCount++;
-        return secCount / 11; // 10 sections + quiz
+        return secCount / 10; // 9 sections + quiz
       case 'scripting': return 0;
       case 'databases': return 0;
       default: return 0;
@@ -774,6 +977,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     updateHeroStats();
     updateMethodBadges();
     updatePhase1HeaderTag();
+    renderStudyPath();
   }
 
   
@@ -800,11 +1004,11 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     const titles = ['Networking Fundamentals', 'Linux & CLI Proficiency', 'Security Concepts', 'Scripting & Automation', 'Databases & Storage'];
     const descs = ['OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security, RJ45 cabling',
                    'File system, permissions, SSH, bash scripting, systemd, text processing, networking commands',
-                   'Encryption, TLS, PKI, least privilege, OWASP',
+                   'Cryptography fundamentals, Hashing & password security, TLS/SSL & the handshake, PKI & Certificate Authorities, Authentication vs Authorization, Network & system hardening',
                    'Python and Bash, file I/O, APIs, JSON',
                    'SQL, NoSQL, indexing, ACID, caching, CAP theorem'];
     const icons = ['net', 'linux', 'sec', 'script', 'db'];
-    const links = ['html/networking.html', 'html/linux.html', '#', '#', '#'];
+    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', '#', '#'];
 
     // Update roadmap phases
     const roadmapContainer = document.getElementById('phase1Roadmap');
@@ -2986,7 +3190,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         }, 300);
       }, 2500);
     }
-
+    
     // --- Setup Custom Controls ---
     function setupCustomControls() {
       const applyBtn = document.getElementById('applyCustomStars');
