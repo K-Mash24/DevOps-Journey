@@ -139,7 +139,7 @@
 /* --- Container --- */
 .stars-tab-container {
   padding: 0.5rem 1rem 1rem;
-  max-width: 800px;
+  max-width: 100%;
 }
 
 /* --- Mode Selector (Top) --- */
@@ -3120,11 +3120,12 @@ pre {
 .tab-pane.active {
   display: block;
 }
-.progress-modal-footer {
+
+/* .progress-modal-footer {
   padding: 0.75rem 1.25rem;
   border-top: 1px solid var(--border-color);
   text-align: center;
-}
+} */
 
 /* Phase 2 specific */
 .phase2-ring {

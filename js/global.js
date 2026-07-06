@@ -1559,8 +1559,8 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                 <!-- Theme cards will be rendered by JavaScript -->
               </div>
               <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1rem;">
-                <button id="resetThemeBtn" class="btn btn-secondary btn-sm" title="Reset to Indigo Theme">Reset to Default</button>
                 <button id="openCustomColorBtn" class="btn btn-secondary btn-sm" title="Create your own custom color theme">🎨 Custom Color</button>
+                <button id="resetThemeBtn" class="btn btn-secondary btn-sm" title="Reset to Indigo Theme">Reset to Default</button>
               </div>
             </div>
           </div>
@@ -1579,12 +1579,14 @@ window.openModalToPillarDetails = openModalToPillarDetails;
               </div>
             </div>
           </div>
-          <div class="progress-modal-footer">
-            <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
-          </div>
+          
         </div>
       </div>
     `;
+          // <div class="progress-modal-footer">
+          //   <button class="btn btn-secondary btn-sm" id="modalCloseFooter">Close</button>
+          // </div>
+
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     initModalAndFloatingRing();
   }
