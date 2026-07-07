@@ -3426,7 +3426,7 @@ pre {
 .pillar-card.locked-card,
 .pillar-card.coming-soon {
   opacity: 0.55;
-  cursor: not-allowed;
+  /* cursor: not-allowed; */
 }
 .card-top {
   display: flex;
