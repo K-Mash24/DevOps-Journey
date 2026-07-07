@@ -8,7 +8,7 @@ const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevO
 // SERVICE WORKER VERSION CHECK
 // ============================================================
 
-const APP_VERSION = '2026-07-07-v4'; // Match your CACHE_NAME
+const APP_VERSION = '2026-07-07-v5'; // Match your CACHE_NAME
 
 if (localStorage.getItem('sw-version') !== APP_VERSION) {
   console.log('🔄 New version detected — clearing old caches...');
