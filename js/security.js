@@ -648,4 +648,12 @@ document.addEventListener('DOMContentLoaded', () => {
   renderQuiz();
   initImageLightbox();
 
+  // Update page header
+  if (typeof window.updatePageHeader === 'function') {
+    window.updatePageHeader('security');
+  } else {
+    console.warn('⚠️ updatePageHeader not available – check global.js');
+  }
+
 }); // DOMContentLoaded end
+
