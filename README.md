@@ -37,7 +37,7 @@ This project is a **structured, self‑paced study roadmap** that builds genuine
 - **Consistent rendering** – all accordions use the same render function.
 - **Better maintainability** – content is cleanly separated from presentation.
 
-For a detailed explanation of this migration, see [CONTENT-MIGRATION.md](./CONTENT-MIGRATION.md).
+For a detailed explanation of this migration, see [Content-Migration](./Markdown/CONTENT-MIGRATION.md).
 
 ### Two‑Phase Approach
 
