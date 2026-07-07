@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
-    // ============================================================
+  // ============================================================
   // PILLAR DETAILS (for both Phase 1 and Phase 2)
   // ============================================================
 
@@ -288,6 +288,141 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   // ============================================================
+  // INDEX PAGE CONTENT — Migrated from HTML to JS
+  // ============================================================
+
+  const INDEX_HERO = {
+    tagline: 'DevOps Journey',
+    title: 'Zero to Cloud',
+    subtitle: 'Foundations-first DevOps',
+    description: 'Learn the fundamentals so deeply that the cloud is just an implementation detail.',
+    badges: ['Foundations first.', 'Cloud later.', 'Always learning.'],
+    pills: [
+      { text: '5 foundational pillars' },
+      { text: '5 Intermediate pillars' },
+      { text: 'Self-paced' },
+      { text: 'Route to be Cloud-ready' }
+    ],
+    floatIcons: ['✦', '⬡'],
+    stats: [
+      { id: 'heroPillarsComplete', label: 'Pillars complete', value: '0/5' },
+      { label: 'Files committed', value: '10+' },
+      { label: 'Current stage', value: 'Phase 1' },
+      { label: 'Next milestone', value: 'SAA' }
+    ]
+  };
+
+  const INDEX_OVERVIEW = {
+    heading: 'DevOps Journey – From Zero to Cloud',
+    description: `This is a <strong>self‑contained, self‑paced study roadmap</strong> designed to build genuine, production‑ready foundations before touching any cloud infrastructure. The goal is not just to pass certifications but to internalise the core concepts that every DevOps engineer needs – no shortcuts, no black‑box magic, just deep understanding through practice.`,
+    
+    phase1: {
+      title: 'Phase 1 – Foundations (5 pillars)',
+      duration: '~3‑4 months (self‑paced)',
+      prereq: 'None – absolute beginners welcome.',
+      pillars: [
+        {
+          id: 'networking',
+          icon: '🌐',
+          title: 'Pillar 1 – Networking Fundamentals (complete)',
+          description: 'OSI & TCP/IP models, IPv4/IPv6, subnetting, CIDR, VLSM, routing & switching, DNS, TCP/UDP, network security, RJ45 cabling.',
+          why: 'Every system you\'ll ever touch lives on a network. You cannot secure, scale, or troubleshoot what you don\'t understand.'
+        },
+        {
+          id: 'linux',
+          icon: '🐧',
+          title: 'Pillar 2 – Linux & CLI Proficiency (in progress)',
+          description: 'Filesystem navigation, file operations, permissions, processes, SSH, package management, bash scripting, systemd, text processing (grep/sed/awk), networking commands.',
+          why: 'Linux runs the cloud. Every server, container, and virtual machine speaks Linux – your terminal is your primary weapon.'
+        },
+        {
+          id: 'security',
+          icon: '🔒',
+          title: 'Pillar 3 – Security Concepts (locked)',
+          description: 'Encryption (symmetric/asymmetric), TLS/SSL, PKI, hashing, authentication, least privilege, OWASP Top 10, secure defaults.',
+          why: 'Security is everyone\'s responsibility. You cannot design safe systems without knowing the threats and the controls.'
+        },
+        {
+          id: 'scripting',
+          icon: '⚙️',
+          title: 'Pillar 4 – Scripting & Automation (locked)',
+          description: 'Python fundamentals, Bash scripting, file I/O, REST APIs, JSON parsing, automation patterns, error handling.',
+          why: 'Automate everything. The difference between a good engineer and a great one is the ability to script repetitive tasks.'
+        },
+        {
+          id: 'databases',
+          icon: '🗄️',
+          title: 'Pillar 5 – Databases & Storage (locked)',
+          description: 'SQL vs NoSQL, normalisation, indexing, ACID properties, transactions, caching strategies, CAP theorem, backup & recovery.',
+          why: 'State is hard. Databases are at the heart of almost every application – understanding them prevents catastrophic data loss.'
+        }
+      ]
+    },
+    
+    phase2: {
+      title: 'Phase 2 – DevOps Roadmap (after SAA)',
+      description: 'Once Phase 1 is complete and the AWS Solutions Architect Associate (SAA) certification is earned, the full <a href="https://roadmap.sh/devops" target="_blank">roadmap.sh/devops</a> is followed:',
+      items: [
+        '🐳 Docker &amp; Containers – images, Dockerfile, Compose, registries',
+        '🔁 CI/CD Pipelines – GitHub Actions, GitLab CI, Jenkins',
+        '☸️ Kubernetes – pods, deployments, services, ingress, Helm',
+        '🏗️ Infrastructure as Code – Terraform, Ansible, CloudFormation',
+        '📊 Monitoring &amp; Observability – Prometheus, Grafana, Loki, tracing',
+        '🔁 GitOps – ArgoCD, Flux'
+      ]
+    },
+    
+    methodology: {
+      title: 'Methodology & Learning Principles',
+      principles: [
+        {
+          title: 'Foundations first:',
+          description: 'No AWS, no cloud abstractions until the raw concepts are mastered. Every topic is studied from first principles – e.g., subnetting by hand before touching a VPC.'
+        },
+        {
+          title: 'Hands‑on, not passive:',
+          description: 'Each section includes practical labs, exercises, and quizzes. Theory without practice is forgotten.'
+        },
+        {
+          title: 'Public & versioned:',
+          description: 'All notes are committed to GitHub (Great_Cheatsheets repo). The website (DevOps‑Journey repo) is built pillar by pillar – flashcards, self‑grading quizzes, and progress rings are part of the learning experience.'
+        },
+        {
+          title: 'Spaced repetition:',
+          description: 'Key concepts are highlighted and revisited across pillars. The site remembers your progress (localStorage) and congratulates you on milestones.'
+        },
+        {
+          title: 'Real‑world relevance:',
+          description: 'Every concept is explicitly connected to the DevOps tools and AWS services that will use it – but only after the foundation is solid.'
+        }
+      ]
+    }
+  };
+
+  const INDEX_METHOD = {
+    title: '📐 The Method — Foundations First',
+    description: 'I hold the AWS Cloud Practitioner (CCP) certification, but I\'m not moving straight to Solutions Architect. Instead, I\'m building genuine depth through <strong>5 prerequisite pillars</strong> before touching any cloud infrastructure.',
+    phases: [
+      {
+        title: 'Phase 1',
+        description: '5 foundations pillars → SAA certification → Phase 2'
+      },
+      {
+        title: 'Phase 2',
+        description: 'Full <a href="https://roadmap.sh/devops" target="_blank" style="color: var(--accent-primary);">roadmap.sh/devops</a> — Docker → CI/CD → K8s → Terraform → Monitoring'
+      }
+    ],
+    badges: [
+      { id: 'methodBadgeNetworking', text: '✅ Networking', defaultClass: 'complete' },
+      { id: 'methodBadgeLinux', text: '⏳ Linux & CLI', defaultClass: 'in-progress' },
+      { id: 'methodBadgeSecurity', text: '🔒 Security', defaultClass: 'locked' },
+      { id: 'methodBadgeScripting', text: '⚙️ Scripting', defaultClass: 'locked' },
+      { id: 'methodBadgeDatabases', text: '🗄️ Databases', defaultClass: 'locked' }
+    ],
+    footnote: 'AWS restriction: OFF until Phase 1 complete'
+  };
+
+  // ============================================================
   // RENDER STUDY PATH TIMELINE (Dynamic – auto-updates status)
   // ============================================================
 
@@ -398,6 +533,144 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
 
     container.innerHTML = dynamicPath;
+  }
+
+  // ============================================================
+  // RENDER FUNCTIONS FOR INDEX PAGE
+  // ============================================================
+
+  function renderHero() {
+    const container = document.querySelector('.hero-section');
+    if (!container) {
+      console.warn('⚠️ Hero section container not found');
+      return;
+    }
+    
+    container.innerHTML = `
+      <span class="hero-float-icon">${INDEX_HERO.floatIcons[0]}</span>
+      <span class="hero-float-icon">${INDEX_HERO.floatIcons[1]}</span>
+      
+      <div class="hero-tagline">
+        <span class="line"></span>
+        <span class="label">${INDEX_HERO.tagline}</span>
+        <span class="line"></span>
+      </div>
+      
+      <h1 class="hero-title">
+        <span class="gradient-text">${INDEX_HERO.title}</span>
+        <span class="sub-text">${INDEX_HERO.subtitle}</span>
+      </h1>
+      
+      <p class="hero-subtitle">
+        ${INDEX_HERO.description}
+        ${INDEX_HERO.badges.map(b => `<span class="badge">${b}</span>`).join(' ')}
+      </p>
+      
+      <div class="hero-pills">
+        ${INDEX_HERO.pills.map(pill => `
+          <span class="pill"><span class="dot"></span>${pill.text}</span>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function renderOverview() {
+    const container = document.getElementById('js-overview-container');
+    if (!container) {
+      console.warn('⚠️ Overview container not found');
+      return;
+    }
+    
+    const phase1Pillars = INDEX_OVERVIEW.phase1.pillars.map(p => `
+      <li>
+        <strong>${p.icon} ${p.title}</strong><br>
+        ${p.description}<br>
+        <em>Why it matters:</em> ${p.why}
+      </li>
+    `).join('');
+    
+    const phase2Items = INDEX_OVERVIEW.phase2.items.map(item => `
+      <li>${item}</li>
+    `).join('');
+    
+    const methodologyItems = INDEX_OVERVIEW.methodology.principles.map(p => `
+      <li><strong>${p.title}</strong> ${p.description}</li>
+    `).join('');
+    
+    // ADD THE overview-description CLASS HERE
+    container.innerHTML = `
+      <div class="overview-description">
+        <h3>📖 ${INDEX_OVERVIEW.heading}</h3>
+        <p>${INDEX_OVERVIEW.description}</p>
+        
+        <div class="section-divider">
+          <div class="section-number" aria-hidden="true">I</div>
+          <h2>🎯 ${INDEX_OVERVIEW.phase1.title}</h2>
+        </div>
+        
+        <p><strong>Duration:</strong> ${INDEX_OVERVIEW.phase1.duration} · <strong>Pre‑requisites:</strong> ${INDEX_OVERVIEW.phase1.prereq}</p>
+        <ul>
+          ${phase1Pillars}
+        </ul>
+        
+        <div class="section-divider">
+          <div class="section-number" aria-hidden="true">II</div>
+          <h2>🚀 ${INDEX_OVERVIEW.phase2.title}</h2>
+        </div>
+        
+        <p>${INDEX_OVERVIEW.phase2.description}</p>
+        <ul>
+          ${phase2Items}
+        </ul>
+        
+        <div class="section-divider">
+          <div class="section-number" aria-hidden="true">III</div>
+          <h2>📐 ${INDEX_OVERVIEW.methodology.title}</h2>
+        </div>
+        
+        <ul>
+          ${methodologyItems}
+        </ul>
+        
+        <div class="info-box warning" style="margin-top: 0.5rem;">
+          <strong>📈 Current Status (2026)</strong>
+          <dl id="statusList" class="key-concepts-list" style="margin-top: 0.75rem;"></dl>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderMethodSection() {
+    const container = document.getElementById('js-method-container');
+    if (!container) {
+      console.warn('⚠️ Method container not found');
+      return;
+    }
+    
+    const phases = INDEX_METHOD.phases.map(p => `
+      <div style="flex: 1; min-width: 180px; background: var(--bg-primary); border-radius: var(--radius-md); padding: 0.75rem; border-left: 3px solid var(--accent-primary);">
+        <div style="font-weight: 600; font-family: var(--font-display);">${p.title}</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">${p.description}</div>
+      </div>
+    `).join('');
+    
+    const badges = INDEX_METHOD.badges.map(b => `
+      <span id="${b.id}" class="method-badge">${b.text}</span>
+    `).join('');
+    
+    container.innerHTML = `
+      <div class="method-section" style="background: var(--bg-card); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color);">
+        <h3 style="margin-bottom: 0.75rem;">${INDEX_METHOD.title}</h3>
+        <p style="margin-bottom: 1rem; color: var(--text-secondary);">${INDEX_METHOD.description}</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.25rem 0;">
+          ${phases}
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+          ${badges}
+          <span style="margin-left: auto; font-size: 0.7rem; color: var(--text-muted);">${INDEX_METHOD.footnote}</span>
+        </div>
+      </div>
+    `;
   }
 
   function showPillarDetail(pillarId, phase = 'phase1') {
@@ -2818,6 +3091,16 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
     window.addEventListener('storage', () => { updateAllUI(); renderPhase1ModalScroller(); renderPhase2ModalScroller(); });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) updateAllUI(); });
+
+    console.log('🚀 DOMContentLoaded firing...');
+
+    // --- Render Index Page Content (if on index.html) ---
+    if (document.querySelector('.hero-section')) {
+      renderHero();
+      renderOverview();
+      renderMethodSection();
+      console.log('✅ Index page content rendered');
+  }
 
   });
 
