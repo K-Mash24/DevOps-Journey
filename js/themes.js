@@ -928,6 +928,21 @@ const COLOR_THEMES = {
 
   // --- Reset Theme ---
   function resetTheme() {
+    // 1. Read the user's saved default theme from Advanced Settings
+    let defaultTheme = 'indigo'; // fallback
+    try {
+      const appearanceSettings = localStorage.getItem('gc-appearance-settings');
+      if (appearanceSettings) {
+        const parsed = JSON.parse(appearanceSettings);
+        if (parsed.defaultTheme && COLOR_THEMES[parsed.defaultTheme]) {
+          defaultTheme = parsed.defaultTheme;
+        }
+      }
+    } catch (e) {
+      // ignore parse errors
+    }
+
+    // 2. Remove all custom theme CSS variables
     document.documentElement.style.removeProperty("--accent-primary");
     document.documentElement.style.removeProperty("--accent-secondary");
     document.documentElement.style.removeProperty("--bg-primary");
@@ -935,16 +950,25 @@ const COLOR_THEMES = {
     document.documentElement.style.removeProperty("--border-color");
     document.documentElement.style.removeProperty("--text-primary");
     document.documentElement.style.removeProperty("--text-secondary");
-
-    //remove sidebar styles
     document.documentElement.style.removeProperty("--sidebar-border");
     document.documentElement.style.removeProperty("--sidebar-section-label");
     document.documentElement.style.removeProperty("--sidebar-active-bg");
     document.documentElement.style.removeProperty("--sidebar-hover-bg");
 
+    // 3. Remove the "current theme" stored from Tab 6
     localStorage.removeItem("gc-color-theme");
+
+    // 4. Apply the default theme (or fallback to Indigo)
+    if (defaultTheme && COLOR_THEMES[defaultTheme]) {
+      applyTheme(defaultTheme, false);
+      showToast(`🔄 Theme reset to default (${COLOR_THEMES[defaultTheme].name})`, "info");
+    } else {
+      applyTheme('indigo', false);
+      showToast("🔄 Theme reset to default (Indigo)", "info");
+    }
+
+    // 5. Refresh the theme cards in Tab 6
     renderThemeCards();
-    showToast("🔄 Theme reset to default (Indigo)", "info");
   }
 
   // --- Load Saved Theme ---
