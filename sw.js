@@ -1,4 +1,4 @@
-const CACHE_NAME = "devops-journey-2026-07-06-v5"; // Increment when you deploy
+const CACHE_NAME = "devops-journey-2026-07-07-v1"; // Increment when you deploy
 
 const urlsToCache = [
   // Critical — always cache these
