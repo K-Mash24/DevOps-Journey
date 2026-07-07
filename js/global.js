@@ -481,6 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="pillar-checklist-status">${checked ? '✓' : '⬚'}</span>
           </div>
         `;
+        updatePhase2RoadmapAndCards();
       }
       totalItems = data.topics.length;
       // Also update the binary pillar completion key based on whether all topics are checked
@@ -912,7 +913,28 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   }
 
   function getPhase2PillarCompletion(pillar) {
-    return localStorage.getItem(`phase2-${pillar}`) === 'true' ? 1 : 0;
+    // First check the binary key (set when all topics are checked)
+    const binaryKey = `phase2-${pillar}`;
+    if (localStorage.getItem(binaryKey) === 'true') return 1;
+    
+    // If binary key is not set, check topics individually
+    const data = phase2PillarData[pillar];
+    if (!data) return 0;
+    
+    let completedTopics = 0;
+    for (let i = 0; i < data.topics.length; i++) {
+      const key = `${data.topicPrefix}${i + 1}`;
+      if (localStorage.getItem(key) === 'true') completedTopics++;
+    }
+    
+    // If all topics are complete, set the binary key and return 1
+    if (completedTopics === data.topics.length) {
+      localStorage.setItem(binaryKey, 'true');
+      return 1;
+    }
+    
+    // Return progress as a fraction (0 to 1) for partial progress
+    return completedTopics / data.topics.length;
   }
 
   function updateHeroStats() {
@@ -969,18 +991,202 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     }
   }
 
-  function updateAllUI() {
-    updateSidebarProgress();
-    updatePhase1RoadmapAndCards();
-    updatePhase2RoadmapAndCards();
-    updateFloatingRings();
-    updateHeroStats();
-    updateMethodBadges();
-    updatePhase1HeaderTag();
-    renderStudyPath();
-  }
+  // ============================================================
+  // RENDER STATUS LIST (Phase 1 or Phase 2, depending on progress)
+  // ============================================================
+  function renderStatusList() {
+    const container = document.getElementById('statusList');
+    if (!container) return;
 
-  
+    const pillars = ['networking', 'linux', 'security', 'scripting', 'databases'];
+    const names = {
+      networking: 'Networking',
+      linux: 'Linux & CLI',
+      security: 'Security',
+      scripting: 'Scripting',
+      databases: 'Databases'
+    };
+    const icons = {
+      networking: '🌐',
+      linux: '🐧',
+      security: '🔒',
+      scripting: '⚙️',
+      databases: '🗄️'
+    };
+
+    // Phase 2 data
+    const phase2Pillars = ['docker', 'cicd', 'kubernetes', 'terraform', 'monitoring'];
+    const phase2Names = {
+      docker: 'Docker & Containers',
+      cicd: 'CI/CD Pipelines',
+      kubernetes: 'Kubernetes',
+      terraform: 'IaC — Terraform & Ansible',
+      monitoring: 'Monitoring & Observability'
+    };
+    const phase2Icons = {
+      docker: '🐳',
+      cicd: '🔁',
+      kubernetes: '☸️',
+      terraform: '🏗️',
+      monitoring: '📊'
+    };
+
+    // --- Check if Phase 1 is complete (all pillars ≥ 80%) ---
+    const phase1Complete = pillars.every(p => getPhase1PillarCompletion(p) >= 0.8);
+    let itemsHtml = '';
+    let nextMilestone = null;
+    let anyIncomplete = false;
+
+    if (phase1Complete) {
+      // --- Phase 2 Status ---
+      phase2Pillars.forEach((pillar, index) => {
+        const completed = getPhase2PillarCompletion(pillar) === 1;
+        const name = phase2Names[pillar] || pillar;
+        const icon = phase2Icons[pillar] || '📌';
+        let statusText;
+        let statusClass;
+
+        if (completed) {
+          statusText = `<strong>Complete!</strong> All topics mastered. Ready for the next challenge. 🚀`;
+          statusClass = 'complete';
+        } else {
+          // Not yet complete – check if it's the first incomplete (next milestone)
+          const previousPillar = index > 0 ? phase2Pillars[index - 1] : null;
+          const prevName = previousPillar ? phase2Names[previousPillar] : null;
+          if (!anyIncomplete) {
+            // This is the next milestone
+            nextMilestone = pillar;
+            anyIncomplete = true;
+            statusText = `<strong>Next up:</strong> ${name}. The next big step in your DevOps journey. 🎯`;
+            statusClass = 'next-up';
+          } else {
+            statusText = `Locked — will unlock once you've completed <strong>${nextMilestone ? phase2Names[nextMilestone] : 'the previous'}</strong>.`;
+            statusClass = 'locked';
+          }
+        }
+
+        itemsHtml += `
+          <dt>${icon} ${name}</dt>
+          <dd>${statusText}</dd>
+        `;
+      });
+
+      // No next milestone means all Phase 2 complete!
+      if (!anyIncomplete) {
+        itemsHtml += `
+          <dt>🏁 Next milestone</dt>
+          <dd style="font-weight: 700; color: var(--accent-secondary);">
+            🎉 All Phase 2 pillars are <strong>complete!</strong> You've finished the entire DevOps roadmap. You're now a full‑stack DevOps engineer! 🌟
+          </dd>
+        `;
+      } else {
+        // Add a next milestone entry for Phase 2
+        const nextName = phase2Names[nextMilestone] || nextMilestone;
+        const nextIcon = phase2Icons[nextMilestone] || '🏁';
+        let nextText = '';
+        if (nextMilestone === 'docker') {
+          nextText = `🐳 Master Docker — containers are the foundation of modern deployment. Learn images, Dockerfile, Compose, and registries.`;
+        } else if (nextMilestone === 'cicd') {
+          nextText = `🔁 Automate everything with CI/CD. Dive into GitHub Actions, pipelines, and deployment automation.`;
+        } else if (nextMilestone === 'kubernetes') {
+          nextText = `☸️ Orchestrate at scale. Learn Pods, Services, Ingress, and Helm — the industry standard for container orchestration.`;
+        } else if (nextMilestone === 'terraform') {
+          nextText = `🏗️ Treat infrastructure as code. Terraform and Ansible will make you a master of provisioning and configuration.`;
+        } else if (nextMilestone === 'monitoring') {
+          nextText = `📊 Observe everything. Prometheus, Grafana, and logging stacks give you superpowers in production.`;
+        }
+        itemsHtml += `
+          <dt style="font-weight: 700; color: var(--accent-secondary);">🏁 Next milestone</dt>
+          <dd style="font-weight: 500; font-size: 0.95rem;">${nextText}</dd>
+        `;
+      }
+
+    } else {
+      // --- Phase 1 Status (as before, enhanced) ---
+      pillars.forEach((pillar, index) => {
+        const progress = getPhase1PillarCompletion(pillar);
+        const percent = Math.round(progress * 100);
+        const data = phase1PillarData[pillar];
+        let statusText = '';
+        let icon = icons[pillar] || '📌';
+
+        if (data && !data.placeholder) {
+          const totalSections = data.sections || 0;
+          let completedSections = 0;
+          for (let i = 1; i <= totalSections; i++) {
+            if (localStorage.getItem(`${data.sectionPrefix}${i}`) === 'true') completedSections++;
+          }
+          const quizPassed = localStorage.getItem(data.quizKey) === 'true';
+          const totalItems = totalSections + (data.quiz ? 1 : 0);
+          const completedItems = completedSections + (quizPassed ? 1 : 0);
+
+          if (percent >= 80) {
+            icon = '🎉';
+            statusText = `<strong>Complete!</strong> All ${totalSections} sections and the quiz are mastered. Ready for the next challenge! 🚀`;
+          } else if (percent > 0) {
+            icon = '⚡';
+            const remaining = totalItems - completedItems;
+            const nextAction = remaining > 0 ? `Keep going — you have ${remaining} more item${remaining > 1 ? 's' : ''} to finish.` : 'Almost there!';
+            statusText = `<strong>${percent}% done</strong> — ${completedItems} of ${totalItems} items complete. ${nextAction}`;
+          } else {
+            icon = '🔒';
+            const previousPillar = index > 0 ? pillars[index - 1] : null;
+            const prevName = previousPillar ? names[previousPillar] : 'the previous';
+            statusText = `Locked — will unlock once you've completed ${prevName} (≥80%). Stay tuned!`;
+          }
+        } else {
+          icon = '🚧';
+          statusText = `Coming soon! This pillar is not yet available.`;
+        }
+
+        itemsHtml += `
+          <dt>${icon} ${names[pillar]}</dt>
+          <dd>${statusText}</dd>
+        `;
+
+        // Determine next milestone (first incomplete phase1 with progress < 80)
+        if (percent < 80 && !anyIncomplete) {
+          nextMilestone = pillar;
+          anyIncomplete = true;
+        }
+      });
+
+      // --- Next milestone (Phase 1) ---
+      let nextText = '';
+      if (nextMilestone) {
+        const nextName = names[nextMilestone] || nextMilestone;
+        const data = phase1PillarData[nextMilestone];
+        const percent = Math.round(getPhase1PillarCompletion(nextMilestone) * 100);
+
+        if (nextMilestone === 'networking' && percent === 0) {
+          nextText = `🚀 Start with Networking — the foundation of everything. Dive into OSI, IP, subnetting, and more!`;
+        } else if (nextMilestone === 'linux' && percent < 80) {
+          nextText = `🐧 Dive deeper into Linux! Master the command line, file system, permissions, and scripting. The cloud runs on Linux — own it!`;
+        } else if (nextMilestone === 'security' && percent === 0) {
+          nextText = `🔐 Ready to secure the world? After Linux, you'll tackle encryption, TLS, PKI, and OWASP. Essential for every DevOps engineer.`;
+        } else if (nextMilestone === 'scripting' && percent === 0) {
+          nextText = `⚙️ Automate everything! Scripting (Python + Bash) will make you unstoppable. Coming after Security.`;
+        } else if (nextMilestone === 'databases' && percent === 0) {
+          nextText = `🗄️ Data is the new oil. You'll learn SQL, NoSQL, ACID, and caching — critical for any application.`;
+        } else {
+          nextText = `Complete <strong>${nextName}</strong> to unlock the next stage. You're building a rock‑solid foundation! 💪`;
+        }
+      } else {
+        // Phase 1 is complete — but this branch is only reached if phase1Complete is false, so this won't happen
+        // (We have a separate Phase 1 complete check earlier)
+        // But as a fallback:
+        nextText = `🎉 All Phase 1 pillars are <strong>complete!</strong> You're ready to move on to Phase 2 — DevOps tools and cloud. Amazing work! 🌟`;
+      }
+
+      // Add next milestone entry with a special class for emphasis
+      itemsHtml += `
+        <dt style="font-weight: 700; color: var(--accent-secondary);">🏁 Next milestone</dt>
+        <dd style="font-weight: 500; font-size: 0.95rem;">${nextText}</dd>
+      `;
+    }
+
+    container.innerHTML = itemsHtml;
+  }  
 
   function updateSidebarProgress() {
     const phase1Pillars = ['networking', 'linux', 'security', 'scripting', 'databases'];
@@ -1060,54 +1266,102 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     }
   }
 
+  // ============================================================
+  // PHASE 2 — ROADMAP & CARDS (Fully Dynamic)
+  // ============================================================
   function updatePhase2RoadmapAndCards() {
     const phases = ['docker', 'cicd', 'kubernetes', 'terraform', 'monitoring'];
-    const titles = ['Docker & Containers', 'CI/CD Pipelines', 'Kubernetes', 'IaC — Terraform & Ansible', 'Monitoring & Observability'];
-    const descs = ['Images, containers, registries, Dockerfile, docker-compose',
-                   'GitHub Actions, GitLab CI, Jenkins',
-                   'Pods, Services, Deployments, Ingress, ConfigMaps, Secrets',
-                   'Infrastructure as Code, state management, modules, configuration management',
-                   'Prometheus, Grafana, logging stacks, alerting, distributed tracing'];
-    const icons = ['docker', 'cicd', 'k8s', 'terraform', 'monitor'];
+    const titles = {
+      docker: 'Docker & Containers',
+      cicd: 'CI/CD Pipelines',
+      kubernetes: 'Kubernetes',
+      terraform: 'IaC — Terraform & Ansible',
+      monitoring: 'Monitoring & Observability'
+    };
+    const descs = {
+      docker: 'Images, containers, registries, Dockerfile, docker-compose',
+      cicd: 'GitHub Actions, GitLab CI, Jenkins — automate everything',
+      kubernetes: 'Pods, Services, Deployments, Ingress, ConfigMaps, Secrets',
+      terraform: 'Infrastructure as Code, state management, modules, configuration management',
+      monitoring: 'Prometheus, Grafana, logging stacks, alerting, distributed tracing'
+    };
+    const icons = {
+      docker: '🐳',
+      cicd: '🔁',
+      kubernetes: '☸️',
+      terraform: '🏗️',
+      monitoring: '📊'
+    };
 
-    // Roadmap
+    // --- Roadmap ---
     const roadmapContainer = document.getElementById('phase2Roadmap');
     if (roadmapContainer) {
       roadmapContainer.innerHTML = phases.map((p, idx) => {
-        const completed = getPhase2PillarCompletion(p);
-        const statusClass = completed ? 'complete' : 'locked';
-        const statusText = completed ? 'COMPLETE' : 'LOCKED';
+        const completed = getPhase2PillarCompletion(p) === 1;
+        const progress = getPhase2PillarCompletion(p);
+        const statusClass = completed ? 'complete' : (progress > 0 ? 'in-progress' : 'locked');
+        const statusText = completed ? '✅ COMPLETE' : (progress > 0 ? '⏳ IN PROGRESS' : '🔒 LOCKED');
+
         return `<div class="phase-item ${statusClass}">
-                  <div class="phase-dot" aria-hidden="true">${idx+1}</div>
+                  <div class="phase-dot" aria-hidden="true">${idx + 1}</div>
                   <div class="phase-content">
-                    <div class="phase-name">Phase 2 · ${idx+1} — ${titles[idx]}</div>
-                    <div class="phase-desc">${descs[idx]}</div>
+                    <div class="phase-name">Phase 2 · ${idx + 1} — ${titles[p]}</div>
+                    <div class="phase-desc">${descs[p]}</div>
                   </div>
                   <span class="phase-status">${statusText}</span>
                 </div>`;
       }).join('');
     }
 
-    // Cards
+    // --- Cards ---
     const cardsContainer = document.getElementById('phase2Cards');
     if (cardsContainer) {
       cardsContainer.innerHTML = phases.map((p, idx) => {
-        const completed = getPhase2PillarCompletion(p);
-        const cardClass = completed ? 'pillar-card complete' : 'pillar-card locked-card';
-        const statusClass = completed ? 'complete' : 'locked-badge';
-        const statusText = completed ? 'Complete' : 'Locked';
-        const fillClass = completed ? 'complete' : 'not-started';
-        return `<div class="${cardClass}" aria-disabled="true">
+        const completed = getPhase2PillarCompletion(p) === 1;
+        const progress = getPhase2PillarCompletion(p);
+        const data = phase2PillarData[p];
+
+        // Count completed topics for this pillar
+        let completedTopics = 0;
+        const totalTopics = data ? data.topics.length : 0;
+        if (data) {
+          for (let i = 0; i < data.topics.length; i++) {
+            const key = `${data.topicPrefix}${i + 1}`;
+            if (localStorage.getItem(key) === 'true') completedTopics++;
+          }
+        }
+
+        const percent = totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0;
+        const isComplete = completed || percent >= 100;
+
+        const cardClass = isComplete ? 'pillar-card complete' : (percent > 0 ? 'pillar-card in-progress' : 'pillar-card locked-card');
+        const statusClass = isComplete ? 'complete' : (percent > 0 ? 'in-progress' : 'locked-badge');
+        const statusText = isComplete ? '✅ Complete' : (percent > 0 ? `⏳ ${percent}%` : '🔒 Locked');
+        const fillClass = isComplete ? 'complete' : (percent > 0 ? 'active' : 'not-started');
+
+        const icon = icons[p] || '📌';
+        const title = titles[p] || p;
+        const desc = descs[p] || '';
+
+        return `<div class="${cardClass}" data-phase2="${p}">
                   <div class="card-top">
-                    <div class="card-icon ${icons[idx]}" aria-hidden="true">${icons[idx]==='docker'?'🐳':icons[idx]==='cicd'?'🔁':icons[idx]==='k8s'?'☸️':icons[idx]==='terraform'?'🏗️':'📊'}</div>
+                    <div class="card-icon ${p}" aria-hidden="true">${icon}</div>
                     <span class="card-status-badge ${statusClass}">${statusText}</span>
                   </div>
-                  <div><div class="card-number">Phase 2 · 0${idx+1}</div><div class="card-title">${titles[idx]}</div></div>
-                  <div class="card-desc">${descs[idx]}</div>
-                  <div class="card-progress"><div class="card-progress-fill ${fillClass}" style="width:${completed?100:0}%;"></div></div>
+                  <div>
+                    <div class="card-number">Phase 2 · ${String(idx + 1).padStart(2, '0')}</div>
+                    <div class="card-title">${title}</div>
+                  </div>
+                  <div class="card-desc">${desc}</div>
+                  <div class="card-progress">
+                    <div class="card-progress-fill ${fillClass}" style="width:${percent}%;"></div>
+                  </div>
                   <div class="card-footer">
-                    <div class="card-meta-pills"><span class="meta-pill">${completed?'100%':'0%'} complete</span></div>
-                    <div class="card-arrow" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg></div>
+                    <div class="card-meta-pills">
+                      <span class="meta-pill">${percent}% complete</span>
+                      <span class="meta-pill">${completedTopics}/${totalTopics} topics</span>
+                    </div>
+                    ${isComplete ? `<div class="card-arrow" aria-hidden="true">✓</div>` : `<div class="card-arrow" aria-hidden="true">→</div>`}
                   </div>
                 </div>`;
       }).join('');
@@ -1171,6 +1425,18 @@ window.openModalToPillarDetails = openModalToPillarDetails;
       overallModalRing.style.strokeDashoffset = offset;
       overallModalPercentSpan.textContent = `${overallPercent}%`;
     }
+  }
+
+  function updateAllUI() {
+    updateSidebarProgress();
+    updatePhase1RoadmapAndCards();
+    updatePhase2RoadmapAndCards();
+    updateFloatingRings();
+    updateHeroStats();
+    updateMethodBadges();
+    updatePhase1HeaderTag();
+    renderStudyPath();
+    renderStatusList();
   }
 
   function initModalAndFloatingRing() {
