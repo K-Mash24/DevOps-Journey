@@ -472,6 +472,486 @@
                 </div>
               </div>
             </div>
+            <!-- ========================================================== -->
+            <!--   HOW TO ADD A NEW PILLAR – COMPLETE GUIDE (HTML)         -->
+            <!-- ========================================================== -->
+
+            <div class="overview-content" style="margin-bottom: 2rem;">
+
+              <!-- ========================================================== -->
+              <!-- INTRODUCTION                                               -->
+              <!-- ========================================================== -->
+              <div class="info-box note" style="margin-bottom: 1.5rem;">
+                <strong>📌 Purpose of this guide</strong>
+                <p>
+                  This guide walks you through adding a new pillar page to the Great Cheatsheets site.
+                  It captures the lessons learned from building the Networking, Linux, and Security pillars,
+                  including the pitfalls to avoid and the patterns that work.
+                </p>
+                <p style="margin-top: 0.5rem;">
+                  Follow these steps in order. If you get stuck, refer back to the working examples in
+                  <code>linux.html</code> and <code>security.html</code>.
+                </p>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 1: Create the HTML Page                               -->
+              <!-- ========================================================== -->
+              <div class="info-box tip" style="margin-bottom: 1.5rem;">
+                <strong>📄 Step 1 – Create the HTML Page</strong>
+                <ol style="margin-top: 0.5rem; padding-left: 1.2rem;">
+                  <li>Copy <code>base.html</code> to <code>html/your-pillar.html</code></li>
+                  <li>Replace <code>&lt;!-- PAGE TITLE --&gt;</code> with your pillar name</li>
+                  <li>Replace <code>&lt;!-- PAGE DESCRIPTION --&gt;</code> with a short summary</li>
+                  <li>Replace <code>&lt;!-- PILLAR NAME --&gt;</code> in the page header</li>
+                  <li>Replace <code>&lt;!-- PILLAR-SPECIFIC-JS --&gt;</code> with <code>your-pillar.js</code></li>
+                  <li>Update the <code>&lt;link rel="icon"&gt;</code> to point to your pillar's icon</li>
+                </ol>
+                <div class="code-block">
+                  <pre>cp base.html html/your-pillar.html
+            # Then edit the placeholders</pre>
+                </div>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 2: Build the Sidebar                                  -->
+              <!-- ========================================================== -->
+              <div class="info-box warning" style="margin-bottom: 1.5rem;">
+                <strong>🧭 Step 2 – Build the Sidebar</strong>
+                <p style="margin-top: 0.25rem;">
+                  Copy the sidebar from <code>linux.html</code> or <code>security.html</code>
+                  and update it for your pillar:
+                </p>
+                <ul style="margin-top: 0.25rem; padding-left: 1.2rem;">
+                  <li>Keep the <strong>Navigation</strong> section unchanged</li>
+                  <li>In <strong>Phase 1 — Foundations</strong>, add your pillar link with <code>data-pillar="your-pillar"</code></li>
+                  <li>Mark your pillar as <code>class="nav-item active"</code></li>
+                  <li>In <strong>Coming Next</strong>, update the disabled link to the next pillar</li>
+                  <li>Keep the <strong>Sidebar Footer</strong> unchanged</li>
+                </ul>
+                <div class="code-block">
+                  <pre>&lt;a class="nav-item active" href="../html/your-pillar.html" data-pillar="your-pillar"&gt;
+              🔒 Pillar X — Your Pillar Name
+              &lt;span class="pillar-progress-percent" data-pillar-progress="your-pillar"&gt;0%&lt;/span&gt;
+            &lt;/a&gt;</pre>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                  ⚠️ <strong>Important:</strong> The <code>data-pillar</code> value must match the
+                  <code>id</code> in your pillar's JavaScript config.
+                </p>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 3: Add Section Navigation                             -->
+              <!-- ========================================================== -->
+              <div class="info-box note" style="margin-bottom: 1.5rem;">
+                <strong>📂 Step 3 – Add Section Navigation in Sidebar</strong>
+                <p style="margin-top: 0.25rem;">
+                  After the pillar links, add section navigation for your pillar's 10 sections:
+                </p>
+                <div class="code-block">
+                  <pre>&lt;div class="sidebar-section-label"&gt;Phase 1 — Foundations (Your Pillar)&lt;/div&gt;
+            &lt;nav class="sidebar-nav" aria-label="Your Pillar sections"&gt;
+              &lt;!-- Overview --&gt;
+              &lt;a class="nav-item" href="#overview-divider"&gt;...&lt;/a&gt;
+              &lt;!-- Section 1 --&gt;
+              &lt;a class="nav-item" href="#s1"&gt;
+                &lt;svg class="nav-icon" ...&gt;...&lt;/svg&gt;
+                Section 1 — Topic
+                &lt;span class="nav-badge"&gt;0&lt;/span&gt;
+              &lt;/a&gt;
+              &lt;!-- ... repeat for sections 2-10 ... --&gt;
+              &lt;!-- Flashcards --&gt;
+              &lt;a class="nav-item" href="#flashcards"&gt;...&lt;/a&gt;
+              &lt;!-- Quiz --&gt;
+              &lt;a class="nav-item" href="#quiz"&gt;...&lt;/a&gt;
+            &lt;/nav&gt;</pre>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                  💡 <strong>Tip:</strong> Each section <code>href</code> must match the <code>id</code>
+                  of the section divider in the page body. The <code>nav-badge</code> will be auto‑populated
+                  by <code>updateNavBadges()</code> in <code>global.js</code>.
+                </p>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 4: Fill the Overview Content                          -->
+              <!-- ========================================================== -->
+              <div class="info-box tip" style="margin-bottom: 1.5rem;">
+                <strong>📝 Step 4 – Fill the Overview Content</strong>
+                <p style="margin-top: 0.25rem;">
+                  Replace the placeholder overview with your pillar's content:
+                </p>
+                <ul style="margin-top: 0.25rem; padding-left: 1.2rem;">
+                  <li><strong>Purpose:</strong> Why this pillar exists and its place in the roadmap</li>
+                  <li><strong>Learning objectives:</strong> 8–12 bullet points of what the learner will gain</li>
+                  <li><strong>Key concepts:</strong> A definition list of the most important terms</li>
+                  <li><strong>Summary statistics:</strong> Sections, topics, estimated time, difficulty, status</li>
+                  <li><strong>Detailed notes:</strong> Link to the GitHub notes folder</li>
+                </ul>
+                <p style="margin-top: 0.5rem;">
+                  The overview is rendered by <code>Base.renderPillarOverview()</code> from data you define in your pillar's JS file.
+                </p>
+                <div class="code-block">
+                  <pre>const PILLAR_OVERVIEW = {
+              purpose: { title: '📌 Purpose', description: ['...'] },
+              objectives: ['...'],
+              keyConcepts: [{ term: '...', definition: '...' }],
+              stats: [{ label: '...', value: '...' }],
+              readmeLink: '...'
+            };</pre>
+                </div>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 5: Section Dividers & Accordions                      -->
+              <!-- ========================================================== -->
+              <div class="info-box note" style="margin-bottom: 1.5rem;">
+                <strong>📂 Step 5 – Add Section Dividers and Accordions</strong>
+                <p style="margin-top: 0.25rem;">
+                  For each section (typically 10 per pillar), add a section divider and a placeholder container:
+                </p>
+                <div class="code-block">
+                  <pre>&lt;div class="section-divider" id="s1"&gt;
+              &lt;div class="section-number" aria-hidden="true"&gt;1&lt;/div&gt;
+              &lt;h2&gt;Section 1 — Topic&lt;/h2&gt;
+              &lt;label class="section-complete-checkbox" style="margin-left:auto;display:flex;align-items:center;gap:5px;"&gt;
+                &lt;input type="checkbox" class="section-checkbox" data-section="1"&gt;
+                &lt;span style="font-size:0.7rem;"&gt;Complete&lt;/span&gt;
+              &lt;/label&gt;
+            &lt;/div&gt;
+
+            &lt;div id="js-section1-container"&gt;&lt;/div&gt;</pre>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                  ⚠️ <strong>Important:</strong> Each section <code>id</code> must match the
+                  <code>data-section</code> value on its checkbox, and also match the sidebar navigation links.
+                </p>
+                <p>
+                  The accordions themselves are rendered from <code>SECTION_X_ACCORDIONS</code> arrays in your pillar's JS file,
+                  using <code>Base.renderAccordion()</code>.
+                </p>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 6: Create the JavaScript File                         -->
+              <!-- ========================================================== -->
+              <div class="info-box warning" style="margin-bottom: 1.5rem;">
+                <strong>⚡ Step 6 – Create the JavaScript File</strong>
+                <p style="margin-top: 0.25rem;">
+                  Create <code>js/your-pillar.js</code> with this structure:
+                </p>
+                <div class="code-block">
+                  <pre>// ============================================================
+            // YOUR-PILLAR.JS — Data and configuration
+            // ============================================================
+
+            document.addEventListener('DOMContentLoaded', function() {
+
+              // 1. Define SECTION_X_ACCORDIONS arrays (one per section)
+              const SECTION_1_ACCORDIONS = [
+                { id: '...', title: '...', priority: false, icon: '📁', bodyHTML: '...' }
+              ];
+              // ... repeat for sections 2-10
+
+              // 2. Define PILLAR_OVERVIEW
+              const PILLAR_OVERVIEW = { purpose: {...}, objectives: [...], keyConcepts: [...], stats: [...], readmeLink: '...' };
+
+              // 3. Define FLASHCARDS array
+              const FLASHCARDS = [ { term: '...', answer: '...' } ];
+
+              // 4. Define QUIZ_SETS (3 sets, 5+ questions each)
+              const QUIZ_SETS = {
+                1: [ { q: '...', options: ['A','B','C'], correct: 0, explain: '...' } ],
+                2: [ /* questions */ ],
+                3: [ /* questions */ ]
+              };
+
+              // 5. Define CONFIG
+              const CONFIG = {
+                id: 'your-pillar',        // MUST match data-pillar in sidebar
+                name: 'Your Pillar Name',
+                totalSections: 10,
+                sectionPrefix: 'your-pillar-section-',
+                quizKey: 'your-pillar-quiz-passed',
+                quizSetPrefix: 'your-pillar-quiz-set-',
+                congratsKey: 'your-pillar-100-congrats-shown',
+                scoreKey: 'gc-score-your-pillar',
+                flashcardData: FLASHCARDS,
+                quizSets: QUIZ_SETS
+              };
+
+              // 6. Render content
+              Base.renderPillarOverview('js-overview-container', PILLAR_OVERVIEW);
+              Base.renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
+              // ... repeat for sections 2-10
+
+              // 7. Initialise with Base
+              Base.init(CONFIG);
+
+              // 8. Update page header
+              Base.updatePageHeader(CONFIG);
+
+            });</pre>
+                </div>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                  ⚠️ <strong>Important:</strong> The <code>id</code> must match the <code>data-pillar</code>
+                  in the sidebar and the <code>global.js</code> tracking. All <code>localStorage</code> keys
+                  use this prefix consistently.
+                </p>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 7: Update global.js                                   -->
+              <!-- ========================================================== -->
+              <div class="info-box note" style="margin-bottom: 1.5rem;">
+                <strong>🔄 Step 7 – Update global.js</strong>
+                <p style="margin-top: 0.25rem;">
+                  Add your pillar to the global progress tracking in <code>global.js</code>:
+                </p>
+                <ol style="margin-top: 0.25rem; padding-left: 1.2rem;">
+                  <li>Add to <code>phase1PillarData</code> with <code>sections</code>, <code>quiz</code>, <code>titles</code>, <code>quizKey</code>, <code>sectionPrefix</code></li>
+                  <li>Add a <code>case 'your-pillar'</code> to <code>getPhase1PillarCompletion()</code></li>
+                  <li>Add <code>'your-pillar'</code> to the pillars array in <code>updateAllUI()</code></li>
+                  <li>Add <code>'your-pillar'</code> to the pillars array in <code>updateSidebarProgress()</code></li>
+                </ol>
+                <div class="code-block">
+                  <pre>// In phase1PillarData
+            yourPillar: {
+              sections: 10,
+              quiz: true,
+              titles: ['Section 1', 'Section 2', ...],
+              quizKey: 'your-pillar-quiz-passed',
+              sectionPrefix: 'your-pillar-section-'
+            }
+
+            // In getPhase1PillarCompletion()
+            case 'your-pillar':
+              let count = 0;
+              for (let i=1; i<=10; i++) {
+                if (localStorage.getItem(`your-pillar-section-${i}`) === 'true') count++;
+              }
+              if (localStorage.getItem('your-pillar-quiz-passed') === 'true') count++;
+              return count / 11;</pre>
+                </div>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 8: Update All Sidebars                                -->
+              <!-- ========================================================== -->
+              <div class="info-box warning" style="margin-bottom: 1.5rem;">
+                <strong>📋 Step 8 – Update All Sidebars</strong>
+                <p style="margin-top: 0.25rem;">
+                  Add your pillar link to every page's sidebar:
+                </p>
+                <ul style="margin-top: 0.25rem; padding-left: 1.2rem;">
+                  <li><code>index.html</code> — Phase 1 section</li>
+                  <li><code>html/networking.html</code> — Phase 1 section</li>
+                  <li><code>html/linux.html</code> — Phase 1 section</li>
+                  <li><code>html/security.html</code> — Phase 1 section</li>
+                  <li><code>html/your-pillar.html</code> — Phase 1 section (mark as active)</li>
+                </ul>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                  ⚠️ <strong>Don't forget:</strong> Update the <strong>Coming Next</strong> section
+                  in each page to reflect the correct next pillar.
+                </p>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- STEP 9: Testing Checklist                                  -->
+              <!-- ========================================================== -->
+              <div class="info-box tip" style="margin-bottom: 1.5rem;">
+                <strong>✅ Step 9 – Testing Checklist</strong>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.5rem;">
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Page loads without errors
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Sidebar navigation works
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Section checkboxes save state
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Progress ring updates correctly
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Flashcards render and flip
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Quiz sets load and submit
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Progress shows on homepage
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1rem;">⬜</span> Search finds content
+                  </div>
+                  <div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.5rem 0.75rem;font-size:0.75rem;display:flex;align-items:center;gap:0.5rem;grid-column:span 2;">
+                    <span style="font-size:1rem;">⬜</span> <strong>Floating ring opens global modal</strong> (modal is generated by JS – not hardcoded)
+                  </div>
+                </div>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- KEY LESSONS (Common Mistakes to Avoid)                    -->
+              <!-- ========================================================== -->
+              <div class="info-box warning" style="margin-bottom: 1.5rem; border-left-color: var(--accent-danger);">
+                <strong>🚫 KEY LESSONS – Common Mistakes to Avoid</strong>
+                <dl class="key-concepts-list" style="margin-top: 0.5rem;">
+                  <dt>❌ Hardcoding the modal or floating ring</dt>
+                  <dd>
+                    <strong>The modal and floating ring are generated by <code>global.js</code>.</strong>
+                    Do NOT copy <code>&lt;div id="progressModal"&gt;</code> or
+                    <code>&lt;div class="global-floating-ring"&gt;</code> into your HTML.
+                    They will be created automatically. If you hardcode them, the dynamic versions won't work.
+                  </dd>
+
+                  <dt>❌ Mismatched IDs</dt>
+                  <dd>
+                    The <code>id</code> in your pillar's JavaScript config must match:
+                    <ul style="margin-top:0.25rem;padding-left:1.2rem;">
+                      <li><code>data-pillar="your-pillar"</code> in the sidebar</li>
+                      <li>The <code>case 'your-pillar'</code> in <code>getPhase1PillarCompletion()</code></li>
+                      <li>The key in <code>phase1PillarData</code></li>
+                    </ul>
+                  </dd>
+
+                  <dt>❌ Wrong localStorage prefixes</dt>
+                  <dd>
+                    Use consistent prefixes:
+                    <ul style="margin-top:0.25rem;padding-left:1.2rem;">
+                      <li>Sections: <code>your-pillar-section-1</code> … <code>your-pillar-section-10</code></li>
+                      <li>Quiz: <code>your-pillar-quiz-passed</code></li>
+                      <li>Quiz sets: <code>your-pillar-quiz-set-1-passed</code> etc.</li>
+                      <li>Score: <code>gc-score-your-pillar</code></li>
+                    </ul>
+                  </dd>
+
+                  <dt>❌ Forgetting to update all sidebars</dt>
+                  <dd>
+                    Your pillar link must be added to <strong>every</strong> page's sidebar –
+                    not just the new page. Otherwise navigation will be incomplete.
+                  </dd>
+
+                  <dt>❌ Mismatched total sections</dt>
+                  <dd>
+                    The <code>totalSections</code> in your config must equal the number of
+                    <code>section-divider</code> elements in your HTML. If they don't match,
+                    the progress ring will calculate the wrong percentage.
+                  </dd>
+
+                  <dt>❌ Script order</dt>
+                  <dd>
+                    Scripts must load in this order:
+                    <ol style="margin-top:0.25rem;padding-left:1.2rem;">
+                      <li><code>global.js</code> — global UI, modal, progress tracking</li>
+                      <li><code>stars.js</code> — starfield background</li>
+                      <li><code>themes.js</code> — color themes</li>
+                      <li><code>base.js</code> — shared pillar functions</li>
+                      <li><code>your-pillar.js</code> — your data + <code>Base.init()</code></li>
+                    </ol>
+                  </dd>
+
+                  <dt>❌ Not calling <code>Base.init()</code></dt>
+                  <dd>
+                    Your pillar script must call <code>Base.init(CONFIG)</code> after
+                    defining <code>CONFIG</code>. Without this, flashcards and quizzes won't render.
+                  </dd>
+
+                  <dt>❌ Missing section navigation in sidebar</dt>
+                  <dd>
+                    The sidebar needs navigation links for each section (<code>#s1</code> … <code>#s10</code>),
+                    plus flashcards and quiz. Without these, users can't easily jump to sections.
+                  </dd>
+                </dl>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- FILE REFERENCE TABLE                                      -->
+              <!-- ========================================================== -->
+              <div class="table-wrapper" style="margin-bottom: 1rem;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>File</th>
+                      <th>Action</th>
+                      <th>What to do</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>html/your-pillar.html</code></td>
+                      <td>Create</td>
+                      <td>Copy from <code>base.html</code>, fill placeholders, add section dividers &amp; containers</td>
+                    </tr>
+                    <tr>
+                      <td><code>js/your-pillar.js</code></td>
+                      <td>Create</td>
+                      <td>Define <code>SECTION_X_ACCORDIONS</code>, <code>PILLAR_OVERVIEW</code>, <code>FLASHCARDS</code>, <code>QUIZ_SETS</code>, <code>CONFIG</code>, call <code>Base.init()</code></td>
+                    </tr>
+                    <tr>
+                      <td><code>js/global.js</code></td>
+                      <td>Update</td>
+                      <td>Add pillar to <code>phase1PillarData</code>, <code>getPhase1PillarCompletion()</code>, <code>updateAllUI()</code></td>
+                    </tr>
+                    <tr>
+                      <td><code>index.html</code></td>
+                      <td>Update</td>
+                      <td>Add sidebar link, update "Coming Next"</td>
+                    </tr>
+                    <tr>
+                      <td><code>html/networking.html</code></td>
+                      <td>Update</td>
+                      <td>Add sidebar link, update "Coming Next"</td>
+                    </tr>
+                    <tr>
+                      <td><code>html/linux.html</code></td>
+                      <td>Update</td>
+                      <td>Add sidebar link, update "Coming Next"</td>
+                    </tr>
+                    <tr>
+                      <td><code>html/security.html</code></td>
+                      <td>Update</td>
+                      <td>Add sidebar link, update "Coming Next" (now Scripting)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- ========================================================== -->
+              <!-- RENDER FUNCTIONS REFERENCE                                 -->
+              <!-- ========================================================== -->
+              <div class="info-box note" style="margin-bottom: 1.5rem;">
+                <strong>⚙️ Render Functions (from base.js)</strong>
+                <dl class="key-concepts-list" style="margin-top: 0.5rem;">
+                  <dt><code>Base.renderAccordion(containerId, accordionData)</code></dt>
+                  <dd>
+                    Renders accordions from data into the container with <code>containerId</code>.
+                    Each accordion object: <code>{ id, title, priority, icon, bodyHTML }</code>.
+                  </dd>
+
+                  <dt><code>Base.renderPillarOverview(containerId, overviewData)</code></dt>
+                  <dd>
+                    Renders the overview section from data:
+                    <code>{ purpose, objectives, keyConcepts, stats, readmeLink, repoPath }</code>.
+                  </dd>
+
+                  <dt><code>Base.init(config)</code></dt>
+                  <dd>
+                    Sets up flashcards, quiz, progress ring, and page header. Automatically called in
+                    your pillar's JS after rendering content.
+                  </dd>
+
+                  <dt><code>Base.updatePageHeader(config)</code></dt>
+                  <dd>
+                    Updates the completion ring and badges in the page header.
+                    Called automatically by <code>Base.init()</code>, but can be called manually if needed.
+                  </dd>
+                </dl>
+              </div>
+
+            </div>
 
             <!-- ========================================================== -->
             <!-- KEY LESSONS (Common Mistakes to Avoid)                    -->
