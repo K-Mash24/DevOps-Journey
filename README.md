@@ -16,8 +16,6 @@
 - [🗂️ Project Structure](#️-project-structure)
 - [💾 Progress Tracking – localStorage Keys](#-progress-tracking--localstorage-keys)
 - [🧩 Key JavaScript Modules](#-key-javascript-modules)
-- [🖼️ Modal Dashboard](#️-modal-dashboard)
-- [🔍 Image Lightbox](#-image-lightbox)
 - [📦 Service Worker](#-service-worker)
 - [🧭 Current Status](#-current-status)
 - [🛠️ How to Extend for a New Pillar](#️-how-to-extend-for-a-new-pillar)
@@ -29,6 +27,17 @@
 ## 📖 Overview
 
 This project is a **structured, self‑paced study roadmap** that builds genuine, production‑ready foundations **before touching any cloud infrastructure**. All notes are written in Markdown, version‑controlled in [Great_Cheatsheets](https://github.com/K-Mash24/Great_Cheatsheets), and published as an interactive website with flashcards, quizzes, and persistent progress tracking.
+
+### Content Architecture
+
+**All pillar content is now data‑driven.** Rather than hardcoding HTML in each page, content is stored in JavaScript arrays (`SECTION_X_ACCORDIONS`) and rendered at runtime. This approach provides:
+
+- **Smaller HTML files** – each page is just a skeleton with placeholders.
+- **Easier updates** – change content in one place (the JS data) instead of hunting through HTML.
+- **Consistent rendering** – all accordions use the same render function.
+- **Better maintainability** – content is cleanly separated from presentation.
+
+For a detailed explanation of this migration, see [CONTENT-MIGRATION.md](./CONTENT-MIGRATION.md).
 
 ### Two‑Phase Approach
 
@@ -81,26 +90,45 @@ This project is a **structured, self‑paced study roadmap** that builds genuine
 
 ```bash
 DevOps-Journey/
-├── index.html            – Homepage (roadmap, cards, modal)
-├── style.css             – Global styles (themes, modal, lightbox, personalization)
-├── sw.js                 – Service worker (versioned cache)
-├── img/                  – Icons, logos, wiring diagrams
+├── index.html                – Homepage (skeleton — content rendered by JS)
+├── style.css                 – Global styles (themes, modal, lightbox, personalization)
+├── sw.js                     – Service worker (versioned cache)
+├── img/                      – Icons, logos, wiring diagrams
 ├── html/
-│   ├── networking.html   – Pillar 1 content (complete)
-│   ├── linux.html        – Pillar 2 content (complete)
-│   └── security.html     – Pillar 3 content (in progress – 9 sections)
+│   ├── networking.html       – Pillar 1 (skeleton + JS placeholders)
+│   ├── linux.html            – Pillar 2 (skeleton + JS placeholders)
+│   └── security.html         – Pillar 3 (skeleton + JS placeholders)
 ├── js/
-│   ├── global.js         – Shared logic (rings, modal, search, toast, study path)
-│   ├── stars.js          – Starfield animation + Advanced Settings
-│   ├── themes.js         – 25 color themes + Custom Color Editor (tab7)
-│   ├── base.js           – Shared pillar functions (flashcards, quiz, progress ring)
-│   ├── networking.js     – Pillar‑specific flashcards & quiz
-│   ├── Linux.js          – Linux‑specific flashcards & quiz
-│   └── security.js       – Security‑specific flashcards & quiz (placeholder – 5 cards)
-└── README.md             – This file
+│   ├── global.js             – Shared logic (rings, modal, search, toast, study path)
+│   ├── stars.js              – Starfield animation + Advanced Settings
+│   ├── themes.js             – 25 color themes + Custom Color Editor (tab7)
+│   ├── base.js               – Shared pillar functions (flashcards, quiz, progress ring)
+│   ├── networking.js         – Networking content data + pillar‑specific logic
+│   ├── Linux.js              – Linux content data + pillar‑specific logic
+│   └── security.js           – Security content data + pillar‑specific logic
+└── README.md                 – This file
+```
+---
+### Content Data Structure
+
+Each pillar JS file now contains `SECTION_X_ACCORDIONS` arrays that hold all content:
+
+```javascript
+const SECTION_1_ACCORDIONS = [
+  {
+    id: "unique-identifier", // Used for navigation and search
+    title: "Accordion Title", // Displayed in the header
+    priority: false, // Shows "priority" tag if true
+    icon: "📁", // Icon shown in the accordion header
+    bodyHTML: `...`, // Full HTML content of the accordion
+  },
+  // ... more accordions
+];
 ```
 
----
+This pattern is used across all pillars. For full details, see [Content-Migration](./CONTENT-MIGRATION.md).
+
+
 
 ## 💾 Progress Tracking – localStorage Keys
 
@@ -158,6 +186,7 @@ All progress is stored in the browser’s `localStorage`. The following keys are
 | `showToast()` / `showComingSoonToast()`                       | Displays toast messages for notifications and coming‑soon pills                 |
 | `renderStudyPath()`                                           | Dynamically renders the study path timeline on the homepage                     |
 | `ensureModalExists()`                                         | Injects the modal into pillar pages (dynamic modal)                             |
+| `updateNavBadges()`                                           | Counts accordions per section and updates sidebar badges                        |
 
 ### `base.js` – Shared Pillar Library
 
@@ -169,6 +198,20 @@ All progress is stored in the browser’s `localStorage`. The following keys are
 | `Base.submitQuiz()` / `Base.resetQuiz()`   | Submits and resets quiz questions                                          |
 | `Base.initFloatingProgressRing()`          | Creates the pillar‑specific floating ring with localStorage tracking       |
 | `Base.updatePageHeader()`                  | Updates the completion ring and badges in the page header                  |
+| `Base.renderContent()`                     | Renders all section accordions from the pillar’s content data              |
+
+### `networking.js` / `Linux.js` / `security.js` – Content Data
+
+| Data Structure         | Purpose                                                     |
+| ---------------------- | ----------------------------------------------------------- |
+| `SECTION_1_ACCORDIONS` | Array of accordion objects for Section 1                    |
+| `SECTION_2_ACCORDIONS` | Array of accordion objects for Section 2                    |
+| `...`                  | ... up to the number of sections in the pillar              |
+| `PILLAR_OVERVIEW`      | Overview content (purpose, objectives, key concepts, stats) |
+| `FLASHCARDS`           | Array of flashcard objects (term + answer)                  |
+| `QUIZ_SETS`            | Object with 3 quiz sets, each containing 10 questions       |
+
+Each section's accordions are rendered by calling `renderAccordion()` with the container ID and data array.
 
 ### `stars.js` – Starfield + Advanced Settings
 
@@ -196,49 +239,11 @@ All progress is stored in the browser’s `localStorage`. The following keys are
 
 ### Pillar‑specific files
 
-| File            | Content                                                    | Status         |
-| --------------- | ---------------------------------------------------------- | -------------- |
-| `networking.js` | Flashcards (38), 3 quiz sets, lightbox                     | ✅ Complete    |
-| `Linux.js`      | Flashcards (50), 3 quiz sets, lightbox                     | ✅ Complete    |
-| `security.js`   | Flashcards (5 placeholder), 3 quiz sets (5 each), lightbox | 🔄 Placeholder |
-
----
-
-## 🖼️ Modal Dashboard
-
-A single modal (`#progressModal`) with **seven** tabs:
-
-| Tab                        | Content                                                                                                                                    |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Overall**                | Combined Phase1+Phase2 progress ring (50% + 50%)                                                                                           |
-| **Phase 1**                | Phase1 ring + horizontal scroller with pillar chips. Clicking a chip opens **Pillar Details** tab.                                         |
-| **Phase 2**                | Phase2 ring + scroller with phase chips. Clicking a chip opens **Pillar Details** tab with topic‑based checklist.                          |
-| **Pillar Details**         | Dynamic ring + checklist for the selected pillar. Checkboxes sync with `localStorage` and update the ring instantly.                       |
-| **💾 Backup**              | GitHub Gist backup/restore for study progress (token and Gist ID).                                                                         |
-| **✨ Stars**               | Starfield presets, customization, and Advanced Settings (fonts, appearance, import/export).                                                |
-| **🎨 Themes**              | 25 color themes with preview/apply, reset to default, and Custom Color Editor button.                                                      |
-| **🎨 Custom Color Editor** | Hidden tab (accessible via button in Themes tab). Full color customization with hex inputs, color pickers, HSL sliders, and preset colors. |
-
-The modal is opened by:
-
-- Clicking the floating global ring (homepage) – shows **Overall** tab.
-- Clicking a pillar/phase chip inside the modal – shows **Pillar Details** tab for that pillar.
-- On pillar pages (`networking.html`, `linux.html`, `security.html`), clicking the floating progress ring opens the modal directly to **Pillar Details** for that pillar.
-
----
-
-## 🔍 Image Lightbox
-
-Any `<img>` inside `.accordion-body` or `.overview-content` becomes clickable and opens a full‑screen lightbox with:
-
-- Fit‑to‑screen mode by default.
-- Toggle button (`📐 Fit`) to switch between fit and actual size.
-- Zoom in/out (buttons or `+`/`-` keys).
-- Pan when zoomed (mouse drag or touch).
-- Reset zoom (`0` key or reset button).
-- Close with `Esc` or click outside.
-
-Implemented identically in `networking.js`, `Linux.js`, and `security.js`.
+| File            | Content                                                          | Status         |
+| --------------- | ---------------------------------------------------------------- | -------------- |
+| `networking.js` | 7 sections (38 accordions), 38 flashcards, 3 quiz sets, lightbox | ✅ Complete    |
+| `Linux.js`      | 10 sections (109 accordions), 50 flashcards, 3 quiz sets         | ✅ Complete    |
+| `security.js`   | 9 sections (in progress), flashcards (placeholder), 3 quiz sets  | 🔄 In progress |
 
 ---
 
@@ -256,45 +261,113 @@ Implemented identically in `networking.js`, `Linux.js`, and `security.js`.
 
 ## 🧭 Current Status (July 2026)
 
-| Component                   | Status                                                                                                          |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| **Networking pillar**       | ✅ Complete – 7 sections, 38 flashcards, 3 quiz sets, floating ring, lightbox                                   |
-| **Linux pillar**            | ✅ Complete – 10 sections, 50 flashcards, 3 quiz sets, floating ring, lightbox                                  |
-| **Security pillar**         | 🔄 In progress – 9 sections planned; Section 1 draft complete; flashcards (5 placeholder), 3 quiz sets (5 each) |
-| **Scripting / Databases**   | 🔒 Locked – placeholders only                                                                                   |
-| **Phase 2 pillars**         | 🔒 Locked – binary completion via modal; no study content yet                                                   |
-| **Homepage modal**          | ✅ Fully functional with 7 tabs                                                                                 |
-| **Progress rings**          | ✅ Phase1, Phase2, Overall, floating rings update correctly                                                     |
-| **Sidebar progress**        | ✅ Shows completion % for Networking, Linux, and Security                                                       |
-| **Roadmap & cards**         | ✅ Dynamically generated from `STUDY_PATH` and pillar data                                                      |
-| **Study path timeline**     | ✅ Dynamic – updates based on pillar completion status                                                          |
-| **Lightbox**                | ✅ Works on pillar pages                                                                                        |
-| **Toast System**            | ✅ Flexbox container with multiple toast support (modal only)                                                   |
-| **Color Themes**            | ✅ 25 themes with preview, apply, and reset                                                                     |
-| **Custom Color Editor**     | ✅ Tab7 with hex inputs, color pickers, HSL sliders, presets                                                    |
-| **Font Settings**           | ✅ Font family, font size, custom font loading                                                                  |
-| **Appearance Controls**     | ✅ Accent intensity, border radius, shadow intensity                                                            |
-| **Accessibility**           | ✅ Reduced motion toggle, high contrast toggle                                                                  |
-| **Import/Export**           | ✅ Full settings backup/restore as JSON                                                                         |
-| **Stars Advanced Settings** | ✅ Font controls, appearance controls, import/export, accessibility                                             |
+| Component                   | Status                                                                                                                                                     |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Networking pillar**       | ✅ Complete – 7 sections, 38 accordions, 38 flashcards, 3 quiz sets, floating ring, lightbox, content fully data‑driven                                    |
+| **Linux pillar**            | ✅ Complete – 10 sections, 109 accordions, 50 flashcards, 3 quiz sets, floating ring, lightbox, content fully data‑driven                                  |
+| **Security pillar**         | 🔄 In progress – 9 sections planned; content data structure ready; flashcards (placeholder), 3 quiz sets (5 each)                                          |
+| **Scripting / Databases**   | 🔒 Locked – placeholders only                                                                                                                              |
+| **Phase 2 pillars**         | 🔒 Locked – binary completion via modal; no study content yet                                                                                              |
+| **Homepage modal**          | ✅ Fully functional with 7 tabs                                                                                                                            |
+| **Progress rings**          | ✅ Phase1, Phase2, Overall, floating rings update correctly                                                                                                |
+| **Sidebar progress**        | ✅ Shows completion % for Networking, Linux, and Security                                                                                                  |
+| **Roadmap & cards**         | ✅ Dynamically generated from `STUDY_PATH` and pillar data                                                                                                 |
+| **Study path timeline**     | ✅ Dynamic – updates based on pillar completion status                                                                                                     |
+| **Lightbox**                | ✅ Works on pillar pages                                                                                                                                   |
+| **Toast System**            | ✅ Flexbox container with multiple toast support (modal only)                                                                                              |
+| **Color Themes**            | ✅ 25 themes with preview, apply, and reset                                                                                                                |
+| **Custom Color Editor**     | ✅ Tab7 with hex inputs, color pickers, HSL sliders, presets                                                                                               |
+| **Font Settings**           | ✅ Font family, font size, custom font loading                                                                                                             |
+| **Appearance Controls**     | ✅ Accent intensity, border radius, shadow intensity                                                                                                       |
+| **Accessibility**           | ✅ Reduced motion toggle, high contrast toggle                                                                                                             |
+| **Import/Export**           | ✅ Full settings backup/restore as JSON                                                                                                                    |
+| **Stars Advanced Settings** | ✅ Font controls, appearance controls, import/export, accessibility; see [CONTENT-MIGRATION.md](./Markdown/Animation%20System%20—%20Tab%205%20Overview.md) |
+| **Content Migration**       | ✅ Networking and Linux fully migrated to data‑driven; Security in progress; see [Content-Migration.md](./Markdown/CONTENT-MIGRATION.md)                   |
 
 ---
 
 ## 🛠️ How to Extend for a New Pillar
 
-1. **Create the HTML page** – copy `base.html` to `html/your-pillar.html`, fill placeholders.
-2. **Create the JavaScript file** – copy the structure from `security.js` (or `Linux.js`), update:
-   - `FLASHCARDS` array with your terms and answers
-   - `QUIZ_SETS` with 3 sets of questions
-   - `CONFIG` with pillar ID, name, total sections, and localStorage keys
-   - Call `window.Base.init(CONFIG)` at the end
-3. **Update `global.js`**:
-   - Add pillar to `phase1PillarData` (sections, titles, quizKey, sectionPrefix)
-   - Add a `case` to `getPhase1PillarCompletion()`
-   - Add pillar to arrays in `updateAllUI()` and `updateSidebarProgress()`
-4. **Update all sidebars** – add your pillar link to `index.html`, `networking.html`, `linux.html`, and `security.html`.
-5. **Update the study path** – add your pillar to `STUDY_PATH` in `global.js`.
-6. **Increment service worker cache version** and deploy.
+### Step 1: Create the HTML page
+
+Copy the skeleton structure from `html/networking.html` or `html/linux.html`. The page should contain:
+
+- The section dividers with their IDs (`#s1`, `#s2`, etc.)
+- Placeholder containers for each section: `<div id="js-section1-container"></div>`
+- A placeholder for the overview: `<div id="js-overview-container"></div>`
+- Flashcards and quiz containers (they use the shared `base.js`)
+
+### Step 2: Create the content data in the pillar's JS file
+
+```javascript
+// SECTION 1 — Content data
+const SECTION_1_ACCORDIONS = [
+  {
+    id: 'unique-identifier',
+    title: 'Accordion Title',
+    priority: false,
+    icon: '📁',
+    bodyHTML: `<p>Your content here...</p>`
+  }
+  // ... more accordions
+];
+
+// ... repeat for each section
+
+// Overview data
+const PILLAR_OVERVIEW = {
+  purpose: { title: '📌 Purpose', description: [...] },
+  objectives: [...],
+  keyConcepts: [...],
+  stats: [...],
+  readmeLink: '...'
+};
+
+// Flashcards and Quiz data
+const FLASHCARDS = [...];
+const QUIZ_SETS = { 1: [...], 2: [...], 3: [...] };
+```
+
+### Step 3: Render the content
+
+In your pillar's JS file, inside `DOMContentLoaded`:
+
+```javascript
+// Render overview
+renderPillarOverview();
+
+// Render all sections
+renderAccordion("js-section1-container", SECTION_1_ACCORDIONS);
+renderAccordion("js-section2-container", SECTION_2_ACCORDIONS);
+// ... up to the number of sections
+
+// Render flashcards and quiz
+renderFlashcards();
+renderQuiz();
+
+// Update nav badges
+setTimeout(() => {
+  if (typeof updateNavBadges === "function") updateNavBadges();
+}, 100);
+```
+
+### Step 4: Update `global.js`
+
+- Add pillar to `phase1PillarData` (sections, titles, quizKey, sectionPrefix)
+- Add a `case` to `getPhase1PillarCompletion()`
+- Add pillar to arrays in `updateAllUI()` and `updateSidebarProgress()`
+
+### Step 5: Update all sidebars
+
+Add your pillar link to `index.html`, `networking.html`, `linux.html`, and `security.html`.
+
+### Step 6: Update the study path
+
+Add your pillar to `STUDY_PATH` in `global.js`.
+
+### Step 7: Increment service worker cache version
+
+Update `CACHE_NAME` in `sw.js` and `APP_VERSION` in `global.js`.
 
 ---
 
