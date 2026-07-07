@@ -77,6 +77,684 @@ document.addEventListener('DOMContentLoaded', () => {
     initFlashcardScroller();
   }
 
+  // ============================================================
+  // SECTION 1 CONTENT — ALL accordions from "How the Internet Is Structured"
+  // ============================================================
+
+  const SECTION_1_ACCORDIONS = [
+    {
+      id: 'osi-model',
+      title: 'OSI Model — Seven Layers',
+      priority: true,
+      icon: '⬡',
+      bodyHTML: `
+        <p>The OSI (Open Systems Interconnection) model breaks down how data travels between two computers into seven discrete layers. Each layer has one job and hands its output to the layer above or below it.</p>
+        <p><strong>Mnemonic (layer 7 → Layer 1) :</strong> <code>All People Seem To Need Data Processing</code></p>
+        <div class="osi-stack">
+            <div class="osi-row priority-row" style="background:#eeedfe; border-color:#534ab7;">
+              <div class="osi-num" style="background:#EEEDFE;color:#3C3489;">7</div>
+              <div class="osi-name" style="background:#EEEDFE;color:#3C3489;">Application</div>
+              <div class="osi-pdu" style="background:#EEEDFE;color:#534ab7;">Data</div>
+              <div class="osi-protocols">HTTP, HTTPS, FTP, SMTP, SSH, DNS <span class="tag priority" style="margin-left:4px;">priority</span></div>
+            </div>
+            <div class="osi-row" style="background:#f1efe8;">
+              <div class="osi-num" style="background:#f1efe8;color:#444441;">6</div>
+              <div class="osi-name" style="background:#f1efe8;color:#444441;">Presentation</div>
+              <div class="osi-pdu" style="background:#f1efe8;color:#5f5e5a;">Data</div>
+              <div class="osi-protocols">TLS/SSL, GZIP, UTF-8</div>
+            </div>
+            <div class="osi-row" style="background:#f1efe8;">
+              <div class="osi-num" style="background:#f1efe8;color:#444441;">5</div>
+              <div class="osi-name" style="background:#f1efe8;color:#444441;">Session</div>
+              <div class="osi-pdu" style="background:#f1efe8;color:#5f5e5a;">Data</div>
+              <div class="osi-protocols">TLS handshake, RPC</div>
+            </div>
+            <div class="osi-row priority-row" style="background:#e6f1fb; border-color:#185fa5;">
+              <div class="osi-num" style="background:#E6F1FB;color:#0C447C;">4</div>
+              <div class="osi-name" style="background:#E6F1FB;color:#0C447C;">Transport</div>
+              <div class="osi-pdu" style="background:#E6F1FB;color:#185fa5;">Segment</div>
+              <div class="osi-protocols">TCP, UDP <span class="tag priority" style="margin-left:4px;">priority</span></div>
+            </div>
+            <div class="osi-row priority-row" style="background:#e1f5ee; border-color:#0f6e56;">
+              <div class="osi-num" style="background:#E1F5EE;color:#085041;">3</div>
+              <div class="osi-name" style="background:#E1F5EE;color:#085041;">Network</div>
+              <div class="osi-pdu" style="background:#E1F5EE;color:#0f6e56;">Packet</div>
+              <div class="osi-protocols">IP, ICMP, OSPF, BGP <span class="tag priority" style="margin-left:4px;">priority</span></div>
+            </div>
+            <div class="osi-row" style="background:#faece7;">
+              <div class="osi-num" style="background:#FAECE7;color:#712B13;">2</div>
+              <div class="osi-name" style="background:#FAECE7;color:#712B13;">Data Link</div>
+              <div class="osi-pdu" style="background:#FAECE7;color:#993c1d;">Frame</div>
+              <div class="osi-protocols">Ethernet, Wi-Fi (802.11), ARP</div>
+            </div>
+            <div class="osi-row" style="background:#f1efe8;">
+              <div class="osi-num" style="background:#f1efe8;color:#444441;">1</div>
+              <div class="osi-name" style="background:#f1efe8;color:#444441;">Physical</div>
+              <div class="osi-pdu" style="background:#f1efe8;color:#5f5e5a;">Bit</div>
+              <div class="osi-protocols">Cables, NICs, Wi-Fi radio, fibre optic</div>
+            </div>
+          </div>
+        <div class="info-box note" style="margin-top:1rem;">
+          <strong>Layer definitions</strong>
+          <ul style="padding-left:1.1rem;margin-top:0.4rem;">
+            <li><strong>Layer 7 — Application:</strong> Enables communication between applications and the network, handling protocols for web browsing (HTTP/HTTPS), file transfer (FTP), email (SMTP), and remote access (SSH).</li>
+            <li><strong>Layer 6 — Presentation:</strong> Translates data by handling encryption (TLS/SSL), compression (GZIP), and character encoding (UTF-8), ensuring both sides agree on format. TLS/SSL encrypts HTTPS requests so intercepted traffic cannot be read.</li>
+            <li><strong>Layer 5 — Session:</strong> Establishes, maintains, and terminates communication sessions. The TLS handshake occurs here, verifying the server's identity and negotiating an encryption key before data is exchanged.</li>
+            <li><strong>Layer 4 — Transport:</strong> Provides reliable end-to-end delivery using TCP (segments, ports, ordered delivery) or fast connectionless delivery using UDP. Port 443 = HTTPS, port 80 = HTTP.</li>
+            <li><strong>Layer 3 — Network:</strong> Handles logical addressing and routing using IP addresses. IP wraps TCP segments in packets. ICMP (used by <code>ping</code>) lives here.</li>
+            <li><strong>Layer 2 — Data Link:</strong> Transfers data between directly connected devices using MAC addresses. ARP resolves IP addresses to MAC addresses. Switches operate here.</li>
+            <li><strong>Layer 1 — Physical:</strong> Transmits raw bits as electrical signals, light pulses, or radio waves. No protocols — just hardware (NICs, cables, antennas).</li>
+          </ul>
+        </div>
+      `
+    },
+    {
+      id: 'tcpip-model',
+      title: 'TCP/IP Model & OSI Mapping',
+      priority: false,
+      icon: '⬡',
+      bodyHTML: `
+        <p>The TCP/IP model is the practical framework that actually runs the internet. OSI is the theory; TCP/IP is the real-world implementation — four layers instead of seven, collapsing those rarely treated separately.</p>
+        <div class="code-block"><pre>OSI model (7 layers)              TCP/IP model (4 layers)
+  ─────────────────────             ──────────────────────────────────────
+  7 — Application   ─┐
+  6 — Presentation  ─┼──────────►  Layer 4 — Application
+  5 — Session       ─┘             (HTTP, HTTPS, DNS, SMTP, SSH, TLS/SSL)
+
+  4 — Transport     ───────────►   Layer 3 — Transport
+                                  (TCP, UDP)
+
+  3 — Network       ───────────►   Layer 2 — Internet
+                                  (IP, ICMP)
+
+  2 — Data link     ─┬──────────►  Layer 1 — Network access
+  1 — Physical      ─┘             (Ethernet, Wi-Fi, ARP, NICs, cables)</pre></div>
+        <div class="info-box tip">
+          <strong>Key distinction</strong>
+          OSI is a <em>reference model</em> used for teaching and troubleshooting. TCP/IP is the <em>working model</em> — the actual protocol suite the internet runs on. Transport and Internet layers map exactly 1:1 between both models.
+        </div>
+      `
+    },
+    {
+      id: 'encapsulation',
+      title: 'Packets & Encapsulation',
+      priority: false,
+      icon: '⬡',
+      bodyHTML: `
+        <p><strong>Encapsulation</strong> is the process by which each layer wraps the data from the layer above in its own header, adding only the information that layer needs. <strong>Decapsulation</strong> is the reverse — each layer strips its header on the receiving side.</p>
+        <div class="code-block"><pre>SENDER — encapsulation (down the stack)
+  ────────────────────────────────────────────
+  Layer 7  Data     → HTTP request (browser)
+  Layer 4  Segment  → [TCP header: ports, seq] + Data
+  Layer 3  Packet   → [IP header: src IP, dst IP] + Segment
+  Layer 2  Frame    → [MAC header] + Packet + [FCS trailer]
+  Layer 1  Bits     → 101101000110... (electrical/radio/light)
+
+  RECEIVER — decapsulation (up the stack)
+  ────────────────────────────────────────────
+  Layer 1  Bits     → frame reconstructed
+  Layer 2  Frame    → MAC header checked + stripped → Packet
+  Layer 3  Packet   → IP header checked + stripped → Segment
+  Layer 4  Segment  → TCP header checked + stripped → Data
+  Layer 7  Data     → original HTTP request delivered</pre></div>
+        <div class="info-box note">
+          <strong>The gift analogy</strong>
+          Think of encapsulation as a gift (your data) wrapped in multiple nested boxes. Each handler reads only their label and passes it on. The depot does not open the shipping box. Decapsulation is the receiver opening each box in reverse order until the original gift is revealed.
+        </div>
+        <p style="margin-top:0.75rem;"><strong>FCS (Frame Check Sequence)</strong> — a checksum added as a <em>trailer</em> (not a header) at layer 2. The receiver recalculates on arrival — mismatch means the frame was corrupted and is discarded. The only footer in the stack.</p>
+      `
+    },
+    {
+      id: 'protocols-ports',
+      title: 'Protocols & Common Port Numbers',
+      priority: false,
+      icon: '⬡',
+      bodyHTML: `
+        <p>A <strong>protocol</strong> is an agreed set of rules two machines follow to understand each other. A <strong>port number</strong> gets data to the right application on a machine — the IP address is the building, the port is the flat number inside.</p>
+        <p>Port ranges: <code>0–1023</code> well-known · <code>1024–49151</code> registered · <code>49152–65535</code> ephemeral</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Port</th><th>Protocol</th><th>Transport</th><th>Category</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>20</code></td><td>FTP data</td><td><span class="tag tcp">TCP</span></td><td>File Transfer</td><td>Transfers actual file data</td></tr>
+              <tr><td><code>21</code></td><td>FTP</td><td><span class="tag tcp">TCP</span></td><td>File Transfer</td><td>Control channel — commands and authentication</td></tr>
+              <tr><td><code>22</code></td><td>SSH</td><td><span class="tag tcp">TCP</span></td><td>Security</td><td>Encrypted remote login and command execution</td></tr>
+              <tr><td><code>23</code></td><td>Telnet</td><td><span class="tag tcp">TCP</span></td><td>Security</td><td>Unencrypted remote login — insecure, replaced by SSH</td></tr>
+              <tr><td><code>25</code></td><td>SMTP</td><td><span class="tag tcp">TCP</span></td><td>Email</td><td>Sends email between mail servers</td></tr>
+              <tr><td><code>53</code></td><td>DNS</td><td><span class="tag both">TCP+UDP</span></td><td>Infrastructure</td><td>Resolves hostnames to IPs. UDP for queries, TCP for large responses</td></tr>
+              <tr><td><code>67/68</code></td><td>DHCP</td><td><span class="tag udp">UDP</span></td><td>Infrastructure</td><td>Assigns IP addresses. 67=server, 68=client</td></tr>
+              <tr><td><code>80</code></td><td>HTTP</td><td><span class="tag tcp">TCP</span></td><td>Web</td><td>Unencrypted web traffic</td></tr>
+              <tr><td><code>110</code></td><td>POP3</td><td><span class="tag tcp">TCP</span></td><td>Email</td><td>Downloads email to client, deletes from server</td></tr>
+              <tr><td><code>143</code></td><td>IMAP</td><td><span class="tag tcp">TCP</span></td><td>Email</td><td>Reads email while keeping it on server</td></tr>
+              <tr><td><code>443</code></td><td>HTTPS</td><td><span class="tag tcp">TCP</span></td><td>Web</td><td>HTTP encrypted with TLS — default modern browsing</td></tr>
+              <tr><td><code>3306</code></td><td>MySQL</td><td><span class="tag tcp">TCP</span></td><td>Infrastructure</td><td>MySQL / MariaDB database connections</td></tr>
+              <tr><td><code>3389</code></td><td>RDP</td><td><span class="tag tcp">TCP</span></td><td>Security</td><td>Graphical remote access to Windows machines</td></tr>
+              <tr><td><code>5432</code></td><td>PostgreSQL</td><td><span class="tag tcp">TCP</span></td><td>Infrastructure</td><td>PostgreSQL database connections</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'rj45-cabling',
+      title: 'RJ45 Cabling — T568A, T568B, Straight‑Through vs Crossover',
+      priority: false,
+      icon: '⬡',
+      bodyHTML: `
+        <p>RJ45 is the standard 8‑pin connector used for Ethernet cables. Two wiring standards exist: <strong>T568A</strong> and <strong>T568B</strong>. The only difference is that the orange and green pairs swap positions. Pins 4,5,7,8 (blue and brown) are identical in both standards.</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pin</th><th>T568A</th><th>T568B</th><th>Pair</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td style="color:green;">White/Green</td><td style="color:orange;">White/Orange</td><td>Pair 3 / Pair 2</td></tr>
+              <tr><td>2</td><td style="color:green;">Green</td><td style="color:orange;">Orange</td><td>Pair 3 / Pair 2</td></tr>
+              <tr><td>3</td><td style="color:orange;">White/Orange</td><td style="color:green;">White/Green</td><td>Pair 2 / Pair 3</td></tr>
+              <tr><td>4</td><td style="color:blue;">Blue</td><td style="color:blue;">Blue</td><td>Pair 1</td></tr>
+              <tr><td>5</td><td style="color:blue;">White/Blue</td><td style="color:blue;">White/Blue</td><td>Pair 1</td></tr>
+              <tr><td>6</td><td style="color:orange;">Orange</td><td style="color:green;">Green</td><td>Pair 2 / Pair 3</td></tr>
+              <tr><td>7</td><td style="color:brown;">White/Brown</td><td style="color:brown;">White/Brown</td><td>Pair 4</td></tr>
+              <tr><td>8</td><td style="color:brown;">Brown</td><td style="color:brown;">Brown</td><td>Pair 4</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Your mnemonic — O G B G B (2-1-2-1-2 format) for T568B:</strong></p>
+        <div class="code-block"><pre>Orange  → 2 wires  → White/Orange (pin1), Orange (pin2)
+  Green   → 1 wire   → White/Green  (pin3)
+  Blue    → 2 wires  → Blue (pin4), White/Blue (pin5)
+  Green   → 1 wire   → Green (pin6)
+  Brown   → 2 wires  → White/Brown (pin7), Brown (pin8)</pre></div>
+
+        <p>For T568A, swap the leading colors: <strong>G O B O B</strong> (Green then Orange).</p>
+
+        <div class="table-wrapper" style="margin-top:1rem;">
+          <table class="data-table">
+            <thead><tr><th>Cable Type</th><th>Both ends</th><th>Use case</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Straight‑through</strong></td><td>Same standard (A‑A or B‑B)</td><td>Different device types: computer → switch, switch → router</td></tr>
+              <tr><td><strong>Crossover</strong></td><td>One end A, other end B</td><td>Same device types: computer → computer, switch → switch</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="info-box note">
+          <strong>Colour‑by‑colour straight‑through vs crossover (T568B on both ends vs A‑B)</strong>
+          <ul style="margin-top:0.5rem;">
+            <li><strong>Straight‑through (B‑B):</strong> pin1→pin1 (W‑O), pin2→pin2 (O), pin3→pin3 (W‑G), pin6→pin6 (G), blue/brown pins stay matched.</li>
+            <li><strong>Crossover (A‑B):</strong> pin1 (W‑G) ↔ pin3 (W‑O), pin2 (G) ↔ pin6 (O), the orange and green pairs cross; blue and brown pairs stay straight.</li>
+          </ul>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+          <div style="background:var(--bg-tertiary); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; flex:1;">
+            <img src="https://www.showmecables.com/media/wysiwyg/RJ45-Pinout-T568A.jpg" alt="T568A wiring diagram" style="width:100%; border-radius: var(--radius-sm); object-fit: contain; max-height: 120px;">
+            <small style="display: block; margin-top: 0.5rem;">T568A — Green pair leads (pins 1-2)</small>
+          </div>
+          <div style="background:var(--bg-tertiary); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; flex:1;">
+            <img src="https://www.showmecables.com/media/wysiwyg/RJ45-Pinout-T568B.jpg" alt="T568B wiring diagram" style="width:100%; border-radius: var(--radius-sm); object-fit: contain; max-height: 120px;">
+            <small style="display: block; margin-top: 0.5rem;">T568B — Orange pair leads (pins 1-2) — most common</small>
+          </div>
+          <div style="background:var(--bg-tertiary); border-radius: var(--radius-md); padding: 0.75rem; text-align: center; flex:1;">
+            <img src="https://www.showmecables.com/media/wysiwyg/Crossover-Pinout-1024x512.png" alt="Crossover cable wiring" style="width:100%; border-radius: var(--radius-sm); object-fit: contain; max-height: 120px;">
+            <small style="display: block; margin-top: 0.5rem;">Crossover — pins 1↔3, 2↔6 swap orange/green pairs</small>
+          </div>
+        </div>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 2 CONTENT — IP Addressing
+  // ============================================================
+
+  const SECTION_2_ACCORDIONS = [
+    {
+      id: 'ipv4-structure',
+      title: 'IPv4 Structure & Binary Conversion',
+      priority: false,
+      icon: '◈',
+      bodyHTML: `
+        <p>A 32-bit numerical label written as four decimal octets separated by dots. Each octet = 8 bits, value always 0–255. The 0–255 range is a hard mathematical limit: 2⁸ = 256 values.</p>
+        <div class="code-block"><pre>192      .    168      .    1        .    1
+  11000000      10101000      00000001      00000001
+  octet 1       octet 2       octet 3       octet 4
+  (8 bits)      (8 bits)      (8 bits)      (8 bits)
+                      total = 32 bits</pre></div>
+        <p><strong>Network ID</strong> — the portion identifying which network a device belongs to. <strong>Host ID</strong> — the portion identifying the specific device. In <code>192.168.1.5</code>, network ID = <code>192.168.1</code>, host ID = <code>5</code> (with a /24 mask).</p>
+        <p><strong>Network address</strong> — first address in the block, host bits all zeros. Cannot be assigned to a device. <strong>Broadcast address</strong> — last address in the block, host bits all ones (255). Delivered to every device on the subnet.</p>
+        <p><strong>Powers of 2 method for binary conversion:</strong></p>
+        <div class="code-block"><pre>Bit position:   7      6      5      4      3      2      1      0
+  Power of 2:   128     64     32     16      8      4      2      1
+
+  Converting 192: 128 fits (rem 64) → 64 fits (rem 0) → all others: 0
+  Result: 11000000
+
+  Converting 168: 128 fits (rem 40) → 32 fits (rem 8) → 8 fits (rem 0)
+  Result: 10101000
+
+  Converting 1:   only the 1-position fits
+  Result: 00000001
+
+  Full address 192.168.1.1 → 11000000.10101000.00000001.00000001</pre></div>
+      `
+    },
+    {
+      id: 'public-private-ip',
+      title: 'Public vs Private IP Ranges (RFC 1918) & Special Addresses',
+      priority: false,
+      icon: '◈',
+      bodyHTML: `
+        <p>IPv4 has only ~4.3 billion addresses (2³²). RFC 1918 designates three ranges as <strong>private</strong> — never routable on the public internet, reusable across any private network.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Range</th><th>CIDR</th><th>Addresses</th><th>Common use</th></tr></thead>
+            <tbody>
+              <tr><td><code>10.0.0.0 – 10.255.255.255</code></td><td><code>10.0.0.0/8</code></td><td>16,777,216</td><td>Large enterprise</td></tr>
+              <tr><td><code>172.16.0.0 – 172.31.255.255</code></td><td><code>172.16.0.0/12</code></td><td>1,048,576</td><td>Mid-size networks</td></tr>
+              <tr><td><code>192.168.0.0 – 192.168.255.255</code></td><td><code>192.168.0.0/16</code></td><td>65,536</td><td>Home &amp; small office</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:0.75rem;">Special addresses:</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Address / Range</th><th>Name</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>127.0.0.1</code></td><td>Loopback</td><td>This machine itself — traffic never leaves the host. Also: <code>localhost</code></td></tr>
+              <tr><td><code>255.255.255.255</code></td><td>Limited broadcast</td><td>All devices on the local segment. Does not cross routers</td></tr>
+              <tr><td><code>169.254.0.0/16</code></td><td>APIPA</td><td>Self-assigned fallback when DHCP is unreachable. Seeing this = DHCP failed</td></tr>
+              <tr><td><code>0.0.0.0</code></td><td>Zero address</td><td>Unknown source address (pre-DHCP) or default route in routing tables</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'ipv6-basics',
+      title: 'IPv6 Basics',
+      priority: false,
+      icon: '◈',
+      bodyHTML: `
+        <p>IPv6 uses 128 bits, providing 2¹²⁸ ≈ 340 undecillion addresses. Written as eight groups of four hexadecimal digits separated by colons.</p>
+        <div class="code-block"><pre>IPv4:   32 bits  → 4 groups of  8 bits → decimal   (0–255)
+  IPv6:  128 bits  → 8 groups of 16 bits → hex       (0000–ffff)
+
+  Full:   2001:0db8:0000:0000:0000:0000:0000:0001
+  Rule 1 (drop leading zeros): 2001:db8:0:0:0:0:0:1
+  Rule 2 (collapse zero run):  2001:db8::1
+
+  Expanding 2001:db8::1 → 3 groups shown → 8-3=5 zeros hidden
+  → 2001:0db8:0000:0000:0000:0000:0000:0001</pre></div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Type</th><th>Prefix</th><th>IPv4 equivalent</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td>Global unicast</td><td><code>2000::/3</code></td><td>Public IPv4</td><td>Globally routable</td></tr>
+              <tr><td>Link-local</td><td><code>fe80::/10</code></td><td>APIPA <code>169.254.x.x</code></td><td>Auto-assigned, local segment only</td></tr>
+              <tr><td>Loopback</td><td><code>::1</code></td><td><code>127.0.0.1</code></td><td>This machine itself</td></tr>
+              <tr><td>Multicast</td><td><code>ff00::/8</code></td><td><code>255.255.255.255</code></td><td>One-to-many (replaces broadcast)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 3 CONTENT — Subnetting & CIDR
+  // ============================================================
+
+  const SECTION_3_ACCORDIONS = [
+    {
+      id: 'subnet-masks',
+      title: 'Subnet Masks & CIDR Notation',
+      priority: false,
+      icon: '◆',
+      bodyHTML: `
+        <p>A <strong>subnet mask</strong> is a 32-bit number that defines the boundary between network ID and host ID. 1-bits = network, 0-bits = host. All 1s always appear before all 0s.</p>
+        <p><strong>CIDR notation</strong> expresses an address and its mask together. The prefix length is the count of consecutive 1-bits.</p>
+        <div class="code-block"><pre>192.168.1.0 + 255.255.255.0  →  192.168.1.0/24
+
+  255.255.255.0 in binary:
+  11111111.11111111.11111111.00000000  (24 ones)</pre></div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Prefix</th><th>Subnet mask</th><th>Host bits</th><th>Block size</th><th>Usable hosts</th></tr></thead>
+            <tbody>
+              <tr><td><code>/8</code></td><td>255.0.0.0</td><td>24</td><td>16,777,216</td><td>16,777,214</td></tr>
+              <tr><td><code>/16</code></td><td>255.255.0.0</td><td>16</td><td>65,536</td><td>65,534</td></tr>
+              <tr><td><code>/24</code></td><td>255.255.255.0</td><td>8</td><td>256</td><td>254</td></tr>
+              <tr><td><code>/26</code></td><td>255.255.255.192</td><td>6</td><td>64</td><td>62</td></tr>
+              <tr><td><code>/28</code></td><td>255.255.255.240</td><td>4</td><td>16</td><td>14</td></tr>
+              <tr><td><code>/30</code></td><td>255.255.255.252</td><td>2</td><td>4</td><td>2 (point-to-point links)</td></tr>
+              <tr><td><code>/32</code></td><td>255.255.255.255</td><td>0</td><td>1</td><td>0 (single host route)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'subnetting-by-hand',
+      title: 'Subnetting by Hand & VLSM',
+      priority: false,
+      icon: '◆',
+      bodyHTML: `
+        <p><strong>The four-step method:</strong> (1) Determine bits to borrow · (2) Calculate new mask · (3) Calculate block size · (4) List subnet boundaries</p>
+        <div class="code-block"><pre>Example: Divide 192.168.1.0/24 into 4 equal subnets
+  4 subnets → 2² → borrow 2 bits → new prefix /26
+  Block size: 2⁶ = 64
+
+  Subnet 1:  192.168.1.0    → 192.168.1.63    (hosts: .1–.62)
+  Subnet 2:  192.168.1.64   → 192.168.1.127   (hosts: .65–.126)
+  Subnet 3:  192.168.1.128  → 192.168.1.191   (hosts: .129–.190)
+  Subnet 4:  192.168.1.192  → 192.168.1.255   (hosts: .193–.254)</pre></div>
+        <div class="info-box tip">
+          <strong>Subnets must be powers of 2</strong>
+          You cannot create exactly 3 equal subnets. Round up to the next power of 2 (4 subnets) and leave the unused one reserved for future growth.
+        </div>
+        <p><strong>VLSM (Variable Length Subnet Masking)</strong> — allows different subnets to have different prefix lengths. Golden rule: always allocate largest requirement first.</p>
+        <div class="code-block"><pre>192.168.1.0/24 — VLSM example
+  Finance (50 hosts) → /26 → 192.168.1.0    – 192.168.1.63   (62 usable)
+  HR (25 hosts)      → /27 → 192.168.1.64   – 192.168.1.95   (30 usable)
+  IT (10 hosts)      → /28 → 192.168.1.96   – 192.168.1.111  (14 usable)
+  Router link (2)    → /30 → 192.168.1.112  – 192.168.1.115  (2 usable)
+  Unused:                     192.168.1.116  – 192.168.1.255</pre></div>
+      `
+    },
+    {
+      id: 'supernetting',
+      title: 'Supernetting & Route Summarisation',
+      priority: false,
+      icon: '◆',
+      bodyHTML: `
+        <p>Supernetting combines multiple contiguous networks into one summary route — the opposite of subnetting. The prefix gets <em>shorter</em>. Used to reduce routing table size.</p>
+        <div class="code-block"><pre>Summarise: 192.168.0.0/24, 192.168.1.0/24, 192.168.2.0/24, 192.168.3.0/24
+
+  In binary (third octet):
+  192.168.0.0 → 000000|00  ─┐
+  192.168.1.0 → 000000|01   │  common bits = 22
+  192.168.2.0 → 000000|10   │  diverge at bit 23
+  192.168.3.0 → 000000|11  ─┘
+
+  Summary route: 192.168.0.0/22  (covers all four)
+
+  Subnetting:    /24 → /26 /26 /26 /26  (prefix gets longer)
+  Supernetting:  /24 /24 /24 /24 → /22  (prefix gets shorter)</pre></div>
+        <div class="info-box note">
+          <strong>Requirements for valid summarisation</strong>
+          Networks must be contiguous · Number summarised must be a power of 2 · Summary address must fall on correct block boundary
+        </div>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 4 CONTENT — Routing & Switching
+  // ============================================================
+
+  const SECTION_4_ACCORDIONS = [
+    {
+      id: 'routers-vs-switches',
+      title: 'Routers vs Switches & ARP',
+      priority: false,
+      icon: '▣',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Feature</th><th>Switch</th><th>Router</th></tr></thead>
+            <tbody>
+              <tr><td>OSI Layer</td><td>Layer 2 — Data link</td><td>Layer 3 — Network</td></tr>
+              <tr><td>Address used</td><td>MAC address</td><td>IP address</td></tr>
+              <tr><td>Scope</td><td>Within one subnet</td><td>Between different networks</td></tr>
+              <tr><td>Primary function</td><td>Frame delivery to correct port</td><td>Packet forwarding to next hop</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:0.75rem;"><strong>ARP (Address Resolution Protocol)</strong> — resolves IP addresses to MAC addresses within the same subnet. Device broadcasts: "Who has IP x.x.x.x?" Owner replies with MAC. Result stored in ARP cache.</p>
+        <div class="code-block"><pre>At each router hop along the path:
+    IP header:  UNCHANGED (src/dst IP stay the same end-to-end)
+    MAC header: REPLACED   (new src/dst MAC for each hop)
+
+  Your laptop → [MAC:laptop→R1] [IP:laptop→server]
+  Router 1    → [MAC:R1→R2]     [IP:laptop→server]
+  Router 2    → [MAC:R2→server] [IP:laptop→server]</pre></div>
+      `
+    },
+    {
+      id: 'routing-tables-nat',
+      title: 'Routing Tables, Default Gateway & NAT/PAT',
+      priority: false,
+      icon: '▣',
+      bodyHTML: `
+        <p>A <strong>routing table</strong> maps destination networks to next hops. The router uses <strong>longest prefix match</strong> — the most specific matching entry always wins. <code>0.0.0.0/0</code> is the default route — catches all unmatched traffic.</p>
+        <p>The <strong>default gateway</strong> is your machine's exit point — the router's private-side IP (typically <code>192.168.1.1</code> at home).</p>
+        <p><strong>NAT (Network Address Translation)</strong> — translates private source IPs to the router's public IP as traffic leaves. Reverses on return. <strong>PAT (Port Address Translation)</strong> extends this by using unique port numbers to track multiple simultaneous connections — many private devices sharing one public IP.</p>
+        <div class="code-block"><pre>PAT translation table:
+  192.168.1.5:51234 → 41.90.64.22:51234  (laptop)
+  192.168.1.7:51235 → 41.90.64.22:51235  (phone)
+  192.168.1.9:51236 → 41.90.64.22:51236  (TV)
+  All three share one public IP — differentiated by port number</pre></div>
+        <p><strong>Dynamic routing protocols:</strong> RIP (small networks) · OSPF (enterprise) · BGP (internet backbone — holds the public internet together) · EIGRP (Cisco)</p>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 5 CONTENT — DNS
+  // ============================================================
+
+  const SECTION_5_ACCORDIONS = [
+    {
+      id: 'dns-hierarchy',
+      title: 'DNS Hierarchy & Resolution',
+      priority: false,
+      icon: '◉',
+      bodyHTML: `
+        <p>DNS translates hostnames to IP addresses. Operates at layer 7 on port 53 (UDP for standard queries, TCP for large responses).</p>
+        <p><strong>Hierarchy:</strong> Root servers (13 sets, labeled a–m) → TLD servers (.com, .org, .ke) → Authoritative name servers (hold actual records)</p>
+        <div class="code-block"><pre>Full resolution for www.google.com:
+  1. Browser cache      → cached? done
+  2. OS cache/hosts     → cached? done (/etc/hosts or C:\\Windows\\...)
+  3. Recursive resolver → cached? done (else queries on your behalf)
+  4. Root server        → "Ask .com TLD at x.x.x.x"
+  5. .com TLD server    → "Ask Google's nameserver at y.y.y.y"
+  6. Authoritative NS   → "www.google.com = 142.250.185.68"
+  7. Answer cached (TTL) and returned to your browser
+  8. Browser connects to 142.250.185.68
+  Typical completion: under 100 milliseconds</pre></div>
+        <p><strong>TTL (Time To Live)</strong> — seconds a record can be cached. Low TTL = faster propagation but more queries. High TTL = less traffic but slower changes.</p>
+      `
+    },
+    {
+      id: 'dns-record-types',
+      title: 'DNS Record Types & Tools',
+      priority: false,
+      icon: '◉',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Record</th><th>Full name</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>A</code></td><td>Address</td><td>Maps hostname → IPv4 address</td></tr>
+              <tr><td><code>AAAA</code></td><td>IPv6 Address</td><td>Maps hostname → IPv6 address</td></tr>
+              <tr><td><code>CNAME</code></td><td>Canonical Name</td><td>Alias — maps one hostname to another hostname</td></tr>
+              <tr><td><code>MX</code></td><td>Mail Exchange</td><td>Mail server for a domain. Contains hostname, not IP</td></tr>
+              <tr><td><code>NS</code></td><td>Name Server</td><td>Identifies authoritative name servers for a domain</td></tr>
+              <tr><td><code>TXT</code></td><td>Text</td><td>Arbitrary text — domain verification, SPF, security records</td></tr>
+              <tr><td><code>PTR</code></td><td>Pointer</td><td>Reverse DNS — IP address → hostname</td></tr>
+              <tr><td><code>SOA</code></td><td>Start of Authority</td><td>Admin info about a DNS zone</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block" style="margin-top:0.75rem;"><pre class="code-comment"># dig — standard DNS query tool (Linux/macOS)</pre><pre><span class="code-keyword">dig</span> google.com              <span class="code-comment"># A record</span>
+  <span class="code-keyword">dig</span> google.com MX           <span class="code-comment"># MX records</span>
+  <span class="code-keyword">dig</span> @8.8.8.8 google.com     <span class="code-comment"># query Google's DNS server</span>
+  <span class="code-keyword">dig</span> +short google.com       <span class="code-comment"># IP only</span>
+  <span class="code-keyword">dig</span> +trace google.com       <span class="code-comment"># full resolution path</span>
+
+  <span class="code-comment"># nslookup — works on Linux, macOS, Windows</span>
+  <span class="code-keyword">nslookup</span> google.com
+  <span class="code-keyword">nslookup</span> -type=MX google.com</pre></div>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 6 CONTENT — TCP & UDP
+  // ============================================================
+
+  const SECTION_6_ACCORDIONS = [
+    {
+      id: 'tcp-handshake',
+      title: 'TCP — Three-Way Handshake & Flow Control',
+      priority: false,
+      icon: '⊞',
+      bodyHTML: `
+        <p>TCP is registered post — tracked, signed for, re-sent if lost. UDP is dropping a flyer through a letterbox — fast, no confirmation.</p>
+        <div class="code-block"><pre>Three-way handshake (connection establishment):
+  Client ──── SYN ──────────────► Server   "I want to connect"
+  Client ◄─── SYN-ACK ─────────── Server   "Acknowledged — I am ready"
+  Client ──── ACK ──────────────► Server   "Confirmed — connected"
+
+  Four-way termination:
+  Client ──── FIN ──────────────► Server
+  Client ◄─── ACK ─────────────── Server
+  Client ◄─── FIN ─────────────── Server
+  Client ──── ACK ──────────────► Server</pre></div>
+        <p><strong>Sliding window (flow control)</strong> — the receiver advertises a window size (max unacknowledged data it can buffer). Sender cannot exceed it. Window grows as receiver frees buffer space.</p>
+        <p><strong>Congestion control</strong> — slow start (window doubles each round trip) → congestion avoidance (linear growth) → packet loss detected (window shrinks sharply).</p>
+        <p><strong>Socket</strong> = IP address + port number. A connection is uniquely identified by the four-tuple: (src IP, src port, dst IP, dst port). Ephemeral ports: 49152–65535.</p>
+      `
+    },
+    {
+      id: 'tcp-vs-udp',
+      title: 'TCP vs UDP — When to Use Which',
+      priority: false,
+      icon: '⊞',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Feature</th><th>TCP</th><th>UDP</th></tr></thead>
+            <tbody>
+              <tr><td>Connection</td><td>Connection-oriented</td><td>Connectionless</td></tr>
+              <tr><td>Reliability</td><td>Guaranteed delivery</td><td>No guarantees</td></tr>
+              <tr><td>Ordering</td><td>In-order delivery</td><td>Not guaranteed</td></tr>
+              <tr><td>Speed</td><td>Slower (overhead)</td><td>Faster (minimal overhead)</td></tr>
+              <tr><td>Header size</td><td>20 bytes minimum</td><td>8 bytes</td></tr>
+              <tr><td>Use cases</td><td>HTTP, FTP, SSH, email</td><td>DNS, VoIP, streaming, gaming, DHCP</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:0.75rem;">DHCP uses UDP because the client has no IP address yet — it cannot establish a TCP connection.</p>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 7 CONTENT — Network Security
+  // ============================================================
+
+  const SECTION_7_ACCORDIONS = [
+    {
+      id: 'firewalls-acls',
+      title: 'Firewalls, ACLs & Network Zones',
+      priority: false,
+      icon: '◐',
+      bodyHTML: `
+        <p><strong>Stateless firewall</strong> — examines each packet in isolation. Matches source IP, destination IP, protocol, port. Cannot understand connection context. Fast but limited.</p>
+        <p><strong>Stateful firewall</strong> — tracks every active connection in a state table. Only allows inbound packets that correspond to established outbound connections. Standard in modern networks.</p>
+        <p><strong>ACL (Access Control List)</strong> — ordered list of permit/deny rules on a router interface. Rules evaluated top-to-bottom. First match wins. Every ACL has an implicit deny all at the end — if no rule matches, traffic is silently dropped.</p>
+        <div class="code-block"><pre>Internet (untrusted)
+        │
+        ▼ firewall
+  ┌─────────────┐
+  │     DMZ     │  ← web servers, mail servers, public DNS
+  │(semi-trusted)│   publicly accessible, isolated from internal
+  └─────────────┘
+        │
+        ▼ firewall
+  ┌─────────────┐
+  │  Internal   │  ← workstations, databases
+  │  (trusted)  │   never directly accessible from internet
+  └─────────────┘</pre></div>
+      `
+    },
+    {
+      id: 'network-attacks',
+      title: 'Common Network Attacks & Wireshark',
+      priority: false,
+      icon: '◐',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Attack</th><th>Layer</th><th>Mechanism</th><th>Effect</th></tr></thead>
+            <tbody>
+              <tr><td>DoS</td><td>Any</td><td>Traffic flood from one source</td><td>Service unavailable</td></tr>
+              <tr><td>DDoS</td><td>Any</td><td>Flood from botnet</td><td>Service unavailable, hard to block</td></tr>
+              <tr><td>SYN flood</td><td>L4</td><td>Incomplete TCP handshakes</td><td>Connection table exhausted</td></tr>
+              <tr><td>IP spoofing</td><td>L3</td><td>Forged source IP</td><td>Origin disguised, access control bypass</td></tr>
+              <tr><td>MITM</td><td>Any</td><td>Intercepts traffic between two parties</td><td>Data exposed or altered</td></tr>
+              <tr><td>ARP spoofing</td><td>L2</td><td>Forged ARP replies poison caches</td><td>Traffic redirected to attacker</td></tr>
+              <tr><td>Port scanning</td><td>L4</td><td>Probe port range for open services</td><td>Reconnaissance for further attack</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:0.75rem;"><strong>Wireshark</strong> — packet analyser. Captures live traffic and displays each packet at every layer. Capture filters (before capture) and display filters (after capture).</p>
+        <div class="code-block"><pre><span class="code-comment"># Common Wireshark display filters</span>
+  http                         <span class="code-comment"># HTTP packets only</span>
+  ip.addr == 192.168.1.5       <span class="code-comment"># traffic involving this IP</span>
+  tcp.flags.syn == 1           <span class="code-comment"># SYN packets (detect SYN floods)</span>
+  dns                          <span class="code-comment"># DNS queries and responses</span>
+  arp                          <span class="code-comment"># ARP packets (detect spoofing)</span></pre></div>
+      `
+    }
+  ];
+
+  function renderAccordion(containerId, accordionData) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const html = accordionData.map(acc => `
+      <div class="accordion open" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">
+          <div class="accordion-title">
+            <span class="acc-icon" aria-hidden="true">${acc.icon}</span>
+            ${acc.title}
+            ${acc.priority ? '<span class="tag priority">priority</span>' : ''}
+          </div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+          </svg>
+        </button>
+        <div class="accordion-body">
+          ${acc.bodyHTML}
+        </div>
+      </div>
+    `).join('');
+
+    container.innerHTML = html;
+  }
+
+  // After rendering all sections, update nav badges
+  function updateBadges() {
+    if (typeof updateNavBadges === 'function') {
+      updateNavBadges();
+    }
+  }
+
+  // Render sections
+  renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
+  renderAccordion('js-section2-container', SECTION_2_ACCORDIONS);
+  renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
+  renderAccordion('js-section4-container', SECTION_4_ACCORDIONS);
+  renderAccordion('js-section5-container', SECTION_5_ACCORDIONS);
+  renderAccordion('js-section6-container', SECTION_6_ACCORDIONS);
+  renderAccordion('js-section7-container', SECTION_7_ACCORDIONS);
+
+  // Update badges after a small delay to let DOM settle
+  setTimeout(updateBadges, 100);
+
   function initFlashcardScroller() {
     const scroller = document.getElementById('flashcardScroller');
     const prevBtn = document.getElementById('flashcardPrev');
@@ -717,11 +1395,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFlashcards();
   renderQuiz();
 
-    // ... existing code (renderFlashcards, renderQuiz, etc.) ...
-
-  renderFlashcards();
-  renderQuiz();
-
   // ----- IMAGE LIGHTBOX (Popup + Zoom) with consistent scaling -----
   function initImageLightbox() {
     const lightbox = document.getElementById('imageLightbox');
@@ -896,5 +1569,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   initImageLightbox();
+
+  // At the bottom of your DOMContentLoaded listener, add:
+  if (typeof updateNavBadges === 'function') {
+    // Initial update after a short delay
+    setTimeout(updateNavBadges, 200);
+  }
+
+  // Inside DOMContentLoaded, after all renders:
+  console.log('✅ Flashcard track:', document.getElementById('flashcardTrack')?.children?.length || 0);
+  console.log('✅ Quiz body:', document.getElementById('quizBody')?.children?.length || 0);
+  console.log('✅ Section 1 container:', document.getElementById('js-section1-container')?.children?.length || 0);
 
 }); // DOMContentLoaded end
