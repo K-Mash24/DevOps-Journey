@@ -2821,6 +2821,10 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
   });
 
+  
+  // Call after DOM ready
+  document.addEventListener('DOMContentLoaded', updateNavBadges);
+
   // ============================================================
   // SIDEBAR - Hamburger Syncs with All Toggle Methods
   // ============================================================
@@ -3593,6 +3597,25 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         quizKey: 'linux-quiz-passed',
       },
       // Add more as needed
+      security: {
+        name: 'Security Concepts',
+        totalSections: 9,
+        sectionPrefix: 'security-section-',
+        quizKey: 'security-quiz-passed',
+      },
+      // Placeholders for future pillars
+      scripting: {
+        name: 'Scripting & Automation',
+        totalSections: 0,
+        sectionPrefix: 'scripting-section-',
+        quizKey: 'scripting-quiz-passed',
+      },
+      databases: {
+        name: 'Databases & Storage',
+        totalSections: 0,
+        sectionPrefix: 'databases-section-',
+        quizKey: 'databases-quiz-passed',
+      }
     };
     
     const config = pillarConfig[pillarId];
@@ -3654,6 +3677,42 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         </span>
       `;
     }
+  }
+
+  // ============================================================
+  // DYNAMIC NAV BADGES – count accordions per section
+  // ============================================================
+  function updateNavBadges() {
+    // Get all section dividers with IDs like #s1, #s2, etc.
+    const sectionDividers = document.querySelectorAll('.section-divider[id^="s"]');
+    
+    sectionDividers.forEach(divider => {
+      const id = divider.id; // e.g., "s1"
+      const link = document.querySelector(`.sidebar-nav a.nav-item[href="#${id}"]`);
+      if (!link) return;
+      
+      const badge = link.querySelector('.nav-badge');
+      if (!badge) return;
+      
+      // Count all accordions that are descendants of this section
+      // (including those inside dynamically rendered containers)
+      let count = 0;
+      let current = divider.nextElementSibling;
+      
+      while (current && !current.id?.startsWith('s') && !current.classList?.contains('section-divider')) {
+        // Count accordions in this element and all its descendants
+        if (current.classList.contains('accordion')) {
+          count++;
+        }
+        // Also count accordions inside this element (if it's a container)
+        const nestedAccordions = current.querySelectorAll('.accordion');
+        count += nestedAccordions.length;
+        
+        current = current.nextElementSibling;
+      }
+      
+      badge.textContent = count;
+    });
   }
 
   // Auto-detect pillar page and initialize

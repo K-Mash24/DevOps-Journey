@@ -337,6 +337,50 @@
             </div>
 
             <!-- ========================================================== -->
+            <!-- STEP 6b: Update updatePageHeader() & Call It              -->
+            <!-- ========================================================== -->
+            <div class="info-box warning" style="margin-bottom: 1.5rem;border-left-color:var(--accent-warning);">
+              <strong>🔄 STEP 6b: Update <code>updatePageHeader()</code> in <code>global.js</code></strong>
+              <p style="margin-top:0.25rem">
+                The page header ring and badges are controlled by <code>updatePageHeader()</code> in <code>global.js</code>.
+                If you don't add your pillar here, the ring will stay at 0% and the badges won't show the correct status.
+              </p>
+
+              <p style="margin-top:0.5rem;font-weight:600;">1. Add your pillar to the <code>pillarConfig</code> object:</p>
+              <div class="code-block" style="margin-top:0.25rem;">
+                <pre>
+            const pillarConfig = {
+              networking: { ... },
+              linux: { ... },
+              security: { ... },
+              <span style="color:var(--accent-secondary);">yourPillar: {
+                name: 'Your Pillar Name',
+                totalSections: 9,        // ← Must match the number of sections in your HTML
+                sectionPrefix: 'your-pillar-section-',
+                quizKey: 'your-pillar-quiz-passed',
+              },</span>
+            };</pre>
+              </div>
+
+              <p style="margin-top:0.5rem;font-weight:600;">2. Call <code>updatePageHeader()</code> in your pillar's JavaScript file:</p>
+              <div class="code-block" style="margin-top:0.25rem;">
+                <pre>
+            // In your-pillar.js (inside DOMContentLoaded, after Base.init())
+            if (typeof window.updatePageHeader === 'function') {
+              window.updatePageHeader('your-pillar');
+            } else {
+              console.warn('⚠️ updatePageHeader not available – check global.js');
+            }</pre>
+              </div>
+
+              <div class="info-box tip" style="margin-top:0.5rem;">
+                <strong>💡 Pro tip:</strong> If the ring doesn't update, open the browser console. 
+                If you see <code>updatePageHeader is not defined</code>, the function isn't exposed globally. 
+                If you see <code>No config for pillar "your-pillar"</code>, you forgot to add it to <code>pillarConfig</code>.
+              </div>
+            </div>
+
+            <!-- ========================================================== -->
             <!-- STEP 7: Update global.js                                   -->
             <!-- ========================================================== -->
             <div class="info-box note" style="margin-bottom: 1.5rem">
@@ -651,6 +695,16 @@
           <div class="no-results" id="noResults" aria-live="polite">
             <svg width="40" height="40" viewBox="0 0 20 20" fill="currentColor" style="margin-bottom:0.75rem;color:var(--text-muted)" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
             <p>No results found for your search.</p>
+          </div>
+          <!-- badges are now dynamic -->
+          <div class="info-box tip">
+            <strong>💡 Sidebar section badges are now dynamic!</strong>
+            <p>
+              The numbers next to each section in the sidebar (e.g., <code>&lt;span class="nav-badge"&gt;9&lt;/span&gt;</code>) are automatically counted from the actual number of accordions in that section. No need to hardcode them.
+            </p>
+            <p>
+              Just make sure each section has a unique ID (<code>#s1</code>, <code>#s2</code>, …) and that accordions are placed as siblings after the section divider. The function <code>updateNavBadges()</code> in <code>global.js</code> will handle the rest.
+            </p>
           </div>
         </main>
       </div>
