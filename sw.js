@@ -1,75 +1,117 @@
-// 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
-// Format: YYYY-MM-DD-sequential (e.g., 2026-06-11-v1, 2026-06-11-v2, 2026-06-12-v1)
-// Integrated JS for the sidebar and styling
-
-const CACHE_NAME = 'devops-journey-2026-07-06-v2';  // Update this version string with each deployment
+const CACHE_NAME = "devops-journey-2026-07-06-v5"; // Increment when you deploy
 
 const urlsToCache = [
-  '/DevOps-Journey/',
-  '/DevOps-Journey/index.html',
-  '/DevOps-Journey/html/networking.html',
-  '/DevOps-Journey/html/linux.html',
-  '/DevOps-Journey/style.css',
-  '/DevOps-Journey/js/global.js',
-  '/DevOps-Journey/img/favicon.svg',
-  '/DevOps-Journey/img/Logo.svg'
+  // Critical — always cache these
+  "/DevOps-Journey/",
+  "/DevOps-Journey/index.html",
+  "/DevOps-Journey/style.css",
+  "/DevOps-Journey/js/global.js",
+  "/DevOps-Journey/js/networking.js",
+  "/DevOps-Journey/js/stars.js",
+  "/DevOps-Journey/js/themes.js",
+
+  // Pages
+  "/DevOps-Journey/html/networking.html",
+
+  // Future pillar
+
+  // Assets
+  "/DevOps-Journey/img/favicon.svg",
+  "/DevOps-Journey/img/Logo.svg",
+  "/DevOps-Journey/img/Network.svg",
+
+  // PWA
+  "/DevOps-Journey/manifest.json",
 ];
 
-// Install event – cache essential files
-self.addEventListener('install', event => {
-  console.log('[SW] Installing...');
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('[SW] Caching files');
-        // Add each file individually to handle failures gracefully
-        return Promise.allSettled(
-          urlsToCache.map(url => 
-            cache.add(url).catch(err => console.warn(`[SW] Failed to cache: ${url}`, err))
-          )
-        );
-      })
-      .then(() => self.skipWaiting())
-  );
-});
+// Fetch event — intelligent caching strategy
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  const request = event.request;
 
-// Activate event – clean up old caches
-self.addEventListener('activate', event => {
-  console.log('[SW] Activating...');
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cache => {
-          if (cache !== CACHE_NAME) {
-            console.log('[SW] Deleting old cache:', cache);
-            return caches.delete(cache);
-          }
-        })
-      );
-    }).then(() => self.clients.claim())
-  );
-});
-
-// Fetch event – serve from cache, fallback to network
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
+  // --- HTML pages: Network-first (get fresh content) ---
+  if (
+    request.mode === "navigate" ||
+    url.pathname.endsWith(".html") ||
+    url.pathname === "/" ||
+    url.pathname === "/DevOps-Journey/"
+  ) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Cache fresh response for offline use
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, clone);
+          });
           return response;
-        }
-        return fetch(event.request).then(response => {
-          // Don't cache non-successful responses
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
+        })
+        .catch(() => {
+          // Offline fallback — serve cached version
+          return caches.match(request).then((cached) => {
+            if (cached) return cached;
+            // Ultimate fallback: serve index.html
+            return caches.match("/DevOps-Journey/index.html");
+          });
+        }),
+    );
+    return;
+  }
+
+  // --- JavaScript & CSS: Cache-first (fastest) ---
+  if (url.pathname.includes("/js/") || url.pathname.includes(".css")) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        // Not in cache — fetch and store
+        return fetch(request).then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, clone);
             });
+          }
+          return response;
+        });
+      }),
+    );
+    return;
+  }
+
+  // --- Images: Cache-first (they rarely change) ---
+  if (url.pathname.includes("/img/")) {
+    event.respondWith(
+      caches.match(request).then((cached) => cached || fetch(request)),
+    );
+    return;
+  }
+
+  // --- Everything else: Cache-first, fallback to network ---
+  event.respondWith(
+    caches
+      .match(request)
+      .then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, clone);
+            });
+          }
           return response;
         });
       })
+      .catch(() => {
+        // Offline fallback for images (optional)
+        if (url.pathname.includes("/img/")) {
+          return caches.match("/DevOps-Journey/img/Logo.svg");
+        }
+        // Return a simple offline page for other requests
+        return new Response("Offline — please check your connection", {
+          status: 503,
+          statusText: "Service Unavailable",
+        });
+      }),
   );
 });
