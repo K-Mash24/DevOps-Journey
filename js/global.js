@@ -5,6 +5,26 @@
 const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevOps-Journey' : '.';
 
 // ============================================================
+// SERVICE WORKER VERSION CHECK
+// ============================================================
+
+const APP_VERSION = '2026-07-07-v4'; // Match your CACHE_NAME
+
+if (localStorage.getItem('sw-version') !== APP_VERSION) {
+  console.log('🔄 New version detected — clearing old caches...');
+  
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(reg => {
+        reg.update(); // Force update check
+      });
+    });
+  }
+  
+  localStorage.setItem('sw-version', APP_VERSION);
+}
+
+// ============================================================
 // SHOW COMING SOON TOAST FOR PILLAR (called from onclick)
 // ============================================================
 
