@@ -78,6 +78,119 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
+  // NETWORKING PAGE — Overview Content
+  // ============================================================
+
+  const NETWORKING_OVERVIEW = {
+    purpose: {
+      title: '📌 Purpose',
+      description: [
+        'This pillar builds genuine networking foundations from first principles before touching any cloud infrastructure or AWS services. Networking underpins every system you will design, operate, and troubleshoot as a Solutions Architect and DevOps engineer — understanding it deeply, not superficially, is the goal.',
+        'Every concept here was studied independently of cloud tooling. The knowledge transfers directly to AWS (VPCs, subnets, route tables, security groups, DNS, load balancers) and to the full DevOps roadmap (service discovery, container networking, Kubernetes networking, infrastructure as code).'
+      ]
+    },
+    objectives: [
+      'Explain the OSI and TCP/IP models from memory and identify which protocols and devices operate at each layer',
+      'Read and write IPv4 addresses in both decimal and binary, and identify address classes, private ranges, and special addresses',
+      'Perform subnetting calculations by hand — network address, broadcast address, usable host range, and host count — for any given CIDR block',
+      'Design a VLSM addressing scheme for a network with mixed host requirements',
+      'Explain how routers forward packets using routing tables and longest prefix match, and how switches use MAC address tables for local delivery',
+      'Describe how NAT and PAT allow private networks to share a public IP address',
+      'Trace a DNS query from browser cache through recursive resolver, root server, TLD server, and authoritative name server to final answer',
+      'Differentiate TCP and UDP, explain the three-way handshake, and identify appropriate use cases for each protocol',
+      'Define stateless and stateful firewalls, explain ACL rule evaluation, and describe network zone design including the DMZ',
+      'Identify common network attacks (SYN flood, ARP spoofing, MITM, DDoS) and explain the mechanism behind each'
+    ],
+    keyConcepts: [
+      { term: 'OSI layers 3, 4, 7', definition: 'Know the protocols at each layer cold' },
+      { term: 'Subnetting by hand', definition: 'Given any CIDR block, calculate network address, broadcast address, usable range, and host count without assistance' },
+      { term: 'VLSM', definition: 'Allocate subnets of different sizes from a single address space' },
+      { term: 'TCP three-way handshake', definition: 'SYN, SYN-ACK, ACK and what each step achieves' },
+      { term: 'DNS resolution', definition: 'The full path from browser cache to authoritative server' },
+      { term: 'NAT/PAT', definition: 'How private addresses share a single public IP using port numbers' },
+      { term: 'Stateful vs stateless firewall', definition: 'The difference and why it matters' },
+      { term: 'RFC 1918 ranges', definition: '<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>' },
+      { term: 'TCP flow control (sliding window)', definition: 'How it prevents overwhelming the receiver' },
+      { term: 'Longest prefix match', definition: 'Router\'s algorithm for choosing the most specific route' }
+    ],
+    stats: [
+      { label: 'Sections', value: '7/7 (100%)' },
+      { label: 'Topics covered', value: '47+' },
+      { label: 'Estimated time', value: '~14-15 hours' },
+      { label: 'Difficulty range', value: '🟢 Beginner → 🟡 Intermediate' },
+      { label: 'Status', value: '🎉 PILLAR COMPLETE' }
+    ],
+    readmeLink: 'https://github.com/K-Mash24/Great_Cheatsheets/tree/Master/saa-foundation/01-networking',
+    readmeDetailLink: 'https://github.com/K-Mash24/Great_Cheatsheets/blob/Master/saa-foundation/01-networking/README.md'
+  };
+
+  function renderNetworkingOverview() {
+    const container = document.getElementById('js-overview-container');
+    if (!container) {
+      console.warn('⚠️ Overview container not found');
+      return;
+    }
+    
+    const objectives = NETWORKING_OVERVIEW.objectives.map(obj => `<li>${obj}</li>`).join('');
+    
+    const keyConcepts = NETWORKING_OVERVIEW.keyConcepts.map(item => `
+      <dt>${item.term}</dt>
+      <dd>${item.definition}</dd>
+    `).join('');
+    
+    const stats = NETWORKING_OVERVIEW.stats.map(stat => `
+      <tr><td><strong>${stat.label}</strong></td><td>${stat.value}</td></tr>
+    `).join('');
+    
+    container.innerHTML = `
+      <div class="overview-content" style="margin-bottom: 2rem;">
+        
+        <!-- Purpose -->
+        <div class="info-box note" style="margin-bottom: 1.5rem;">
+          <strong>${NETWORKING_OVERVIEW.purpose.title}</strong>
+          <p>${NETWORKING_OVERVIEW.purpose.description[0]}</p>
+          <p style="margin-top: 0.5rem;">${NETWORKING_OVERVIEW.purpose.description[1]}</p>
+        </div>
+
+        <!-- Learning Objectives -->
+        <div class="info-box tip" style="margin-bottom: 1.5rem;">
+          <strong>🎯 Learning objectives</strong>
+          <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+            ${objectives}
+          </ul>
+        </div>
+
+        <!-- Key Concepts -->
+        <div class="info-box warning" style="margin-bottom: 2rem;">
+          <strong>🔁 Key concepts to revise</strong>
+          <dl class="key-concepts-list">
+            ${keyConcepts}
+          </dl>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="table-wrapper" style="margin-bottom: 1rem;">
+          <table class="data-table">
+            <thead>
+              <tr><th>Metric</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              ${stats}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Link to detailed README -->
+        <div class="info-box note">
+          <strong>📖 Detailed notes</strong>
+          <p style="margin-top: 0.25rem;">All markdown notes are committed to <a href="${NETWORKING_OVERVIEW.readmeLink}" target="_blank" style="color: var(--accent-secondary);">Great_Cheatsheets/saa-foundation/01-networking/</a>. The <a href="${NETWORKING_OVERVIEW.readmeDetailLink}" target="_blank" style="color: var(--accent-secondary);">README.md</a> in that folder contains the complete pillar summary, learning objectives, and revision checklist.</p>
+        </div>
+
+      </div>
+    `;
+  }
+
+  // ============================================================
   // SECTION 1 CONTENT — ALL accordions from "How the Internet Is Structured"
   // ============================================================
 
@@ -744,6 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Render sections
+  renderNetworkingOverview();
   renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
   renderAccordion('js-section2-container', SECTION_2_ACCORDIONS);
   renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
