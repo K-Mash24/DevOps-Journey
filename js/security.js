@@ -1732,6 +1732,1011 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  const SECTION_4_ACCORDIONS = [
+    {
+      id: 's4-trust-problem',
+      title: '4.1 The Trust Problem, With a Concrete Scenario',
+      priority: false,
+      icon: '🏛️',
+      bodyHTML: `
+        <p>Section 3 glossed over one detail: in the TLS handshake, the server sends its public key. But here's the gap — <strong>how does your browser know that public key actually belongs to your bank, and not to an attacker running a fake "bank" server?</strong></p>
+        <p>Concrete attack: you connect to public Wi-Fi at a coffee shop. An attacker runs a <strong>man-in-the-middle (MITM)</strong> device that intercepts your connection attempt to <code>yourbank.com</code> and instead hands you <em>its own</em> public key, pretending to be the bank. Without a way to verify identity, your browser would happily encrypt your login credentials — to the attacker's key. This is what tools like <strong>sslstrip</strong> are built to perform.</p>
+        <p>This is the <strong>trust problem</strong>: encryption alone proves nothing about <em>identity</em>. Anyone can generate a key pair — a key pair proves you hold the matching private key, not that you're who you claim to be. <strong>PKI (Public Key Infrastructure)</strong> solves this by creating a chain of trust.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: MITM Attack Without PKI</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    MITM Attack Without PKI                     │
+    │                                                                 │
+    │    User ──"Wants: yourbank.com"──► Public Wi-Fi               │
+    │                                        │                        │
+    │                                        ▼                        │
+    │                              ┌───────────────────┐             │
+    │                              │   Attacker (MITM) │             │
+    │                              └───────────────────┘             │
+    │                                        │                        │
+    │                    ┌───────────────────┴───────────────────┐   │
+    │                    │                                       │   │
+    │                    ▼                                       ▼   │
+    │    Sends attacker's own public key,        Forwards traffic to  │
+    │    pretending to be the bank               real bank server,   │
+    │                    │                       reading everything  │
+    │                    ▼                       in between          │
+    │             User encrypts login                                │
+    │             to attacker's key                                 │
+    │                    │                                           │
+    │                    ▼                                           │
+    │    ❌ Attacker now has the credentials                        │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <div class="info-box warning"><strong>⚠️ The key insight:</strong> A padlock proves encryption, not identity. PKI exists to solve this specific problem.</div>
+      `
+    },
+    {
+      id: 's4-certificate-structure',
+      title: '4.2 What a Certificate Actually Is — The Structure',
+      priority: false,
+      icon: '📜',
+      bodyHTML: `
+        <p>A <strong>digital certificate</strong> binds a public key to an identity (a domain name, an organization) and is digitally signed by a <strong>Certificate Authority (CA)</strong> — a trusted third party whose entire business is vouching for identities.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Certificate Structure</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                     X.509 Certificate                          │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Version                                                │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  Serial Number                                          │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  Signature Algorithm                                    │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  Issuer (CA that signed it)                            │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  Validity (Not Before / Not After)                     │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  Subject (who the cert is for)                         │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  Subject Public Key Info                                │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  Extensions (SAN, Key Usage, etc.)                     │   │
+    │  ├─────────────────────────────────────────────────────────┤   │
+    │  │  🔑 CA's Digital Signature (over all fields above)     │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p>The <strong>signature</strong> is the crucial part — it's created using asymmetric cryptography (Section 1) again: the CA signs the certificate with <em>its own</em> private key. Anyone can verify that signature using the CA's <em>public</em> key, which is bundled directly into every browser and OS.</p>
+        <p>A certificate contains, among other fields:</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>The domain name(s) it's valid for (Subject Alternative Name)</li>
+          <li>The public key it certifies</li>
+          <li>The issuing CA's identity</li>
+          <li>A validity period (issued date, expiry date)</li>
+          <li>A <strong>digital signature</strong> from the CA, over all of the above</li>
+        </ul>
+      `
+    },
+    {
+      id: 's4-chain-of-trust',
+      title: '4.3 The Chain of Trust',
+      priority: false,
+      icon: '🔗',
+      bodyHTML: `
+        <p>Browsers don't trust every CA in existence blindly — they ship with a curated list of <strong>root CAs</strong> (root certificates), pre-installed by the browser/OS vendor. Root CAs almost never sign website certificates directly — instead, they sign <strong>intermediate CAs</strong>, which then sign the actual website's certificate. This creates a chain:</p>
+        <div class="code-block">
+          <pre>
+    Root CA (trusted, built into browser)
+      └── signs ──► Intermediate CA
+                        └── signs ──► yourbank.com's certificate</pre>
+        </div>
+        <p><strong>Why the extra layer?</strong> If an intermediate CA's key is ever compromised, it can be revoked without invalidating the root CA itself — the root stays offline and protected essentially all the time, minimizing its exposure.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Chain of Trust (Issuance Direction)</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Chain of Trust (Issuance)                   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────┐               │
+    │  │  Root CA (pre-installed in browser/OS)     │               │
+    │  │  ✅ Trusted by default                      │               │
+    │  └──────────────────────┬──────────────────────┘               │
+    │                         │  signs                               │
+    │                         ▼                                      │
+    │  ┌─────────────────────────────────────────────┐               │
+    │  │  Intermediate CA                            │               │
+    │  │  (Signed by root, can be revoked)           │               │
+    │  └──────────────────────┬──────────────────────┘               │
+    │                         │  signs                               │
+    │                         ▼                                      │
+    │  ┌─────────────────────────────────────────────┐               │
+    │  │  yourbank.com certificate                   │               │
+    │  │  (Contains bank's public key)               │               │
+    │  └─────────────────────────────────────────────┘               │
+    │                                                                 │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Chain of Trust (Validation Direction)</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Chain of Trust (Validation)                 │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────┐               │
+    │  │  yourbank.com certificate                   │               │
+    │  │  (Presented during handshake)              │               │
+    │  └──────────────────────┬──────────────────────┘               │
+    │                         │  verify signature                     │
+    │                         ▼                                      │
+    │  ┌─────────────────────────────────────────────┐               │
+    │  │  Intermediate CA                            │               │
+    │  │  (Sent alongside leaf cert)                 │               │
+    │  └──────────────────────┬──────────────────────┘               │
+    │                         │  verify signature                     │
+    │                         ▼                                      │
+    │  ┌─────────────────────────────────────────────┐               │
+    │  │  Root CA (pre-installed in                  │               │
+    │  │  browser's trust store)                     │               │
+    │  └──────────────────────┬──────────────────────┘               │
+    │                         │                                       │
+    │                         ▼                                      │
+    │  ┌─────────────────────────────────────────────┐               │
+    │  │  ✅ Connection is trusted                    │               │
+    │  └─────────────────────────────────────────────┘               │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Certificate type</th><th>Role in the chain</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Root CA</strong></td><td>The ultimate trust anchor — browsers ship with a pre-installed list of trusted root CAs (managed by Mozilla's CA Certificate Program)</td></tr>
+              <tr><td><strong>Intermediate CA</strong></td><td>Signed by the root CA — used to issue leaf certificates; if compromised, can be revoked without revoking the root</td></tr>
+              <tr><td><strong>Leaf Certificate</strong></td><td>Issued to your specific domain — contains the server's public key, domain name, expiration date</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's4-verification',
+      title: '4.4 How Browser Verification Actually Works, Step by Step',
+      priority: false,
+      icon: '🔍',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Visual: Browser Certificate Validation</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Browser Certificate Validation              │
+    │                                                                 │
+    │  Server sends certificate + intermediate during handshake     │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  1. Domain match: SAN matches requested domain?        │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                    │                │                          │
+    │                   No                Yes                        │
+    │                    │                │                          │
+    │                    ▼                ▼                          │
+    │  ┌──────────────────────┐  ┌─────────────────────────────┐   │
+    │  │ ❌ Show 'Connection  │  │  2. Expiration: Is it        │   │
+    │  │   is not private'   │  │     within validity period?  │   │
+    │  └──────────────────────┘  └─────────────────────────────┘   │
+    │                                      │                │        │
+    │                                     No                Yes      │
+    │                                      │                │        │
+    │                                      ▼                ▼        │
+    │                      ┌─────────────────────────────┐          │
+    │                      │  3. Chain validation:       │          │
+    │                      │     Verify intermediate's   │          │
+    │                      │     signature on leaf cert  │          │
+    │                      └─────────────────────────────┘          │
+    │                                      │                │        │
+    │                                     Fails            Succeeds  │
+    │                                      │                │        │
+    │                                      ▼                ▼        │
+    │                      ┌─────────────────────────────┐          │
+    │                      │  4. Trust anchor: Verify     │          │
+    │                      │     intermediate's cert was  │          │
+    │                      │     signed by a trusted root │          │
+    │                      └─────────────────────────────┘          │
+    │                                      │                │        │
+    │                                     Fails            Succeeds  │
+    │                                      │                │        │
+    │                                      ▼                ▼        │
+    │                      ┌─────────────────────────────┐          │
+    │                      │  5. Revocation check:       │          │
+    │                      │     Is certificate revoked? │          │
+    │                      │     (OCSP/CRL)              │          │
+    │                      └─────────────────────────────┘          │
+    │                                      │                │        │
+    │                                     Revoked          Not       │
+    │                                      │                │        │
+    │                                      ▼                ▼        │
+    │                      ┌─────────────────────────────┐          │
+    │                      │  ✅ Connection is trusted   │          │
+    │                      │     — show padlock         │          │
+    │                      └─────────────────────────────┘          │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p><strong>Step-by-step explanation:</strong></p>
+        <ol style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>Server sends its certificate <em>and</em> the intermediate CA's certificate during the TLS handshake</li>
+          <li>Browser checks: is this certificate's domain name a match for the site I'm trying to reach? (SAN)</li>
+          <li>Browser checks: is the certificate within its validity period (not expired, not "not yet valid")?</li>
+          <li>Browser verifies the intermediate CA's signature on the site's certificate, using the intermediate CA's public key</li>
+          <li>Browser then verifies the intermediate CA's <em>own</em> certificate was signed by a root CA it already trusts (built into its trust store)</li>
+          <li>Browser optionally checks revocation status (OCSP or CRL)</li>
+          <li>If every link in the chain checks out, the browser shows the padlock. If any link fails, you get the "Your connection is not private" warning</li>
+        </ol>
+      `
+    },
+    {
+      id: 's4-formats',
+      title: '4.5 Certificate Formats',
+      priority: false,
+      icon: '📄',
+      bodyHTML: `
+        <p>When working with certificates, you'll encounter different file formats. Here's what they mean:</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Format</th><th>Extension(s)</th><th>Description</th><th>Common use</th></tr></thead>
+            <tbody>
+              <tr><td><strong>PEM</strong></td><td><code>.pem</code>, <code>.crt</code>, <code>.cer</code></td><td>Base64-encoded, human-readable (starts with <code>-----BEGIN CERTIFICATE-----</code>)</td><td>Most common; used in web servers, Kubernetes secrets, and most Linux tools</td></tr>
+              <tr><td><strong>DER</strong></td><td><code>.der</code>, <code>.cer</code></td><td>Binary format (not human-readable)</td><td>Windows systems, some Java keystores</td></tr>
+              <tr><td><strong>PKCS#12</strong></td><td><code>.p12</code>, <code>.pfx</code></td><td>Binary bundle containing certificate + private key (password-protected)</td><td>Windows IIS, mutual TLS client certificates</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Converting Between Formats (Handy Reference)</h4>
+        <div class="code-block">
+          <pre>
+    # PEM → DER
+    openssl x509 -in cert.pem -outform DER -out cert.der
+
+    # DER → PEM
+    openssl x509 -in cert.der -inform DER -out cert.pem
+
+    # PEM → PKCS#12 (cert + key bundle)
+    openssl pkcs12 -export -in cert.pem -inkey key.pem -out bundle.p12
+
+    # PKCS#12 → PEM (extract cert and key separately)
+    openssl pkcs12 -in bundle.p12 -nokeys -out cert.pem
+    openssl pkcs12 -in bundle.p12 -nocerts -out key.pem</pre>
+        </div>
+      `
+    },
+    {
+      id: 's4-private-key',
+      title: '4.6 Private Key Protection',
+      priority: false,
+      icon: '🔑',
+      bodyHTML: `
+        <p>The private key is the most sensitive part of the PKI system. If it's stolen, the certificate becomes useless — anyone with the private key can impersonate the server.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Private Key Storage Options</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Method</th><th>Security Level</th><th>Use case</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Filesystem (plaintext)</strong></td><td>Low</td><td>Development only — never production</td></tr>
+              <tr><td><strong>Encrypted filesystem</strong></td><td>Medium</td><td>Small deployments, protected by OS-level encryption</td></tr>
+              <tr><td><strong>HSM (Hardware Security Module)</strong></td><td>Very High</td><td>Banking, government, high-security environments — keys never leave the hardware</td></tr>
+              <tr><td><strong>TPM (Trusted Platform Module)</strong></td><td>High</td><td>Server hardware with built-in cryptographic coprocessor</td></tr>
+              <tr><td><strong>KMS (Key Management Service)</strong></td><td>High</td><td>Cloud environments — AWS KMS, GCP Cloud KMS, Azure Key Vault — keys stored in managed HSM-backed services</td></tr>
+              <tr><td><strong>Secrets Manager</strong></td><td>Medium-High</td><td>Storing TLS private keys as encrypted secrets with rotation</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Best practice:</strong> In production, never store private keys in plaintext on disk. Use a KMS, HSM, or at minimum, encrypt the key with a strong passphrase.</div>
+      `
+    },
+    {
+      id: 's4-certificate-types',
+      title: '4.7 Certificate Types',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Type</th><th>What's verified</th><th>Example use case</th></tr></thead>
+            <tbody>
+              <tr><td><strong>DV (Domain Validated)</strong></td><td>Only that you control the domain (e.g. via DNS record or email)</td><td>Free certs (Let's Encrypt), personal sites, most of the modern web</td></tr>
+              <tr><td><strong>OV (Organization Validated)</strong></td><td>Domain control + verified business registration</td><td>Corporate sites wanting extra legitimacy</td></tr>
+              <tr><td><strong>EV (Extended Validation)</strong></td><td>Domain + rigorous legal/business identity verification</td><td>Historically banks; largely deprecated in browser UI today since browsers stopped showing the special green-bar indicator</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning"><strong>⚠️ Important:</strong> None of these certificate types guarantee the site itself is trustworthy — only that the domain/identity claim checks out. A padlock means "this is the real domain" not "this domain is safe."</div>
+      `
+    },
+    {
+      id: 's4-transparency',
+      title: '4.8 Certificate Transparency — A Modern PKI Safeguard',
+      priority: false,
+      icon: '📊',
+      bodyHTML: `
+        <p><strong>Certificate Transparency (CT)</strong> is a system that requires CAs to publicly log every certificate they issue. These logs are public, auditable, and append-only.</p>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Certificate Transparency Flow               │
+    │                                                                 │
+    │  CA issues certificate                                         │
+    │          │                                                     │
+    │          ▼                                                     │
+    │  Certificate logged in public CT log                          │
+    │          │                                                     │
+    │    ┌─────┴─────┐                                              │
+    │    │           │                                              │
+    │    ▼           ▼                                              │
+    │  Browsers/   Anyone can                                       │
+    │  Operators   audit the log                                    │
+    │  monitor logs  to detect                                      │
+    │  for unexpected mis-issuance                                  │
+    │  certificates                                                 │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p><strong>Why CT matters:</strong></p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>If a CA is breached (like DigiNotar), the fraudulent certificates will appear in the public logs</li>
+          <li>Domain owners can monitor CT logs for certificates issued for their domain without their knowledge</li>
+          <li>Browsers now require CT for all public TLS certificates</li>
+        </ul>
+        <div class="info-box note"><strong>📌 ACME Protocol:</strong> (Automatic Certificate Management Environment) is how Let's Encrypt and other modern CAs automate issuance. It handles the domain validation and certificate issuance over HTTPS, without manual intervention.</div>
+      `
+    },
+    {
+      id: 's4-pitfalls',
+      title: '4.9 Common Pitfalls',
+      priority: false,
+      icon: '⚠️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it happens</th><th>How to avoid</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Self-signed certificates in production</strong></td><td>No signature from a trusted CA at all — browsers reject or warn loudly</td><td>Use a real CA (Let's Encrypt is free and automatable)</td></tr>
+              <tr><td><strong>Expired certificates</strong></td><td>No automated renewal process</td><td>Automate renewal (certbot, cert-manager, ACM)</td></tr>
+              <tr><td><strong>Incomplete certificate chain (missing intermediate)</strong></td><td>Server only sends its own cert, not the intermediate</td><td>Configure the server to send the full chain, not just the leaf cert</td></tr>
+              <tr><td><strong>Wildcard certificate misuse</strong></td><td>Using one <code>*.example.com</code> cert across too many unrelated subdomains/services</td><td>Scope certificates tightly; a leak on one service shouldn't compromise all subdomains</td></tr>
+              <tr><td><strong>Not pinning certificates for high-security mobile apps</strong></td><td>Assuming the OS trust store is always sufficient</td><td>Certificate pinning defends specifically against a compromised or coerced CA issuing a fraudulent cert for your domain</td></tr>
+              <tr><td><strong>Trusting any CA blindly</strong></td><td>Assuming "it has a padlock" means "it's safe"</td><td>A padlock only proves <em>encryption + identity of the domain</em>, not that the site itself is trustworthy or non-malicious</td></tr>
+              <tr><td><strong>Storing private keys in plaintext</strong></td><td>Convenience; lack of understanding of the risk</td><td>Use KMS, HSM, or at minimum encrypt the key with a passphrase</td></tr>
+              <tr><td><strong>Using weak key algorithms</strong></td><td>Legacy systems</td><td>Use RSA-2048+ or ECC (P-256 or higher) for modern security</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Real-World Examples</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong>DigiNotar (2011):</strong> a Dutch CA was breached, and the attacker issued fraudulent certificates for domains including <code>*.google.com</code>. These fake certificates were used in real MITM attacks against Iranian internet users. The fallout was severe enough that DigiNotar was removed from every major browser's trust store, effectively ending the company.</li>
+          <li><strong>Superfish (2015, revisited from Section 3):</strong> a PKI failure specifically — Lenovo's adware installed its <em>own</em> root CA certificate into the OS trust store on every affected laptop, meaning the adware could silently forge valid-looking certificates for any HTTPS site. This also demonstrates why trust stores should only contain legitimate, audited CAs.</li>
+          <li><strong>Let's Encrypt (2015–present):</strong> founded specifically to fix a PKI accessibility problem — before it existed, certificates commonly cost money and required manual, tedious renewal, which pushed many site operators toward the self-signed and expired-cert pitfalls above. Free, automatable, short-lived (90-day) certificates changed the entire industry's default behavior. The <strong>CA/Browser Forum</strong> (the governing body that sets the rules for CAs) now mandates maximum certificate lifetimes of 398 days (≈13 months), pushing the industry toward shorter, more frequently renewed certificates.</li>
+        </ul>
+      `
+    },
+    {
+      id: 's4-hands-on',
+      title: '4.10 Hands-On Practice (Codespace)',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. Inspect the full certificate chain for a real site</h4>
+        <div class="code-block">
+          <pre>
+    openssl s_client -connect github.com:443 -showcerts </dev/null 2>/dev/null | grep -E "s:|i:"
+    # "s:" = subject (who the cert is for), "i:" = issuer (who signed it)
+    # Trace the chain: leaf cert's issuer should match the next cert's subject, and so on up to the root</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. Generate your own self-signed certificate (to see what browsers reject and why)</h4>
+        <div class="code-block">
+          <pre>
+    openssl req -x509 -newkey rsa:2048 -keyout selfsigned-key.pem -out selfsigned-cert.pem -days 365 -nodes -subj "/CN=localhost"</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">3. Inspect your self-signed cert's fields</h4>
+        <div class="code-block">
+          <pre>
+    openssl x509 -in selfsigned-cert.pem -noout -text | head -20
+    # Notice: issuer and subject are IDENTICAL — this is exactly what marks it as self-signed,
+    # and exactly what a browser flags as untrusted (no external CA vouching for it)</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">4. Check a real certificate's validity dates and issuing CA</h4>
+        <div class="code-block">
+          <pre>
+    echo | openssl s_client -connect github.com:443 2>/dev/null | openssl x509 -noout -issuer -dates</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">5. Convert a certificate between formats (if you have one)</h4>
+        <div class="code-block">
+          <pre>
+    # Create a self-signed cert if you don't have one
+    openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+
+    # Convert PEM to DER
+    openssl x509 -in cert.pem -outform DER -out cert.der
+
+    # Convert DER to PEM
+    openssl x509 -in cert.der -inform DER -out cert.pem
+
+    # Create a PKCS#12 bundle
+    openssl pkcs12 -export -in cert.pem -inkey key.pem -out bundle.p12 -password pass:test123</pre>
+        </div>
+      `
+    },
+    {
+      id: 's4-devops-connection',
+      title: '4.11 DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>DevOps context</th><th>Where PKI appears</th></tr></thead>
+            <tbody>
+              <tr><td><strong>cert-manager (Kubernetes)</strong></td><td>Automates the entire chain-of-trust lifecycle — requesting, issuing, and renewing certs from a CA like Let's Encrypt</td></tr>
+              <tr><td><strong>Internal CAs (HashiCorp Vault PKI secrets engine)</strong></td><td>Organizations run their own private CA to issue short-lived certs for internal service-to-service mTLS</td></tr>
+              <tr><td><strong>AWS ACM</strong></td><td>Managed CA-issued certificates for load balancers, auto-renewed, no manual PEM file handling</td></tr>
+              <tr><td><strong>Container image signing (Cosign/Sigstore)</strong></td><td>Uses a similar trust-chain concept — verifying a signature traces back to a trusted identity</td></tr>
+              <tr><td><strong>Corporate device management (MDM)</strong></td><td>Company-issued devices often have an internal root CA installed to inspect/proxy corporate traffic</td></tr>
+              <tr><td><strong>mTLS in service meshes</strong></td><td>Istio/Linkerd use PKI internally to issue certificates for each service for mutual TLS authentication</td></tr>
+              <tr><td><strong>Code signing</strong></td><td>CI/CD pipelines sign build artifacts with code-signing certificates to verify authenticity</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's4-key-takeaways',
+      title: 'Key Takeaways — PKI & Certificate Authorities',
+      priority: false,
+      icon: '🧠',
+      bodyHTML: `
+        <div class="mental-model-grid">
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🏛️</span><span class="mental-title">PKI Solves the Trust Problem</span></div>
+            <div class="mental-card-body">Encryption alone proves nothing about <strong>identity</strong> — PKI creates a chain of trust to verify who you're talking to.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📜</span><span class="mental-title">Certificate = Public Key + Identity + Signature</span></div>
+            <div class="mental-card-body">A certificate binds a public key to an identity, signed by a CA using asymmetric cryptography (Section 1).</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔗</span><span class="mental-title">Chain of Trust</span></div>
+            <div class="mental-card-body">Browsers trust pre-installed <strong>root CAs</strong>. Everything else chains back: Root → Intermediate → Leaf.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🛡️</span><span class="mental-title">Intermediate Layer Protects the Root</span></div>
+            <div class="mental-card-body">If an intermediate is compromised, it can be revoked without invalidating the root CA itself.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📊</span><span class="mental-title">Certificate Transparency</span></div>
+            <div class="mental-card-body">All public certificates are logged. Anyone can detect fraudulent certs.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔑</span><span class="mental-title">Protect the Private Key</span></div>
+            <div class="mental-card-body">Use HSMs, KMS, or encrypted storage in production. Never store private keys in plaintext.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📄</span><span class="mental-title">Know Your Formats</span></div>
+            <div class="mental-card-body">PEM (text), DER (binary), PKCS#12 (bundle) — each has its use case.</div>
+          </div>
+          <div class="mental-card mental-card-full">
+            <div class="mental-card-header"><span class="mental-icon">🚨</span><span class="mental-title">Real Breaches, Real Lessons</span></div>
+            <div class="mental-card-body">DigiNotar (breached CA), Superfish (rogue root CA), Let's Encrypt (fixed accessibility) — the trust model's weakest point is often the CA itself, not the cryptographic math.</div>
+          </div>
+        </div>
+      `
+    }
+  ];
+
+  const SECTION_5_ACCORDIONS = [
+    {
+      id: 's5-distinction',
+      title: '5.1 The Distinction, With a Concrete Scenario',
+      priority: false,
+      icon: '🚪',
+      bodyHTML: `
+        <p>Picture an office building. <strong>Authentication</strong> is showing your ID badge at the front door so the guard confirms <em>you are who you claim to be</em>. <strong>Authorization</strong> is separate — once inside, your badge only opens certain doors: your floor, maybe the server room if you're IT staff, but not the CEO's office or the finance vault. You were authenticated once at the entrance, but authorization is checked <em>again, separately</em>, at every single door.</p>
+        <p>This distinction gets conflated constantly in casual conversation ("I logged in" vs "I have access"), but they answer fundamentally different questions:</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Authentication (AuthN):</strong> "Who are you?" — verifying identity</li>
+          <li><strong>Authorization (AuthZ):</strong> "What are you allowed to do?" — verifying permissions</li>
+        </ul>
+        <p>A system can authenticate you perfectly (you proved you're really Alice) and still deny you access to something (Alice isn't authorized to view payroll data). These are two separate checks, and conflating them in code or design is a very common, very real security bug.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: AuthN vs AuthZ as Two Separate Gates</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    AuthN vs AuthZ as Two Gates                 │
+    │                                                                 │
+    │    User attempts login                                         │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    ┌─────────────────────────────────────────────┐             │
+    │    │  Authentication: Are you who you claim?    │             │
+    │    └─────────────────────────────────────────────┘             │
+    │           │                     │                               │
+    │          Fail                   Pass                           │
+    │           │                     │                               │
+    │           ▼                     ▼                               │
+    │    ┌───────────────────┐  ┌─────────────────────────────┐     │
+    │    │ 401 Unauthorized  │  │ Authorization: Are you      │     │
+    │    │ (identity not    │  │ allowed to do this action?  │     │
+    │    │  proven)         │  └─────────────────────────────┘     │
+    │    └───────────────────┘           │                     │     │
+    │                                   Fail                   Pass   │
+    │                                    │                     │     │
+    │                                    ▼                     ▼     │
+    │                         ┌─────────────────────┐  ┌──────────┐ │
+    │                         │ 403 Forbidden       │  │  ✅       │ │
+    │                         │ (identity confirmed │  │  Action  │ │
+    │                         │  but no permission) │  │  succeeds│ │
+    │                         └─────────────────────┘  └──────────┘ │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p>Notice the distinct HTTP status codes — <code>401</code> means "I don't know who you are," <code>403</code> means "I know exactly who you are, and the answer is still no." Mixing these up in an API's error handling is itself a common real-world bug that leaks information.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Status Code</th><th>Meaning</th><th>AuthN/AuthZ</th></tr></thead>
+            <tbody>
+              <tr><td><code>200 OK</code></td><td>Success</td><td>AuthZ passed</td></tr>
+              <tr><td><code>401 Unauthorized</code></td><td>Authentication failed or missing</td><td>AuthN failure</td></tr>
+              <tr><td><code>403 Forbidden</code></td><td>Authentication succeeded, but AuthZ failed</td><td>AuthZ failure</td></tr>
+              <tr><td><code>404 Not Found</code></td><td>Resource doesn't exist (sometimes used to hide existence from unauthorised users)</td><td>Often AuthZ failure masquerading as 404</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's5-factors',
+      title: '5.2 Authentication Factors',
+      priority: false,
+      icon: '🔑',
+      bodyHTML: `
+        <p>Authentication proves identity using one or more "factors":</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Factor type</th><th>Example</th><th>Weakness</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Something you know</strong></td><td>Password, PIN</td><td>Can be guessed, phished, leaked in a breach</td></tr>
+              <tr><td><strong>Something you have</strong></td><td>Phone (SMS code), hardware key (YubiKey), authenticator app</td><td>Can be lost or stolen; SMS specifically vulnerable to SIM-swapping</td></tr>
+              <tr><td><strong>Something you are</strong></td><td>Fingerprint, face ID</td><td>Can't be "changed" if compromised — no password reset for your face</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Multi-Factor Authentication (MFA)</strong> combines two or more of these categories. Crucially, <em>two passwords</em> is not MFA — that's still one factor type (something you know), just twice. Real MFA requires factors from <em>different</em> categories.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: MFA Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                       MFA Flow                                  │
+    │                                                                 │
+    │    User enters username + password                             │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    ┌─────────────────────────────────────────────┐             │
+    │    │  Factor 1: Something you know               │             │
+    │    │  (password)                                 │             │
+    │    └─────────────────────────────────────────────┘             │
+    │           │                     │                               │
+    │         Correct               Incorrect                        │
+    │           │                     │                               │
+    │           ▼                     ▼                               │
+    │    ┌───────────────────┐  ┌───────────────────┐               │
+    │    │  Factor 2:        │  │  ❌ Access denied │               │
+    │    │  Something you    │  └───────────────────┘               │
+    │    │  have (OTP code)  │                                       │
+    │    └───────────────────┘                                       │
+    │           │                     │                               │
+    │         Correct               Incorrect                        │
+    │           │                     │                               │
+    │           ▼                     ▼                               │
+    │    ┌───────────────────┐  ┌───────────────────┐               │
+    │    │  ✅ Authenticated │  │  ❌ Access denied │               │
+    │    └───────────────────┘  └───────────────────┘               │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's5-session-vs-token',
+      title: '5.3 Session-Based vs Token-Based Authentication',
+      priority: false,
+      icon: '🔄',
+      bodyHTML: `
+        <p>Once you're authenticated, the system needs to remember you across requests — HTTP itself is stateless, so "remembering" has to be built on top.</p>
+        <p><strong>Session-based (traditional):</strong> server creates a session record (stored server-side, often in memory or a database) and gives the browser a <strong>session ID</strong> in a cookie. Every request, the browser sends the cookie, and the server looks up the session record to know who you are.</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Pro:</strong> server can instantly revoke a session (just delete the record)</li>
+          <li><strong>Con:</strong> doesn't scale easily across multiple servers without a shared session store (like Redis)</li>
+        </ul>
+        <p><strong>Token-based (JWT — JSON Web Token):</strong> instead of a server-side record, the server issues a signed token containing the user's identity and claims directly inside it. The server doesn't need to "look anything up" — it just verifies the token's signature.</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Pro:</strong> stateless, scales trivially across many servers (no shared session store needed)</li>
+          <li><strong>Con:</strong> harder to revoke early — a JWT is valid until it expires, no matter what, unless you build extra infrastructure (a blocklist) specifically to handle revocation, which partially defeats the "stateless" benefit</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Session Cookies vs JWT</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                   Session-Based Authentication                 │
+    │                                                                 │
+    │    Browser                                 Server               │
+    │       │                                         │              │
+    │       │  Session ID cookie                       │              │
+    │       │────────────────────────────────────────►│              │
+    │       │                                         │              │
+    │       │                                     looks up           │
+    │       │                                         │              │
+    │       │                                         ▼              │
+    │       │                              ┌─────────────────────┐  │
+    │       │                              │  Session store      │  │
+    │       │                              │  (server-side)      │  │
+    │       │                              └─────────────────────┘  │
+    │       │                                         │              │
+    │       │                                   returns:             │
+    │       │                                   "user=alice"        │
+    │       │                                         │              │
+    │       │◄────────────────────────────────────────│              │
+    │                                                                 │
+    └─────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                   Token-Based (JWT) Authentication             │
+    │                                                                 │
+    │    Browser                                 Server               │
+    │       │                                         │              │
+    │       │  JWT (self-contained, signed)            │              │
+    │       │────────────────────────────────────────►│              │
+    │       │                                         │              │
+    │       │                               verifies signature       │
+    │       │                               no lookup needed         │
+    │       │                                         │              │
+    │       │◄────────────────────────────────────────│              │
+    │                                                                 │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: JWT Structure</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                       JWT Structure                            │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  HEADER (Base64Url)                                     │   │
+    │  │  {"alg":"HS256","typ":"JWT"}                            │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  PAYLOAD (Base64Url)                                    │   │
+    │  │  {"sub":"123","name":"Alice","role":"admin"}            │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  SIGNATURE (HMAC-SHA256)                                │   │
+    │  │  (verifies header + payload weren't altered)            │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ═══════════════════════════════════════════════════════════    │
+    │                                                                 │
+    │  🔑 JWT is SIGNED, NOT encrypted — anyone can read the        │
+    │     payload. Only tampering is prevented.                     │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's5-refresh-tokens',
+      title: '5.4 Refresh Tokens — The Complete Picture',
+      priority: false,
+      icon: '🔄',
+      bodyHTML: `
+        <p>JWTs have a natural tension: short expiry is secure (less window for abuse) but annoying for users; long expiry is convenient but risky. <strong>Refresh tokens</strong> solve this:</p>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Refresh Token Flow                          │
+    │                                                                 │
+    │    Client                               Auth Server             │
+    │       │                                         │              │
+    │       │  1. Login (username + password)         │              │
+    │       │────────────────────────────────────────►│              │
+    │       │                                         │              │
+    │       │  2. Access Token (short-lived) +        │              │
+    │       │     Refresh Token (long-lived)          │              │
+    │       │◄────────────────────────────────────────│              │
+    │       │                                         │              │
+    │       │  3. API Request with Access Token       │              │
+    │       │────────────────────────────────────────►│              │
+    │       │                                         │              │
+    │       │  4. Response (or 401 if expired)        │              │
+    │       │◄────────────────────────────────────────│              │
+    │       │                                         │              │
+    │       │  5. Exchange Refresh Token for new      │              │
+    │       │     Access Token                        │              │
+    │       │────────────────────────────────────────►│              │
+    │       │                                         │              │
+    │       │  6. New Access Token (and optionally    │              │
+    │       │     new Refresh Token)                  │              │
+    │       │◄────────────────────────────────────────│              │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Token type</th><th>Lifetime</th><th>Purpose</th><th>Storage</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Access Token</strong></td><td>Short (15-60 min)</td><td>Authorise API requests</td><td>Client (memory or httpOnly cookie)</td></tr>
+              <tr><td><strong>Refresh Token</strong></td><td>Long (days to months)</td><td>Get new Access Tokens without re-login</td><td>Secure, often stored server-side or in httpOnly cookie</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Best practice:</strong> Store Access Tokens in memory (not localStorage) and Refresh Tokens in httpOnly cookies to prevent XSS theft.</div>
+      `
+    },
+    {
+      id: 's5-authz-concepts',
+      title: '5.5 Authorization Concepts',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <p>Authorization decides what an authenticated identity can <em>do</em>.</p>
+        <p><strong>Role-Based Access Control (RBAC):</strong> users are assigned roles (<code>admin</code>, <code>editor</code>, <code>viewer</code>), and permissions attach to the role, not the individual user. Adding a new admin is just "assign the admin role" — no need to individually configure dozens of permissions per person. (Full access control models, including RBAC in depth, are covered in Section 6.)</p>
+        <p><strong>Common real-world confusion:</strong> many systems check <em>authentication</em> ("is this a logged-in user?") when they actually needed to check <em>authorization</em> ("is this logged-in user allowed to edit THIS specific resource?"). This exact gap is the root cause of a huge class of real vulnerabilities, covered concretely below.</p>
+      `
+    },
+    {
+      id: 's5-oauth-teaser',
+      title: '5.6 OAuth 2.0 and OpenID Connect — Teaser',
+      priority: false,
+      icon: '🔗',
+      bodyHTML: `
+        <p>You've probably used "Login with Google" or "Login with GitHub" — that's <strong>OAuth 2.0</strong> and <strong>OpenID Connect (OIDC)</strong> in action.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Protocol</th><th>Purpose</th><th>What it gives you</th></tr></thead>
+            <tbody>
+              <tr><td><strong>OAuth 2.0</strong></td><td>Authorization</td><td>Delegated access — "This app can read my Google Drive files"</td></tr>
+              <tr><td><strong>OpenID Connect</strong></td><td>Authentication</td><td>Identity verification — "This user is really alice@gmail.com"</td></tr>
+              <tr><td><strong>JWT</strong></td><td>Token format</td><td>A specific way to encode and sign claims</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box note"><strong>📌 Note:</strong> JWT is a token format, OAuth is a protocol. They're not the same thing — OAuth can use JWTs (and often does), but JWTs can be used independently of OAuth. We'll cover OAuth and OIDC in detail in later sections.</div>
+      `
+    },
+    {
+      id: 's5-pitfalls',
+      title: '5.7 Common Pitfalls',
+      priority: false,
+      icon: '⚠️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it happens</th><th>How to avoid</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Broken Object Level Authorization (BOLA/IDOR)</strong></td><td>Checking "is user logged in" but not "does this user own THIS specific resource"</td><td>Explicitly verify resource ownership on every request, not just login status</td></tr>
+              <tr><td><strong>Storing JWTs in localStorage</strong></td><td>Convenient for frontend developers</td><td>Vulnerable to XSS-based token theft; prefer httpOnly cookies where possible</td></tr>
+              <tr><td><strong>Never expiring sessions/tokens</strong></td><td>Convenience, avoiding "annoying" re-logins</td><td>Set reasonable expiry; use refresh tokens for longer-lived sessions</td></tr>
+              <tr><td><strong>Treating "authenticated" as "authorized for everything"</strong></td><td>Conflating the two concepts in code</td><td>Always check authorization separately and explicitly, per action/resource</td></tr>
+              <tr><td><strong>SMS-based MFA treated as equally strong as an authenticator app</strong></td><td>Assuming all MFA is equivalent</td><td>SIM-swapping defeats SMS MFA; prefer app-based or hardware-key MFA for sensitive accounts</td></tr>
+              <tr><td><strong>Putting secrets in JWT payloads</strong></td><td>Assuming JWT is encrypted</td><td>JWT is signed, NOT encrypted — anyone can read the payload</td></tr>
+              <tr><td><strong>Not validating JWT signature</strong></td><td>Assuming any token is valid</td><td>Always verify signature using the server's secret or public key</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: IDOR Attack Pattern</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    IDOR Attack Pattern                         │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  The Attack                                               │   │
+    │  │                                                          │   │
+    │  │  Attacker is logged in (authenticated)                   │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  GET /api/invoices/12345                                 │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server checks: Is user logged in? ✅                   │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server returns invoice 12345                            │   │
+    │  │  (never checked if owner = attacker)                    │   │
+    │  │                                                          │   │
+    │  │  ❌ Attacker sees someone else's data                    │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Proper Authorization                                    │   │
+    │  │                                                          │   │
+    │  │  Attacker requests: GET /api/invoices/12345             │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server checks: Is user logged in? ✅                   │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server checks: Does user OWN invoice 12345?            │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Owner mismatch → 403 Forbidden                         │   │
+    │  │                                                          │   │
+    │  │  ✅ Attacker blocked                                     │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Real-World Examples</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong>IDOR / BOLA vulnerabilities</strong> are so common they've topped the OWASP API Security Top 10 for years (full OWASP coverage in Sections 7–8). Classic pattern: an API endpoint like <code>GET /api/invoices/12345</code> checks that you're <em>logged in</em>, but never checks that invoice <code>12345</code> actually <em>belongs to you</em>. Simply changing the number in the URL — no hacking tools required, just editing a number — lets any logged-in user view or edit anyone else's data. This exact bug has been found in production at major companies repeatedly; it's less "exotic exploit" and more "someone forgot one <code>if</code> statement."</li>
+          <li><strong>Twitter's 2020 breach:</strong> attackers used social engineering to gain access to an internal admin tool. Once <em>authenticated</em> as an employee (via a phished credential), the tool's <em>authorization</em> model apparently didn't sufficiently limit which accounts that access could touch, allowing high-profile account takeovers used to tweet a crypto scam.</li>
+        </ul>
+      `
+    },
+    {
+      id: 's5-hands-on',
+      title: '5.8 Hands-On Practice (Codespace)',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. Decode a JWT's structure (JWTs are base64, NOT encrypted!)</h4>
+        <div class="code-block">
+          <pre>
+    # A JWT looks like: header.payload.signature
+
+    # Decode the header
+    echo '{"alg":"HS256","typ":"JWT"}' | base64
+
+    # Decode the payload
+    echo '{"sub":"1234567890","name":"Alice","role":"admin"}' | base64
+
+    # Notice: this is BASE64, not encryption — anyone can decode and READ a JWT's contents.
+    # Only the SIGNATURE prevents tampering; the payload itself is fully readable by anyone.</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. Generate a signature to see what "signing" a token means</h4>
+        <div class="code-block">
+          <pre>
+    # Sign a payload with HMAC-SHA256
+    echo -n '{"sub":"1234567890","role":"admin"}' | openssl dgst -sha256 -hmac "supersecretkey"
+    # This HMAC is conceptually what a JWT signature is — proof the payload wasn't altered,
+    # without encrypting the payload itself</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">3. Verify a signature (simulate server-side validation)</h4>
+        <div class="code-block">
+          <pre>
+    # Step 1: Original payload
+    PAYLOAD='{"sub":"1234567890","role":"admin"}'
+    SECRET="supersecretkey"
+
+    # Step 2: Compute signature
+    SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
+    echo "Original signature: $SIGNATURE"
+
+    # Step 3: Attacker tampers with payload
+    TAMPERED='{"sub":"1234567890","role":"superadmin"}'
+    NEW_SIG=$(echo -n "$TAMPERED" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
+    echo "Tampered signature: $NEW_SIG"
+
+    # The signatures don't match! The server would detect tampering immediately.</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">4. Notice the avalanche effect</h4>
+        <div class="code-block">
+          <pre>
+    # Change one character in the payload
+    PAYLOAD1='{"role":"admin"}'
+    PAYLOAD2='{"role":"Admin"}'  # Capital A
+
+    echo -n "$PAYLOAD1" | openssl dgst -sha256 -hmac "secret"
+    echo -n "$PAYLOAD2" | openssl dgst -sha256 -hmac "secret"
+    # The HMAC outputs are completely different — one character change = totally different signature</pre>
+        </div>
+        <div class="info-box warning"><strong>⚠️ Important realization from exercise 1:</strong> a JWT is <em>not</em> encrypted, just base64-encoded and signed. This is a very common misconception — never put secrets inside a JWT payload assuming they're hidden. They're plainly readable by anyone who intercepts the token; only tampering is prevented, not reading.</div>
+      `
+    },
+    {
+      id: 's5-devops-connection',
+      title: '5.9 DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>DevOps context</th><th>Where AuthN/AuthZ appears</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Kubernetes RBAC</strong></td><td>Every <code>kubectl</code> action is checked against Role/ClusterRole bindings — pure authorization, layered on top of authentication (via certs or tokens)</td></tr>
+              <tr><td><strong>CI/CD pipeline secrets</strong></td><td>Pipeline runners authenticate to cloud providers via service accounts/tokens, then are authorized only for specific scoped actions</td></tr>
+              <tr><td><strong>API Gateways</strong></td><td>Commonly centralize authentication (verify the JWT) while delegating fine-grained authorization to each backend service</td></tr>
+              <tr><td><strong>SSO (Single Sign-On) in enterprises</strong></td><td>One authentication event (e.g. via SAML/OIDC) grants access across many separate tools, each still enforcing its own authorization rules</td></tr>
+              <tr><td><strong>GitHub/GitLab repo permissions</strong></td><td>Classic RBAC in action — Owner/Maintainer/Developer/Reporter roles each authorized for different actions on the same authenticated account</td></tr>
+              <tr><td><strong>Service accounts in cloud</strong></td><td>AWS IAM roles, GCP service accounts — authentication via credentials, authorization via policies (covered in Section 6)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's5-key-takeaways',
+      title: 'Key Takeaways — Authentication vs Authorization',
+      priority: false,
+      icon: '🧠',
+      bodyHTML: `
+        <div class="mental-model-grid">
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🚪</span><span class="mental-title">AuthN ≠ AuthZ</span></div>
+            <div class="mental-card-body">Authentication answers <strong>"who are you"</strong>; authorization answers <strong>"what can you do"</strong>. They are separate checks, and conflating them is a serious class of bug.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📊</span><span class="mental-title">401 vs 403</span></div>
+            <div class="mental-card-body"><code>401</code> = authentication failed (identity unknown). <code>403</code> = authentication succeeded, authorization failed.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔑</span><span class="mental-title">MFA Requires Different Factors</span></div>
+            <div class="mental-card-body">Real MFA requires factors from <strong>different</strong> categories (know/have/are). Two passwords is not MFA.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔄</span><span class="mental-title">Session vs JWT</span></div>
+            <div class="mental-card-body">Session-based auth is stateful and revocable. JWT auth is stateless, scales better, but is harder to revoke.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔓</span><span class="mental-title">JWT is Signed, Not Encrypted</span></div>
+            <div class="mental-card-body">Anyone can read a JWT's payload (base64). <strong>Only tampering is prevented</strong> by the signature.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔄</span><span class="mental-title">Refresh Tokens</span></div>
+            <div class="mental-card-body">Access token (short-lived) + Refresh token (long-lived) = secure + convenient. Refresh tokens get new access tokens without re-login.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🎯</span><span class="mental-title">IDOR/BOLA</span></div>
+            <div class="mental-card-body">Checking login but not resource ownership is one of the most common authorization vulnerabilities. Always verify ownership.</div>
+          </div>
+          <div class="mental-card mental-card-full">
+            <div class="mental-card-header"><span class="mental-icon">🚨</span><span class="mental-title">Real-World Incidents</span></div>
+            <div class="mental-card-body">Twitter 2020 breach showed that authentication compromise plus weak authorization scope multiplies the blast radius of a single stolen credential. <strong>Authenticated ≠ Authorized.</strong></div>
+          </div>
+        </div>
+      `
+    }
+  ];
+
   // ============================================================
   // RENDER FUNCTIONS
   // ============================================================
@@ -1821,6 +2826,29 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
   renderAccordion('js-section2-container', SECTION_2_ACCORDIONS);
   renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
+  renderAccordion('js-section4-container', SECTION_4_ACCORDIONS);
+  renderAccordion('js-section5-container', SECTION_5_ACCORDIONS);
+  renderAccordion('js-section6-container', SECTION_6_ACCORDIONS);
+  renderAccordion('js-section7-container', SECTION_7_ACCORDIONS);
+  renderAccordion('js-section8-container', SECTION_8_ACCORDIONS);
+
+  // ============================================================
+  // RE-ATTACH COPY BUTTONS AFTER DYNAMIC RENDER
+  // ============================================================
+
+  // After all renderAccordion calls
+  setTimeout(() => {
+    if (typeof initCopyButtons === 'function') {
+      const added = initCopyButtons();
+      console.log(`✅ Copy buttons re-attached: ${added} added`);
+    } else {
+      console.warn('⚠️ initCopyButtons not available');
+    }
+  }, 150);
+
+  // Update badges after a small delay to let DOM settle
+  setTimeout(updateBadges, 100);
+
   // Sections 4-9 are currently placeholders — they will have content added later
   // ============================================================
   // FLOATING PROGRESS RING

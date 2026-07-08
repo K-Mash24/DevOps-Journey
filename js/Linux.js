@@ -2795,6 +2795,20 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAccordion('js-section10-container', SECTION_10_ACCORDIONS);
 
   // ============================================================
+  // RE-ATTACH COPY BUTTONS AFTER DYNAMIC RENDER
+  // ============================================================
+
+  // After all renderAccordion calls
+  setTimeout(() => {
+    if (typeof initCopyButtons === 'function') {
+      const added = initCopyButtons();
+      console.log(`✅ Copy buttons re-attached: ${added} added`);
+    } else {
+      console.warn('⚠️ initCopyButtons not available');
+    }
+  }, 150);
+
+  // ============================================================
   // QUIZ DATA – 3 SETS
   // ============================================================
   const QUIZ_SETS = {

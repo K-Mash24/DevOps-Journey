@@ -8,7 +8,7 @@ const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevO
 // SERVICE WORKER VERSION CHECK
 // ============================================================
 
-const APP_VERSION = '2026-07-07-v6'; // Match your CACHE_NAME
+const APP_VERSION = '2026-07-08-v1.3'; // Match your CACHE_NAME
 
 if (localStorage.getItem('sw-version') !== APP_VERSION) {
   console.log('🔄 New version detected — clearing old caches...');
@@ -52,6 +52,9 @@ function showComingSoonForPillar(element) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
+  initCopyButtons();
+  setupCopyButtonObserver();
 
   // --- Theme Toggle ---
   const html = document.documentElement;
@@ -1091,24 +1094,157 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     }, { rootMargin: '0px 0px -10% 0px' }).observe(resContainer);
   }
 
-  // --- Copy Buttons ---
+  // ============================================================
+  // INIT COPY BUTTONS — Robust version
+  // ============================================================
+
   function initCopyButtons() {
-    document.querySelectorAll('.code-block').forEach(block => {
+    console.log('📋 initCopyButtons called');
+    
+    const blocks = document.querySelectorAll('.code-block');
+    console.log(`📋 Found ${blocks.length} code blocks`);
+    
+    let added = 0;
+    blocks.forEach(block => {
+      // Skip if a copy button already exists
       if (block.querySelector('.copy-btn')) return;
+
+      // Create the copy button
       const btn = document.createElement('button');
       btn.className = 'copy-btn';
-      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1z"/><path d="M8 5h12a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>';
+      btn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1z"/>
+          <path d="M8 5h12a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V7a2 2 0 012-2z"/>
+        </svg>
+      `;
       btn.setAttribute('aria-label', 'Copy code');
-      btn.style.cssText = 'position:absolute; top:8px; right:8px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:4px 8px; cursor:pointer; opacity:0.7; transition:opacity 0.2s;';
+
+      // Style the button
+      Object.assign(btn.style, {
+        position: 'absolute',
+        top: '8px',
+        right: '8px',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-color)',
+        borderRadius: 'var(--radius-sm)',
+        padding: '4px 8px',
+        cursor: 'pointer',
+        opacity: '0.7',
+        transition: 'opacity 0.2s, background 0.2s, transform 0.2s'
+      });
+
+      // Ensure code-block has position:relative
       block.style.position = 'relative';
       block.appendChild(btn);
-      btn.addEventListener('click', async () => {
+      added++;
+
+      // Copy functionality with visual feedback
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
         const text = block.querySelector('pre')?.innerText || block.innerText;
-        await navigator.clipboard.writeText(text);
-        btn.innerHTML = '✓';
-        setTimeout(() => btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1z"/><path d="M8 5h12a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>', 1500);
+        try {
+          await navigator.clipboard.writeText(text);
+          // Success feedback
+          btn.innerHTML = '✓';
+          btn.style.opacity = '1';
+          btn.style.background = 'var(--accent-secondary)';
+          btn.style.color = 'white';
+          btn.style.transform = 'scale(1.1)';
+          setTimeout(() => {
+            btn.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1z"/>
+                <path d="M8 5h12a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V7a2 2 0 012-2z"/>
+              </svg>
+            `;
+            btn.style.opacity = '0.7';
+            btn.style.background = 'var(--bg-card)';
+            btn.style.color = '';
+            btn.style.transform = 'scale(1)';
+          }, 1500);
+        } catch (err) {
+          console.warn('Copy failed:', err);
+          btn.innerHTML = '✕';
+          btn.style.opacity = '1';
+          btn.style.background = 'var(--accent-danger)';
+          btn.style.color = 'white';
+          setTimeout(() => {
+            btn.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1z"/>
+                <path d="M8 5h12a2 2 0 012 2v14a2 2 0 01-2 2H8a2 2 0 01-2-2V7a2 2 0 012-2z"/>
+              </svg>
+            `;
+            btn.style.opacity = '0.7';
+            btn.style.background = 'var(--bg-card)';
+            btn.style.color = '';
+          }, 1500);
+        }
+      });
+
+      // Hover effects
+      btn.addEventListener('mouseenter', () => {
+        btn.style.opacity = '1';
+        btn.style.background = 'var(--accent-primary)';
+        btn.style.color = 'white';
+      });
+      btn.addEventListener('mouseleave', () => {
+        if (btn.innerHTML === '✓' || btn.innerHTML === '✕') return;
+        btn.style.opacity = '0.7';
+        btn.style.background = 'var(--bg-card)';
+        btn.style.color = '';
       });
     });
+
+    if (added > 0) console.log(`📋 Added ${added} copy buttons`);
+    return added;
+  }
+
+  // ============================================================
+  // MUTATION OBSERVER — Reliable detection of new code blocks
+  // ============================================================
+
+  function setupCopyButtonObserver() {
+    const observer = new MutationObserver((mutations) => {
+      let needsUpdate = false;
+      
+      mutations.forEach(mutation => {
+        // Check added nodes
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1) { // Element node
+            // Check if the node itself is a code block
+            if (node.classList && node.classList.contains('code-block')) {
+              needsUpdate = true;
+            }
+            // Check if it contains code blocks (using querySelectorAll on the node)
+            if (node.querySelectorAll) {
+              const childCodeBlocks = node.querySelectorAll('.code-block');
+              if (childCodeBlocks.length > 0) {
+                needsUpdate = true;
+              }
+            }
+          }
+        });
+      });
+      
+      if (needsUpdate) {
+        // Use requestAnimationFrame to ensure DOM is fully updated
+        requestAnimationFrame(() => {
+          // Small delay to let the browser paint
+          setTimeout(() => {
+            initCopyButtons();
+          }, 50);
+        });
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    
+    console.log('🔍 Copy button observer active');
   }
 
   // --- Fetch Last Updated ---
@@ -3097,7 +3233,6 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     initGlobalScrollSpy();
     initResourcePulse();
     initGlobalKeyboard();
-    initCopyButtons();
     fetchLastUpdated();
     addResetButton();
     restoreAccordionStates();
