@@ -2828,27 +2828,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
   renderAccordion('js-section4-container', SECTION_4_ACCORDIONS);
   renderAccordion('js-section5-container', SECTION_5_ACCORDIONS);
-  renderAccordion('js-section6-container', SECTION_6_ACCORDIONS);
-  renderAccordion('js-section7-container', SECTION_7_ACCORDIONS);
-  renderAccordion('js-section8-container', SECTION_8_ACCORDIONS);
-
-  // ============================================================
-  // RE-ATTACH COPY BUTTONS AFTER DYNAMIC RENDER
-  // ============================================================
-
-  // After all renderAccordion calls
-  setTimeout(() => {
-    if (typeof initCopyButtons === 'function') {
-      const added = initCopyButtons();
-      console.log(`✅ Copy buttons re-attached: ${added} added`);
-    } else {
-      console.warn('⚠️ initCopyButtons not available');
-    }
-  }, 150);
-
-  // Update badges after a small delay to let DOM settle
-  setTimeout(updateBadges, 100);
-
   // Sections 4-9 are currently placeholders — they will have content added later
   // ============================================================
   // FLOATING PROGRESS RING
