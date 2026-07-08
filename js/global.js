@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 'linux',
       icon: '→',
-      status: 'in-progress',
+      status: 'complete',
       name: 'Pillar 2 — Linux & CLI Proficiency',
       sub: '10 sections · File system, permissions, processes, SSH, package management, bash scripting, systemd, text processing, networking commands',
       link: 'html/linux.html',
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 'security',
       icon: '3',
-      status: 'locked',
+      status: 'in-progress',
       name: 'Pillar 3 — Security Concepts',
       sub: '9 sections · Cryptography fundamentals, Hashing & password security, TLS/SSL & the handshake, PKI & Certificate Authorities, Authentication vs Authorization, Network & system hardening',
       link: 'html/security.html'
@@ -827,7 +827,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.showPillarDetail = showPillarDetail; // Expose globally for fallback
 
   // ============================================================
-  // OVERRIDE CHIP CLICK HANDLERS IN PHASE 1 AND PHASE 2 SCROLLERS
+  // OVERRIDE CHIP CLICK HANDLERS IN PHASE 1 AND PHASE 2 SCROLLERS 
+  // REMEMBER TO ALTER AS YOU ADD ON NEW PAGES TO THE SITE
   // ============================================================
 
   // Original renderPhase1ModalScroller – modify the click handler
@@ -836,8 +837,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!track) return;
     const pillars = ['networking','linux','security','scripting','databases'];
     const names = ['Networking', 'Linux & CLI', 'Security', 'Scripting', 'Databases'];
-    const icons = ['🌐', '🐧', '🔒', '⚙️', '🗄️'];
-    const links = ['html/networking.html', 'html/linux.html', '#', '#', '#'];
+    const icons = ['🌐', '🐧', '👀', '⚙️', '🗄️'];
+    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', '#', '#'];
     track.innerHTML = pillars.map((p, idx) => {
       const progress = getPhase1PillarCompletion(p);
       const percent = Math.round(progress * 100);

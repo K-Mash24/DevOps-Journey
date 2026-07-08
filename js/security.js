@@ -2737,6 +2737,942 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  const SECTION_6_ACCORDIONS = [
+    {
+      id: 's6-principle',
+      title: '6.1 The Principle, With a Concrete Scenario',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <p>Say a junior developer needs to deploy code to a staging server. The lazy approach: give them full admin access to the entire production AWS account, because "it's easier than figuring out exactly what they need." Six months later, that developer's laptop gets phished. Because their account had full admin rights, the attacker now has full admin rights too — over production databases, billing, IAM, everything — not because the attacker was sophisticated, but because nobody scoped the original access down.</p>
+        <p><strong>Principle of Least Privilege (PoLP):</strong> every user, process, or system should have the <em>minimum</em> access necessary to do its job — nothing more. Not "access I might need someday." Not "access that's convenient." The minimum, full stop.</p>
+        <p>This sounds obvious stated plainly, but it's violated constantly in practice because scoping access down takes deliberate effort, while granting broad access is the path of least resistance in the moment. The 2017 Equifax breach and countless smaller incidents trace back to exactly this: a service or account had far more access than its actual job required, and that excess access is precisely what an attacker exploited once they got in anywhere.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Blast Radius With and Without Least Privilege</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │            Blast Radius With and Without Least Privilege        │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Overprivileged Account Compromised                     │   │
+    │  │                                                          │   │
+    │  │  Phished developer account ──► Attacker has FULL admin  │   │
+    │  │  (has FULL admin)                       │              │   │
+    │  │                                          ▼              │   │
+    │  │                          Access: prod DB, billing,     │   │
+    │  │                          IAM, all services             │   │
+    │  │                                                          │   │
+    │  │  ❌ Blast radius: ENTIRE ACCOUNT                        │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Least-Privilege Account Compromised                    │   │
+    │  │                                                          │   │
+    │  │  Phished developer account ──► Attacker can access:    │   │
+    │  │  (scoped to staging deploy only)        │              │   │
+    │  │                                          ▼              │   │
+    │  │                          Access: staging environment    │   │
+    │  │                          only                          │   │
+    │  │                                                          │   │
+    │  │  ✅ Blast radius: LIMITED TO STAGING                    │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  💡 Key insight: The account gets compromised either way.      │
+    │     Least privilege limits the blast radius, not the breach.   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <div class="info-box tip"><strong>💡 Key insight:</strong> Least privilege is about <strong>limiting blast radius</strong>, not about preventing breaches entirely. Assume breach somewhere; design so it can't go everywhere.</div>
+      `
+    },
+    {
+      id: 's6-models',
+      title: '6.2 Access Control Models',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <p>There are several standard models for actually implementing "who can do what." Each solves the same underlying problem differently.</p>
+        
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">RBAC — Role-Based Access Control</h4>
+        <p>Permissions are attached to <strong>roles</strong>, and users are assigned roles. You don't configure permissions per-person; you configure them per-role, then assign people to roles.</p>
+        <p><strong>Worked example:</strong> at a company, the roles might be <code>viewer</code>, <code>editor</code>, <code>admin</code>. <code>editor</code> can create and modify documents but not delete users. <code>admin</code> can do both. When Alice joins as a new editor, she's simply assigned the <code>editor</code> role — she instantly inherits exactly the right permission set, no manual configuration per person.</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Pro:</strong> scales cleanly as organizations grow — managing 10 roles is far simpler than managing custom permissions for 10,000 individual employees</li>
+          <li><strong>Con:</strong> can become rigid — "role explosion" happens when edge cases pile up and you end up creating dozens of hyper-specific roles to handle exceptions</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Role Explosion</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                      Role Explosion                             │
+    │                                                                 │
+    │                    ┌─────────────────────────┐                 │
+    │                    │      Editor             │                 │
+    │                    └─────────────────────────┘                 │
+    │                              │                                  │
+    │          ┌───────────────────┼───────────────────┐             │
+    │          ▼                   ▼                   ▼             │
+    │  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐     │
+    │  │ Editor-EMEA   │  │ Editor-APAC   │  │ Editor-Prod   │     │
+    │  └───────────────┘  └───────────────┘  └───────────────┘     │
+    │          │                   │                   │             │
+    │          ▼                   ▼                   ▼             │
+    │  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐     │
+    │  │ Editor-Prod-  │  │ Editor-Prod-  │  │ Editor-Prod-  │     │
+    │  │ EMEA          │  │ ReadOnly      │  │ ReadOnly-EMEA │     │
+    │  └───────────────┘  └───────────────┘  └───────────────┘     │
+    │                              │                                  │
+    │                              ▼                                  │
+    │                    ┌─────────────────────────┐                 │
+    │                    │  ❌ Too many roles!      │                 │
+    │                    └─────────────────────────┘                 │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">ABAC — Attribute-Based Access Control</h4>
+        <p>Permissions are decided dynamically based on <strong>attributes</strong> of the user, resource, and context — not a fixed role.</p>
+        <p><strong>Worked example:</strong> "Allow access to this document IF the user's department attribute matches the document's department tag, AND the request is coming from a corporate IP address, AND it's during business hours." None of that is a fixed "role" — it's a real-time policy evaluation across multiple attributes.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: ABAC Attributes</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                      ABAC Attributes                            │
+    │                                                                 │
+    │  ┌─────────────────────┐  ┌─────────────────────────────────┐  │
+    │  │  User Attributes    │  │  Resource Attributes            │  │
+    │  │                     │  │                                 │  │
+    │  │  Department: Finance│  │  Department: Finance            │  │
+    │  │  Clearance: Secret  │  │  Classification: Secret        │  │
+    │  │  Location: Office   │  │  Owner: Alice                  │  │
+    │  └─────────────────────┘  └─────────────────────────────────┘  │
+    │           │                           │                         │
+    │           └───────────┬───────────────┘                         │
+    │                       ▼                                         │
+    │  ┌─────────────────────┐  ┌─────────────────────────────────┐  │
+    │  │  Context Attributes │  │  Policy Engine                  │  │
+    │  │                     │  │                                 │  │
+    │  │  Time: Business hrs │  │  ┌─────────────────────────┐   │  │
+    │  │  IP: Corporate      │  │  │  All conditions match?  │   │  │
+    │  │  Device: Company    │  │  └─────────────────────────┘   │  │
+    │  │  laptop             │  │           │                     │  │
+    │  └─────────────────────┘  │           ▼                     │  │
+    │                           │  ✅ Access granted               │  │
+    │                           └─────────────────────────────────┘  │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Pro:</strong> far more granular and context-aware than RBAC</li>
+          <li><strong>Con:</strong> significantly more complex to design, audit, and reason about — harder to answer "who can access X" at a glance, since the answer depends on live context</li>
+        </ul>
+        
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">ACL — Access Control Lists</h4>
+        <p>Permissions attached directly to individual resources, listing exactly which users/groups can perform which actions on that specific resource.</p>
+        <p><strong>Worked example:</strong> a specific file on a Linux server has an ACL saying "user alice: read+write, group finance: read-only, everyone else: no access." This is per-resource, not per-role.</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Pro:</strong> very precise, fine-grained control over individual resources</li>
+          <li><strong>Con:</strong> doesn't scale — managing thousands of files each with their own custom ACL becomes unmanageable at scale, unlike RBAC's "assign a role once" model</li>
+        </ul>
+        
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Three Models Side by Side</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                Three Access Control Models Side by Side         │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  RBAC (Role-Based)                                       │   │
+    │  │                                                          │   │
+    │  │  User: Alice ───► Role: Editor ───► Permissions:       │   │
+    │  │                                    read, write, delete  │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  ABAC (Attribute-Based)                                  │   │
+    │  │                                                          │   │
+    │  │  User: Alice      ───┐                                  │   │
+    │  │  Dept: Finance         │                                 │   │
+    │  │  Resource: doc123   ───┼──► Policy Engine ──► Access   │   │
+    │  │  Dept: Finance         │    (real-time)    granted/    │   │
+    │  │  Context: 10am,     ───┘                   denied     │   │
+    │  │  Office IP                                             │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  ACL (Access Control List)                              │   │
+    │  │                                                          │   │
+    │  │  Resource: file.txt                                     │   │
+    │  │    ├── Alice: rw                                       │   │
+    │  │    ├── Finance: r                                      │   │
+    │  │    └── Others: none                                    │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's6-separation-duties',
+      title: '6.3 Separation of Duties',
+      priority: false,
+      icon: '🔀',
+      bodyHTML: `
+        <p>A related concept: <strong>Separation of Duties (SoD)</strong> ensures that no single person has enough access to perform a critical action alone. This prevents fraud, errors, and insider threats.</p>
+        <p><strong>Example:</strong> In financial systems, one person shouldn't be able to both request and approve a payment. In DevOps, the same person shouldn't be able to both write code and deploy it to production without a review.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th></th><th>Least Privilege</th><th>Separation of Duties</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Focus</strong></td><td>Limit access scope</td><td>Distribute critical access across multiple people</td></tr>
+              <tr><td><strong>Goal</strong></td><td>Reduce blast radius</td><td>Prevent unilateral action</td></tr>
+              <tr><td><strong>Example</strong></td><td>Developer only has staging access</td><td>Require two-person approval for production deployments</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's6-zero-trust',
+      title: '6.4 Zero Trust — A Related, Broader Philosophy',
+      priority: false,
+      icon: '🌐',
+      bodyHTML: `
+        <p>Least privilege is one piece of a broader philosophy called <strong>Zero Trust</strong>: "never trust, always verify." Traditional network security assumed anything <em>inside</em> the corporate firewall was trustworthy — the "castle and moat" model. Zero Trust rejects this assumption entirely: every request, from anywhere, internal or external, is authenticated and authorized <em>every time</em>, as if the network itself is hostile.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Zero Trust vs Castle and Moat</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                Castle and Moat vs Zero Trust                   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Castle and Moat                                         │   │
+    │  │                                                          │   │
+    │  │  User ──► ✅ Corporate Network ──► ✅ Trusted by default│   │
+    │  │                                          │              │   │
+    │  │                                          ▼              │   │
+    │  │                          ❌ Once inside, can move freely│   │
+    │  │                                                          │   │
+    │  │  Problem: Breach the moat → breach everything           │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Zero Trust                                              │   │
+    │  │                                                          │   │
+    │  │  User ──► 🌐 Any Network ──► 🔐 Authenticate every     │   │
+    │  │                              request                    │   │
+    │  │                              │                          │   │
+    │  │                              ▼                          │   │
+    │  │                         🔑 Authorize every request     │   │
+    │  │                              │                          │   │
+    │  │                              ▼                          │   │
+    │  │                         ✅ Only specific access        │   │
+    │  │                            granted                     │   │
+    │  │                                                          │   │
+    │  │  Benefit: Breach is contained; no free movement         │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p>This matters practically because internal networks get breached constantly — once an attacker is "inside" the moat in a castle-and-moat model, they often have free rein. Zero Trust assumes breach is inevitable somewhere, and designs so that a breach in one place doesn't cascade everywhere.</p>
+      `
+    },
+    {
+      id: 's6-service-accounts',
+      title: '6.5 Service Account Rotation',
+      priority: false,
+      icon: '🤖',
+      bodyHTML: `
+        <p>Service accounts (used by CI/CD pipelines, automated jobs, and system daemons) are a special case of least privilege — they're even more dangerous because they often have no human review process.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Best practice</th><th>Why it matters</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Short-lived credentials</strong></td><td>Reduce the window of opportunity if credentials are compromised</td></tr>
+              <tr><td><strong>Automated rotation</strong></td><td>Eliminates the human failure point of "I forgot to rotate"</td></tr>
+              <tr><td><strong>Scoped permissions</strong></td><td>Exactly the actions the pipeline needs, nothing more</td></tr>
+              <tr><td><strong>Audit trail</strong></td><td>Know when and how service accounts are used</td></tr>
+              <tr><td><strong>Human review</strong></td><td>Don't let service accounts run forever without review</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Cloud example:</strong> AWS recommends using IAM roles (not long-term access keys) for EC2 instances and services. The role credentials are automatically rotated by the service.</div>
+      `
+    },
+    {
+      id: 's6-privilege-escalation',
+      title: '6.6 Privilege Escalation — What Least Privilege Defends Against',
+      priority: false,
+      icon: '📈',
+      bodyHTML: `
+        <p><strong>Privilege escalation</strong> is an attack where an attacker gains access to a low-privilege account and then exploits a vulnerability to gain higher privileges (e.g., admin).</p>
+        <p>Least privilege defends against this in two ways:</p>
+        <ol style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Vertical privilege escalation:</strong> A low-privilege user can't become admin if there are no admin capabilities to exploit — the "admin" role shouldn't be accessible from a normal user's session</li>
+          <li><strong>Horizontal privilege escalation:</strong> A user in one department shouldn't be able to access another department's data even if they're both "regular users" — because resource ownership checks are part of authorization</li>
+        </ol>
+      `
+    },
+    {
+      id: 's6-pitfalls',
+      title: '6.7 Common Pitfalls',
+      priority: false,
+      icon: '⚠️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it happens</th><th>How to avoid</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Granting broad access "to be safe" / "just in case"</strong></td><td>Convenience, avoiding future access requests</td><td>Grant exactly what's needed now; expand only when a real, specific need arises</td></tr>
+              <tr><td><strong>Never auditing/rotating old permissions</strong></td><td>"Set and forget" mentality</td><td>Periodic access reviews — remove permissions from roles/people who no longer need them</td></tr>
+              <tr><td><strong>Shared admin accounts across a team</strong></td><td>Convenience, avoiding individual account setup</td><td>Individual accounts per person, even if they share the same role — enables accountability and easy revocation</td></tr>
+              <tr><td><strong>Over-scoped service accounts</strong></td><td>Easier than scoping exact permissions needed</td><td>Scope service accounts to the minimum actions that specific pipeline actually performs</td></tr>
+              <tr><td><strong>Role explosion in RBAC</strong></td><td>Handling every edge case with a new custom role</td><td>Consider ABAC for genuinely dynamic/contextual access needs instead of endless new roles</td></tr>
+              <tr><td><strong>Confusing "authenticated" with "should have broad access"</strong></td><td>Conflating AuthN and AuthZ (Section 5) again</td><td>Authorization must be scoped deliberately, regardless of how strong authentication was</td></tr>
+              <tr><td><strong>Long-lived service account keys</strong></td><td>Easier than implementing rotation</td><td>Use short-lived credentials (IAM roles, workload identity, OIDC) where possible</td></tr>
+              <tr><td><strong>Not separating duties</strong></td><td>One person does everything</td><td>Enforce approval workflows for critical actions (e.g., deployment approvals)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Real-World Examples</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong>Equifax (2017):</strong> attackers exploited an unpatched web application vulnerability, but the breach became catastrophic (147 million people's data) partly because the compromised system had far more access to sensitive internal databases than its actual function required — a textbook least-privilege failure compounding a separate vulnerability.</li>
+          <li><strong>Capital One (2019):</strong> a former AWS employee exploited a misconfigured web application firewall to assume an overly-permissive IAM role, which then had access to far more S3 storage than that specific application actually needed — the initial entry point was one flaw, but the <em>scale</em> of the breach (100+ million records) was a direct consequence of that role's excessive scope.</li>
+          <li><strong>Target (2013):</strong> attackers initially breached the network through a third-party HVAC (heating/cooling) vendor's credentials. Those vendor credentials should never have had a path into payment systems at all — a clear least-privilege and network segmentation failure, letting a small, unrelated vendor access balloon into a massive breach of 40 million credit cards.</li>
+        </ul>
+      `
+    },
+    {
+      id: 's6-hands-on',
+      title: '6.8 Hands-On Practice (Codespace)',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. Inspect Linux file permissions</h4>
+        <div class="code-block">
+          <pre>
+    touch secret-config.txt
+    ls -l secret-config.txt
+    # Notice the rwx permission bits for owner/group/others</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. Restrict a file to owner-only access</h4>
+        <div class="code-block">
+          <pre>
+    chmod 600 secret-config.txt
+    ls -l secret-config.txt
+    # Now only the file owner can read/write it — group and others have zero access</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">3. View and set Linux ACLs (finer-grained permissions)</h4>
+        <div class="code-block">
+          <pre>
+    # View current ACLs
+    getfacl secret-config.txt
+
+    # Add a specific user with read permission
+    setfacl -m u:alice:r secret-config.txt
+
+    # Verify the ACL was applied
+    getfacl secret-config.txt
+    # Now Alice has read access even if she's not the owner or in the group</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">4. Simulate role-based grouping using Linux groups</h4>
+        <div class="code-block">
+          <pre>
+    # Create a group
+    sudo groupadd deployers
+
+    # Add yourself to the group
+    sudo usermod -aG deployers $(whoami)
+
+    # Check your groups
+    groups
+    # In real systems, group membership is exactly the RBAC pattern —
+    # permissions attach to the group ("role"), users are added to it</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">5. Check what sudo privileges your current user actually has</h4>
+        <div class="code-block">
+          <pre>
+    sudo -l
+    # This shows exactly which commands your account is authorized to run as another user —
+    # a live, practical example of scoped authorization</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">6. Create a file with group-based permissions (RBAC simulation)</h4>
+        <div class="code-block">
+          <pre>
+    # Create a file
+    touch shared-file.txt
+
+    # Set group ownership to the deployers group
+    sudo chown :deployers shared-file.txt
+
+    # Set permissions: owner rw, group rw, others none
+    chmod 660 shared-file.txt
+
+    # Verify
+    ls -l shared-file.txt
+    # -rw-rw---- 1 user deployers 0 date shared-file.txt</pre>
+        </div>
+      `
+    },
+    {
+      id: 's6-devops-connection',
+      title: '6.9 DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>DevOps context</th><th>Where least privilege / access control models appear</th></tr></thead>
+            <tbody>
+              <tr><td><strong>AWS IAM policies</strong></td><td>The canonical example — scoping a role to exactly the S3 buckets/EC2 actions it needs, nothing more</td></tr>
+              <tr><td><strong>Kubernetes RBAC</strong></td><td>Roles and RoleBindings scope exactly which pods/namespaces a service account can touch</td></tr>
+              <tr><td><strong>Terraform Cloud/Enterprise workspace permissions</strong></td><td>Different teams get scoped access to apply changes only to their own infrastructure workspaces</td></tr>
+              <tr><td><strong>CI/CD pipeline service accounts</strong></td><td>A deploy pipeline should hold credentials scoped only to the deployment target, never broader account-wide access</td></tr>
+              <tr><td><strong>HashiCorp Vault policies</strong></td><td>ABAC-like dynamic secret access — policies grant access to specific secret paths based on identity and context</td></tr>
+              <tr><td><strong>Zero Trust network architectures (e.g. BeyondCorp)</strong></td><td>Google's internal model — no "trusted internal network," every request authenticated/authorized regardless of origin</td></tr>
+              <tr><td><strong>AWS IAM Roles for Service Accounts (IRSA)</strong></td><td>In Kubernetes, assign IAM roles to pods — each pod gets exactly the permissions it needs, not full account access</td></tr>
+              <tr><td><strong>GitHub branch protection rules</strong></td><td>Require approvals for merges, restrict who can push to main — a practical separation of duties</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's6-key-takeaways',
+      title: 'Key Takeaways — Least Privilege & Access Control Models',
+      priority: false,
+      icon: '🧠',
+      bodyHTML: `
+        <div class="mental-model-grid">
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🛡️</span><span class="mental-title">Least Privilege</span></div>
+            <div class="mental-card-body">The minimum access necessary — not "access that might be convenient someday." Limits <strong>blast radius</strong>, not breaches themselves.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📋</span><span class="mental-title">RBAC</span></div>
+            <div class="mental-card-body">Scales well via roles but risks <strong>role explosion</strong> for edge cases. Permissions attach to roles, users to roles.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔬</span><span class="mental-title">ABAC</span></div>
+            <div class="mental-card-body">More granular and context-aware but harder to audit. Permissions based on user + resource + context attributes.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📄</span><span class="mental-title">ACL</span></div>
+            <div class="mental-card-body">Precise per-resource but doesn't scale to large numbers of resources. Good for filesystems, not for enterprise-wide access.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔀</span><span class="mental-title">Separation of Duties</span></div>
+            <div class="mental-card-body">No single person can perform critical actions alone. Prevents fraud, errors, and insider threats.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🌐</span><span class="mental-title">Zero Trust</span></div>
+            <div class="mental-card-body">"Never trust, always verify." Every request, from anywhere, is authenticated and authorized every time.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🤖</span><span class="mental-title">Service Accounts</span></div>
+            <div class="mental-card-body">Special attention needed — use short-lived credentials, automated rotation, and scoped permissions.</div>
+          </div>
+          <div class="mental-card mental-card-full">
+            <div class="mental-card-header"><span class="mental-icon">🚨</span><span class="mental-title">Real Breaches, Real Lessons</span></div>
+            <div class="mental-card-body">Equifax, Capital One, Target: an initial entry point becomes catastrophic because <em>something</em> along the chain had far more access than it needed. <strong>Scope access tightly.</strong></div>
+          </div>
+        </div>
+      `
+    }
+  ];
+
+  const SECTION_7_ACCORDIONS = [
+    {
+      id: 's7-what-is-owasp',
+      title: '7.1 What OWASP Is, and Why This List Matters',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <p>OWASP (Open Web Application Security Project) is a nonprofit that maintains, among other things, the <strong>OWASP Top 10</strong> — a periodically updated ranking of the most critical web application security risks, based on real-world data contributed by security firms and bug bounty programs across the industry. It's not theoretical — it's a distillation of what actually keeps getting exploited in production, over and over, across thousands of real applications.</p>
+        <p>This section and Section 8 cover the current (2021) Top 10 in two halves. The goal isn't memorizing a list — it's understanding the <em>mechanism</em> behind each category well enough to recognize it in real code, not just recite the name.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">OWASP Top 10 (2021) — Overview</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Rank</th><th>Category</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>A01</strong></td><td>Broken Access Control</td><td>Authentication without proper authorization checks</td></tr>
+              <tr><td><strong>A02</strong></td><td>Cryptographic Failures</td><td>Weak crypto, missing TLS, hardcoded keys, bad hashing</td></tr>
+              <tr><td><strong>A03</strong></td><td>Injection</td><td>SQL, command, LDAP injection (covered in this section)</td></tr>
+              <tr><td><strong>A04</strong></td><td>Insecure Design</td><td>Architectural flaws that can't be patched easily</td></tr>
+              <tr><td><strong>A05</strong></td><td>Security Misconfiguration</td><td>Default credentials, open ports, exposed error messages</td></tr>
+              <tr><td><strong>A06</strong></td><td>Vulnerable and Outdated Components</td><td>Known CVEs in dependencies (Section 8)</td></tr>
+              <tr><td><strong>A07</strong></td><td>Identification and Authentication Failures</td><td>Weak session management, credential stuffing (Section 8)</td></tr>
+              <tr><td><strong>A08</strong></td><td>Software and Data Integrity Failures</td><td>Supply chain attacks, unsigned updates (Section 8)</td></tr>
+              <tr><td><strong>A09</strong></td><td>Security Logging and Monitoring Failures</td><td>Insufficient detection and response (Section 8)</td></tr>
+              <tr><td><strong>A10</strong></td><td>Server-Side Request Forgery</td><td>SSRF attacks (Section 8)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box note"><strong>📌 Note:</strong> A04–A10 are covered in Section 8.</div>
+      `
+    },
+    {
+      id: 's7-a01-broken-access-control',
+      title: '7.2 A01: Broken Access Control',
+      priority: false,
+      icon: '🚪',
+      bodyHTML: `
+        <p>This is currently the #1 risk on the list — and it's the exact IDOR/BOLA pattern already covered in Section 5.5, now framed at the OWASP category level. Broken access control means the system fails to properly enforce what an authenticated user is allowed to do or access.</p>
+        <p><strong>Concrete example beyond the invoice-ID case from Section 5:</strong> an e-commerce site's admin panel is reachable at <code>/admin/dashboard</code>. The developer assumed "nobody will guess this URL," so the page itself never checks whether the logged-in user actually has the admin role — it just renders if you're logged in <em>at all</em>. Any regular customer who happens to type that URL gets full admin access. This is called <strong>security through obscurity</strong> — hiding something rather than actually protecting it — and it's a well-known anti-pattern precisely because URLs, API endpoints, and file paths get discovered constantly, whether through crawling, leaked documentation, or simple guessing.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Access Control Bypass Pattern</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Access Control Bypass Pattern                │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  The Attack                                               │   │
+    │  │                                                          │   │
+    │  │  Attacker logs in as regular user                       │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Requests: /admin/dashboard                             │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server checks: Is user logged in? ✅                   │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server returns admin dashboard                         │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  ❌ Attacker has admin access without admin role        │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Proper Authorization                                     │   │
+    │  │                                                          │   │
+    │  │  Attacker logs in as regular user                       │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Requests: /admin/dashboard                             │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server checks: Is user logged in? ✅                   │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  Server checks: Does user have admin role? ❌           │   │
+    │  │           │                                              │   │
+    │  │           ▼                                              │   │
+    │  │  ✅ 403 Forbidden — no access                           │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's7-a02-cryptographic-failures',
+      title: '7.3 A02: Cryptographic Failures',
+      priority: false,
+      icon: '🔐',
+      bodyHTML: `
+        <p>This category covers cryptography done wrong — not "no cryptography," but cryptography implemented in a way that fails to actually protect data. It directly connects everything from Sections 1, 2, and 3.</p>
+        <p><strong>Concrete examples:</strong></p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>Transmitting sensitive data (passwords, card numbers) over plain HTTP instead of HTTPS — no TLS at all (Section 3)</li>
+          <li>Using a weak or outdated cipher (e.g. still supporting SSL 3.0, or using MD5 for anything security-related) — covered in Sections 2 and 3's pitfalls</li>
+          <li>Storing passwords with a fast, unsalted hash instead of bcrypt/Argon2id — the exact Section 2 pitfall</li>
+          <li>Hardcoding encryption keys directly in source code, where anyone with repo access (or a leaked repo) gets the key too</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Hardcoded Secrets Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Hardcoded Secrets Flow                       │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Development                                             │   │
+    │  │                                                          │   │
+    │  │  Developer hardcodes AWS key in source                  │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  Commits to GitHub                                      │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Attack                                                 │   │
+    │  │                                                          │   │
+    │  │  Repository leaked or made public                       │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  Attacker finds key in code                             │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  Attacker accesses AWS account                         │   │
+    │  │                                                          │   │
+    │  │  ❌ Breach                                               │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Fix                                                     │   │
+    │  │                                                          │   │
+    │  │  Store secrets in environment variables                 │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  Secrets Manager / Vault                                │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  ✅ Credentials never in source                         │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Cryptographic Failure Chain</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Cryptographic Failure Chain                  │
+    │                                                                 │
+    │    Sensitive data (passwords, cards, PII)                      │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    ┌─────────────────────────────────────────────┐             │
+    │    │  Properly encrypted/hashed?                  │             │
+    │    └─────────────────────────────────────────────┘             │
+    │           │                     │                               │
+    │          No                     Yes                            │
+    │           │                     │                               │
+    │           ▼                     ▼                               │
+    │    ┌───────────────────┐  ┌───────────────────┐               │
+    │    │ Cryptographic     │  │  ✅ Data protected│               │
+    │    │ Failure (A02)     │  └───────────────────┘               │
+    │    └───────────────────┘                                       │
+    │                                                                 │
+    │    Examples:                                                    │
+    │    • Plaintext storage                                         │
+    │    • Weak cipher (MD5, SSL 3.0)                               │
+    │    • Hardcoded key                                            │
+    │    • No TLS                                                    │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's7-a03-injection',
+      title: '7.4 A03: Injection',
+      priority: false,
+      icon: '💉',
+      bodyHTML: `
+        <p>This is one of the oldest, most well-understood vulnerability classes — and still shows up constantly in real code. Injection happens when untrusted user input is inserted directly into a command, query, or interpreter without being properly separated from the code itself.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">SQL Injection — the Classic Example</h4>
+        <p>Imagine a login form built naively like this (pseudocode, illustrating the vulnerability pattern, not real production code):</p>
+        <div class="code-block">
+          <pre>
+    query = "SELECT * FROM users WHERE username = '" + userInput + "' AND password = '" + passwordInput + "'"</pre>
+        </div>
+        <p>If a user types <code>admin' --</code> into the username field, the query becomes:</p>
+        <div class="code-block">
+          <pre>
+    SELECT * FROM users WHERE username = 'admin' --' AND password = '...'</pre>
+        </div>
+        <p>The <code>--</code> starts a SQL comment, so everything after it is ignored — including the password check entirely. The attacker logs in as <code>admin</code> without ever knowing the actual password. This isn't a hypothetical exploit; it's one of the very first things any security scanner or attacker tries against a login form.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: SQL Injection Anatomy</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    SQL Injection Anatomy                        │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Malicious Input                                         │   │
+    │  │                                                          │   │
+    │  │  Username: admin' --                                    │   │
+    │  │  Password: anything                                     │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Constructed Query                                       │   │
+    │  │                                                          │   │
+    │  │  Original: SELECT * FROM users WHERE username = '       │   │
+    │  │                                                          │   │
+    │  │  + Input: admin' --' AND password = 'anything'          │   │
+    │  │                                                          │   │
+    │  │  Result: SELECT * FROM users WHERE username = 'admin'   │   │
+    │  │          --' AND password = 'anything'                  │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Result                                                 │   │
+    │  │                                                          │   │
+    │  │  -- starts comment                                      │   │
+    │  │        │                                                │   │
+    │  │        ▼                                                │   │
+    │  │  Password check ignored                                 │   │
+    │  │        │                                                │   │
+    │  │        ▼                                                │   │
+    │  │  ✅ Attacker logged in as admin                         │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p><strong>The fix — parameterized queries (prepared statements):</strong> instead of building a query string by concatenating user input directly, the query and the data are sent to the database <em>separately</em>. The database engine treats user input strictly as <em>data</em>, never as executable query syntax, no matter what characters it contains.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Parameterized Query Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Parameterized Query Flow                     │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Step 1: Prepare Query                                   │   │
+    │  │                                                          │   │
+    │  │  Query template:                                         │   │
+    │  │  SELECT * FROM users WHERE username = ?                 │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  Database compiles query structure                       │   │
+    │  │  (without executing)                                    │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Step 2: Send Data Separately                           │   │
+    │  │                                                          │   │
+    │  │  User input: admin' --                                  │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  Database treats input as literal string                │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Step 3: Execute Safely                                 │   │
+    │  │                                                          │   │
+    │  │  Database searches for literal username 'admin' --'    │   │
+    │  │                    │                                     │   │
+    │  │                    ▼                                     │   │
+    │  │  ❌ No match — login fails safely                      │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Command Injection — Another Injection Variant</h4>
+        <p>Injection isn't limited to SQL. The same fundamental flaw shows up in <strong>command injection</strong>:</p>
+        <div class="code-block">
+          <pre>
+    # Vulnerable
+    command = f"ping -c 1 {user_input}"
+    os.system(command)  # user_input: "8.8.8.8; rm -rf /"
+    # Executes: ping -c 1 8.8.8.8; rm -rf /
+
+    # Safe
+    import subprocess
+    subprocess.run(["ping", "-c", "1", user_input])  # treats input as data only</pre>
+        </div>
+        <p>The underlying lesson is identical every time: <strong>never build executable syntax by concatenating untrusted input directly into it.</strong></p>
+      `
+    },
+    {
+      id: 's7-defence-depth',
+      title: '7.5 Defence in Depth — Multiple Layers, Not Just One',
+      priority: false,
+      icon: '🧅',
+      bodyHTML: `
+        <p>None of these controls alone is sufficient. Security works as a series of layers:</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Layer</th><th>Tool/Control</th><th>What it protects against</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Application code</strong></td><td>Parameterized queries, role checks</td><td>Injection, access control</td></tr>
+              <tr><td><strong>CI/CD</strong></td><td>SAST, secrets scanning</td><td>Catching issues before they reach production</td></tr>
+              <tr><td><strong>Infrastructure</strong></td><td>WAF, rate limiting</td><td>Blocking attacks at the network layer</td></tr>
+              <tr><td><strong>Monitoring</strong></td><td>Logging, alerting</td><td>Detecting attacks in progress</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning"><strong>⚠️ Important:</strong> WAFs can be bypassed. They're a helpful extra layer, not a replacement for writing secure code.</div>
+      `
+    },
+    {
+      id: 's7-pitfalls',
+      title: '7.6 Common Pitfalls (A01–A03)',
+      priority: false,
+      icon: '⚠️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it happens</th><th>How to avoid</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Relying on "hidden" URLs for admin access</strong></td><td>Assumes obscurity is sufficient protection</td><td>Explicitly check role/permission on every sensitive endpoint, every request</td></tr>
+              <tr><td><strong>Building SQL queries via string concatenation</strong></td><td>Feels simpler, especially in quick prototypes</td><td>Always use parameterized queries / prepared statements, no exceptions</td></tr>
+              <tr><td><strong>Trusting client-side validation alone</strong></td><td>Client-side checks feel "good enough" in testing</td><td>Client-side validation is UX only — the server must independently re-validate everything</td></tr>
+              <tr><td><strong>Hardcoding secrets/keys in source code</strong></td><td>Convenience during development</td><td>Use environment variables or a secrets manager; never commit secrets to git</td></tr>
+              <tr><td><strong>Assuming HTTPS alone means "secure"</strong></td><td>Conflates transport security with all security</td><td>HTTPS protects data in transit only — it says nothing about access control, injection, or storage</td></tr>
+              <tr><td><strong>WAF as a substitute for fixing code</strong></td><td>Misunderstanding WAF capabilities</td><td>WAFs can be bypassed; they're a defence-in-depth measure, not a complete solution</td></tr>
+              <tr><td><strong>Not validating input on the server</strong></td><td>Assumes client-side validation is sufficient</td><td>Server-side validation is mandatory; client-side is UX only</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Real-World Examples</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong>Uber (2016 breach):</strong> attackers found AWS credentials <strong>hardcoded in a private GitHub repository</strong> — a textbook A02 cryptographic/secrets failure. Those credentials granted access to cloud storage containing data on 57 million users and drivers. Uber reportedly paid the attackers to delete the data and stay quiet, which later triggered its own separate legal and regulatory fallout for concealment.</li>
+          <li><strong>Sony Pictures (2011 PSN breach, and separately the 2014 hack):</strong> among many issues, investigators found evidence of passwords stored in plaintext and poor access segmentation — overlapping A01 and A02 failures compounding each other.</li>
+          <li><strong>Countless SQL injection breaches over decades:</strong> SQLi has been used in some of the largest data breaches in history (including large-scale credit card theft rings in the 2000s–2010s) precisely because so many applications, even now, still build queries via string concatenation rather than parameterized queries.</li>
+        </ul>
+      `
+    },
+    {
+      id: 's7-hands-on',
+      title: '7.7 Hands-On Practice (Codespace)',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. Set up a minimal SQLite database to demonstrate injection</h4>
+        <div class="code-block">
+          <pre>
+    python3 -c "
+    import sqlite3
+    conn = sqlite3.connect(':memory:')
+    c = conn.cursor()
+    c.execute('CREATE TABLE users (username TEXT, password TEXT)')
+    c.execute(\"INSERT INTO users VALUES ('admin', 'supersecret')\")
+    conn.commit()
+
+    # VULNERABLE: string concatenation
+    user_input = \"admin' --\"
+    query = f\"SELECT * FROM users WHERE username = '{user_input}'\"
+    print('Vulnerable query:', query)
+    result = c.execute(query).fetchall()
+    print('Result (bypassed password check!):', result)
+    "</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. SAFE version — parameterized query</h4>
+        <div class="code-block">
+          <pre>
+    python3 -c "
+    import sqlite3
+    conn = sqlite3.connect(':memory:')
+    c = conn.cursor()
+    c.execute('CREATE TABLE users (username TEXT, password TEXT)')
+    c.execute(\"INSERT INTO users VALUES ('admin', 'supersecret')\")
+    conn.commit()
+
+    # SAFE: parameterized query — user input is treated strictly as data
+    user_input = \"admin' --\"
+    result = c.execute('SELECT * FROM users WHERE username = ?', (user_input,)).fetchall()
+    print('Safe query result (correctly finds nothing):', result)
+    "</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">3. Search your own past commits for accidentally hardcoded secrets</h4>
+        <div class="code-block">
+          <pre>
+    git log -p | grep -iE "api[_-]?key|secret|password" | head -20</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">4. Command injection demo (safe demonstration)</h4>
+        <div class="code-block">
+          <pre>
+    python3 -c "
+    import os, subprocess
+
+    # VULNERABLE: string concatenation
+    user_input = '8.8.8.8; echo \"INJECTED\"'
+    command = f'ping -c 1 {user_input}'
+    print('Vulnerable command:', command)
+    # os.system(command)  # Don't actually run this!
+
+    # SAFE: argument list
+    try:
+        subprocess.run(['ping', '-c', '1', user_input], capture_output=True, timeout=2)
+    except Exception as e:
+        print('Safe execution: treated as invalid hostname, not injected')
+    "</pre>
+        </div>
+        <p style="margin-top:0.5rem;">Running exercises 1 and 2 side by side makes the injection vulnerability concrete rather than abstract — the <em>exact same malicious input string</em> either bypasses authentication entirely, or correctly fails to match anything, purely based on how the query was constructed.</p>
+      `
+    },
+    {
+      id: 's7-devops-connection',
+      title: '7.8 DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>DevOps context</th><th>Where this OWASP category appears</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Static Application Security Testing (SAST) in CI/CD</strong></td><td>Tools like Semgrep, SonarQube scan code for injection patterns and access control issues before merge</td></tr>
+              <tr><td><strong>Secrets scanning (git-secrets, TruffleHog, GitHub secret scanning)</strong></td><td>Automatically catches hardcoded credentials in commits before they reach a shared repo — a direct defense against the Uber-style breach</td></tr>
+              <tr><td><strong>Dependency/vulnerability scanning (Snyk, Dependabot)</strong></td><td>Flags known cryptographic weaknesses or injection-prone library versions before deployment</td></tr>
+              <tr><td><strong>Infrastructure as Code security scanning (tfsec, Checkov)</strong></td><td>Catches Terraform/CloudFormation misconfigurations that create broken access control at the infrastructure level</td></tr>
+              <tr><td><strong>WAF (Web Application Firewall) rules</strong></td><td>Often specifically tuned to detect and block common SQL injection and access-control-bypass attack patterns in real time</td></tr>
+              <tr><td><strong>Secrets Managers (Vault, AWS Secrets Manager, Doppler)</strong></td><td>Prevent hardcoded secrets by providing a secure way to inject credentials at runtime</td></tr>
+              <tr><td><strong>Dynamic Application Security Testing (DAST)</strong></td><td>Runs simulated attacks against running applications to find injection vulnerabilities and access control issues</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's7-key-takeaways',
+      title: 'Key Takeaways — OWASP Top 10 Part 1',
+      priority: false,
+      icon: '🧠',
+      bodyHTML: `
+        <div class="mental-model-grid">
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📋</span><span class="mental-title">OWASP is Data-Driven</span></div>
+            <div class="mental-card-body">The OWASP Top 10 is drawn from <strong>real-world exploitation data</strong>, not theoretical risk — that's what makes it worth internalizing.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🚪</span><span class="mental-title">A01: Broken Access Control</span></div>
+            <div class="mental-card-body">The #1 risk — checking authentication but not authorization. Security through obscurity is not real protection.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔐</span><span class="mental-title">A02: Cryptographic Failures</span></div>
+            <div class="mental-card-body">Weak ciphers, missing TLS, bad hashing, hardcoded keys. Connects directly to Sections 1–3.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">💉</span><span class="mental-title">A03: Injection</span></div>
+            <div class="mental-card-body">Untrusted input concatenated into executable syntax. <strong>Parameterized queries</strong> are the fix, always.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🧅</span><span class="mental-title">Defence in Depth</span></div>
+            <div class="mental-card-body">Multiple layers: secure code + CI/CD scanning + infrastructure controls + monitoring. No single layer is sufficient.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🛡️</span><span class="mental-title">Server-Side Validation is Mandatory</span></div>
+            <div class="mental-card-body">Client-side validation is UX only — the server must independently validate everything, since the client can always be bypassed.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔑</span><span class="mental-title">Never Hardcode Secrets</span></div>
+            <div class="mental-card-body">Use environment variables or secrets managers. Hardcoded keys (like the Uber breach) are A02 failures.</div>
+          </div>
+          <div class="mental-card mental-card-full">
+            <div class="mental-card-header"><span class="mental-icon">🚨</span><span class="mental-title">Real Breaches, Real Lessons</span></div>
+            <div class="mental-card-body">Uber (hardcoded keys), Sony (plaintext passwords + access control), and countless SQLi breaches show these categories compounding. <strong>A single unchecked endpoint or one hardcoded key can cascade into a breach affecting tens of millions.</strong></div>
+          </div>
+        </div>
+      `
+    }
+  ];
+
   // ============================================================
   // RENDER FUNCTIONS
   // ============================================================
@@ -2828,6 +3764,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
   renderAccordion('js-section4-container', SECTION_4_ACCORDIONS);
   renderAccordion('js-section5-container', SECTION_5_ACCORDIONS);
+  renderAccordion('js-section6-container', SECTION_6_ACCORDIONS);
+  renderAccordion('js-section7-container', SECTION_7_ACCORDIONS);
+  
   // Sections 4-9 are currently placeholders — they will have content added later
   // ============================================================
   // FLOATING PROGRESS RING
