@@ -5722,3 +5722,48 @@ select.styled-select:hover,
     min-width: unset;
   }
 }
+
+.page-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.page-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--accent-primary);
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.page-icon:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Make the h1 sit next to the icon */
+.page-header .header-left h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-icon {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
