@@ -4,7 +4,7 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-07-06-v4)
 
-const CACHE_NAME = 'devops-journey-2026-07-09-v1.4';
+const CACHE_NAME = 'devops-journey-2026-07-09-v1.5';
 
 // ----- STATIC ASSETS TO CACHE ON INSTALL -----
 const urlsToCache = [
