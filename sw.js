@@ -186,3 +186,22 @@ self.addEventListener('fetch', event => {
       })
   );
 });
+
+// For JS & CSS, instead of just cache-first, add background update:
+if (url.pathname.includes('/js/') || url.pathname.includes('.css')) {
+  event.respondWith(
+    caches.match(request).then(cached => {
+      const fetchPromise = fetch(request).then(response => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+        }
+        return response;
+      }).catch(() => {});
+      
+      // Return cached version immediately, but update in background
+      return cached || fetchPromise;
+    })
+  );
+  return;
+}
