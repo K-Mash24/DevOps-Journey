@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'Section 9 — Automation Patterns'
       ],
       quizKey: 'scripting-quiz-passed',
-      sectionPrefix: 'scripting-section'
+      sectionPrefix: 'scripting-section-'
      },
     databases: { placeholder: true, name: 'Databases' }
   };
@@ -297,8 +297,8 @@ document.addEventListener('DOMContentLoaded', () => {
       icon: '4',
       status: 'in-progress',
       name: 'Pillar 4 — Scripting & Automation',
-      sub: 'Python fundamentals, Bash, REST APIs, JSON',
-      link: '#'
+      sub: '9 sections · Python fundamentals, Functions % Modules, Bash Scripting, REST APIs, Working with APIs, JSON Parsing, Data Manipulation, Automation Patterns',
+      link: 'html/scripting.html'
     },
     {
       id: 'databases',
@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
           id: 'scripting',
           icon: '⚙️',
           title: 'Pillar 4 – Scripting & Automation (locked)',
-          description: 'Python fundamentals, Bash scripting, file I/O, REST APIs, JSON parsing, automation patterns, error handling.',
+          description: '9 sections · Python fundamentals, Functions % Modules, Bash Scripting, REST APIs, Working with APIs, JSON Parsing, Data Manipulation, Automation Patterns',
           why: 'Automate everything. The difference between a good engineer and a great one is the ability to script repetitive tasks.'
         },
         {
@@ -834,6 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem(key, cb.checked ? 'true' : 'false');
           // Re-render the same pillar to update ring and counts
           showPillarDetail(pillarId, phase);
+          if (typeof updatePageHeader === 'function') updatePageHeader(pillarId);
         }
       });
     });
@@ -1296,6 +1297,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
          ...Array.from({length:7}, (_,i)=>`networking-section-${i+1}`), 'networking-quiz-passed',
          ...Array.from({length:10}, (_,i)=>`linux-section-${i+1}`), 'linux-quiz-passed',
           ...Array.from({length:10}, (_,i)=>`security-section-${i+1}`), 'security-quiz-passed',
+          ...Array.from({length:10}, (_,i)=>`scripting-section-${i+1}`), 'scripting-quiz-passed',
          'phase2-docker','phase2-cicd','phase2-kubernetes','phase2-terraform','phase2-monitoring'
         ].forEach(key => localStorage.removeItem(key));
         updateAllUI();
@@ -1352,7 +1354,13 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         }
         if (localStorage.getItem('security-quiz-passed') === 'true') secCount++;
         return secCount / 10; // 9 sections + quiz
-      case 'scripting': return 0;
+      case 'scripting':
+        let sCount = 0;
+        for (let i = 1; i <= 9; i++) {
+          if (localStorage.getItem(`scripting-section-${i}`) === 'true') sCount++;
+        }
+        if (localStorage.getItem('scripting-quiz-passed') === 'true') sCount++;
+        return sCount / 10; // 9 sections + quiz
       case 'databases': return 0;
       default: return 0;
     }
@@ -1657,10 +1665,10 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     const descs = ['OSI model, IP addressing, subnetting, routing, DNS, TCP/UDP, security, RJ45 cabling',
                    'File system, permissions, SSH, bash scripting, systemd, text processing, networking commands',
                    'Cryptography fundamentals, Hashing & password security, TLS/SSL & the handshake, PKI & Certificate Authorities, Authentication vs Authorization, Network & system hardening',
-                   'Python and Bash, file I/O, APIs, JSON',
+                   'Python fundamentals, Functions % Modules, Bash Scripting, REST APIs, Working with APIs, JSON Parsing, Data Manipulation, Automation Patterns',
                    'SQL, NoSQL, indexing, ACID, caching, CAP theorem'];
     const icons = ['net', 'linux', 'sec', 'script', 'db'];
-    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', '#', '#'];
+    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', 'html/scripting.html', '#'];
 
     // Update roadmap phases
     const roadmapContainer = document.getElementById('phase1Roadmap');
@@ -4061,7 +4069,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
       // Placeholders for future pillars
       scripting: {
         name: 'Scripting & Automation',
-        totalSections: 0,
+        totalSections: 9,
         sectionPrefix: 'scripting-section-',
         quizKey: 'scripting-quiz-passed',
       },
@@ -4177,6 +4185,8 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     
     if (path.includes('networking.html')) pillarId = 'networking';
     else if (path.includes('linux.html')) pillarId = 'linux';
+    else if (path.includes('security.html')) pillarId = 'security';
+    else if (path.includes('scripting.html')) pillarId = 'scripting';
     // Add more as needed
     
     if (pillarId) {

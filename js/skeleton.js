@@ -1,15 +1,22 @@
 // ============================================================
 // PILLAR 4: SCRIPTING & AUTOMATION – FLASHCARDS & QUIZ
-// (placeholder version – replace content later)
+// 📌 SKELETON / TEMPLATE – Replace placeholder content only!
+//    DO NOT change the logic unless you know what you're doing.
+//    See comments below for key integration points.
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
-  // ----- FLASHCARD DATA (placeholders) -----
+
+  // ------------------------------------------------------------------
+  // 1. FLASHCARD DATA – Replace these with your own terms/answers.
+  //    You can add/remove entries – the scroller will adapt.
+  // ------------------------------------------------------------------
   const FLASHCARDS = [
     { term: "Placeholder term 1", answer: "Placeholder answer 1" },
     { term: "Placeholder term 2", answer: "Placeholder answer 2" },
     { term: "Placeholder term 3", answer: "Placeholder answer 3" },
   ];
 
+  // ----- Flashcard rendering (do not modify) -----
   function renderFlashcards() {
     const track = document.getElementById("flashcardTrack");
     if (!track) return;
@@ -42,7 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
     initFlashcardScroller();
   }
 
-  // ----- SCRIPTING OVERVIEW (placeholder) -----
+  // ------------------------------------------------------------------
+  // 2. OVERVIEW DATA – Replace with your pillar's purpose,
+  //    objectives, key concepts, stats, and README links.
+  // ------------------------------------------------------------------
   const SCRIPTING_OVERVIEW = {
     purpose: {
       title: "📌 Purpose",
@@ -63,10 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
       { label: "Sections", value: "0/0" },
       { label: "Status", value: "⏳ Placeholder" },
     ],
-    readmeLink: "#",
-    readmeDetailLink: "#",
+    readmeLink: "#",           // Replace with actual GitHub README link
+    readmeDetailLink: "#",     // Replace with actual README.md link
   };
 
+  // ----- Overview rendering (do not modify) -----
   function renderScriptingOverview() {
     const container = document.getElementById("js-overview-container");
     if (!container) return;
@@ -119,10 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // ----- SECTION ACCORDIONS (placeholders) -----
-  // We'll create one placeholder accordion per section (9 sections)
-  // Each uses a generic title and placeholder body.
-
+  // ------------------------------------------------------------------
+  // 3. SECTION ACCORDIONS – There are 9 sections (matching the HTML).
+  //    Replace the title and bodyHTML for each section.
+  //    Use the buildPlaceholderAccordion function as a template.
+  //    ✅ Keep the 'id' and 'icon' fields if you want unique IDs/icons.
+  //    The 'priority' tag will show a "priority" badge on the first section.
+  // ------------------------------------------------------------------
   function buildPlaceholderAccordion(sectionNum) {
     return {
       id: `section-${sectionNum}`,
@@ -143,7 +157,11 @@ document.addEventListener("DOMContentLoaded", () => {
     SECTION_ACCORDIONS.push(buildPlaceholderAccordion(i));
   }
 
-  // ----- QUIZ SETS (placeholders) -----
+  // ------------------------------------------------------------------
+  // 4. QUIZ SETS – Three sets (Set 1, 2, 3). Each set is an array of
+  //    question objects. Replace the placeholder questions with your own.
+  //    Each question: { q, options: [], correct: index, explain: string }
+  // ------------------------------------------------------------------
   const QUIZ_SETS = {
     1: [
       {
@@ -190,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ============================================================
-  // RENDER FUNCTIONS (identical to networking.js logic)
+  // RENDER FUNCTIONS (do not modify – identical to networking.js)
   // ============================================================
 
   function renderAccordion(containerId, accordionData) {
@@ -373,6 +391,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (window.updateFloatingRing) window.updateFloatingRing();
 
+    // ⚠️ IMPORTANT: If you want the header ring to update after quiz submit,
+    //    uncomment the following lines:
+    // if (typeof updatePageHeader === 'function') {
+    //   updatePageHeader('scripting');
+    // }
+
     document.getElementById("quizFeedback").style.display = "none";
     document.getElementById("quizScore").classList.add("show");
     document.getElementById("scoreNum").textContent =
@@ -408,6 +432,12 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem(`scripting-quiz-set-${currentSet}-passed`);
     if (!isQuizMastered()) localStorage.removeItem("scripting-quiz-passed");
     if (window.updateFloatingRing) window.updateFloatingRing();
+
+    // ⚠️ IMPORTANT: If you want the header ring to update after quiz reset,
+    //    uncomment the following lines:
+    // if (typeof updatePageHeader === 'function') {
+    //   updatePageHeader('scripting');
+    // }
   };
 
   function isQuizMastered() {
@@ -512,6 +542,12 @@ document.addEventListener("DOMContentLoaded", () => {
           cb.checked,
         );
         updateFloatingRing();
+
+        // ⚠️ IMPORTANT: If you want the header ring to update when a section checkbox is toggled,
+        //    uncomment the following lines:
+        // if (typeof updatePageHeader === 'function') {
+        //   updatePageHeader('scripting');
+        // }
       });
     });
 
@@ -597,6 +633,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initFloatingProgressRing();
   initImageLightbox();
 
+  // ⚠️ IMPORTANT: If you want the header ring to update on page load (and after any progress changes),
+  //    uncomment the following line:
+  // if (typeof updatePageHeader === 'function') {
+  //   updatePageHeader('scripting');
+  // }
+
   console.log("✅ Scripting & Automation pillar loaded (placeholder mode)");
 });
 
@@ -616,3 +658,25 @@ function toggleAccordion(header) {
   openStates[id] = accordion.classList.contains("open");
   localStorage.setItem("gc-accordion-states", JSON.stringify(openStates));
 }
+
+// ============================================================
+// 📌 CRITICAL INTEGRATION NOTES:
+// 1. The `scripting` pillar must be correctly configured in global.js:
+//    - In phase1PillarData, set `sectionPrefix: 'scripting-section-'` (with trailing dash!)
+//    - Set `sections: 9` and `quiz: true`
+//    - In getPhase1PillarCompletion, add a case for 'scripting' that counts
+//      the 9 sections and the quiz (total 10 items).
+// 2. The header ring (top right) updates only if you call updatePageHeader('scripting').
+//    Uncomment the calls in the checkbox change, quiz submit, and quiz reset handlers,
+//    and also call it once after the initial render.
+// 3. The modal checkboxes use the same `sectionPrefix` (with dash) to store/read keys.
+//    If you change the prefix, update it everywhere to keep them in sync.
+// 4. The nav badges count the accordions in each section automatically using updateNavBadges.
+// 5. All local storage keys used:
+//    - `scripting-section-1` to `scripting-section-9` (section checkboxes)
+//    - `scripting-quiz-passed` (overall quiz mastery)
+//    - `scripting-quiz-set-1-passed`, `-2`, `-3` (per-set mastery)
+//    - `gc-score-scripting` (best quiz score)
+//    - `scripting-100-congrats-shown` (prevents repeat congrats toast)
+// 6. If you add/remove sections, update the loop ranges in this file and in global.js.
+// ============================================================
