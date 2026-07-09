@@ -2028,4 +2028,1396 @@ setTimeout(() => {
   console.log('✅ Quiz body:', document.getElementById('quizBody')?.children?.length || 0);
   console.log('✅ Section 1 container:', document.getElementById('js-section1-container')?.children?.length || 0);
 
+  const SECTION_PBX_ACCORDIONS = [
+    // ============================================================
+    // TOPIC 1: FUNDAMENTALS & CONCEPTS
+    // ============================================================
+    {
+      id: 'pbx-what-is',
+      title: 'What is a PBX?',
+      priority: true,
+      icon: '📞',
+      bodyHTML: `
+        <p>A <strong>Private Branch Exchange (PBX)</strong> is a private telephone network used within an organization. It acts as a central switching system that:</p>
+        <ul style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li>Connects all internal extensions (employees' phones) to each other</li>
+          <li>Shares a limited number of external phone lines (trunks) for outside calls</li>
+          <li>Provides features like call routing, voicemail, auto-attendants, call forwarding, and conferencing</li>
+        </ul>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Aspect</th><th>Before PBX</th><th>With PBX</th></tr></thead>
+            <tbody>
+              <tr><td>Phone lines</td><td>Every phone needs its own outside line</td><td>Many phones share a few external lines</td></tr>
+              <tr><td>Cost</td><td>Expensive (per-line charges)</td><td>Cost-effective (shared trunks)</td></tr>
+              <tr><td>Internal calls</td><td>Go through the public network</td><td>Stay internal — free</td></tr>
+              <tr><td>Features</td><td>Limited to basic calling</td><td>Rich (voicemail, conferencing, IVR, call recording)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box note"><strong>📌 Modern context:</strong> Today's PBX systems are increasingly <strong>IP‑based</strong> (VoIP), running on the same network infrastructure as your data. This makes PBX part of the networking stack.</div>
+      `
+    },
+    {
+      id: 'pbx-history-evolution',
+      title: 'History & Evolution of PBX',
+      priority: false,
+      icon: '📜',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Era</th><th>Technology</th><th>Characteristics</th></tr></thead>
+            <tbody>
+              <tr><td><strong>1970s–1990s</strong></td><td>TDM PBX (Circuit‑Switched)</td><td>Dedicated hardware, analogue/digital lines, ISDN PRI, limited features, expensive</td></tr>
+              <tr><td><strong>2000s–2010s</strong></td><td>IP‑PBX (On‑Premises)</td><td>Runs on standard servers, uses SIP trunks, more flexible, lower cost</td></tr>
+              <tr><td><strong>2015–Present</strong></td><td>Cloud PBX (Hosted/UCaaS)</td><td>No hardware on-site, subscription model, auto‑scaling, rich features</td></tr>
+              <tr><td><strong>2020+</strong></td><td>Hybrid PBX</td><td>Combination of on‑premises and cloud — best of both worlds</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Key milestone:</strong> The transition from circuit‑switched (dedicated path for each call) to packet‑switched (voice as data packets over IP networks) fundamentally changed PBX architecture.</div>
+      `
+    },
+    {
+      id: 'pbx-terminology',
+      title: 'PBX Terminology — Key Terms',
+      priority: false,
+      icon: '📖',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Extension</strong></td><td>Internal phone number (e.g., 101, 102, 103)</td></tr>
+              <tr><td><strong>Trunk</strong></td><td>Connection to the outside world (PSTN or SIP)</td></tr>
+              <tr><td><strong>CO Line</strong></td><td>Central Office line — direct connection to telephone exchange</td></tr>
+              <tr><td><strong>DID / DDI</strong></td><td>Direct Inward Dialling — external number that routes directly to an extension</td></tr>
+              <tr><td><strong>Hunt Group</strong></td><td>Group of extensions that ring in sequence or simultaneously</td></tr>
+              <tr><td><strong>Auto‑Attendant</strong></td><td>Automated greeting that routes calls (Press 1 for Sales...)</td></tr>
+              <tr><td><strong>IVR</strong></td><td>Interactive Voice Response — more advanced auto‑attendant with database integration</td></tr>
+              <tr><td><strong>PSTN</strong></td><td>Public Switched Telephone Network — the traditional phone network</td></tr>
+              <tr><td><strong>VoIP</strong></td><td>Voice over IP — voice transmitted over IP networks</td></tr>
+              <tr><td><strong>SIP</strong></td><td>Session Initiation Protocol — signalling protocol for VoIP calls</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'pbx-call-flow',
+      title: 'How a Call Works (Flow)',
+      priority: false,
+      icon: '🔄',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Internal call (Extension to Extension)</h4>
+        <div class="code-block"><pre>1. User picks up phone, dials extension (e.g., 102)
+  2. PBX checks: extension 102 exists and is registered
+  3. PBX sends SIP INVITE to extension 102
+  4. Phone 102 rings, user answers (200 OK)
+  5. RTP audio flows between phones (or via PBX)
+  6. Either party hangs up (BYE)</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">External call (Outbound)</h4>
+        <div class="code-block"><pre>1. User picks up phone, dials outside number
+  2. PBX checks outbound routing rules
+  3. PBX selects an available trunk (SIP or ISDN)
+  4. PBX sends call to trunk provider
+  5. Provider routes call to PSTN/destination
+  6. RTP audio flows between phone and provider
+  7. Call ends (BYE)</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">External call (Inbound)</h4>
+        <div class="code-block"><pre>1. Incoming call arrives on a trunk/DID
+  2. PBX matches inbound route (DDI mapping)
+  3. PBX routes to extension, auto‑attendant, or queue
+  4. Answer and establish audio path</pre></div>
+      `
+    },
+    {
+      id: 'pbx-pstn-vs-voip',
+      title: 'PSTN vs VoIP',
+      priority: false,
+      icon: '📡',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Aspect</th><th>PSTN</th><th>VoIP</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Technology</strong></td><td>Circuit‑switched</td><td>Packet‑switched</td></tr>
+              <tr><td><strong>Medium</strong></td><td>Copper lines, fibre</td><td>IP network</td></tr>
+              <tr><td><strong>Billing</strong></td><td>Per‑minute, distance‑based</td><td>Usually flat rate</td></tr>
+              <tr><td><strong>Features</strong></td><td>Basic (caller ID, voicemail)</td><td>Rich (video, conferencing, integration)</td></tr>
+              <tr><td><strong>Quality</strong></td><td>Consistent, toll‑grade</td><td>Variable (depends on network)</td></tr>
+              <tr><td><strong>Cost</strong></td><td>High</td><td>Low</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'pbx-codecs',
+      title: 'Codecs Explained',
+      priority: false,
+      icon: '🎵',
+      bodyHTML: `
+        <p>Codecs compress audio for transmission over IP networks.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Codec</th><th>Bandwidth (per call)</th><th>Quality</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td><strong>G.711</strong></td><td>~87 kbps</td><td>Toll‑grade (excellent)</td><td>Default, high‑bandwidth</td></tr>
+              <tr><td><strong>G.722</strong></td><td>~64 kbps</td><td>Wideband (HD)</td><td>HD voice, good bandwidth</td></tr>
+              <tr><td><strong>G.729</strong></td><td>~31 kbps</td><td>Good (compressed)</td><td>Low‑bandwidth, international</td></tr>
+              <tr><td><strong>Opus</strong></td><td>32–64 kbps</td><td>Excellent (adaptive)</td><td>Modern, adaptive</td></tr>
+              <tr><td><strong>AMR‑WB</strong></td><td>12–23 kbps</td><td>Good</td><td>Mobile networks</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Rule of thumb:</strong> Estimate <strong>100 kbps per concurrent call</strong> for G.711, <strong>40 kbps</strong> for G.729 (including overhead).</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 2: PBX ARCHITECTURE & COMPONENTS
+    // ============================================================
+    {
+      id: 'pbx-core-components',
+      title: 'PBX Core Components',
+      priority: false,
+      icon: '🏗️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Component</th><th>Function</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Call Processor</strong></td><td>The "brain" — handles call setup, routing, and tear‑down</td></tr>
+              <tr><td><strong>Switching Matrix</strong></td><td>Connects calls between extensions and trunks</td></tr>
+              <tr><td><strong>Interface Cards</strong></td><td>Connect to outside lines (ISDN, analogue, PRI)</td></tr>
+              <tr><td><strong>Telephony Database</strong></td><td>Stores users, extensions, routing rules, voicemail</td></tr>
+              <tr><td><strong>Media Server</strong></td><td>Handles audio processing (music on hold, conferencing, IVR)</td></tr>
+              <tr><td><strong>Management Interface</strong></td><td>Admin web GUI or CLI for configuration</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'pbx-ip-architecture',
+      title: 'IP‑PBX Architecture',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <div class="code-block"><pre>                     ┌─────────────────────────────────────────────────┐
+                      │                IP‑PBX Server                    │
+                      ├─────────────────────────────────────────────────┤
+                      │  SIP Proxy/Registrar                           │
+                      │  ├── Authentication                           │
+                      │  ├── Registration handling                    │
+                      │  └── Call routing                             │
+                      ├─────────────────────────────────────────────────┤
+                      │  Media Server                                  │
+                      │  ├── RTP relaying                             │
+                      │  ├── Transcoding                             │
+                      │  ├── Music on hold                           │
+                      │  └── Conferencing                            │
+                      ├─────────────────────────────────────────────────┤
+                      │  Database                                      │
+                      │  ├── Users/Extensions                         │
+                      │  ├── Routing rules                           │
+                      │  ├── Voicemail                               │
+                      │  └── Call logs                               │
+                      ├─────────────────────────────────────────────────┤
+                      │  Web Admin Interface                          │
+                      │  ├── User management                         │
+                      │  ├── Feature configuration                   │
+                      │  └── Reporting                               │
+                      └─────────────────────────────────────────────────┘
+                                      │
+                      ┌──────────────┼──────────────┐
+                      │              │              │
+                  ┌───┴───┐      ┌───┴───┐      ┌───┴───┐
+                  │Phone A│      │Phone B│      │Trunk  │
+                  │(101)  │      │(102)  │      │(SIP)  │
+                  └───────┘      └───────┘      └───────┘</pre></div>
+        <div class="info-box note"><strong>📌 Key components:</strong> SIP Proxy handles registration and routing. Media Server processes audio. Database stores user data and call logs.</div>
+      `
+    },
+    {
+      id: 'pbx-cloud-architecture',
+      title: 'Cloud PBX Architecture',
+      priority: false,
+      icon: '☁️',
+      bodyHTML: `
+        <p>Cloud PBX is multi‑tenant, distributed, and elastic:</p>
+        <div class="code-block"><pre>                     ┌─────────────────────────────────────────────────┐
+                      │            CLOUD PBX PROVIDER                   │
+                      │              (e.g., RingCentral, 3CX)           │
+                      │                                                 │
+                      │  ┌─────────────────────────────────────────┐   │
+                      │  │   Regional SBC / POP                   │   │
+                      │  │   (Edge for SIP signalling)           │   │
+                      │  └─────────────────────────────────────────┘   │
+                      │                    │                           │
+                      │  ┌─────────────────────────────────────────┐   │
+                      │  │   Core Processing                     │   │
+                      │  │   ├── Multi‑tenant SIP Proxy          │   │
+                      │  │   ├── Media Processing                │   │
+                      │  │   ├── Database (scalable)             │   │
+                      │  │   └── API Gateway                     │   │
+                      │  └─────────────────────────────────────────┘   │
+                      │                    │                           │
+                      │  ┌─────────────────────────────────────────┐   │
+                      │  │   PSTN Gateway                         │   │
+                      │  │   (Connects to public network)         │   │
+                      │  └─────────────────────────────────────────┘   │
+                      └─────────────────────────────────────────────────┘</pre></div>
+        <div class="info-box tip"><strong>💡 Key characteristics:</strong> Multi‑tenant (one platform serves many customers), Elastic (auto‑scales), Redundant (built‑in failover), API‑driven.</div>
+      `
+    },
+    {
+      id: 'pbx-hybrid-architecture',
+      title: 'Hybrid PBX Architecture',
+      priority: false,
+      icon: '🔀',
+      bodyHTML: `
+        <p>Hybrid PBX combines on‑premises and cloud PBX capabilities.</p>
+        <div class="code-block"><pre>                     ┌─────────────────────────────────────────────────┐
+                      │         HYBRID PBX ARCHITECTURE                │
+                      ├─────────────────────────────────────────────────┤
+                      │                                                 │
+                      │   ┌─────────────────────────────────┐          │
+                      │   │     On‑Premises PBX             │          │
+                      │   │   (Core calls stay internal)   │          │
+                      │   │   ├── Extensions (101, 102)   │          │
+                      │   │   └── Local gateway            │          │
+                      │   └─────────────┬───────────────────┘          │
+                      │                 │                              │
+                      │                 │ SIP Trunk                    │
+                      │                 │ (Backup/Failover)            │
+                      │                 ▼                              │
+                      │   ┌─────────────────────────────────┐          │
+                      │   │     Cloud PBX Provider          │          │
+                      │   │   (Failover/Remote users)      │          │
+                      │   │   ├── Disaster recovery        │          │
+                      │   │   └── Remote worker access    │          │
+                      │   └─────────────────────────────────┘          │
+                      │                                                 │
+                      └─────────────────────────────────────────────────┘</pre></div>
+        <div class="info-box tip"><strong>💡 Common hybrid scenarios:</strong> On‑premises PBX + SIP trunking (cost savings), On‑premises + cloud failover (disaster recovery), Cloud PBX + local PSTN gateway (emergency calls).</div>
+      `
+    },
+    {
+      id: 'pbx-sbc',
+      title: 'Session Border Controller (SBC)',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <p><strong>Purpose:</strong> The SBC sits at the edge of the VoIP network, acting as a gateway between your internal network and external providers.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Key functions</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li><strong>Security:</strong> Hides internal topology, prevents SIP attacks</li>
+          <li><strong>NAT traversal:</strong> Enables SIP to work across NAT boundaries</li>
+          <li><strong>Interoperability:</strong> Translates between different SIP implementations</li>
+          <li><strong>QoS:</strong> Prioritises voice traffic at the border</li>
+          <li><strong>Media processing:</strong> Transcoding, media forking</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Deployment models</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li><strong>Hardware SBC:</strong> Physical appliance (Cisco, AudioCodes, Oracle)</li>
+          <li><strong>Virtual SBC:</strong> Runs on VMware, Hyper‑V, KVM</li>
+          <li><strong>Cloud SBC:</strong> Offered by cloud providers (AWS, Azure, GCP)</li>
+        </ul>
+        <div class="info-box tip"><strong>💡 When you need an SBC:</strong> Connecting to a cloud PBX provider, multiple SIP trunk providers, complex network topology (multiple NAT layers), regulatory compliance requiring encryption.</div>
+      `
+    },
+    {
+      id: 'pbx-gateways',
+      title: 'VoIP Gateways',
+      priority: false,
+      icon: '🔌',
+      bodyHTML: `
+        <p>A VoIP gateway bridges IP networks and traditional telephony.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Gateway Type</th><th>Purpose</th><th>Connection</th></tr></thead>
+            <tbody>
+              <tr><td><strong>FXS Gateway</strong></td><td>Connects analogue phones to IP network</td><td>Phone → Gateway → LAN</td></tr>
+              <tr><td><strong>FXO Gateway</strong></td><td>Connects IP‑PBX to analogue phone lines</td><td>LAN → Gateway → PSTN</td></tr>
+              <tr><td><strong>ISDN PRI Gateway</strong></td><td>Connects IP‑PBX to ISDN PRI lines</td><td>LAN → Gateway → ISDN</td></tr>
+              <tr><td><strong>E1/T1 Gateway</strong></td><td>Connects to E1/T1 digital trunks</td><td>LAN → Gateway → E1/T1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Common use cases:</strong> Transitioning from traditional to IP‑PBX, Failover to analogue lines if internet goes down, Connecting legacy equipment (fax machines, analogue phones). <strong>Popular vendors:</strong> Grandstream, Cisco, Patton, Sangoma, AudioCodes.</div>
+      `
+    },
+    {
+      id: 'pbx-sip-trunks',
+      title: 'SIP Trunks',
+      priority: false,
+      icon: '🔗',
+      bodyHTML: `
+        <p>A <strong>SIP Trunk</strong> is a virtual connection to a VoIP provider that replaces traditional ISDN/analogue lines.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">How it works</h4>
+        <ol style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li>Your PBX registers with the SIP provider</li>
+          <li>Provider assigns a SIP URI (e.g., <code>12345@sip.provider.com</code>)</li>
+          <li>You receive a block of DID (Direct Inward Dialling) numbers</li>
+          <li>All inbound/outbound calls go over your internet connection</li>
+        </ol>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Benefits</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li><strong>Cost:</strong> Much cheaper than ISDN</li>
+          <li><strong>Scalability:</strong> Add capacity instantly (no physical lines)</li>
+          <li><strong>Geographic flexibility:</strong> Get DID numbers from any area code</li>
+          <li><strong>Features:</strong> Multiple channels, failover, E911</li>
+        </ul>
+      `
+    },
+    {
+      id: 'pbx-softphones',
+      title: 'Softphones',
+      priority: false,
+      icon: '📱',
+      bodyHTML: `
+        <p>A <strong>softphone</strong> is a software‑based telephone running on a computer, tablet, or smartphone.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Softphone</th><th>Platform</th><th>Features</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Linphone</strong></td><td>Windows, macOS, Linux, iOS, Android</td><td>Free, open‑source, SIP, video</td></tr>
+              <tr><td><strong>Zoiper</strong></td><td>Windows, macOS, Linux, iOS, Android</td><td>Free version, business version, SIP/IAX</td></tr>
+              <tr><td><strong>Bria</strong></td><td>Windows, macOS, iOS, Android</td><td>Paid, professional, enterprise features</td></tr>
+              <tr><td><strong>MicroSIP</strong></td><td>Windows</td><td>Lightweight, open‑source</td></tr>
+              <tr><td><strong>TeamSoftphone</strong></td><td>Web‑based</td><td>Built into 3CX, RingCentral, etc.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Use cases:</strong> Remote workers, Traveling employees, Call centre agents, Testing and development.</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 4: CLOUD PBX
+    // ============================================================
+    {
+      id: 'cloud-pbx-what-is',
+      title: 'What is Cloud PBX?',
+      priority: true,
+      icon: '☁️',
+      bodyHTML: `
+        <p>A <strong>Cloud PBX</strong> (also called Hosted PBX or UCaaS) is a phone system hosted and managed by a third‑party provider. No hardware is installed on‑site — phones connect to the cloud over the internet.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pros</th><th>Cons</th></tr></thead>
+            <tbody>
+              <tr><td>No capital expenditure (capex) — operational expense (opex)</td><td>Ongoing subscription costs</td></tr>
+              <tr><td>Instant provisioning (minutes, not weeks)</td><td>Dependent on internet connectivity</td></tr>
+              <tr><td>Automatic updates and security patches</td><td>Less control over configuration</td></tr>
+              <tr><td>Built‑in redundancy and disaster recovery</td><td>Compliance concerns (data sovereignty)</td></tr>
+              <tr><td>Rich feature set (IVR, call recording, CRM integration)</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'cloud-pbx-providers-global',
+      title: 'Cloud PBX Providers (Global)',
+      priority: false,
+      icon: '🌍',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Provider</th><th>Type</th><th>Key Features</th></tr></thead>
+            <tbody>
+              <tr><td><strong>RingCentral</strong></td><td>UCaaS</td><td>Voice, video, messaging, fax, integrations</td></tr>
+              <tr><td><strong>8x8</strong></td><td>UCaaS</td><td>Voice, video, contact centre, international focus</td></tr>
+              <tr><td><strong>Zoom Phone</strong></td><td>UCaaS</td><td>Zoom‑integrated PBX, cloud‑native</td></tr>
+              <tr><td><strong>Microsoft Teams Calling</strong></td><td>UCaaS</td><td>Teams integration, direct routing</td></tr>
+              <tr><td><strong>Cisco Webex Calling</strong></td><td>UCaaS</td><td>Webex integration, enterprise‑grade</td></tr>
+              <tr><td><strong>3CX Cloud</strong></td><td>Hosted PBX</td><td>Self‑hosted or cloud, open‑source base</td></tr>
+              <tr><td><strong>Twilio Voice</strong></td><td>API‑first</td><td>Programmable voice, build your own PBX</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 How to choose:</strong> RingCentral (all‑in‑one), Zoom Phone (if you use Zoom), Microsoft Teams (if you use Office 365), 3CX (flexibility), Twilio (custom build).</div>
+      `
+    },
+    {
+      id: 'cloud-pbx-providers-kenya',
+      title: 'Cloud PBX Providers (Kenya/Africa)',
+      priority: false,
+      icon: '🇰🇪',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Provider</th><th>Type</th><th>Presence in Kenya</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Safaricom Business</strong></td><td>SIP Trunks + UCaaS</td><td>Strong local presence, SIP trunking</td></tr>
+              <tr><td><strong>Telkom Kenya</strong></td><td>SIP Trunks</td><td>Traditional telecom, SIP offering</td></tr>
+              <tr><td><strong>Liquid Telecom</strong></td><td>SIP Trunks + Cloud PBX</td><td>Pan‑African, enterprise focus</td></tr>
+              <tr><td><strong>Airtel Kenya</strong></td><td>SIP Trunks</td><td>SIP trunking and VoIP</td></tr>
+              <tr><td><strong>3CX Cloud</strong></td><td>Hosted PBX</td><td>Available globally, self‑hosted option</td></tr>
+              <tr><td><strong>RingCentral</strong></td><td>UCaaS</td><td>Available globally (requires local DID)</td></tr>
+              <tr><td><strong>Zoom Phone</strong></td><td>UCaaS</td><td>Available globally</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box note"><strong>📌 Important:</strong> For Kenya, Safaricom is the dominant provider with the most extensive coverage. Telkom and Liquid are also strong options for enterprise.</div>
+      `
+    },
+    {
+      id: 'cloud-pbx-signup',
+      title: 'How to Sign Up for a Cloud PBX (Step‑by‑Step)',
+      priority: false,
+      icon: '📝',
+      bodyHTML: `
+        <p><strong>General process (applies to most providers):</strong></p>
+        <ol style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li><strong>Choose a provider</strong> — RingCentral, Zoom Phone, 3CX, Safaricom, etc.</li>
+          <li><strong>Visit the provider's website</strong> and find the "Sign Up" or "Get Started" page</li>
+          <li><strong>Create an account</strong> — provide business email, company name, phone number</li>
+          <li><strong>Choose a plan</strong> — based on number of users and features needed</li>
+          <li><strong>Set up billing</strong> — credit card, invoice, or bank transfer</li>
+          <li><strong>Add users</strong> — import or manually add employees</li>
+          <li><strong>Assign numbers</strong> — choose DID numbers (local, toll‑free, etc.)</li>
+          <li><strong>Provision phones</strong> — auto‑provision IP phones or use softphones</li>
+          <li><strong>Configure call routing</strong> — auto‑attendant, IVR, call queues</li>
+          <li><strong>Test</strong> — make internal and external calls to verify</li>
+          <li><strong>Go live</strong> — train users, cutover from old system</li>
+        </ol>
+        <div class="info-box tip"><strong>💡 Typical time:</strong> 30 minutes to 2 hours (provider‑dependent).</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 5: HYBRID PBX
+    // ============================================================
+    {
+      id: 'hybrid-pbx-what-is',
+      title: 'What is Hybrid PBX?',
+      priority: false,
+      icon: '🔀',
+      bodyHTML: `
+        <p>A <strong>Hybrid PBX</strong> combines on‑premises and cloud PBX capabilities. It gives you the best of both worlds:</p>
+        <ul style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li><strong>Control</strong> of on‑premises PBX</li>
+          <li><strong>Resilience</strong> of cloud PBX</li>
+          <li><strong>Flexibility</strong> to choose where each call is handled</li>
+        </ul>
+        <div class="info-box tip"><strong>💡 Key characteristics:</strong> On‑premises PBX handles internal calls, Cloud PBX handles external calls (or vice versa), Failover between on‑premises and cloud for disaster recovery, Gradual migration from on‑premises to cloud.</div>
+      `
+    },
+    {
+      id: 'hybrid-pbx-scenarios',
+      title: 'Hybrid PBX Deployment Scenarios',
+      priority: false,
+      icon: '🏗️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Scenario</th><th>Best Approach</th></tr></thead>
+            <tbody>
+              <tr><td>Office with unreliable internet</td><td>On‑premises PBX + local PSTN + cloud backup</td></tr>
+              <tr><td>Large enterprise with multiple offices</td><td>Central on‑premises PBX + SIP trunks + cloud failover</td></tr>
+              <tr><td>Startup wanting cloud but concerned about cost</td><td>Cloud PBX with local gateway for emergency calls</td></tr>
+              <tr><td>Organisation with regulatory compliance requirements</td><td>On‑premises PBX for sensitive calls, cloud for others</td></tr>
+              <tr><td>Phased migration from legacy PBX</td><td>On‑premises PBX with SIP trunk, move extensions to cloud gradually</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 7: PBX TROUBLESHOOTING
+    // ============================================================
+    {
+      id: 'pbx-common-issues',
+      title: 'Common PBX Issues',
+      priority: true,
+      icon: '🔧',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Issue</th><th>Symptom</th><th>Likely Cause</th></tr></thead>
+            <tbody>
+              <tr><td><strong>No dial tone</strong></td><td>Phone doesn't respond</td><td>Network connectivity, registration failure, power</td></tr>
+              <tr><td><strong>One‑way audio</strong></td><td>Can hear other party but they can't hear you</td><td>NAT, firewall, codec mismatch, RTP blocked</td></tr>
+              <tr><td><strong>Dropped calls</strong></td><td>Calls disconnect randomly</td><td>Network congestion, jitter, packet loss</td></tr>
+              <tr><td><strong>Registration failures</strong></td><td>Phone won't register</td><td>Credentials wrong, SIP port blocked, network issue</td></tr>
+              <tr><td><strong>No incoming calls</strong></td><td>Calls ring but don't connect</td><td>DDI mapping wrong, inbound routing misconfigured</td></tr>
+              <tr><td><strong>No outgoing calls</strong></td><td>Can't dial outside</td><td>Outbound routing misconfigured, trunk down</td></tr>
+              <tr><td><strong>Chopped audio</strong></td><td>Voice breaks up</td><td>Network congestion, jitter, packet loss</td></tr>
+              <tr><td><strong>Delay/latency</strong></td><td>Talking over each other</td><td>High latency (>300ms), network congestion</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'pbx-sip-errors',
+      title: 'SIP Troubleshooting — Error Codes',
+      priority: false,
+      icon: '🚫',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Meaning</th><th>What to Do</th></tr></thead>
+            <tbody>
+              <tr><td><strong>408 Request Timeout</strong></td><td>No response from remote</td><td>Check network connectivity, firewall</td></tr>
+              <tr><td><strong>503 Service Unavailable</strong></td><td>Provider issue</td><td>Wait, retry, check trunk status</td></tr>
+              <tr><td><strong>404 Not Found</strong></td><td>User/extension doesn't exist</td><td>Check number dialled, routing rules</td></tr>
+              <tr><td><strong>407 Proxy Authentication Required</strong></td><td>Authentication failed</td><td>Check username, password, realm</td></tr>
+              <tr><td><strong>486 Busy Here</strong></td><td>Remote is busy</td><td>Remote user is on another call</td></tr>
+              <tr><td><strong>483 Too Many Hops</strong></td><td>Routing loop</td><td>Check routing configurations</td></tr>
+              <tr><td><strong>401 Unauthorised</strong></td><td>Authentication failed</td><td>Check credentials</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block"><pre><span class="code-comment"># Check registration</span>
+  sip show registry              <span class="code-comment"># Asterisk</span>
+  systemctl status 3CX           <span class="code-comment"># 3CX</span>
+
+  <span class="code-comment"># Check SIP log</span>
+  tail -f /var/log/asterisk/full | grep SIP
+
+  <span class="code-comment"># Capture SIP traffic</span>
+  tcpdump -i eth0 -s 0 -w sip.pcap port 5060</pre></div>
+      `
+    },
+    {
+      id: 'pbx-rtp-troubleshooting',
+      title: 'RTP Troubleshooting (Audio Issues)',
+      priority: false,
+      icon: '🎤',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Cause</th><th>Explanation</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr><td><strong>NAT</strong></td><td>RTP ports not forwarded</td><td>Configure NAT traversal (STUN, TURN, SBC)</td></tr>
+              <tr><td><strong>Firewall</strong></td><td>RTP ports blocked</td><td>Open RTP port range (10000–20000)</td></tr>
+              <tr><td><strong>Codec mismatch</strong></td><td>Incompatible codecs</td><td>Configure common codec (G.711, G.722)</td></tr>
+              <tr><td><strong>Network congestion</strong></td><td>Packet loss, jitter</td><td>QoS, bandwidth upgrade</td></tr>
+              <tr><td><strong>RTP relay</strong></td><td>Media not flowing</td><td>Configure RTP relay, check media path</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block"><pre><span class="code-comment"># Check RTP ports are open</span>
+  ss -tulpn | grep 10000
+
+  <span class="code-comment"># Check RTP traffic</span>
+  tcpdump -i eth0 -s 0 -w rtp.pcap udp portrange 10000-20000</pre></div>
+      `
+    },
+    {
+      id: 'pbx-troubleshooting-tools',
+      title: 'Troubleshooting Tools',
+      priority: false,
+      icon: '🛠️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Tool</th><th>Purpose</th><th>Command</th></tr></thead>
+            <tbody>
+              <tr><td><strong>tcpdump</strong></td><td>Capture network traffic</td><td><code>tcpdump -i eth0 port 5060</code></td></tr>
+              <tr><td><strong>sngrep</strong></td><td>Visual SIP debug</td><td><code>sngrep</code></td></tr>
+              <tr><td><strong>ss</strong></td><td>Check listening ports</td><td><code>ss -tulpn</code></td></tr>
+              <tr><td><strong>ping</strong></td><td>Test connectivity</td><td><code>ping &lt;ip&gt;</code></td></tr>
+              <tr><td><strong>mtr</strong></td><td>Trace route with stats</td><td><code>mtr &lt;ip&gt;</code></td></tr>
+              <tr><td><strong>iperf</strong></td><td>Bandwidth test</td><td><code>iperf -c &lt;server&gt;</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 9: PBX INTEGRATIONS
+    // ============================================================
+    {
+      id: 'pbx-integrations-crm',
+      title: 'CRM Integration',
+      priority: false,
+      icon: '🔗',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>CRM</th><th>Integration Method</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Salesforce</strong></td><td>CTI API, Lightning Dialer</td><td>Enterprise, robust</td></tr>
+              <tr><td><strong>HubSpot</strong></td><td>Telephony API</td><td>Growing, easy to set up</td></tr>
+              <tr><td><strong>Zoho CRM</strong></td><td>SIP-based Integration</td><td>Good for small/medium</td></tr>
+              <tr><td><strong>Freshsales</strong></td><td>Telephony Integration</td><td>Freshworks ecosystem</td></tr>
+              <tr><td><strong>Pipedrive</strong></td><td>Click‑to‑dial</td><td>Good for sales teams</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Benefits:</strong> Click‑to‑dial from CRM, Call pop‑ups (view customer info before answering), Call logging (automatically log calls in CRM), Customer history, Screen pops.</div>
+      `
+    },
+    {
+      id: 'pbx-integrations-api',
+      title: 'API Integration',
+      priority: false,
+      icon: '⚡',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>API Type</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><strong>REST API</strong></td><td>User management, provisioning, call control, reporting</td></tr>
+              <tr><td><strong>Webhooks</strong></td><td>Real‑time events (call started, call ended, voicemail)</td></tr>
+              <tr><td><strong>SIP API</strong></td><td>Programmatic call control (originate, hangup, transfer)</td></tr>
+              <tr><td><strong>WebRTC API</strong></td><td>Browser‑based calling</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Common use cases:</strong> Automated provisioning (onboarding/offboarding users), Custom IVR (database‑driven menus), Call analytics (dashboards, reporting), Automated call routing (based on CRM data).</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 10: PBX SECURITY
+    // ============================================================
+    {
+      id: 'pbx-security-toll-fraud',
+      title: 'Toll Fraud Prevention',
+      priority: false,
+      icon: '💰',
+      bodyHTML: `
+        <p><strong>Toll fraud:</strong> Attackers gain access to your PBX and make expensive international calls.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Measure</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>International call blocking</strong></td><td>Block all international calls unless specifically needed</td></tr>
+              <tr><td><strong>Rate limiting</strong></td><td>Limit calls per minute/hour/day</td></tr>
+              <tr><td><strong>Anomaly detection</strong></td><td>Alerts on unusual call patterns</td></tr>
+              <tr><td><strong>Strong passwords</strong></td><td>Minimum 12 characters, special characters, unique</td></tr>
+              <tr><td><strong>IP whitelisting</strong></td><td>Only allow SIP from trusted IPs</td></tr>
+              <tr><td><strong>Monitor call logs</strong></td><td>Regularly review call logs for suspicious activity</td></tr>
+              <tr><td><strong>Fail2ban</strong></td><td>Block IPs after failed login attempts</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning"><strong>⚠️ Signs of toll fraud:</strong> High international call volume, Calls to premium numbers, Calls at unusual times, Multiple failed registrations.</div>
+      `
+    },
+    {
+      id: 'pbx-security-sip-attacks',
+      title: 'SIP Attacks & Mitigation',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Attack</th><th>Description</th><th>Mitigation</th></tr></thead>
+            <tbody>
+              <tr><td><strong>INVITE flood</strong></td><td>Thousands of INVITE requests</td><td>Rate limiting, fail2ban</td></tr>
+              <tr><td><strong>REGISTER flood</strong></td><td>Fake registration attempts</td><td>Rate limiting, strong passwords</td></tr>
+              <tr><td><strong>Scanner attacks</strong></td><td>Scanning for open SIP ports</td><td>Firewall, SBC</td></tr>
+              <tr><td><strong>Bye attack</strong></td><td>Sending BYE to end calls</td><td>Authentication, encryption</td></tr>
+              <tr><td><strong>RTP injection</strong></td><td>Injecting RTP packets</td><td>SRTP, authentication</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block"><pre><span class="code-comment"># Fail2ban configuration for Asterisk</span>
+  <span class="code-comment"># /etc/fail2ban/jail.local</span>
+  [asterisk]
+  enabled = true
+  port = 5060,5061
+  filter = asterisk
+  logpath = /var/log/asterisk/security
+  maxretry = 5
+  bantime = 3600</pre></div>
+      `
+    },
+    {
+      id: 'pbx-security-encryption',
+      title: 'Encryption for VoIP',
+      priority: false,
+      icon: '🔐',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Protocol</th><th>Encrypts</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><strong>TLS</strong> (SIPS)</td><td>SIP signalling</td><td>Prevent eavesdropping on call setup</td></tr>
+              <tr><td><strong>SRTP</strong></td><td>RTP audio</td><td>Encrypt voice packets</td></tr>
+              <tr><td><strong>HTTPS</strong></td><td>Web UI</td><td>Secure web interface</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block"><pre><span class="code-comment"># Enable TLS for SIP (Asterisk)</span>
+  transport=tls
+  tlscertfile=/etc/asterisk/keys/asterisk.pem
+  tlscafile=/etc/asterisk/keys/ca.crt</pre></div>
+        <div class="info-box tip"><strong>💡 Best practice:</strong> Always use TLS for SIP and SRTP for media when possible. Most modern PBX providers support both.</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 12: PRACTICAL GUIDES
+    // ============================================================
+    {
+      id: 'pbx-guide-small-office',
+      title: 'How to Set Up a Small Office PBX',
+      priority: true,
+      icon: '🏢',
+      bodyHTML: `
+        <p><strong>Scenario:</strong> 5–20 users, simple call routing, budget‑conscious</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Option A: Cloud PBX (Recommended)</h4>
+        <ol style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li><strong>Sign up with a provider:</strong> RingCentral, 3CX Cloud, Safaricom Business</li>
+          <li><strong>Add users:</strong> Each user gets an extension (101, 102, 103...)</li>
+          <li><strong>Set up call routing:</strong> Auto‑attendant, ring groups</li>
+          <li><strong>Provision phones:</strong> Buy SIP‑enabled IP phones (Yealink, Grandstream), use auto‑provisioning</li>
+          <li><strong>Test and go live</strong></li>
+        </ol>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Option B: On‑premises PBX (More technical)</h4>
+        <div class="code-block"><pre><span class="code-comment"># Install Issabel (Asterisk with GUI)</span>
+  wget -O install.sh https://raw.githubusercontent.com/issabel/install/master/install.sh
+  sudo bash install.sh</pre></div>
+      `
+    },
+    {
+      id: 'pbx-guide-add-user',
+      title: 'How to Add a New User',
+      priority: false,
+      icon: '👤',
+      bodyHTML: `
+        <ol style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li><strong>Create extension:</strong> Choose extension number (e.g., 104), set display name, set SIP password</li>
+          <li><strong>Configure voicemail:</strong> Enable voicemail, set mailbox number, enable voicemail‑to‑email</li>
+          <li><strong>Set permissions:</strong> Outbound restrictions, feature access</li>
+          <li><strong>Assign phone:</strong> If using IP phone — provision; if using softphone — provide credentials</li>
+          <li><strong>Test calls:</strong> Internal call, external call</li>
+        </ol>
+        <div class="info-box tip"><strong>💡 In 3CX:</strong> Admin Console → Users → Add → Fill in details → Assign phone → Save</div>
+        <div class="info-box tip"><strong>💡 In Issabel/FreePBX:</strong> PBX → Extensions → Add Extension → Fill in details → Save → Apply Configuration</div>
+      `
+    },
+    {
+      id: 'pbx-guide-ivr',
+      title: 'How to Set Up an Auto‑Attendant (IVR)',
+      priority: false,
+      icon: '🎙️',
+      bodyHTML: `
+        <ol style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li><strong>Record greeting:</strong> "Thank you for calling [Company]. Press 1 for Sales, 2 for Support, 3 for Accounts..."</li>
+          <li><strong>Create IVR in PBX:</strong> Asterisk: <code>extensions.conf</code>, 3CX: Management Console → IVR, Issabel: PBX → IVR</li>
+          <li><strong>Configure menu options:</strong> 1 → Sales (ring group), 2 → Support (ring group), * → Operator (extension 0)</li>
+          <li><strong>Set time‑based routing:</strong> Office hours → Route to operators, After hours → Play closed greeting and voicemail</li>
+          <li><strong>Test:</strong> Call main number, test each option</li>
+        </ol>
+        <div class="code-block"><pre><span class="code-comment"># Asterisk IVR example</span>
+  [inbound]
+  exten => s,1,Answer()
+  same => n,Wait(1)
+  same => n,Background(welcome-greeting)
+  same => n,WaitExten(5)
+
+  exten => 1,1,Dial(SIP/101)
+  exten => 2,1,Dial(SIP/102)
+  exten => 0,1,Dial(SIP/0)</pre></div>
+      `
+    },
+    {
+      id: 'pbx-guide-call-recording',
+      title: 'How to Set Up Call Recording',
+      priority: false,
+      icon: '🎥',
+      bodyHTML: `
+        <ol style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li><strong>Enable recording:</strong> Asterisk: <code>monitor.conf</code>, 3CX: Settings → Recording, Issabel: PBX → Recording</li>
+          <li><strong>Choose recording mode:</strong> On‑demand (*9 to record), Always (record all calls), Never</li>
+          <li><strong>Set storage location:</strong> Local storage or external storage (NAS, cloud)</li>
+          <li><strong>Configure retention:</strong> How long to keep recordings, auto‑delete older recordings</li>
+          <li><strong>Compliance:</strong> Inform callers they are being recorded, secure access to recordings</li>
+        </ol>
+        <div class="info-box warning"><strong>⚠️ Important:</strong> Check local regulations. In Kenya, you must inform participants that calls are being recorded.</div>
+      `
+    },
+    {
+      id: 'pbx-guide-troubleshoot-dropped-call',
+      title: 'How to Troubleshoot a Dropped Call',
+      priority: false,
+      icon: '🔍',
+      bodyHTML: `
+        <p><strong>Step‑by‑step diagnostic flow:</strong></p>
+        <ol style="padding-left:1.25rem;margin-bottom:0.75rem;">
+          <li><strong>Is it internal or external?</strong> Internal → Check PBX logs, External → Check SIP trunk/provider</li>
+          <li><strong>Check network:</strong> <code>ping &lt;provider-ip&gt; -c 10</code>, <code>mtr &lt;provider-ip&gt;</code> — check latency, jitter, packet loss</li>
+          <li><strong>Check logs:</strong> <code>tail -f /var/log/asterisk/full</code> — look for error messages (408, 503, BYE)</li>
+          <li><strong>Check SIP traffic:</strong> <code>sngrep</code> — look for BYE messages (who sent the BYE?)</li>
+          <li><strong>If BYE from provider:</strong> Contact provider, provide timestamps</li>
+          <li><strong>If BYE from PBX:</strong> Check configuration (timeouts, codecs), check logs for errors</li>
+        </ol>
+        <div class="code-block"><pre><span class="code-comment"># Follow Asterisk logs for debugging</span>
+  tail -f /var/log/asterisk/full | grep -v "verbose"</pre></div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 3: ON‑PREMISES PBX (Selected Subtopics)
+    // ============================================================
+    {
+      id: 'onprem-what-is',
+      title: 'What is On‑Premises PBX?',
+      priority: false,
+      icon: '🏠',
+      bodyHTML: `
+        <p>An on‑premises PBX is a phone system where the PBX hardware and software are physically located at your office or data centre. You own and manage the entire system.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pros</th><th>Cons</th></tr></thead>
+            <tbody>
+              <tr><td>Full control over configuration</td><td>High upfront cost (hardware, licensing)</td></tr>
+              <tr><td>No recurring subscription costs (after hardware purchase)</td><td>Requires technical expertise to maintain</td></tr>
+              <tr><td>Data stays on‑premises (compliance)</td><td>Responsible for backups, updates, security</td></tr>
+              <tr><td>No dependency on internet for internal calls</td><td>Limited scalability (requires hardware upgrades)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 When to choose:</strong> Large enterprise with dedicated IT staff, Regulatory/compliance requirements, Unreliable internet connectivity, Existing PBX investment.</div>
+      `
+    },
+    {
+      id: 'onprem-software',
+      title: 'Popular On‑Premises PBX Software',
+      priority: false,
+      icon: '💻',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Software</th><th>Description</th><th>License</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Asterisk</strong></td><td>Most popular open‑source PBX</td><td>GPLv2</td></tr>
+              <tr><td><strong>FreeSWITCH</strong></td><td>Modern alternative to Asterisk</td><td>MPL 1.1</td></tr>
+              <tr><td><strong>Issabel</strong></td><td>Asterisk‑based with GUI</td><td>GPL</td></tr>
+              <tr><td><strong>3CX Self‑Hosted</strong></td><td>Commercial, easy setup</td><td>Paid</td></tr>
+              <tr><td><strong>FreePBX</strong></td><td>Asterisk‑based web GUI</td><td>GPL</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box note"><strong>📌 Recommended for beginners:</strong> Issabel (GUI) or 3CX Self‑Hosted (easy setup wizard). <strong>For advanced users:</strong> Asterisk (most flexible).</div>
+      `
+    },
+    {
+      id: 'onprem-hardware',
+      title: 'Hardware Requirements',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Minimal hardware (10–20 users)</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Component</th><th>Specification</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>CPU</strong></td><td>2+ cores</td><td>Intel Xeon or i5</td></tr>
+              <tr><td><strong>RAM</strong></td><td>4–8 GB</td><td>More for call recording</td></tr>
+              <tr><td><strong>Storage</strong></td><td>50–100 GB SSD</td><td>For OS, logs, recordings</td></tr>
+              <tr><td><strong>Network</strong></td><td>1 Gbps</td><td>Static IP recommended</td></tr>
+              <tr><td><strong>Power</strong></td><td>UPS</td><td>Surge protection</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Phones</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li><strong>IP Phones:</strong> Yealink, Grandstream, Cisco, Polycom</li>
+          <li><strong>Analogue phones:</strong> Need FXS gateway</li>
+          <li><strong>Softphones:</strong> Linphone, Zoiper, Bria</li>
+        </ul>
+        <div class="info-box tip"><strong>💡 Popular brands in Kenya:</strong> Yealink (most popular, good value), Grandstream (affordable), Cisco (enterprise).</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 6: PBX DEPLOYMENT & SETUP (Selected Subtopics)
+    // ============================================================
+    {
+      id: 'pbx-deployment-planning',
+      title: 'Planning a PBX Deployment',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Phase 1: Discovery</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li><strong>Determine requirements:</strong> Number of users (current and future), Call volume (peak concurrent calls), Features needed (IVR, recording, conferencing), Budget (capex vs opex)</li>
+          <li><strong>Network assessment:</strong> Bandwidth available, Network quality (latency, jitter, packet loss), Firewall/NAT status</li>
+          <li><strong>Phone inventory:</strong> Existing phones (compatible?), New phone procurement</li>
+          <li><strong>Number porting:</strong> Numbers to port, Porting timeline</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Phase 2: Selection</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li>Model selection: On‑premises, Cloud, Hybrid</li>
+          <li>Vendor selection: Asterisk/Issabel/3CX/RingCentral</li>
+          <li>Hardware selection: Server, phones, gateways</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Phase 3: Implementation</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li>Installation: Hardware, OS, PBX software</li>
+          <li>Configuration: Extensions, trunks, routing</li>
+          <li>Testing: Internal, external, features</li>
+          <li>User training: How to use new system</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Phase 4: Cutover</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li>Migration: Port numbers, move users</li>
+          <li>Go‑live: Day 1 support</li>
+          <li>Review: Address issues</li>
+        </ul>
+      `
+    },
+    {
+      id: 'pbx-deployment-selection',
+      title: 'Selecting the Right PBX Model',
+      priority: false,
+      icon: '🎯',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Criteria</th><th>On‑Premises</th><th>Cloud</th><th>Hybrid</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Cost</strong></td><td>High capex, low opex</td><td>Low capex, high opex</td><td>Medium</td></tr>
+              <tr><td><strong>Control</strong></td><td>Full</td><td>Limited</td><td>Partial</td></tr>
+              <tr><td><strong>Maintenance</strong></td><td>Internal IT</td><td>Provider</td><td>Shared</td></tr>
+              <tr><td><strong>Scalability</strong></td><td>Hardware upgrades</td><td>Instant</td><td>Flexible</td></tr>
+              <tr><td><strong>Reliability</strong></td><td>Single point of failure</td><td>Multi‑site redundancy</td><td>Best of both</td></tr>
+              <tr><td><strong>Remote work</strong></td><td>VPN required</td><td>Native</td><td>Hybrid</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Decision guide:</strong> Dedicated IT staff + budget → On‑premises, No IT staff + want simplicity → Cloud, Compliance requirements + want cloud benefits → Hybrid.</div>
+      `
+    },
+    {
+      id: 'pbx-deployment-hardware',
+      title: 'Hardware Selection',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Server Hardware (On‑Premises)</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Component</th><th>SOHO (10‑20)</th><th>SME (20‑100)</th><th>Enterprise (100+)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>CPU</strong></td><td>2‑4 cores</td><td>4‑8 cores</td><td>8+ cores</td></tr>
+              <tr><td><strong>RAM</strong></td><td>4‑8 GB</td><td>8‑16 GB</td><td>16‑32 GB</td></tr>
+              <tr><td><strong>Storage</strong></td><td>60‑120 GB SSD</td><td>120‑500 GB SSD</td><td>500 GB+ SSD (RAID)</td></tr>
+              <tr><td><strong>Network</strong></td><td>1 Gbps</td><td>1 Gbps (dual)</td><td>10 Gbps</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Phones — Recommended Brands</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Type</th><th>Recommended Brands</th><th>Use Case</th></tr></thead>
+            <tbody>
+              <tr><td><strong>IP Desk Phones</strong></td><td>Yealink, Grandstream, Cisco</td><td>Office workers</td></tr>
+              <tr><td><strong>IP Conference Phones</strong></td><td>Polycom, Yealink</td><td>Meeting rooms</td></tr>
+              <tr><td><strong>Softphones</strong></td><td>Linphone, Zoiper, Bria</td><td>Remote workers</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'pbx-safaricom-sip',
+      title: 'Connecting to Safaricom SIP Trunk',
+      priority: true,
+      icon: '🇰🇪',
+      bodyHTML: `
+        <div class="info-box note"><strong>📌 Prerequisites:</strong> Safaricom business account, Lease line or fibre connection, Public IP address (or VPN), PBX with SIP trunking support.</div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Step 1: Contact Safaricom Business</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li><strong>Phone:</strong> 0733 222 333</li>
+          <li><strong>Email:</strong> business@safaricom.co.ke</li>
+          <li><strong>Website:</strong> https://www.safaricom.co.ke/business</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Step 2: Configure PBX</h4>
+        <div class="code-block"><pre><span class="code-comment"># Asterisk SIP configuration</span>
+  [safaricom-trunk]
+  type=peer
+  host=sip.safaricom.co.ke
+  username=your-username
+  secret=your-password
+  context=from-safaricom
+  dtmfmode=rfc2833
+  disallow=all
+  allow=alaw
+  allow=ulaw
+  qualify=yes
+  register => your-username:your-password@sip.safaricom.co.ke
+
+  <span class="code-comment"># Outbound routing</span>
+  [outbound]
+  exten => _0.,1,Dial(SIP/$\{EXTEN}@safaricom-trunk)</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Step 3: Test</h4>
+        <ul style="padding-left:1.25rem;margin-bottom:0.5rem;">
+          <li><strong>Registration:</strong> <code>sip show registry</code> — should show "Registered"</li>
+          <li><strong>Outbound:</strong> Dial a mobile number (e.g., 0712345678)</li>
+          <li><strong>Inbound:</strong> Call your DID number from mobile</li>
+          <li><strong>Quality:</strong> Test multiple calls, check audio quality</li>
+        </ul>
+        <div class="info-box tip"><strong>💡 Zoom Phone & Webex Calling:</strong> Zoom Phone and Cisco Webex Calling are UCaaS platforms, not SIP trunk providers. To use them in Kenya, sign up directly: <a href="https://zoom.us/phone" target="_blank">Zoom Phone</a> | <a href="https://www.webex.com/calling" target="_blank">Webex Calling</a> (check regional availability).</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 11: PBX FOR KENYA (REGIONAL)
+    // ============================================================
+    {
+      id: 'kenya-telecom-landscape',
+      title: 'Kenyan Telecom Landscape',
+      priority: false,
+      icon: '🇰🇪',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Provider</th><th>Type</th><th>Market Position</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Safaricom</strong></td><td>Mobile + Fixed</td><td>Dominant (70%+ market share)</td></tr>
+              <tr><td><strong>Telkom Kenya</strong></td><td>Mobile + Fixed</td><td>Challenger, enterprise focus</td></tr>
+              <tr><td><strong>Airtel Kenya</strong></td><td>Mobile</td><td>Strong consumer, growing enterprise</td></tr>
+              <tr><td><strong>Liquid Telecom</strong></td><td>Fixed (Fibre)</td><td>Pan‑African, enterprise</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box note"><strong>📌 Key facts:</strong> Safaricom is the largest provider with the most extensive network. Fibre penetration is increasing but still limited in rural areas. Mobile penetration is high (>80%). 4G/5G availability is widespread in urban areas.</div>
+        <div class="info-box note"><strong>📌 Regulatory body:</strong> Communications Authority of Kenya (CAK) — <a href="https://ca.go.ke" target="_blank">https://ca.go.ke</a></div>
+      `
+    },
+    {
+      id: 'kenya-sip-providers',
+      title: 'SIP Trunk Providers in Kenya',
+      priority: false,
+      icon: '📞',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Provider</th><th>Type</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Safaricom Business</strong></td><td>SIP Trunks</td><td>Largest, most reliable, enterprise focus</td></tr>
+              <tr><td><strong>Telkom Kenya</strong></td><td>SIP Trunks</td><td>Good alternative, competitive pricing</td></tr>
+              <tr><td><strong>Liquid Telecom</strong></td><td>SIP Trunks</td><td>Pan‑African, good for multinationals</td></tr>
+              <tr><td><strong>Airtel Kenya</strong></td><td>SIP Trunks</td><td>Growing offering, good for SMEs</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Contact details:</strong>
+          <ul style="margin:0.25rem 0 0 1rem;">
+            <li><strong>Safaricom Business:</strong> 0733 222 333 | business@safaricom.co.ke</li>
+            <li><strong>Telkom Kenya:</strong> 020 222 2222 | enterprise@telkom.co.ke</li>
+            <li><strong>Liquid Telecom:</strong> 020 366 1000 | sales@liquidtelecom.com</li>
+            <li><strong>Airtel Kenya:</strong> 0722 000 000 | https://www.airtel.co.ke/business</li>
+          </ul>
+        </div>
+      `
+    },
+    {
+      id: 'kenya-call-rates',
+      title: 'Call Termination Rates in Kenya',
+      priority: false,
+      icon: '💰',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Call Type</th><th>Approximate Rate</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Safaricom mobile (on‑net)</strong></td><td>~KSh 1.50‑2.00/min</td><td>SIP to mobile</td></tr>
+              <tr><td><strong>Other mobile (off‑net)</strong></td><td>~KSh 2.00‑3.00/min</td><td>Termination to other networks</td></tr>
+              <tr><td><strong>International (outbound)</strong></td><td>Varies by destination</td><td>Depends on country</td></tr>
+              <tr><td><strong>Local fixed</strong></td><td>~KSh 0.50‑1.00/min</td><td>Termination to fixed lines</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Factors affecting rates:</strong> Volume (higher volume = lower rates), Contract terms (long‑term = lower rates), Provider (Safaricom typically higher but more reliable), Time of day (peak rates higher).</div>
+      `
+    },
+    {
+      id: 'kenya-regulations',
+      title: 'Kenyan Regulations (CAK)',
+      priority: false,
+      icon: '📜',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Regulation</th><th>Implication</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Licensing</strong></td><td>Providers must have a licence to offer voice services</td></tr>
+              <tr><td><strong>Numbering</strong></td><td>DID numbers must be obtained from CAK (via providers)</td></tr>
+              <tr><td><strong>Quality of Service</strong></td><td>Providers must meet QoS targets</td></tr>
+              <tr><td><strong>Consumer protection</strong></td><td>Clear billing, dispute resolution</td></tr>
+              <tr><td><strong>Privacy</strong></td><td>Must protect customer data</td></tr>
+              <tr><td><strong>Interconnection</strong></td><td>Providers must interconnect</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning"><strong>⚠️ Compliance checklist:</strong> Ensure provider is CAK‑licensed. Only use numbers allocated by CAK. Comply with privacy regulations (Kenyan Data Protection Act 2019). Maintain call records as required.</div>
+      `
+    },
+    {
+      id: 'kenya-bandwidth',
+      title: 'Internet Bandwidth Considerations',
+      priority: false,
+      icon: '📶',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>User Type</th><th>Recommended Bandwidth</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Single user (G.711)</strong></td><td>~100 kbps</td><td>Including overhead</td></tr>
+              <tr><td><strong>Single user (G.729)</strong></td><td>~40 kbps</td><td>Compressed codec</td></tr>
+              <tr><td><strong>10 users (G.711)</strong></td><td>1 Mbps</td><td>Concurrent calls</td></tr>
+              <tr><td><strong>50 users (G.711)</strong></td><td>5 Mbps</td><td>Concurrent calls</td></tr>
+              <tr><td><strong>100 users (G.711)</strong></td><td>10 Mbps</td><td>Concurrent calls</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Connection Type</th><th>Best For</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Fibre</strong></td><td>All PBX deployments (most reliable)</td></tr>
+              <tr><td><strong>4G/5G</strong></td><td>Backup, remote users (best‑effort)</td></tr>
+              <tr><td><strong>ADSL</strong></td><td>Not recommended (unreliable)</td></tr>
+              <tr><td><strong>Leased line</strong></td><td>Enterprise (guaranteed bandwidth)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Quality metrics:</strong> Latency < 150 ms (preferred < 100 ms), Jitter < 30 ms (< 10 ms preferred), Packet loss < 1% (< 0.1% preferred).</div>
+      `
+    },
+    {
+      id: 'kenya-hardware',
+      title: 'Hardware Availability in Kenya',
+      priority: false,
+      icon: '🛒',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Supplier</th><th>Products</th><th>Location</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Safaricom Business</strong></td><td>IP phones, gateways</td><td>Nairobi</td></tr>
+              <tr><td><strong>Telkom Kenya</strong></td><td>IP phones, gateways</td><td>Nairobi</td></tr>
+              <tr><td><strong>Gadgets Computers</strong></td><td>IP phones, servers</td><td>Nairobi (Various branches)</td></tr>
+              <tr><td><strong>Safaricom Shops</strong></td><td>IP phones</td><td>Nationwide</td></tr>
+              <tr><td><strong>Online (Jumia, Kilimall)</strong></td><td>SIP phones, adapters</td><td>Online</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Model</th><th>Approx Price (KSh)</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Yealink T31P</strong></td><td>8,000‑12,000</td><td>Entry‑level</td></tr>
+              <tr><td><strong>Yealink T43U</strong></td><td>15,000‑20,000</td><td>Mid‑range</td></tr>
+              <tr><td><strong>Yealink T54W</strong></td><td>25,000‑35,000</td><td>Premium</td></tr>
+              <tr><td><strong>Grandstream GXP2130</strong></td><td>10,000‑15,000</td><td>Entry‑level</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Popular brands in Kenya:</strong> Yealink (most popular, good value), Grandstream (affordable), Cisco (enterprise).</div>
+      `
+    },
+    {
+      id: 'kenya-support',
+      title: 'Local Support & Vendors in Kenya',
+      priority: false,
+      icon: '🤝',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Vendor</th><th>Services</th><th>Contact</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Safaricom Business</strong></td><td>PBX, SIP, UCaaS</td><td>0733 222 333</td></tr>
+              <tr><td><strong>Telkom Kenya</strong></td><td>PBX, SIP, UCaaS</td><td>020 222 2222</td></tr>
+              <tr><td><strong>Liquid Telecom</strong></td><td>PBX, SIP</td><td>020 366 1000</td></tr>
+              <tr><td><strong>3CX Partners (Kenya)</strong></td><td>3CX installation/support</td><td>(Check 3CX website)</td></tr>
+              <tr><td><strong>Asterisk Consultants</strong></td><td>Asterisk/Issabel</td><td>(Search online)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 How to find a vendor:</strong> Google search "PBX installer Kenya", Business directories (Yellow Pages Kenya), Recommendations from other businesses, LinkedIn.</div>
+      `
+    },
+
+    // ============================================================
+    // TOPIC 15: GLOSSARY & REFERENCE
+    // ============================================================
+    {
+      id: 'pbx-glossary',
+      title: 'PBX Terminology Glossary',
+      priority: false,
+      icon: '📖',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+            <tbody>
+              <tr><td><strong>ACD</strong></td><td>Automatic Call Distribution — queuing and routing calls to agents</td></tr>
+              <tr><td><strong>ATA</strong></td><td>Analogue Telephone Adapter — connects analogue phones to VoIP</td></tr>
+              <tr><td><strong>Auto‑Attendant</strong></td><td>Automated system that answers and routes calls</td></tr>
+              <tr><td><strong>B2BUA</strong></td><td>Back‑to‑Back User Agent — terminates and re‑originates SIP</td></tr>
+              <tr><td><strong>CDR</strong></td><td>Call Detail Record — call log information</td></tr>
+              <tr><td><strong>CLI</strong></td><td>Calling Line Identity — caller ID</td></tr>
+              <tr><td><strong>Codec</strong></td><td>Coder/Decoder — compresses audio for VoIP</td></tr>
+              <tr><td><strong>DDI / DID</strong></td><td>Direct Dialling In — external number to extension</td></tr>
+              <tr><td><strong>DTMF</strong></td><td>Dual‑Tone Multi‑Frequency — telephone keypad tones</td></tr>
+              <tr><td><strong>Extension</strong></td><td>Internal phone number</td></tr>
+              <tr><td><strong>FXO</strong></td><td>Foreign Exchange Office — connects to PSTN line</td></tr>
+              <tr><td><strong>FXS</strong></td><td>Foreign Exchange Station — connects to a phone</td></tr>
+              <tr><td><strong>Gateway</strong></td><td>Bridges IP and traditional telephony</td></tr>
+              <tr><td><strong>Hunt Group</strong></td><td>Group of extensions (ring in sequence or all at once)</td></tr>
+              <tr><td><strong>IVR</strong></td><td>Interactive Voice Response — automated menu system</td></tr>
+              <tr><td><strong>Jitter</strong></td><td>Variation in packet delay</td></tr>
+              <tr><td><strong>MoH</strong></td><td>Music on Hold — music played to waiting callers</td></tr>
+              <tr><td><strong>PBX</strong></td><td>Private Branch Exchange — private phone system</td></tr>
+              <tr><td><strong>PSTN</strong></td><td>Public Switched Telephone Network — traditional phone network</td></tr>
+              <tr><td><strong>QoS</strong></td><td>Quality of Service — prioritising voice traffic</td></tr>
+              <tr><td><strong>Registrar</strong></td><td>SIP server that authenticates and registers phones</td></tr>
+              <tr><td><strong>RTP</strong></td><td>Real‑time Transport Protocol — carries audio (UDP)</td></tr>
+              <tr><td><strong>SBC</strong></td><td>Session Border Controller — security and NAT device</td></tr>
+              <tr><td><strong>SIP</strong></td><td>Session Initiation Protocol — signalling protocol for VoIP</td></tr>
+              <tr><td><strong>SIP Trunk</strong></td><td>Virtual connection to VoIP provider</td></tr>
+              <tr><td><strong>Softphone</strong></td><td>Software‑based phone (PC/mobile)</td></tr>
+              <tr><td><strong>SRTP</strong></td><td>Secure RTP — encrypted audio</td></tr>
+              <tr><td><strong>Trunk</strong></td><td>Connection to outside world (PSTN or SIP)</td></tr>
+              <tr><td><strong>VoIP</strong></td><td>Voice over IP — voice over internet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'pbx-port-reference',
+      title: 'PBX Port Reference',
+      priority: false,
+      icon: '🔌',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Protocol</th><th>Port</th><th>Type</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><strong>SIP</strong></td><td>5060</td><td>UDP/TCP</td><td>SIP signalling (default)</td></tr>
+              <tr><td><strong>SIPS</strong></td><td>5061</td><td>UDP/TCP</td><td>SIP over TLS (encrypted)</td></tr>
+              <tr><td><strong>RTP</strong></td><td>10000‑20000</td><td>UDP</td><td>Media (audio) — configurable</td></tr>
+              <tr><td><strong>SSH</strong></td><td>22</td><td>TCP</td><td>Secure shell (server access)</td></tr>
+              <tr><td><strong>HTTPS</strong></td><td>443</td><td>TCP</td><td>Web admin interface</td></tr>
+              <tr><td><strong>HTTP</strong></td><td>80</td><td>TCP</td><td>Web admin (unsecure)</td></tr>
+              <tr><td><strong>MySQL</strong></td><td>3306</td><td>TCP</td><td>Database access</td></tr>
+              <tr><td><strong>NTP</strong></td><td>123</td><td>UDP</td><td>Time synchronisation</td></tr>
+              <tr><td><strong>DNS</strong></td><td>53</td><td>UDP/TCP</td><td>DNS resolution</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box tip"><strong>💡 Common port configurations:</strong>
+          <ul style="margin:0.25rem 0 0 1rem;">
+            <li><strong>SIP (insecure):</strong> UDP 5060 + RTP ports</li>
+            <li><strong>SIP (TLS):</strong> TCP 5061 + SRTP ports</li>
+            <li><strong>Web Admin:</strong> TCP 443 (HTTPS)</li>
+            <li><strong>Softphone:</strong> 5060 (SIP) + RTP ports</li>
+          </ul>
+        </div>
+      `
+    },
+    {
+      id: 'pbx-quick-reference',
+      title: 'PBX Quick Reference Cards',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Asterisk Quick Commands</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Action</th><th>Command</th></tr></thead>
+            <tbody>
+              <tr><td>Connect to CLI</td><td><code>asterisk -rvvv</code></td></tr>
+              <tr><td>SIP debug on</td><td><code>sip set debug on</code></td></tr>
+              <tr><td>SIP debug off</td><td><code>sip set debug off</code></td></tr>
+              <tr><td>Show SIP peers</td><td><code>sip show peers</code></td></tr>
+              <tr><td>Show SIP registry</td><td><code>sip show registry</code></td></tr>
+              <tr><td>Reload config</td><td><code>reload</code></td></tr>
+              <tr><td>Monitor logs</td><td><code>tail -f /var/log/asterisk/full</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">SIP Response Codes</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><strong>200</strong></td><td>OK</td></tr>
+              <tr><td><strong>401</strong></td><td>Unauthorised</td></tr>
+              <tr><td><strong>403</strong></td><td>Forbidden</td></tr>
+              <tr><td><strong>404</strong></td><td>Not Found</td></tr>
+              <tr><td><strong>407</strong></td><td>Proxy Authentication Required</td></tr>
+              <tr><td><strong>408</strong></td><td>Request Timeout</td></tr>
+              <tr><td><strong>486</strong></td><td>Busy Here</td></tr>
+              <tr><td><strong>500</strong></td><td>Server Internal Error</td></tr>
+              <tr><td><strong>503</strong></td><td>Service Unavailable</td></tr>
+              <tr><td><strong>603</strong></td><td>Decline</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Troubleshooting Flowchart</h4>
+        <div class="code-block"><pre>Call Issue?
+  ├── Internal call?
+  │   ├── Yes → Check PBX logs
+  │   └── No → Check trunk/provider
+  ├── Audio issue?
+  │   ├── No audio → Check RTP ports, NAT, codecs
+  │   ├── One‑way → Check firewall, NAT, codecs
+  │   └── Chopped → Check QoS, network congestion
+  ├── Call drops?
+  │   ├── Check logs (who sent BYE?)
+  │   ├── Check network (latency, jitter)
+  │   └── Check provider (contact support)
+  ├── Registration issue?
+  │   ├── Check credentials
+  │   ├── Check network (ping provider)
+  │   ├── Check firewall (port 5060)
+  │   └── Check provider (registration status)
+  └── Outbound issue?
+      ├── Check routing rules
+      ├── Check trunk status
+      └── Check provider (call logs)</pre></div>
+      `
+    }
+  ];
+
+  function renderPBXAccordions() {
+    const container = document.getElementById('js-sectionPBX-container');
+    if (!container) {
+      console.warn('⚠️ PBX accordion container not found');
+      return;
+    }
+
+    let html = '';
+    SECTION_PBX_ACCORDIONS.forEach(item => {
+      html += `
+        <div class="accordion" data-searchable>
+          <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="false">
+            <div class="accordion-title">
+              <span class="acc-icon" aria-hidden="true">${item.icon}</span>
+              ${item.title}
+            </div>
+            <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+            </svg>
+          </button>
+          <div class="accordion-body">
+            ${item.bodyHTML}
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  renderPBXAccordions();
+
 }); // DOMContentLoaded end
