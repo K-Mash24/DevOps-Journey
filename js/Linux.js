@@ -3,78 +3,298 @@
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
-  
-  // ----- FLASHCARDS DATA (50 flashcards – all 10 sections) -----
   const FLASHCARDS = [
-    // SECTION 1 — Filesystem Structure & Navigation
-    { term: "Absolute vs relative path", answer: "Absolute starts with / (from root). Relative starts from current directory. Example: /home/user/file.txt (absolute) vs ./file.txt (relative)" },
-    { term: "Create nested directories in one command", answer: "mkdir -p parent/child/grandchild" },
-    { term: "Wildcard for single character", answer: "? matches exactly one character. Example: file-?.txt matches file-1.txt, file-a.txt" },
-    { term: "Wildcard for any characters", answer: "* matches zero or more characters. Example: *.log deletes all .log files" },
-    { term: "Hidden file prefix", answer: "Dot (.) prefix hides files/directories. Use ls -a to see them." },
+    // ============================================================
+    // SECTION 1 — Filesystem Structure & Navigation (5 cards)
+    // ============================================================
+    {
+      term: "Absolute vs relative path",
+      answer: "Absolute starts with / (from root). Relative starts from current directory. /home/user/file.txt (absolute) vs ./file.txt (relative)"
+    },
+    {
+      term: "Create nested directories in one command",
+      answer: "mkdir -p parent/child/grandchild — creates all missing parent directories in one go"
+    },
+    {
+      term: "Wildcard for single character",
+      answer: "? matches exactly one character. file-?.txt matches file-1.txt, file-a.txt, but not file-10.txt"
+    },
+    {
+      term: "Wildcard for any characters",
+      answer: "* matches zero or more characters. *.log matches all .log files"
+    },
+    {
+      term: "Hidden file prefix",
+      answer: "Dot (.) prefix hides files/directories. Use ls -a to see them."
+    },
 
-    // SECTION 2 — File & Directory Operations
-    { term: "Create empty file", answer: "touch filename.txt" },
-    { term: "Difference between > and >>", answer: "> overwrites entire file. >> appends to end. Use >> to preserve existing content." },
-    { term: "Delete a non-empty directory", answer: "rm -r directory_name (or rm -rf for force, no confirmation)" },
-    { term: "Copy directory recursively", answer: "cp -r source_dir destination_dir" },
-    { term: "View file with scrolling", answer: "less filename (Space=down, b=up, /search, q=quit)" },
+    // ============================================================
+    // SECTION 2 — File & Directory Operations (6 cards)
+    // ============================================================
+    {
+      term: "Create an empty file",
+      answer: "touch filename.txt — creates empty file or updates timestamp if it exists"
+    },
+    {
+      term: "Difference between > and >>",
+      answer: "> overwrites entire file. >> appends to end. Use >> to preserve existing content."
+    },
+    {
+      term: "Delete a non-empty directory",
+      answer: "rm -r directory_name (recursive) or rm -rf (force + recursive, no confirmation)"
+    },
+    {
+      term: "Copy directory recursively",
+      answer: "cp -r source_dir destination_dir — copies entire directory tree"
+    },
+    {
+      term: "View file with scrolling",
+      answer: "less filename (Space=down, b=up, /search, q=quit)"
+    },
+    {
+      term: "Move or rename a file",
+      answer: "mv oldname newname — moves files/directories or renames them in place"
+    },
 
-    // SECTION 3 — Permissions & Ownership
-    { term: "Display file permissions in octal", answer: "stat -c '%a %n' filename (e.g., 644 for rw-r--r--)" },
-    { term: "Change file permissions (numeric)", answer: "chmod 755 script.sh (rwxr-xr-x) or chmod 644 file.txt (rw-r--r--)" },
-    { term: "Change file permissions (symbolic)", answer: "chmod u+x file.sh (add execute for user), chmod go-w file.txt (remove write from group and others)" },
-    { term: "Change file owner", answer: "sudo chown newowner filename (requires sudo)" },
-    { term: "Change file owner and group", answer: "sudo chown user:group filename (e.g., sudo chown alice:developers script.sh)" },
+    // ============================================================
+    // SECTION 3 — Permissions & Ownership (6 cards)
+    // ============================================================
+    {
+      term: "Display file permissions in octal",
+      answer: "stat -c '%a %n' filename — shows octal permissions (e.g., 644 for rw-r--r--)"
+    },
+    {
+      term: "Change file permissions (numeric)",
+      answer: "chmod 755 script.sh (rwxr-xr-x) or chmod 644 file.txt (rw-r--r--)"
+    },
+    {
+      term: "Change file permissions (symbolic)",
+      answer: "chmod u+x file.sh (add execute for user), chmod go-w file.txt (remove write from group and others)"
+    },
+    {
+      term: "Change file owner",
+      answer: "sudo chown newowner filename — requires root privileges"
+    },
+    {
+      term: "Change file owner and group",
+      answer: "sudo chown user:group filename — changes both owner and group at once"
+    },
+    {
+      term: "Change permissions recursively",
+      answer: "chmod -R 755 directory/ — applies permissions to all files and subdirectories"
+    },
 
-    // SECTION 4 — Users & Groups
-    { term: "Which file stores user accounts?", answer: "/etc/passwd — stores username, UID, GID, home directory, shell. Passwords are in /etc/shadow." },
-    { term: "Add user to a supplementary group", answer: "sudo usermod -aG groupname username (always use -a to append)" },
-    { term: "Create a user with home directory", answer: "sudo useradd -m -s /bin/bash username" },
-    { term: "Delete user AND their home directory", answer: "sudo userdel -r username" },
-    { term: "Switch user with full environment", answer: "su - username (the dash loads the target user's environment)" },
+    // ============================================================
+    // SECTION 4 — Users & Groups (7 cards)
+    // ============================================================
+    {
+      term: "Which file stores user accounts?",
+      answer: "/etc/passwd — stores username, UID, GID, home directory, shell. Passwords are in /etc/shadow."
+    },
+    {
+      term: "Add user to a supplementary group",
+      answer: "sudo usermod -aG groupname username — always use -a to append, never replace"
+    },
+    {
+      term: "Create a user with home directory",
+      answer: "sudo useradd -m -s /bin/bash username"
+    },
+    {
+      term: "Delete user AND their home directory",
+      answer: "sudo userdel -r username"
+    },
+    {
+      term: "Switch user with full environment",
+      answer: "su - username — the dash loads the target user's environment"
+    },
+    {
+      term: "Create a new group",
+      answer: "sudo groupadd groupname — creates a new system group"
+    },
+    {
+      term: "Set or change a user's password",
+      answer: "sudo passwd username — sets or changes a user's password"
+    },
 
-    // SECTION 5 — Processes & Job Control
-    { term: "Display running processes", answer: "ps aux (all processes), top (interactive), htop (colorful interactive)" },
-    { term: "Kill a process by PID (graceful)", answer: "kill PID (SIGTERM — polite request to terminate)" },
-    { term: "Kill a process by PID (force)", answer: "kill -9 PID (SIGKILL — immediate, no cleanup)" },
-    { term: "Kill a process by name", answer: "pkill process_name (e.g., pkill firefox), killall process_name" },
-    { term: "Run a command in the background", answer: "command & — use jobs to list, fg to bring to foreground" },
+    // ============================================================
+    // SECTION 5 — Processes & Job Control (7 cards)
+    // ============================================================
+    {
+      term: "Display running processes",
+      answer: "ps aux (all processes), top (interactive), htop (colorful interactive)"
+    },
+    {
+      term: "Kill a process by PID (graceful)",
+      answer: "kill PID — sends SIGTERM, a polite request to terminate"
+    },
+    {
+      term: "Kill a process by PID (force)",
+      answer: "kill -9 PID — sends SIGKILL, immediate termination with no cleanup"
+    },
+    {
+      term: "Kill a process by name",
+      answer: "pkill process_name (e.g., pkill firefox) or killall process_name"
+    },
+    {
+      term: "Run a command in the background",
+      answer: "command & — returns job number and PID immediately"
+    },
+    {
+      term: "List background/paused jobs",
+      answer: "jobs — shows all background and paused jobs in the current session"
+    },
+    {
+      term: "Bring a job to the foreground",
+      answer: "fg %1 — brings job number 1 to the foreground"
+    },
 
-    // SECTION 6 — Package Management
-    { term: "Refresh package list from repositories", answer: "sudo apt update" },
-    { term: "Install a package", answer: "sudo apt install package-name -y" },
-    { term: "Remove a package but keep config files", answer: "sudo apt remove package-name" },
-    { term: "Remove a package AND its config files", answer: "sudo apt purge package-name" },
-    { term: "Clean up unused dependencies", answer: "sudo apt autoremove" },
+    // ============================================================
+    // SECTION 6 — Package Management (5 cards)
+    // ============================================================
+    {
+      term: "Refresh package list from repositories",
+      answer: "sudo apt update — refreshes the list of available packages and versions"
+    },
+    {
+      term: "Install a package",
+      answer: "sudo apt install package-name -y (auto-answer yes)"
+    },
+    {
+      term: "Remove a package but keep config files",
+      answer: "sudo apt remove package-name"
+    },
+    {
+      term: "Remove a package AND its config files",
+      answer: "sudo apt purge package-name"
+    },
+    {
+      term: "Clean up unused dependencies",
+      answer: "sudo apt autoremove — removes packages installed as dependencies but no longer needed"
+    },
 
-    // SECTION 7 — Networking Commands
-    { term: "Show IP addresses and interfaces", answer: "ip addr (or ip a) — shows all IP addresses assigned to interfaces" },
-    { term: "Show interface status (UP/DOWN)", answer: "ip link — shows whether each interface is UP or DOWN" },
-    { term: "Test connectivity to a host", answer: "ping -c 4 google.com — sends 4 ICMP packets" },
-    { term: "DNS lookup (full)", answer: "dig google.com — shows detailed DNS query response" },
-    { term: "Show listening ports", answer: "ss -tuln — shows TCP/UDP listening ports with numbers" },
+    // ============================================================
+    // SECTION 7 — Networking Commands (7 cards)
+    // ============================================================
+    {
+      term: "Show IP addresses and interfaces",
+      answer: "ip addr (or ip a) — shows all IP addresses assigned to network interfaces"
+    },
+    {
+      term: "Show interface status (UP/DOWN)",
+      answer: "ip link — shows whether each network interface is UP or DOWN"
+    },
+    {
+      term: "Test connectivity to a host",
+      answer: "ping -c 4 google.com — sends 4 ICMP echo requests to test reachability"
+    },
+    {
+      term: "DNS lookup (full)",
+      answer: "dig google.com — shows detailed DNS query response"
+    },
+    {
+      term: "Show listening ports",
+      answer: "ss -tuln — shows TCP/UDP listening ports with port numbers"
+    },
+    {
+      term: "Trace route to a host",
+      answer: "traceroute hostname — shows each router hop the packet takes"
+    },
+    {
+      term: "Fetch data from a URL",
+      answer: "curl https://url — transfers data from a URL (great for API testing)"
+    },
 
-    // SECTION 8 — Bash Scripting
-    { term: "Script shebang line", answer: "#!/bin/bash — tells the OS which interpreter to use" },
-    { term: "Command substitution", answer: "result=$(command) — captures command output into a variable" },
-    { term: "Read user input", answer: "read -p 'Prompt: ' variable — shows a prompt and stores input" },
-    { term: "If condition with spaces", answer: "if [ condition ]; then ... fi — spaces inside [ ] are REQUIRED" },
-    { term: "Function definition", answer: "funcname() { echo $1; } — $1 is the first argument to the function" },
+    // ============================================================
+    // SECTION 8 — Bash Scripting (7 cards)
+    // ============================================================
+    {
+      term: "Script shebang line",
+      answer: "#!/bin/bash — tells the OS which interpreter to use"
+    },
+    {
+      term: "Command substitution",
+      answer: "result=$(command) — captures command output into a variable"
+    },
+    {
+      term: "Read user input",
+      answer: "read -p 'Prompt: ' variable — shows a prompt and stores input"
+    },
+    {
+      term: "If condition with spaces",
+      answer: "if [ condition ]; then ... fi — spaces inside [ ] are REQUIRED"
+    },
+    {
+      term: "Function definition",
+      answer: "funcname() { echo $1; } — $1 is the first argument passed to the function"
+    },
+    {
+      term: "For loop over a range",
+      answer: "for i in {1..5}; do echo $i; done — loops from 1 to 5"
+    },
+    {
+      term: "Case statement syntax",
+      answer: "case $var in pattern1) ... ;; pattern2) ... ;; esac — multi-branch conditional"
+    },
 
-    // SECTION 9 — systemd & Services
-    { term: "Start a systemd service", answer: "sudo systemctl start service-name" },
-    { term: "Enable a service at boot", answer: "sudo systemctl enable service-name" },
-    { term: "Check service status", answer: "systemctl status service-name — shows state and recent logs" },
-    { term: "View logs for a specific service", answer: "journalctl -u service-name — shows all logs for that service" },
-    { term: "Follow logs in real time", answer: "journalctl -u service-name -f — follows new log entries (like tail -f)" },
+    // ============================================================
+    // SECTION 9 — systemd & Services (6 cards)
+    // ============================================================
+    {
+      term: "Start a systemd service",
+      answer: "sudo systemctl start service-name — starts the service immediately"
+    },
+    {
+      term: "Enable a service at boot",
+      answer: "sudo systemctl enable service-name — configures service to start at boot"
+    },
+    {
+      term: "Start and enable in one command",
+      answer: "sudo systemctl enable --now service-name — enables AND starts immediately"
+    },
+    {
+      term: "Check service status",
+      answer: "systemctl status service-name — shows state, PID, and recent logs"
+    },
+    {
+      term: "View logs for a specific service",
+      answer: "journalctl -u service-name — shows all logs for that service"
+    },
+    {
+      term: "Follow logs in real time",
+      answer: "journalctl -u service-name -f — follows new log entries (like tail -f)"
+    },
 
-    // SECTION 10 — Text Processing
-    { term: "Search for pattern in a file", answer: "grep 'pattern' filename — prints matching lines" },
-    { term: "Invert match (exclude pattern)", answer: "grep -v 'pattern' file — prints lines that do NOT match" },
-    { term: "Replace all occurrences in a file", answer: "sed -i 's/old/new/g' file.txt — edits file in place (g = global)" },
-    { term: "Print specific column from a delimited file", answer: "awk -F: '{print $1}' /etc/passwd — extracts the first field using : as delimiter" },
-    { term: "Count lines in a file", answer: "wc -l file.txt — prints only the line count" }
+    // ============================================================
+    // SECTION 10 — Text Processing (7 cards)
+    // ============================================================
+    {
+      term: "Search for pattern in a file",
+      answer: "grep 'pattern' filename — prints matching lines"
+    },
+    {
+      term: "Invert match (exclude pattern)",
+      answer: "grep -v 'pattern' file — prints lines that do NOT match"
+    },
+    {
+      term: "Replace all occurrences in a file",
+      answer: "sed -i 's/old/new/g' file.txt — edits file in place (g = global)"
+    },
+    {
+      term: "Extract specific column from a delimited file",
+      answer: "awk -F: '{print $1}' /etc/passwd — extracts first field using colon as delimiter"
+    },
+    {
+      term: "Count lines in a file",
+      answer: "wc -l file.txt — prints only the line count"
+    },
+    {
+      term: "Sort lines alphabetically",
+      answer: "sort file.txt — sorts lines alphabetically (use -n for numeric)"
+    },
+    {
+      term: "Count unique occurrences",
+      answer: "sort file.txt | uniq -c | sort -rn — counts frequency of each line, most common first"
+    }
   ];
 
   function renderFlashcards() {
@@ -2812,7 +3032,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // QUIZ DATA – 3 SETS
   // ============================================================
   const QUIZ_SETS = {
-    // ----- SET 1: General Linux (Original) -----
+    // ============================================================
+    // SET 1: General Linux — Basic Commands (10 questions)
+    // ============================================================
     1: [
       {
         q: "Which command shows your current directory location?",
@@ -2836,7 +3058,7 @@ document.addEventListener('DOMContentLoaded', () => {
         q: "Which wildcard matches exactly one character?",
         options: ["*", "?", "#", "%"],
         correct: 1,
-        explain: "? matches a single character. Example: file-?.txt matches file-1.txt, file-a.txt, but not file-10.txt."
+        explain: "? matches a single character. file-?.txt matches file-1.txt, file-a.txt, but not file-10.txt."
       },
       {
         q: "What is the difference between `rmdir` and `rm -r`?",
@@ -2848,16 +3070,58 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         correct: 1,
         explain: "rmdir only removes empty directories. rm -r recursively deletes directories and all contents."
+      },
+      {
+        q: "Which command lists all files including hidden ones?",
+        options: ["ls", "ls -a", "ls -l", "ls -h"],
+        correct: 1,
+        explain: "ls -a shows all files, including hidden ones (those starting with a dot)."
+      },
+      {
+        q: "How do you copy a file to another location?",
+        options: ["cp source destination", "copy source destination", "mv source destination", "cp -r source destination"],
+        correct: 0,
+        explain: "cp copies files. cp -r is needed for directories, but for a single file, cp source destination works."
+      },
+      {
+        q: "What does `mkdir -p` do?",
+        options: [
+          "Creates a single directory",
+          "Creates parent directories if they don't exist",
+          "Creates a directory and changes to it",
+          "Creates a directory with specific permissions"
+        ],
+        correct: 1,
+        explain: "mkdir -p creates parent directories along the path if they don't already exist."
+      },
+      {
+        q: "Which command shows the contents of a file with line numbers?",
+        options: ["cat -n", "less -n", "more -n", "head -n"],
+        correct: 0,
+        explain: "cat -n shows file content with line numbers. Useful for referencing specific lines."
+      },
+      {
+        q: "What is the purpose of the `./` prefix when running a script?",
+        options: [
+          "It tells Linux to look in system directories",
+          "It tells Linux to look in the current directory",
+          "It runs the script in the background",
+          "It tells Linux to use the default interpreter"
+        ],
+        correct: 1,
+        explain: "./ means 'in the current directory.' Linux doesn't look in the current directory by default — only in $PATH."
       }
     ],
 
-    // ----- SET 2: System Administration (Users, Groups, Permissions, Processes, Packages) -----
+    // ============================================================
+    // SET 2: System Administration (12 questions)
+    // ============================================================
     2: [
       {
         q: "Which file stores user account information (but NOT passwords)?",
         options: ["/etc/shadow", "/etc/passwd", "/etc/group", "/etc/sudoers"],
         correct: 1,
-        explain: "/etc/passwd stores username, UID, GID, home directory, shell — but passwords are stored in /etc/shadow."
+        explain: "/etc/passwd stores username, UID, GID, home directory, shell. Passwords are in /etc/shadow."
       },
       {
         q: "How do you add a user to an existing supplementary group?",
@@ -2868,7 +3132,7 @@ document.addEventListener('DOMContentLoaded', () => {
           "sudo usermod +group user"
         ],
         correct: 1,
-        explain: "The -aG flag appends the user to the group. Without -a, -G replaces all supplementary groups."
+        explain: "-aG appends the user to the group. Without -a, -G replaces all supplementary groups."
       },
       {
         q: "What numeric permission value corresponds to `rwxr-xr-x`?",
@@ -2877,10 +3141,10 @@ document.addEventListener('DOMContentLoaded', () => {
         explain: "rwx = 7 (4+2+1), r-x = 5 (4+0+1), r-x = 5 → 755. Common for scripts and directories."
       },
       {
-        q: "Which command changes the owner of a file (requires sudo)?",
+        q: "Which command changes the owner of a file?",
         options: ["chmod", "chown", "chgrp", "usermod"],
         correct: 1,
-        explain: "chown changes the user owner (and optionally group) of a file. Only root can transfer ownership."
+        explain: "chown changes the user owner (and optionally group). Only root can transfer ownership."
       },
       {
         q: "How do you politely stop a running process by PID?",
@@ -2920,17 +3184,41 @@ document.addEventListener('DOMContentLoaded', () => {
           "Clears the package cache"
         ],
         correct: 1,
-        explain: "autoremove cleans up orphaned dependencies that were installed automatically but are no longer required by any package."
+        explain: "autoremove cleans up orphaned dependencies that were installed automatically but are no longer required."
       },
       {
         q: "Which file stores group information on a Linux system?",
         options: ["/etc/passwd", "/etc/group", "/etc/shadow", "/etc/groups"],
         correct: 1,
         explain: "/etc/group stores group names, GIDs, and member lists. Each line represents one group."
+      },
+      {
+        q: "What does `sudo` allow you to do?",
+        options: [
+          "Switch to another user permanently",
+          "Run commands with root privileges",
+          "Change file permissions",
+          "Delete files without confirmation"
+        ],
+        correct: 1,
+        explain: "sudo (superuser do) allows authorized users to run commands with root privileges."
+      },
+      {
+        q: "What is the difference between `chown` and `chgrp`?",
+        options: [
+          "chown changes user owner; chgrp changes group owner",
+          "chown changes group owner; chgrp changes user owner",
+          "They do the same thing",
+          "chown requires sudo; chgrp doesn't"
+        ],
+        correct: 0,
+        explain: "chown changes the user owner (and optionally group). chgrp changes only the group owner."
       }
     ],
 
-    // ----- SET 3: Advanced Tools (Networking, Bash, systemd, Text Processing) -----
+    // ============================================================
+    // SET 3: Advanced Tools (13 questions)
+    // ============================================================
     3: [
       {
         q: "Which command tests network connectivity to a host?",
@@ -3036,6 +3324,34 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         correct: 1,
         explain: "ssh-copy-id copies your public key to the remote server's authorized_keys file, enabling passwordless authentication."
+      },
+      {
+        q: "Which command shows the route packets take to reach a destination?",
+        options: ["ping", "traceroute", "dig", "ss"],
+        correct: 1,
+        explain: "traceroute shows every router hop a packet takes. tracepath is a no-root alternative."
+      },
+      {
+        q: "What does `sort file.txt | uniq -c` do?",
+        options: [
+          "Sorts and removes duplicates, counting occurrences",
+          "Only sorts the file",
+          "Only removes duplicates without sorting",
+          "Counts characters in each line"
+        ],
+        correct: 0,
+        explain: "sort arranges lines, uniq -c counts consecutive duplicates. Sorting first ensures all duplicates are adjacent."
+      },
+      {
+        q: "What is the difference between `systemctl start` and `systemctl enable`?",
+        options: [
+          "start runs now; enable runs at boot",
+          "start runs at boot; enable runs now",
+          "They do the same thing",
+          "start is for services; enable is for timers"
+        ],
+        correct: 0,
+        explain: "start runs the service immediately. enable configures it to start automatically at boot. Use enable --now to do both."
       }
     ]
   };

@@ -2,48 +2,252 @@
 // PILLAR 1: NETWORKING – FLASHCARDS & QUIZ (only pillar-specific)
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+
   //----- FLASHCARD DATA & RENDERING -----
   const FLASHCARDS = [
-    // Original cards (23)
-    { term: "OSI Model mnemonic", answer: "All People Seem To Need Data Processing — layers 7 to 1: Application, Presentation, Session, Transport, Network, Data Link, Physical" },
-    { term: "PDU at Layer 4", answer: "Segment — TCP breaks data into numbered segments with source/destination port numbers and sequence numbers" },
-    { term: "PDU at Layer 3", answer: "Packet — IP wraps the segment adding source and destination IP addresses. Routers forward at this layer" },
-    { term: "PDU at Layer 2", answer: "Frame — Ethernet wraps the packet with MAC addresses + FCS trailer. Switches operate here" },
-    { term: "RFC 1918 private ranges", answer: "10.0.0.0/8 (enterprise) · 172.16.0.0/12 (mid-size) · 192.168.0.0/16 (home/office)" },
-    { term: "APIPA range", answer: "169.254.0.0/16 — self-assigned when DHCP fails. Seeing 169.254.x.x = DHCP unreachable" },
-    { term: "Loopback address", answer: "127.0.0.1 — traffic sent here never leaves the host. Also accessible as 'localhost'" },
-    { term: "Subnet formula: usable hosts", answer: "2^(host bits) − 2. Subtract 2 for network address and broadcast address" },
-    { term: "CIDR /26 — key facts", answer: "Mask: 255.255.255.192 · Block size: 64 · Usable hosts: 62 · Subnets from /24: 4" },
-    { term: "TCP three-way handshake", answer: "SYN (client initiates) → SYN-ACK (server confirms + sends seq) → ACK (client confirms). Connection established" },
-    { term: "DNS port and protocol", answer: "Port 53. UDP for standard queries (small, fast). TCP for large responses (zone transfers, 512+ byte replies)" },
-    { term: "NAT vs PAT", answer: "NAT = IP translation only (one private per public). PAT = IP + port translation (many private per public IP)" },
-    { term: "Stateful vs stateless firewall", answer: "Stateless: examines each packet in isolation. Stateful: tracks connection state table — only allows responses to established outbound connections" },
-    { term: "ARP purpose", answer: "Address Resolution Protocol — resolves IP addresses to MAC addresses within a subnet. Broadcasts 'Who has x.x.x.x?' and caches the reply" },
-    { term: "Default gateway", answer: "The router's private-side IP configured on every device. Traffic to destinations outside the local subnet is forwarded here" },
-    { term: "SYN flood attack", answer: "Attacker sends many SYN packets but never completes the handshake. Target's connection table fills with half-open connections, refusing legitimate traffic" },
-    { term: "VLSM golden rule", answer: "Always allocate subnets from largest host requirement to smallest. Prevents large subnets consuming space needed by smaller ones" },
-    { term: "BGP", answer: "Border Gateway Protocol — holds the public internet together. ISPs use it to advertise address blocks and determine routing paths globally" },
-    { term: "FCS", answer: "Frame Check Sequence — a checksum trailer added at Layer 2. Receiver recalculates; mismatch = frame corrupted and discarded. Only footer in the stack" },
-    { term: "IPv6 shortening rules", answer: "Rule 1: drop leading zeros in each group (0db8 → db8). Rule 2: replace one consecutive run of all-zero groups with :: (can appear only once)" },
-    { term: "T568B mnemonic", answer: "O · G · B · G · B (2-1-2-1-2): Orange×2 → White/Green → Blue×2 → Green → Brown×2. Dominant standard for commercial and home cabling." },
-    { term: "RJ45 T568A vs T568B difference", answer: "Only the orange and green pairs swap. Pins 4,5 (blue) and 7,8 (brown) are identical in both. T568B: Orange leads. T568A: Green leads." },
-    { term: "Straight-through vs crossover cable", answer: "Straight-through: both ends T568B — connects different device types (PC→switch). Crossover: T568A one end, T568B other — connects same device types (PC→PC)." }, 
-    // New cards (15)
-    { term: "OSI Layer 7 protocols", answer: "HTTP, HTTPS, FTP, SMTP, SSH, DNS — Application layer protocols that enable communication between applications and the network" },
-    { term: "OSI Layer 4 protocols", answer: "TCP (Transmission Control Protocol) — reliable, connection-oriented. UDP (User Datagram Protocol) — fast, connectionless" },
-    { term: "OSI Layer 3 protocols", answer: "IP (Internet Protocol) — routing and addressing. ICMP (Internet Control Message Protocol) — used by ping and traceroute" },
-    { term: "Difference between hub, switch, router", answer: "Hub: broadcasts to all ports (obsolete). Switch: forwards based on MAC address. Router: forwards based on IP address between networks" },
-    { term: "Public vs private IP addresses", answer: "Public: globally unique, routable on internet, assigned by IANA. Private: RFC 1918 ranges, reusable, not routable on internet" },
-    { term: "What is a subnet mask?", answer: "32-bit number that separates IP address into network and host portions. 1s = network bits, 0s = host bits. Example: 255.255.255.0 = /24" },
-    { term: "CIDR notation explained", answer: "Classless Inter-Domain Routing — writes IP address followed by slash and prefix length. /24 means first 24 bits are network, 8 bits are hosts" },
-    { term: "Broadcast address vs multicast address", answer: "Broadcast: sent to ALL devices on network (255.255.255.255). Multicast: sent to specific group of devices (224.0.0.0 to 239.255.255.255)" },
-    { term: "What is NAT overloading (PAT)?", answer: "Port Address Translation — maps multiple private IPs to one public IP using unique source port numbers. Most common form of NAT in home routers" },
-    { term: "DNS record types — A vs AAAA vs CNAME", answer: "A: IPv4 address. AAAA: IPv6 address. CNAME: alias/canonical name (maps one hostname to another)" },
-    { term: "TCP congestion control algorithms", answer: "Slow start (exponential growth) → Congestion avoidance (linear growth) → Fast retransmit/fast recovery (on packet loss)" },
-    { term: "UDP use cases (why not TCP)", answer: "DNS queries (small, fast), VoIP (latency-sensitive), video streaming (dropped frames better than delay), DHCP (no IP yet)" },
-    { term: "What is ARP poisoning/spoofing?", answer: "Attacker sends fake ARP replies, associating their MAC address with another device's IP. Traffic intended for that device goes to attacker instead" },
-    { term: "Difference between IDS and IPS", answer: "IDS (Intrusion Detection System): monitors and alerts. IPS (Intrusion Prevention System): monitors and actively blocks/threatens traffic" },
-    { term: "What is the DMZ in networking?", answer: "Demilitarized Zone — network segment between internet and internal network. Hosts public-facing servers (web, email). If compromised, internal network remains protected" }
+    // ============================================================
+    // OSI MODEL & LAYERS (6 cards)
+    // ============================================================
+    {
+      term: "OSI Model mnemonic",
+      answer: "All People Seem To Need Data Processing — layers 7 to 1: Application, Presentation, Session, Transport, Network, Data Link, Physical"
+    },
+    {
+      term: "PDU at Layer 4 (Transport)",
+      answer: "Segment — TCP/UDP segment with port numbers. TCP adds sequence numbers for reliability."
+    },
+    {
+      term: "PDU at Layer 3 (Network)",
+      answer: "Packet — IP packet with source/destination IP addresses. Routers forward at this layer."
+    },
+    {
+      term: "PDU at Layer 2 (Data Link)",
+      answer: "Frame — Ethernet frame with MAC addresses and FCS trailer. Switches operate here."
+    },
+    {
+      term: "OSI Layer 7 protocols",
+      answer: "HTTP, HTTPS, FTP, SMTP, SSH, DNS — Application layer protocols for user services."
+    },
+    {
+      term: "OSI Layer 4 protocols",
+      answer: "TCP (reliable, connection-oriented) and UDP (fast, connectionless)."
+    },
+
+    // ============================================================
+    // IP ADDRESSING & SUBNETTING (8 cards)
+    // ============================================================
+    {
+      term: "RFC 1918 private ranges",
+      answer: "10.0.0.0/8 (enterprise) · 172.16.0.0/12 (mid-size) · 192.168.0.0/16 (home/office)"
+    },
+    {
+      term: "APIPA range",
+      answer: "169.254.0.0/16 — self-assigned when DHCP fails. Seeing 169.254.x.x = DHCP unreachable."
+    },
+    {
+      term: "Loopback address",
+      answer: "127.0.0.1 — traffic never leaves the host. Also accessible as 'localhost'."
+    },
+    {
+      term: "Subnet formula: usable hosts",
+      answer: "2^(host bits) − 2. Subtract 2 for network address and broadcast address."
+    },
+    {
+      term: "CIDR /26 — key facts",
+      answer: "Mask: 255.255.255.192 · Block size: 64 · Usable hosts: 62 · Subnets from /24: 4"
+    },
+    {
+      term: "What is a subnet mask?",
+      answer: "32-bit number separating network and host portions. 1s = network bits, 0s = host bits. 255.255.255.0 = /24."
+    },
+    {
+      term: "CIDR notation explained",
+      answer: "IP address followed by slash and prefix length. /24 means 24 network bits, 8 host bits."
+    },
+    {
+      term: "IPv6 address shortening rules",
+      answer: "Rule 1: drop leading zeros in each group (0db8 → db8). Rule 2: replace one consecutive run of zero groups with :: (can appear only once)."
+    },
+
+    // ============================================================
+    // TCP & UDP (5 cards)
+    // ============================================================
+    {
+      term: "TCP three-way handshake",
+      answer: "SYN (client) → SYN-ACK (server) → ACK (client). Connection established."
+    },
+    {
+      term: "TCP flags — SYN, ACK, FIN, RST",
+      answer: "SYN: establish connection. ACK: acknowledge data. FIN: graceful close. RST: reset/abort connection."
+    },
+    {
+      term: "TCP vs UDP — key differences",
+      answer: "TCP: reliable, ordered, connection-oriented, slower. UDP: unreliable, unordered, connectionless, faster."
+    },
+    {
+      term: "UDP use cases",
+      answer: "DNS queries, VoIP, video streaming, DHCP — where speed matters more than reliability."
+    },
+    {
+      term: "TCP congestion control algorithms",
+      answer: "Slow start (exponential) → Congestion avoidance (linear) → Fast retransmit/fast recovery (on loss)."
+    },
+
+    // ============================================================
+    // DNS & PORTS (3 cards)
+    // ============================================================
+    {
+      term: "DNS port and protocol",
+      answer: "Port 53. UDP for standard queries. TCP for large responses (zone transfers, 512+ byte replies)."
+    },
+    {
+      term: "DNS record types — A, AAAA, CNAME",
+      answer: "A: IPv4 address. AAAA: IPv6 address. CNAME: alias/canonical name (maps one hostname to another)."
+    },
+    {
+      term: "Common ports — SSH, HTTP, HTTPS, DNS",
+      answer: "SSH: 22, HTTP: 80, HTTPS: 443, DNS: 53."
+    },
+
+    // ============================================================
+    // NETWORK DEVICES & TOPOLOGIES (4 cards)
+    // ============================================================
+    {
+      term: "Hub vs switch vs router",
+      answer: "Hub: broadcasts to all ports (obsolete). Switch: forwards based on MAC address. Router: forwards based on IP address between networks."
+    },
+    {
+      term: "Default gateway",
+      answer: "Router's private-side IP configured on every device. Traffic to other networks is forwarded here."
+    },
+    {
+      term: "What is a VLAN?",
+      answer: "Virtual LAN — logically segments a physical network into separate broadcast domains for security and traffic reduction."
+    },
+    {
+      term: "Broadcast vs multicast address",
+      answer: "Broadcast: sent to ALL devices (255.255.255.255). Multicast: sent to specific group (224.0.0.0–239.255.255.255)."
+    },
+
+    // ============================================================
+    // NAT & FIREWALLS (3 cards)
+    // ============================================================
+    {
+      term: "NAT vs PAT",
+      answer: "NAT = IP translation only (one private per public). PAT = IP + port translation (many private per public IP)."
+    },
+    {
+      term: "What is NAT overloading (PAT)?",
+      answer: "Port Address Translation — maps multiple private IPs to one public IP using unique source ports. Most common NAT in home routers."
+    },
+    {
+      term: "Stateful vs stateless firewall",
+      answer: "Stateless: examines each packet in isolation. Stateful: tracks connection state table — only allows responses to established outbound connections."
+    },
+
+    // ============================================================
+    // ARP & LAYER 2 (4 cards)
+    // ============================================================
+    {
+      term: "ARP purpose",
+      answer: "Address Resolution Protocol — resolves IP addresses to MAC addresses within a subnet. Broadcasts 'Who has x.x.x.x?' and caches the reply."
+    },
+    {
+      term: "ARP poisoning/spoofing",
+      answer: "Attacker sends fake ARP replies, associating their MAC with another device's IP. Traffic goes to attacker instead."
+    },
+    {
+      term: "FCS (Frame Check Sequence)",
+      answer: "Checksum trailer at Layer 2. Receiver recalculates; mismatch = frame corrupted and discarded. Only footer in the stack."
+    },
+    {
+      term: "MAC address structure",
+      answer: "48-bit address: first 24 bits = OUI (vendor), last 24 bits = NIC-specific. Example: 00:1A:2B:3C:4D:5E."
+    },
+
+    // ============================================================
+    // ROUTING PROTOCOLS (3 cards)
+    // ============================================================
+    {
+      term: "BGP (Border Gateway Protocol)",
+      answer: "Holds the public internet together. ISPs use it to advertise address blocks and determine global routing paths."
+    },
+    {
+      term: "OSPF (Open Shortest Path First)",
+      answer: "Interior Gateway Protocol (IGP) using link-state routing. Calculates shortest path using Dijkstra's algorithm. Common in enterprise networks."
+    },
+    {
+      term: "VLSM golden rule",
+      answer: "Always allocate subnets from largest host requirement to smallest. Prevents large subnets wasting space needed by smaller ones."
+    },
+
+    // ============================================================
+    // NETWORK SECURITY (3 cards)
+    // ============================================================
+    {
+      term: "SYN flood attack",
+      answer: "Attacker sends many SYN packets but never completes the handshake. Target's connection table fills with half-open connections, refusing legitimate traffic."
+    },
+    {
+      term: "IDS vs IPS",
+      answer: "IDS (Intrusion Detection System): monitors and alerts. IPS (Intrusion Prevention System): monitors and actively blocks/threatens traffic."
+    },
+    {
+      term: "DMZ (Demilitarized Zone)",
+      answer: "Network segment between internet and internal network. Hosts public-facing servers (web, email). If compromised, internal network remains protected."
+    },
+
+    // ============================================================
+    // CABLING & PHYSICAL LAYER (4 cards)
+    // ============================================================
+    {
+      term: "T568B mnemonic",
+      answer: "O · G · B · G · B (2-1-2-1-2): Orange×2 → White/Green → Blue×2 → Green → Brown×2. Dominant standard for commercial and home cabling."
+    },
+    {
+      term: "RJ45 T568A vs T568B difference",
+      answer: "Only the orange and green pairs swap. Pins 4,5 (blue) and 7,8 (brown) are identical in both. T568B: Orange leads. T568A: Green leads."
+    },
+    {
+      term: "Straight-through vs crossover cable",
+      answer: "Straight-through: both ends T568B — connects different device types (PC→switch). Crossover: T568A one end, T568B other — connects same device types (PC→PC)."
+    },
+    {
+      term: "OSI Layer 1 (Physical) responsibilities",
+      answer: "Transmits raw bits over a medium. Defines cabling, connectors, signaling, voltage levels, and data rates."
+    },
+
+    // ============================================================
+    // IPv6 & ICMP (3 cards)
+    // ============================================================
+    {
+      term: "IPv6 address types — link-local, unique local, global",
+      answer: "Link-local: FE80::/10 (communication on same subnet). Unique local: FC00::/7 (private internal). Global: 2000::/3 (public internet)."
+    },
+    {
+      term: "ICMP protocol",
+      answer: "Internet Control Message Protocol — used for error reporting and diagnostics. Ping uses ICMP Echo Request/Reply."
+    },
+    {
+      term: "Common ICMP types",
+      answer: "Type 0: Echo Reply (ping response). Type 3: Destination Unreachable. Type 8: Echo Request (ping). Type 11: Time Exceeded (traceroute)."
+    },
+
+    // ============================================================
+    // DHCP & TROUBLESHOOTING (3 cards)
+    // ============================================================
+    {
+      term: "DHCP process — DORA",
+      answer: "Discover (client broadcast) → Offer (server) → Request (client) → Acknowledge (server). Client gets IP, mask, gateway, DNS."
+    },
+    {
+      term: "ping command",
+      answer: "Tests reachability using ICMP Echo Request/Reply. Common flags: -c (count), -i (interval), -s (packet size)."
+    },
+    {
+      term: "traceroute command",
+      answer: "Shows each hop (router) a packet takes to reach a destination. Uses ICMP Time Exceeded or UDP packets with increasing TTL."
+    }
   ];
 
   function renderFlashcards() {
@@ -954,15 +1158,16 @@ setTimeout(() => {
     });
   }
   
-  // ----- QUIZ DATA SETS -----
   const QUIZ_SETS = {
-    // SET 1 – Core Networking Fundamentals (Original 10 questions)
+    // ============================================================
+    // SET 1: Core Networking Fundamentals (14 questions)
+    // ============================================================
     1: [
       {
         q: "Which OSI layer is responsible for logical addressing and routing packets across multiple networks?",
         options: ["Layer 2 — Data Link", "Layer 3 — Network", "Layer 4 — Transport", "Layer 7 — Application"],
         correct: 1,
-        explain: "Layer 3 (Network) handles IP addressing and routing. Routers operate exclusively at this layer, reading the IP header to forward packets hop-by-hop."
+        explain: "Layer 3 (Network) handles IP addressing and routing. Routers operate at this layer, reading the IP header to forward packets hop-by-hop."
       },
       {
         q: "What is the correct formula for calculating the number of usable host addresses in a subnet?",
@@ -972,7 +1177,12 @@ setTimeout(() => {
       },
       {
         q: "A device on your network has the IP address 169.254.45.12. What does this indicate?",
-        options: ["The device has a valid DHCP-assigned address", "The device cannot reach a DHCP server and has self-assigned an APIPA address", "The device is using a loopback address", "The device is on the 172.16.0.0/12 private range"],
+        options: [
+          "The device has a valid DHCP-assigned address",
+          "The device cannot reach a DHCP server and has self-assigned an APIPA address",
+          "The device is using a loopback address",
+          "The device is on the 172.16.0.0/12 private range"
+        ],
         correct: 1,
         explain: "169.254.0.0/16 is the APIPA range. Seeing 169.254.x.x means DHCP failed — the device is isolated from the broader network."
       },
@@ -986,23 +1196,38 @@ setTimeout(() => {
         q: "During the TCP three-way handshake, what is the correct sequence of messages?",
         options: ["ACK → SYN → SYN-ACK", "SYN → SYN-ACK → ACK", "SYN → ACK → SYN-ACK", "SYN-ACK → SYN → ACK"],
         correct: 1,
-        explain: "SYN (client initiates) → SYN-ACK (server acknowledges and sends its sequence number) → ACK (client confirms). Connection is now established."
+        explain: "SYN (client initiates) → SYN-ACK (server acknowledges) → ACK (client confirms). Connection is now established."
       },
       {
         q: "Which statement correctly describes the difference between a stateless and stateful firewall?",
-        options: ["A stateless firewall is slower because it checks every packet twice", "A stateful firewall tracks the connection state table and only allows inbound packets matching established outbound connections", "A stateless firewall tracks MAC addresses; stateful tracks IP addresses", "A stateful firewall only works at layer 2"],
+        options: [
+          "A stateless firewall is slower because it checks every packet twice",
+          "A stateful firewall tracks the connection state table and only allows inbound packets matching established outbound connections",
+          "A stateless firewall tracks MAC addresses; stateful tracks IP addresses",
+          "A stateful firewall only works at layer 2"
+        ],
         correct: 1,
         explain: "A stateful firewall maintains a state table of active connections. Inbound packets that don't match an established outbound connection are dropped."
       },
       {
         q: "What is the purpose of ARP (Address Resolution Protocol)?",
-        options: ["It translates domain names to IP addresses", "It assigns IP addresses to devices on a network", "It resolves IP addresses to MAC addresses within the same subnet", "It encrypts traffic between two devices"],
+        options: [
+          "It translates domain names to IP addresses",
+          "It assigns IP addresses to devices on a network",
+          "It resolves IP addresses to MAC addresses within the same subnet",
+          "It encrypts traffic between two devices"
+        ],
         correct: 2,
         explain: "ARP resolves an IP address to its corresponding MAC address on the local subnet. The device broadcasts 'Who has IP x.x.x.x?' and the owner replies with its MAC address."
       },
       {
         q: "A DNS query for 'www.example.com' reaches a recursive resolver that has no cached answer. What is the correct order of servers it contacts?",
-        options: ["Authoritative NS → TLD server → Root server", "TLD server → Root server → Authoritative NS", "Root server → TLD server → Authoritative NS", "Root server → Authoritative NS → TLD server"],
+        options: [
+          "Authoritative NS → TLD server → Root server",
+          "TLD server → Root server → Authoritative NS",
+          "Root server → TLD server → Authoritative NS",
+          "Root server → Authoritative NS → TLD server"
+        ],
         correct: 2,
         explain: "Root server → TLD server → Authoritative NS. The root tells the resolver which TLD handles .com, the TLD tells it which NS handles example.com, and the NS returns the IP."
       },
@@ -1017,10 +1242,42 @@ setTimeout(() => {
         options: ["10.0.0.0/22", "10.0.0.0/23", "10.0.0.0/24", "10.0.0.0/20"],
         correct: 0,
         explain: "The four networks share the first 22 bits — they diverge at bit 23. Summary = 10.0.0.0/22. Block size 2^10 = 1024 addresses, range 10.0.0.0 → 10.0.3.255 ✓"
+      },
+      // 🔴 NEW CARDS
+      {
+        q: "Which of the following is a private IP address range?",
+        options: ["8.8.8.8", "192.168.1.1", "169.254.0.1", "1.1.1.1"],
+        correct: 1,
+        explain: "192.168.0.0/16 is one of the RFC 1918 private ranges. 8.8.8.8 and 1.1.1.1 are public DNS servers. 169.254.0.0/16 is APIPA (link-local)."
+      },
+      {
+        q: "What is the loopback address in IPv4?",
+        options: ["0.0.0.0", "127.0.0.1", "255.255.255.255", "169.254.0.1"],
+        correct: 1,
+        explain: "127.0.0.1 is the loopback address. Traffic sent here never leaves the host and is used for testing the local network stack."
+      },
+      {
+        q: "What port does SSH use by default?",
+        options: ["20", "21", "22", "23"],
+        correct: 2,
+        explain: "SSH uses port 22 by default. Port 20/21 are FTP, port 23 is Telnet."
+      },
+      {
+        q: "What is the primary difference between a hub and a switch?",
+        options: [
+          "Hub is faster than switch",
+          "Hub broadcasts to all ports; switch forwards based on MAC address",
+          "Hub works at Layer 3; switch works at Layer 2",
+          "Hub is more secure than switch"
+        ],
+        correct: 1,
+        explain: "A hub broadcasts all traffic to every port (obsolete). A switch intelligently forwards frames based on MAC addresses, reducing collisions and improving performance."
       }
     ],
 
-    // SET 2 – Subnetting & CIDR (New)
+    // ============================================================
+    // SET 2: Subnetting, IPv6 & Advanced IP (14 questions)
+    // ============================================================
     2: [
       {
         q: "What is the subnet mask for a /27 CIDR block?",
@@ -1081,16 +1338,43 @@ setTimeout(() => {
         options: ["32", "64", "128", "256"],
         correct: 1,
         explain: "/26 = 32-26=6 host bits → 2^6 = 64 total addresses."
+      },
+      // 🔴 NEW CARDS
+      {
+        q: "What is the IPv6 link-local address prefix?",
+        options: ["FE80::/10", "FC00::/7", "2000::/3", "FF00::/8"],
+        correct: 0,
+        explain: "FE80::/10 is the link-local prefix. These addresses are used for communication on the same subnet and are not routed."
+      },
+      {
+        q: "What is the IPv6 unique local address prefix?",
+        options: ["FE80::/10", "FC00::/7", "2000::/3", "FF00::/8"],
+        correct: 1,
+        explain: "FC00::/7 is the unique local prefix (similar to IPv4 private addresses). They are routable within a site but not on the internet."
+      },
+      {
+        q: "What is the IPv6 global unicast address prefix?",
+        options: ["FE80::/10", "FC00::/7", "2000::/3", "FF00::/8"],
+        correct: 2,
+        explain: "2000::/3 is the global unicast prefix — these addresses are routable on the public internet."
+      },
+      {
+        q: "What is the DHCP process commonly referred to as?",
+        options: ["SYN-ACK", "DORA", "Three-way handshake", "DNS resolution"],
+        correct: 1,
+        explain: "DORA = Discover, Offer, Request, Acknowledge. The client broadcasts a Discover, the server Offers an IP, the client Requests it, and the server Acknowledges."
       }
     ],
 
-    // SET 3 – Network Security & Advanced Topics (New)
+    // ============================================================
+    // SET 3: Security, Protocols & Troubleshooting (14 questions)
+    // ============================================================
     3: [
       {
         q: "What type of attack sends TCP SYN packets but never completes the handshake?",
         options: ["DDoS", "SYN flood", "ARP spoofing", "IP spoofing"],
         correct: 1,
-        explain: "SYN flood attack sends many SYN packets without ACK, exhausting the target's connection table."
+        explain: "SYN flood attack sends many SYN packets without ACK, exhausting the target's connection table and preventing legitimate connections."
       },
       {
         q: "Which firewall type tracks the state of active connections?",
@@ -1112,7 +1396,12 @@ setTimeout(() => {
       },
       {
         q: "What is the primary purpose of a VLAN?",
-        options: ["Increase bandwidth", "Segment a physical network into logical broadcast domains", "Encrypt traffic between switches", "Provide redundancy"],
+        options: [
+          "Increase bandwidth",
+          "Segment a physical network into logical broadcast domains",
+          "Encrypt traffic between switches",
+          "Provide redundancy"
+        ],
         correct: 1,
         explain: "VLANs logically separate networks on the same physical switch, improving security and reducing broadcast traffic."
       },
@@ -1145,6 +1434,36 @@ setTimeout(() => {
         options: ["TCP", "UDP", "ICMP", "ARP"],
         correct: 2,
         explain: "ICMP (Internet Control Message Protocol) Echo Request and Echo Reply are used by ping."
+      },
+      // 🔴 NEW CARDS
+      {
+        q: "What does ICMP Type 3 indicate?",
+        options: ["Echo Reply", "Destination Unreachable", "Time Exceeded", "Redirect"],
+        correct: 1,
+        explain: "ICMP Type 3 is Destination Unreachable. It indicates a network, host, port, or protocol is unreachable."
+      },
+      {
+        q: "What command shows the route packets take to reach a destination?",
+        options: ["ping", "traceroute", "dig", "nmap"],
+        correct: 1,
+        explain: "traceroute shows every router hop a packet takes to reach the destination. tracepath is a no-root alternative."
+      },
+      {
+        q: "Which wireless security standard is considered the most secure for home networks?",
+        options: ["WEP", "WPA", "WPA2", "WPA3"],
+        correct: 3,
+        explain: "WPA3 is the most current and secure standard. WEP is obsolete, WPA is outdated, and WPA2 is still common but WPA3 offers better protection."
+      },
+      {
+        q: "What is the purpose of the `netstat` or `ss` command?",
+        options: [
+          "Show routing table",
+          "Show active network connections and listening ports",
+          "Test connectivity to a host",
+          "Resolve hostnames"
+        ],
+        correct: 1,
+        explain: "ss (or the older netstat) shows active network connections, listening ports, and socket statistics. ss -tuln is the most common usage."
       }
     ]
   };
