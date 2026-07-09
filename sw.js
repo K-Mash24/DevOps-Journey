@@ -4,7 +4,7 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-07-06-v4)
 
-const CACHE_NAME = 'devops-journey-2026-07-09-v1.2';
+const CACHE_NAME = 'devops-journey-2026-07-09-v1.4';
 
 // ----- STATIC ASSETS TO CACHE ON INSTALL -----
 const urlsToCache = [
@@ -28,9 +28,7 @@ const urlsToCache = [
   
   // Assets
   '/DevOps-Journey/img/favicon.svg',
-  '/DevOps-Journey/img/Logo.svg',
-  '/DevOps-Journey/img/Network.svg',
-  '/DevOps-Journey/img/linux-icon.svg',
+  '/DevOps-Journey/img/Logo.svg',  
   
   // PWA
   '/DevOps-Journey/manifest.json'
