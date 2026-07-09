@@ -163,7 +163,23 @@ document.addEventListener('DOMContentLoaded', () => {
       quizKey: 'security-quiz-passed', 
       sectionPrefix: 'security-section-' 
     },
-    scripting: { placeholder: true, name: 'Scripting' },
+    scripting: { 
+      sections: 9,
+      quiz: true,
+      titles: [
+        'Section 1 — Python fundamentals',
+        'Section 2 — Python Functions, Modules & Error Handling',
+        'Section 3 — File I/O in Python',
+        'Section 4 — Bash Scripting Fundamentals',
+        'Section 5 — Bash Scripting — Advanced',
+        'Section 6 — REST APIs — Concepts',
+        'Section 7 — Working with APIs in Python',
+        'Section 8 — JSON Parsing & Data Manipulation',
+        'Section 9 — Automation Patterns'
+      ],
+      quizKey: 'scripting-quiz-passed',
+      sectionPrefix: 'scripting-section'
+     },
     databases: { placeholder: true, name: 'Databases' }
   };
 
@@ -271,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 'security',
       icon: '3',
-      status: 'in-progress',
+      status: 'complete',
       name: 'Pillar 3 — Security Concepts',
       sub: '9 sections · Cryptography fundamentals, Hashing & password security, TLS/SSL & the handshake, PKI & Certificate Authorities, Authentication vs Authorization, Network & system hardening',
       link: 'html/security.html'
@@ -279,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 'scripting',
       icon: '4',
-      status: 'locked',
+      status: 'in-progress',
       name: 'Pillar 4 — Scripting & Automation',
       sub: 'Python fundamentals, Bash, REST APIs, JSON',
       link: '#'
@@ -838,7 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pillars = ['networking','linux','security','scripting','databases'];
     const names = ['Networking', 'Linux & CLI', 'Security', 'Scripting', 'Databases'];
     const icons = ['🌐', '🐧', '👀', '⚙️', '🗄️'];
-    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', '#', '#'];
+    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', 'html/scripting.html', '#'];
     track.innerHTML = pillars.map((p, idx) => {
       const progress = getPhase1PillarCompletion(p);
       const percent = Math.round(progress * 100);
