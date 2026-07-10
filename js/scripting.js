@@ -137,28 +137,48 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================
   // SECTION ACCORDIONS (9 sections — replace content)
   // ============================================================
+  function renderAccordion(containerId, accordionData) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-  function buildPlaceholderAccordion(sectionNum) {
-    return {
-      id: `section-${sectionNum}`,
-      title: `Section ${sectionNum} — Placeholder`,
-      priority: sectionNum === 1,
-      icon: '📄',
-      bodyHTML: `
-        <p>This is a placeholder for Section ${sectionNum}. Replace with actual content.</p>
-        <div class="code-block"><pre><span class="code-comment"># Placeholder code block</span>
-  echo "Replace me"</pre></div>
-        <div class="info-box note">Add your notes here.</div>
-      `
-    };
+    const html = accordionData.map(acc => `
+      <div class="accordion open" data-searchable>
+        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">
+          <div class="accordion-title">
+            <span class="acc-icon" aria-hidden="true">${acc.icon}</span>
+            ${acc.title}
+            ${acc.priority ? '<span class="tag priority">priority</span>' : ''}
+          </div>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+          </svg>
+        </button>
+        <div class="accordion-body">${acc.bodyHTML}</div>
+      </div>
+    `).join('');
+
+    container.innerHTML = html;
   }
 
-  // const SECTION_ACCORDIONS = [];
-  // for (let i = 1; i <= 9; i++) {
-  //   SECTION_ACCORDIONS.push(buildPlaceholderAccordion(i));
+  // function buildPlaceholderAccordion(sectionNum) {
+  //   return {
+  //     id: `section-${sectionNum}`,
+  //     title: `Section ${sectionNum} — Placeholder`,
+  //     priority: sectionNum === 1,
+  //     icon: '📄',
+  //     bodyHTML: `
+  //       <p>This is a placeholder for Section ${sectionNum}. Replace with actual content.</p>
+  //       <div class="code-block"><pre><span class="code-comment"># Placeholder code block</span>
+  // echo "Replace me"</pre></div>
+  //       <div class="info-box note">Add your notes here.</div>
+  //     `
+  //   };
   // }
 
-    const SECTION_ACCORDIONS = [
+  // ============================================================
+  // SECTION 1 — Python Fundamentals
+  // ============================================================
+  const SECTION_1_ACCORDIONS = [
     {
       id: 's1-problem',
       title: '1.1 The Problem, With a Concrete Scenario',
@@ -619,29 +639,459 @@ document.addEventListener('DOMContentLoaded', () => {
       `
     }
   ];
+  // // ============================================================
+  // // SECTION 2 — Functions, Modules & Error Handling
+  // // ============================================================
+  const SECTION_2_ACCORDIONS = [
+    {
+      id: 'python-functions',
+      title: 'Defining & Calling Functions',
+      priority: true,
+      icon: '⚡',
+      bodyHTML: `
+        <p>Functions are reusable blocks of code.</p>
+        <div class="code-block"><pre>def greet(name):
+        return f"Hello, {name}!"
 
-  function renderAccordion(containerId, accordionData) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
+    print(greet("Alice"))</pre></div>
+      `
+    },
+    {
+      id: 'python-modules',
+      title: 'Modules & Imports',
+      priority: false,
+      icon: '📦',
+      bodyHTML: `
+        <p>Python modules are files containing Python code.</p>
+        <div class="code-block"><pre><span class="code-comment"># Import entire module</span>
+    import math
+    print(math.sqrt(16))
 
-    const html = accordionData.map(acc => `
-      <div class="accordion open" data-searchable>
-        <button type="button" class="accordion-header" onclick="toggleAccordion(this)" aria-expanded="true">
-          <div class="accordion-title">
-            <span class="acc-icon" aria-hidden="true">${acc.icon}</span>
-            ${acc.title}
-            ${acc.priority ? '<span class="tag priority">priority</span>' : ''}
-          </div>
-          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
-          </svg>
-        </button>
-        <div class="accordion-body">${acc.bodyHTML}</div>
-      </div>
-    `).join('');
+    <span class="code-comment"># Import specific functions</span>
+    from math import sqrt, pi</pre></div>
+      `
+    },
+    {
+      id: 'python-error-handling',
+      title: 'Error Handling (try/except)',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <p>Python uses exceptions to handle errors.</p>
+        <div class="code-block"><pre>try:
+        x = int(input("Enter a number: "))
+        result = 10 / x
+    except ValueError:
+        print("That's not a valid number!")
+    except ZeroDivisionError:
+        print("Cannot divide by zero!")</pre></div>
+      `
+    }
+  ];
 
-    container.innerHTML = html;
-  }
+  // // ============================================================
+  // // SECTION 3 — File I/O in Python
+  // // ============================================================
+  const SECTION_3_ACCORDIONS = [
+    {
+      id: 'python-file-read',
+      title: 'Reading Files',
+      priority: true,
+      icon: '📖',
+      bodyHTML: `
+        <p>The <code>with</code> statement ensures files are properly closed.</p>
+        <div class="code-block"><pre><span class="code-comment"># Read entire file</span>
+    with open("data.txt", "r") as file:
+        content = file.read()
+
+    <span class="code-comment"># Read line by line</span>
+    with open("data.txt", "r") as file:
+        for line in file:
+            print(line.strip())</pre></div>
+      `
+    },
+    {
+      id: 'python-file-write',
+      title: 'Writing Files',
+      priority: false,
+      icon: '✍️',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># Write to file</span>
+    with open("output.txt", "w") as file:
+        file.write("Hello, World!\\n")
+
+    <span class="code-comment"># Append to file</span>
+    with open("output.txt", "a") as file:
+        file.write("Appended line.\\n")</pre></div>
+      `
+    }
+  ];
+
+  // // ============================================================
+  // // SECTION 4 — Bash Scripting Fundamentals
+  // // ============================================================
+  const SECTION_4_ACCORDIONS = [
+    {
+      id: 'bash-hello-world',
+      title: 'Hello World & Shebang',
+      priority: true,
+      icon: '🚀',
+      bodyHTML: `
+        <p>Bash scripts start with a <strong>shebang</strong> line.</p>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+    echo "Hello, World!"</pre></div>
+      `
+    },
+    {
+      id: 'bash-variables',
+      title: 'Variables & Command Substitution',
+      priority: false,
+      icon: '📦',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># Variables (no spaces around =)</span>
+    name="Alice"
+    echo "Hello, $name"
+
+    <span class="code-comment"># Command substitution</span>
+    current_date=$(date)
+    echo "Today is $current_date"</pre></div>
+      `
+    },
+    {
+      id: 'bash-conditionals',
+      title: 'Conditionals (if, elif, else)',
+      priority: false,
+      icon: '🔀',
+      bodyHTML: `
+        <div class="code-block"><pre>if [ "$age" -gt 18 ]; then
+        echo "Adult"
+    else
+        echo "Minor"
+    fi</pre></div>
+      `
+    },
+    {
+      id: 'bash-loops',
+      title: 'Loops (for, while)',
+      priority: false,
+      icon: '🔄',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># For loop</span>
+    for i in {1..5}; do
+        echo "Number: $i"
+    done
+
+    <span class="code-comment"># While loop</span>
+    count=0
+    while [ $count -lt 5 ]; do
+        echo "Count: $count"
+        ((count++))
+    done</pre></div>
+      `
+    }
+  ];
+
+  // // ============================================================
+  // // SECTION 5 — Bash Scripting Advanced
+  // // ============================================================
+  const SECTION_5_ACCORDIONS = [
+    {
+      id: 'bash-functions',
+      title: 'Functions & Arguments',
+      priority: false,
+      icon: '⚡',
+      bodyHTML: `
+        <div class="code-block"><pre>greet() {
+        echo "Hello, $1!"
+    }
+    greet "Alice"</pre></div>
+      `
+    },
+    {
+      id: 'bash-text-processing',
+      title: 'Text Processing — grep, sed, awk',
+      priority: true,
+      icon: '📊',
+      bodyHTML: `
+        <h4>grep — Search for patterns</h4>
+        <div class="code-block"><pre>grep "error" /var/log/system.log
+    grep -i "warning" log.txt
+    grep -r "TODO" src/</pre></div>
+
+        <h4>sed — Stream Editor</h4>
+        <div class="code-block"><pre>sed 's/old/new/g' file.txt
+    sed -i 's/old/new/g' file.txt</pre></div>
+
+        <h4>awk — Pattern Scanning</h4>
+        <div class="code-block"><pre>awk '{print $1, $3}' data.txt
+    awk '$2 > 100 {print $1}' data.txt</pre></div>
+      `
+    },
+    {
+      id: 'bash-exit-codes',
+      title: 'Exit Codes & Error Handling',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># Exit code — 0 = success</span>
+    ls /nonexistent
+    echo $?                              <span class="code-comment"># 2</span>
+
+    <span class="code-comment"># Exit on error</span>
+    set -e
+    set -euo pipefail</pre></div>
+      `
+    }
+  ];
+
+  // // ============================================================
+  // // SECTION 6 — REST APIs Concepts
+  // // ============================================================
+  const SECTION_6_ACCORDIONS = [
+    {
+      id: 'rest-basics',
+      title: 'REST API Fundamentals',
+      priority: true,
+      icon: '🌐',
+      bodyHTML: `
+        <h4>HTTP Methods</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>GET</code></td><td>Retrieve data</td></tr>
+              <tr><td><code>POST</code></td><td>Create resource</td></tr>
+              <tr><td><code>PUT</code></td><td>Replace resource</td></tr>
+              <tr><td><code>PATCH</code></td><td>Partial update</td></tr>
+              <tr><td><code>DELETE</code></td><td>Remove resource</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>HTTP Status Codes</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><strong>200</strong> OK</td><td>Success</td></tr>
+              <tr><td><strong>201</strong> Created</td><td>Resource created</td></tr>
+              <tr><td><strong>404</strong> Not Found</td><td>Resource not found</td></tr>
+              <tr><td><strong>500</strong> Server Error</td><td>Server error</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'rest-authentication',
+      title: 'Authentication Methods',
+      priority: false,
+      icon: '🔐',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Method</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><strong>API Key</strong></td><td>Static token in header</td></tr>
+              <tr><td><strong>Bearer Token</strong></td><td>JWT in Authorization header</td></tr>
+              <tr><td><strong>OAuth 2.0</strong></td><td>Delegated authorization</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-block"><pre>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</pre></div>
+      `
+    }
+  ];
+
+  // // ============================================================
+  // // SECTION 7 — Working with APIs in Python
+  // // ============================================================
+  const SECTION_7_ACCORDIONS = [
+    {
+      id: 'python-requests-get',
+      title: 'Making GET Requests',
+      priority: true,
+      icon: '📥',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># pip install requests</span>
+    import requests
+
+    response = requests.get("https://api.github.com/users/octocat")
+    print(response.status_code)
+    print(response.json())
+
+    <span class="code-comment"># With query parameters</span>
+    params = {"q": "python", "per_page": 10}
+    response = requests.get("https://api.github.com/search/repositories", params=params)</pre></div>
+      `
+    },
+    {
+      id: 'python-requests-post',
+      title: 'Making POST, PUT, DELETE Requests',
+      priority: false,
+      icon: '📤',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># POST with JSON</span>
+    data = {"name": "Alice", "email": "alice@example.com"}
+    response = requests.post(
+        "https://api.example.com/users",
+        json=data
+    )
+
+    <span class="code-comment"># PUT (replace)</span>
+    response = requests.put(
+        "https://api.example.com/users/123",
+        json={"name": "Alice Smith"}
+    )
+
+    <span class="code-comment"># DELETE</span>
+    response = requests.delete(
+        "https://api.example.com/users/123"
+    )</pre></div>
+      `
+    }
+  ];
+
+  // // ============================================================
+  // // SECTION 8 — JSON Parsing & Data Manipulation
+  // // ============================================================
+  const SECTION_8_ACCORDIONS = [
+    {
+      id: 'json-parse',
+      title: 'Parsing JSON in Python',
+      priority: true,
+      icon: '🔍',
+      bodyHTML: `
+        <div class="code-block"><pre>import json
+
+    <span class="code-comment"># Parse JSON string</span>
+    json_string = '{"name": "Alice", "age": 30}'
+    data = json.loads(json_string)
+    print(data["name"])
+
+    <span class="code-comment"># Convert Python to JSON</span>
+    person = {"name": "Bob", "age": 25}
+    json_string = json.dumps(person, indent=2)
+
+    <span class="code-comment"># Read from file</span>
+    with open("data.json", "r") as file:
+        data = json.load(file)</pre></div>
+      `
+    },
+    {
+      id: 'json-advanced',
+      title: 'Advanced JSON — Data Extraction',
+      priority: false,
+      icon: '🔄',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># Safe access with .get()</span>
+    city = data.get("address", {}).get("city", "Unknown")
+
+    <span class="code-comment"># Extract fields from API response</span>
+    response = requests.get("https://api.github.com/users/octocat")
+    data = response.json()
+    print(data.get("login"))
+    print(data.get("name"))
+
+    <span class="code-comment"># List comprehension to extract field</span>
+    names = [item["name"] for item in api_response["results"]]</pre></div>
+      `
+    }
+  ];
+
+  // // ============================================================
+  // // SECTION 9 — Automation Patterns
+  // // ============================================================
+  const SECTION_9_ACCORDIONS = [
+    {
+      id: 'automation-patterns',
+      title: 'Common Automation Patterns',
+      priority: true,
+      icon: '🤖',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pattern</th><th>Description</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Scheduled (Cron)</strong></td><td>Run at fixed times</td><td>Daily backups at 2am</td></tr>
+              <tr><td><strong>Polling</strong></td><td>Check for changes periodically</td><td>Check for new files every 5 minutes</td></tr>
+              <tr><td><strong>Idempotent</strong></td><td>Safe to run multiple times</td><td>Create user only if they don't exist</td></tr>
+              <tr><td><strong>Retry</strong></td><td>Retry on failure with backoff</td><td>API call retries 3 times</td></tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 'automation-cron',
+      title: 'Scheduling with Cron',
+      priority: false,
+      icon: '⏰',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># Crontab format</span>
+    <span class="code-comment"># ┌───────────── minute</span>
+    <span class="code-comment"># │ ┌───────────── hour</span>
+    <span class="code-comment"># │ │ ┌───────────── day of month</span>
+    <span class="code-comment"># │ │ │ ┌───────────── month</span>
+    <span class="code-comment"># │ │ │ │ ┌───────────── day of week</span>
+    <span class="code-comment"># │ │ │ │ │</span>
+    <span class="code-comment"># * * * * * command</span>
+
+    30 2 * * * /home/user/backup.sh     <span class="code-comment"># daily at 2:30am</span>
+    */5 * * * * /home/user/check.sh      <span class="code-comment"># every 5 minutes</span>
+    0 9 * * 1 /home/user/weekly.sh       <span class="code-comment"># Monday at 9am</span></pre></div>
+      `
+    },
+    {
+      id: 'automation-python-scripting',
+      title: 'Automation with Python',
+      priority: false,
+      icon: '🐍',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment">#!/usr/bin/env python3</span>
+    <span class="code-comment"># Idempotent user creation</span>
+
+    import json
+    import os
+
+    def create_user(username, email):
+        users_file = "users.json"
+
+        if os.path.exists(users_file):
+            with open(users_file, "r") as f:
+                users = json.load(f)
+        else:
+            users = []
+
+        for user in users:
+            if user["username"] == username:
+                print(f"User {username} already exists")
+                return
+
+        users.append({"username": username, "email": email})
+        with open(users_file, "w") as f:
+            json.dump(users, f, indent=2)
+        print(f"User {username} created")
+
+    if __name__ == "__main__":
+        create_user("alice", "alice@example.com")</pre></div>
+      `
+    }
+  ];
+
+
+
+
+  // renderAccordion();
+  renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
+  renderAccordion('js-section2-container', SECTION_2_ACCORDIONS);
+  renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
+  renderAccordion('js-section4-container', SECTION_4_ACCORDIONS);
+  renderAccordion('js-section5-container', SECTION_5_ACCORDIONS);
+  renderAccordion('js-section6-container', SECTION_6_ACCORDIONS);
+  renderAccordion('js-section7-container', SECTION_7_ACCORDIONS);
+  renderAccordion('js-section8-container', SECTION_8_ACCORDIONS);
+  renderAccordion('js-section9-container', SECTION_9_ACCORDIONS);
 
   // ============================================================
   // FLASHCARD SCROLLER
