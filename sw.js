@@ -4,7 +4,7 @@
 // 🔄 UPDATE THIS VERSION EVERY TIME YOU DEPLOY CHANGES
 // Format: YYYY-MM-DD-sequential (e.g., 2026-07-06-v4)
 
-const CACHE_NAME = 'devops-journey-2026-07-10-v2.0';
+const CACHE_NAME = 'devops-journey-2026-07-10-v2.1';
 
 // ----- STATIC ASSETS TO CACHE ON INSTALL -----
 const urlsToCache = [
@@ -188,22 +188,3 @@ self.addEventListener('fetch', event => {
       })
   );
 });
-
-// For JS & CSS, instead of just cache-first, add background update:
-if (url.pathname.includes('/js/') || url.pathname.includes('.css')) {
-  event.respondWith(
-    caches.match(request).then(cached => {
-      const fetchPromise = fetch(request).then(response => {
-        if (response && response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
-        }
-        return response;
-      }).catch(() => {});
-      
-      // Return cached version immediately, but update in background
-      return cached || fetchPromise;
-    })
-  );
-  return;
-}
