@@ -1079,10 +1079,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-
-
-
-  // renderAccordion();
   renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
   renderAccordion('js-section2-container', SECTION_2_ACCORDIONS);
   renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
@@ -1426,17 +1422,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================
 
   renderScriptingOverview();
-
-  const containerIds = [
-    'js-section1-container', 'js-section2-container', 'js-section3-container',
-    'js-section4-container', 'js-section5-container', 'js-section6-container',
-    'js-section7-container', 'js-section8-container', 'js-section9-container'
-  ];
-
-  containerIds.forEach((id, index) => {
-    renderAccordion(id, [SECTION_ACCORDIONS[index]]);
-  });
-
   renderFlashcards();
   renderQuiz();
 
