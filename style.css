@@ -1338,6 +1338,95 @@ pre {
   }
 }
 
+/* ── Accordion Toggle Button ── */
+.accordion-toggle-btn {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 4px 8px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--text-muted) !important;
+  transition: background 0.2s ease,
+              color 0.2s ease,
+              box-shadow 0.2s ease,
+              transform 0.15s ease !important;
+  box-shadow: var(--shadow-sm) !important;
+  margin-right: 8px !important;
+  height: 32px !important;
+  width: 32px !important;
+  flex-shrink: 0 !important;
+}
+
+.accordion-toggle-btn:hover {
+  background: var(--pillar-color-light) !important;
+  color: var(--accent-primary) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.accordion-toggle-btn:active {
+  transform: scale(0.92) !important;
+}
+
+/* ── SVG icon inside the button ── */
+.accordion-toggle-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+/* ── Tooltip ── */
+.accordion-toggle-btn .toggle-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  font-weight: 500;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.accordion-toggle-btn:hover .toggle-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Dark theme ── */
+[data-theme="dark"] .accordion-toggle-btn {
+  border-color: var(--border-color);
+  background: var(--bg-card);
+}
+
+[data-theme="dark"] .accordion-toggle-btn:hover {
+  background: var(--pillar-color-light);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .accordion-toggle-btn,
+  .accordion-toggle-btn svg {
+    transition: none !important;
+  }
+}
+
 /* ── Sidebar Overlay ── */
 .sidebar-overlay {
   position: fixed;
@@ -1370,7 +1459,7 @@ pre {
 /* ── Page Container ── */
 .page-container {
   padding: 2rem 2.5rem 4rem;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   width: 100%;
 }
@@ -1381,6 +1470,49 @@ pre {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-color);
 }
+
+.page-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.page-icon {
+  width: 40px;
+  flex-shrink: 0;
+  color: var(--accent-primary);
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.page-icon:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Make the h1 sit next to the icon */
+.page-header .header-left h1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-icon {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-icon {
+    display: none;
+  }
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -5805,47 +5937,5 @@ select.styled-select:hover,
   select.styled-select {
     width: 100%;
     min-width: unset;
-  }
-}
-
-.page-header .header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.page-icon {
-  width: 40px;
-  flex-shrink: 0;
-  color: var(--accent-primary);
-  opacity: 0.8;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.page-icon:hover {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-/* Make the h1 sit next to the icon */
-.page-header .header-left h1 {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  width: 100%;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .page-icon {
-    display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .page-icon {
-    display: none;
   }
 }

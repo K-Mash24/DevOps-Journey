@@ -8,7 +8,7 @@ const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevO
 // SERVICE WORKER VERSION CHECK
 // ============================================================
 
-const APP_VERSION = '2026-07-10-v2.6'; // Match your CACHE_NAME
+const APP_VERSION = '2026-07-10-v2.7'; // Match your CACHE_NAME
 
 if (localStorage.getItem('sw-version') !== APP_VERSION) {
   console.log('🔄 New version detected — clearing old caches...');
@@ -2563,60 +2563,42 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
   function addAccordionToggleButton() {
     const topbarRight = document.querySelector('.topbar-right');
-    if (!topbarRight) {
-      console.warn('⚠️ .topbar-right not found, skipping accordion toggle button');
-      return;
-    }
-
-    // Check if button already exists
+    if (!topbarRight) return;
     if (topbarRight.querySelector('.accordion-toggle-btn')) return;
 
-    // Create the button
     const btn = document.createElement('button');
     btn.className = 'accordion-toggle-btn';
     btn.setAttribute('aria-label', 'Toggle all accordions');
-    btn.title = 'Toggle all accordions';
+    btn.title = 'Toggle all accordions'; // Fallback for browsers
+
     btn.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M4 10a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z" clip-rule="evenodd"/>
-        <path fill-rule="evenodd" d="M10 4a1 1 0 011 1v10a1 1 0 11-2 0V5a1 1 0 011-1z" clip-rule="evenodd"/>
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 10a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z"/>
+        <path d="M10 4a1 1 0 011 1v10a1 1 0 11-2 0V5a1 1 0 011-1z"/>
       </svg>
+      <span class="toggle-tooltip">Toggle all</span>
     `;
 
-    // Style the button
     Object.assign(btn.style, {
-      background: 'var(--bg-card)',
-      border: '1px solid var(--border-color)',
-      borderRadius: 'var(--radius-sm)',
-      padding: '4px 8px',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'var(--text-primary)',
-      transition: 'background 0.2s, transform 0.15s',
-      marginRight: '8px'
+      // All styles moved to CSS
+      // We only keep the minimal inline styles needed
     });
 
-    // Add hover effect via CSS or inline
+    // Hover effects (keep these if you want)
     btn.addEventListener('mouseenter', () => {
-      btn.style.background = 'var(--bg-tertiary)';
+      btn.style.background = 'var(--pillar-color-light)';
     });
     btn.addEventListener('mouseleave', () => {
       btn.style.background = 'var(--bg-card)';
     });
 
-    // Click handler
     btn.addEventListener('click', function(e) {
       e.preventDefault();
       if (typeof window.toggleAllAccordions === 'function') {
         window.toggleAllAccordions();
-      } else {
-        console.warn('⚠️ toggleAllAccordions not defined');
       }
     });
 
-    // Insert before the theme toggle
     topbarRight.insertBefore(btn, topbarRight.firstChild);
   }
 
