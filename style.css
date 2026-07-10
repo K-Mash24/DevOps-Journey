@@ -1550,6 +1550,14 @@ pre {
   background: var(--text-primary);
 }
 
+.header-text {
+  width: 100%;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-direction: row;
+};
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -3202,9 +3210,6 @@ pre {
   border-radius: 50%;
   background: var(--accent-primary);
   animation: pulse 2s ease-in-out infinite;
-}
-.hero-eyebrow .page-icon{
-  padding: 4px 0;
 }
 @keyframes pulse {
   0%,
@@ -5734,8 +5739,7 @@ select.styled-select:hover,
 }
 
 .page-icon {
-  width: 32px;
-  height: 32px;
+  width: 40px;
   flex-shrink: 0;
   color: var(--accent-primary);
   opacity: 0.8;
@@ -5759,14 +5763,12 @@ select.styled-select:hover,
 /* Responsive */
 @media (max-width: 768px) {
   .page-icon {
-    width: 26px;
-    height: 26px;
+    display: none;
   }
 }
 
 @media (max-width: 480px) {
   .page-icon {
-    width: 22px;
-    height: 22px;
+    display: none;
   }
 }

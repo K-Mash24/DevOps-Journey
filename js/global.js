@@ -8,7 +8,7 @@ const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevO
 // SERVICE WORKER VERSION CHECK
 // ============================================================
 
-const APP_VERSION = '2026-07-10-v2.2'; // Match your CACHE_NAME
+const APP_VERSION = '2026-07-10-v2.3'; // Match your CACHE_NAME
 
 if (localStorage.getItem('sw-version') !== APP_VERSION) {
   console.log('🔄 New version detected — clearing old caches...');
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Pillar 2 — Linux & CLI Proficiency',
       sub: '10 sections · File system, permissions, processes, SSH, package management, bash scripting, systemd, text processing, networking commands',
       link: 'html/linux.html',
-      highlight: '← YOU ARE HERE'
+      // highlight: '← YOU ARE HERE'
     },
     {
       id: 'security',
@@ -452,9 +452,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     ],
     badges: [
-      { id: 'methodBadgeNetworking', text: '✅ Networking', defaultClass: 'complete' },
+      { id: 'methodBadgeNetworking', text: '📶 Networking', defaultClass: 'complete' },
       { id: 'methodBadgeLinux', text: '⏳ Linux & CLI', defaultClass: 'in-progress' },
-      { id: 'methodBadgeSecurity', text: '🔒 Security', defaultClass: 'locked' },
+      { id: 'methodBadgeSecurity', text: '🔐 Security', defaultClass: 'locked' },
       { id: 'methodBadgeScripting', text: '⚙️ Scripting', defaultClass: 'locked' },
       { id: 'methodBadgeDatabases', text: '🗄️ Databases', defaultClass: 'locked' }
     ],
@@ -1705,7 +1705,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         const isDisabled = (progress === 0 && links[idx] === '#') ? 'aria-disabled="true" style="pointer-events:none;"' : '';
         return `<a href="${links[idx]}" class="${cardClass}" ${isDisabled}>
                   <div class="card-top">
-                    <div class="card-icon ${icons[idx]}" aria-hidden="true">${icons[idx]==='net'?'🌐':icons[idx]==='linux'?'🐧':'🔒'}</div>
+                    <div class="card-icon ${icons[idx]}" aria-hidden="true">${icons[idx]==='net'?'📶':icons[idx]==='linux'?'👩‍💻':icons[idx]==='sec'?'🔐':icons[idx]==='script'?'👀':'🔒'}</div>
                     <span class="card-status-badge ${statusClass}">${statusBadge}</span>
                   </div>
                   <div><div class="card-number">Pillar 0${idx+1}</div><div class="card-title">${titles[idx]}</div></div>
@@ -2847,7 +2847,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           '🔒 Network security basics (firewalls, ACLs, attacks)',
           '🔌 RJ45 cabling (T568A/T568B, straight‑through, crossover)'
         ],
-        '🌐'
+        '📶'
       );
     }
     // Linux Pillar
@@ -2866,7 +2866,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           '🌐 Networking commands (ssh, curl, netstat, ss)',
           '🔧 Systemd & service management (systemctl, journalctl)'
         ],
-        '🐧'
+        '👩‍💻'
       );
     }
     // Add more pillars here as they are built
@@ -2882,7 +2882,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           '🌐 OWASP Top 10 web vulnerabilities',
           '🔒 Network hardening & secure defaults'
         ],
-        '🔒'
+        '🔐'
       );
     }
     else if (path.includes('scripting.html')) {

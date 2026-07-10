@@ -55,7 +55,7 @@
 
     <div class="sidebar-section-label">Navigation</div>
     <nav class="sidebar-nav" aria-label="Primary navigation">
-      <a class="nav-item" href="../index.html">
+      <a class="nav-item" href="../index.html" title="Back to the Home Page">
         <svg 
           class="nav-icon"
           viewBox="0 0 30 30" 
@@ -67,7 +67,7 @@
         </svg>
         Home
       </a>
-      <a class="nav-item" href="#resources">
+      <a class="nav-item" href="#resources" title="Other Resources and Further Reading">
         <svg 
               class="nav-icon"
               viewBox="0 0 16 16" 
@@ -78,18 +78,6 @@
               <path fill-rule="evenodd" clip-rule="evenodd" d="M7.71 3h6.79l.51.5v10l-.5.5h-13l-.5-.5v-11l.5-.5h5l.35.15.85.85zm6.28 10v-1.51l.01-4v-1.5H7.7l-.86.86-.35.15H2v6h11.99zm-6.5-8h6.5l.01-.99H7.5l-.36-.15-.85-.85H2v3h4.28l.86-.86.35-.15zm2.29 4.07L8.42 7.7l.74-.69 2.22 2.22v.71l-2.29 2.21-.7-.72 1.4-1.35H8.42a2 2 0 0 0-1.35.61A1.8 1.8 0 0 0 6.54 12h-1a2.76 2.76 0 0 1 .81-2 3 3 0 0 1 2-.93h1.43z"/>
             </svg>
         Resources
-      </a>
-      <a class="nav-item" href="../index.html" aria-label="Go back to Networking Fundamentals pillar">
-        <svg 
-          class="nav-icon"
-          viewBox="0 0 256 256" 
-          fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path d="M70.72168,128.3916c.22412-.273.46289-.53271.71-.78467.02881-.02978.05322-.0625.083-.09228l24-24a12.0001,12.0001,0,0,1,16.9707,16.9707L108.9707,124H164V104a12,12,0,0,1,24,0v32a12.0006,12.0006,0,0,1-12,12H108.9707l3.51465,3.51465a12.0001,12.0001,0,0,1-16.9707,16.9707l-24-24c-.02979-.02978-.0542-.0625-.083-.09228-.24707-.252-.48584-.51172-.71-.78467-.12354-.15039-.23145-.30908-.34668-.46387-.11816-.15869-.24121-.31348-.35156-.478-.12012-.18017-.2251-.3667-.335-.55127-.08985-.15185-.18555-.2998-.269-.45605-.10009-.18652-.18505-.37842-.27441-.56885-.07715-.16455-.15967-.32617-.22949-.49463-.07666-.18554-.13916-.375-.20606-.56347-.06494-.18164-.13476-.35987-.19092-.54541-.05712-.189-.0996-.38135-.14746-.57325-.04687-.188-.10009-.374-.13818-.56543-.044-.22168-.07031-.44482-.10156-.668-.02344-.165-.05518-.32666-.07129-.49366a12.042,12.042,0,0,1,0-2.373c.01611-.167.04785-.32862.07129-.49366.03125-.22314.05761-.44628.10156-.668.03809-.19141.09131-.37745.13818-.56543.04786-.1919.09034-.38428.14746-.57373.05616-.18506.126-.36329.19092-.54493.0669-.18847.1294-.37793.20606-.56347.06982-.16846.15234-.33008.23-.49463.08887-.19043.17383-.38233.27392-.56885.0835-.15625.1792-.3042.269-.45605.10986-.18457.21484-.3711.335-.55127.11035-.16455.2334-.31934.35156-.478C70.49023,128.70068,70.59814,128.542,70.72168,128.3916ZM236,56V200a20.02229,20.02229,0,0,1-20,20H40a20.02229,20.02229,0,0,1-20-20V56A20.02229,20.02229,0,0,1,40,36H216A20.02229,20.02229,0,0,1,236,56Zm-24,4H44V196H212Z"/>
-        </svg>
-        Back to Home. 
       </a>
     </nav>
 
@@ -281,6 +269,12 @@
           </svg>
           Pillar 3 — Security Concepts
         </a>
+        <a class="nav-item" href="../html/scripting.html" aria-disabled="true">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M7.71 3h6.79l.51.5v10l-.5.5h-13l-.5-.5v-11l.5-.5h5l.35.15.85.85zm6.28 10v-1.51l.01-4v-1.5H7.7l-.86.86-.35.15H2v6h11.99zm-6.5-8h6.5l.01-.99H7.5l-.36-.15-.85-.85H2v3h4.28l.86-.86.35-.15zm2.29 4.07L8.42 7.7l.74-.69 2.22 2.22v.71l-2.29 2.21-.7-.72 1.4-1.35H8.42a2 2 0 0 0-1.35.61A1.8 1.8 0 0 0 6.54 12h-1a2.76 2.76 0 0 1 .81-2 3 3 0 0 1 2-.93h1.43z"/>
+            </svg>
+            Pillar 4 — Scripting & Automation
+        </a>
       </nav>
 
     <div class="sidebar-footer">
@@ -340,9 +334,14 @@
       
       <div class="header-content">
         <div class="header-left">
-          <h1>
-            Networking Fundamentals
-          </h1>
+          <div class="header-text">
+            <div class="page-icon" aria-hidden="true" style="background: var(--logo-color);">
+              <img src="../img/Network.svg" alt="Great Cheatsheets Logo">
+            </div>
+            <h1 class="header-text">
+              Networking Fundamentals
+            </h1>
+          </div>
           <div class="meta-badges" id="metaBadges">
             <!-- Populated by JavaScript -->
           </div>
