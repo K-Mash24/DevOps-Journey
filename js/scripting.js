@@ -160,745 +160,2120 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = html;
   }
 
-  // function buildPlaceholderAccordion(sectionNum) {
-  //   return {
-  //     id: `section-${sectionNum}`,
-  //     title: `Section ${sectionNum} — Placeholder`,
-  //     priority: sectionNum === 1,
-  //     icon: '📄',
-  //     bodyHTML: `
-  //       <p>This is a placeholder for Section ${sectionNum}. Replace with actual content.</p>
-  //       <div class="code-block"><pre><span class="code-comment"># Placeholder code block</span>
-  // echo "Replace me"</pre></div>
-  //       <div class="info-box note">Add your notes here.</div>
-  //     `
-  //   };
-  // }
-
   // ============================================================
   // SECTION 1 — Python Fundamentals
   // ============================================================
   const SECTION_1_ACCORDIONS = [
     {
-      id: 's1-problem',
-      title: '1.1 The Problem, With a Concrete Scenario',
+      id: 's1-what-is-python',
+      title: '1.1 What is Python, Actually?',
       priority: false,
-      icon: '🔓',
+      icon: '🐍',
       bodyHTML: `
-        <p>
-          Imagine you run an online store. A customer, Alice, wants to enter her card number on your checkout page. Between her laptop and your server sits an untrusted path — her home router, her ISP, backbone routers, possibly a public Wi-Fi hotspot. Any one of these hops could, in principle, be run or compromised by someone hostile. Security engineers work under the default assumption: <strong>treat the network as hostile</strong> — design as if someone is always listening.
-        </p>
-        <p>
-          The moment Alice tries to send her card number securely, two distinct problems appear:
-        </p>
-        <ol style="padding-left:1.2rem;margin:0.5rem 0;">
-          <li><strong>Confidentiality</strong> — scramble the data so a listener sees gibberish.</li>
-          <li><strong>Key exchange</strong> — the scrambling needs a "key," but how do Alice's browser and your server agree on that key <em>without</em> the listener also learning it?</li>
-        </ol>
-        <p>
-          Problem 2 is the hard one. If the key itself is sent over the same network, the eavesdropper grabs it too — the entire scheme collapses. This is the <strong>key exchange problem</strong>, and modern cryptography largely exists to solve it.
-        </p>
-        <div class="info-box tip" style="margin-top:1rem;">
-          <strong>🔑 The Locked Box Analogy</strong>
-          <p>Think of cryptography as sending a package through a hostile postal system:</p>
-          <ul style="margin-top:0.25rem;padding-left:1.2rem;">
-            <li><strong>Symmetric:</strong> A lock with one key. You must physically hand the key to the recipient <em>before</em> sending anything. If the postal system is compromised, delivering the key is the weak point.</li>
-            <li><strong>Asymmetric:</strong> A padlock that anyone can lock but only you can unlock. You publish copies of the open padlock to the world. Anyone can put a message in a box and snap the padlock shut. Only you have the key to open it — and the key never leaves your pocket.</li>
-          </ul>
-          <p style="margin-top:0.25rem;">This is the conceptual leap that makes modern cryptography work: <strong>instead of sharing a secret key, you share a public padlock.</strong></p>
+        <p>Python is an <strong>interpreted</strong> language — there is no separate compile step producing a standalone executable before running (contrast with C, where source is compiled into a binary first). A program called the <strong>Python interpreter</strong> reads a <code>.py</code> file line by line and executes it directly.</p>
+        <p>This gives a fast feedback loop: write code, run it, see the result immediately — exactly why Python dominates scripting and automation work.</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Check version:</h4>
+        <div class="code-block"><pre>python3 --version</pre></div>
+        <p>Expected output:</p>
+        <div class="code-block"><pre>Python 3.11.x</pre></div>
+        <div class="info-box note">
+          <strong>📌 Note:</strong> Always use <code>python3</code>, not <code>python</code>, on Linux. Many systems don't alias <code>python</code> to <code>python3</code> — bare <code>python</code> may fail with "command not found" or invoke a legacy Python 2 install if one still exists on the system.
         </div>
       `
     },
     {
-      id: 's1-symmetric',
-      title: '1.2 Symmetric Encryption',
+      id: 's1-running-python',
+      title: '1.2 Running Python Two Ways',
       priority: false,
-      icon: '🔐',
+      icon: '▶️',
       bodyHTML: `
-        <p>
-          One key does both jobs — it encrypts and decrypts. Think of a physical padlock: whoever holds the key can lock the box or unlock it. There's no distinction between a "locking key" and an "unlocking key" — it's the same object.
-        </p>
-        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Symmetric Encryption Flow</h4>
-        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
-          <pre style="color:var(--text-primary);font-size:0.75rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
-            <code>
-  ┌─────────────────────────────────────────────────────────────┐
-  │                          Alice                             │
-  │                                                            │
-  │                     Plaintext: "4111"                      │
-  │                           │                                │
-  │                           ▼                                │
-  │                  ┌──────────────┐                         │
-  │                  │  AES Encrypt │                         │
-  │                  └──────────────┘                         │
-  │                           │                                │
-  │                  Ciphertext: "9f2a..."                    │
-  │                           │                                │
-  └───────────────────────────┼─────────────────────────────────┘
-                              │
-                              ▼
-  ┌─────────────────────────────────────────────────────────────┐
-  │                         Network                            │
-  │                                                            │
-  │                  Ciphertext: "9f2a..."                    │
-  │                           │                                │
-  │                  Eavesdropper sees gibberish              │
-  │                                                            │
-  └───────────────────────────┼─────────────────────────────────┘
-                              │
-                              ▼
-  ┌─────────────────────────────────────────────────────────────┐
-  │                           Bob                              │
-  │                                                            │
-  │                  Ciphertext: "9f2a..."                    │
-  │                           │                                │
-  │                           ▼                                │
-  │                  ┌──────────────┐                         │
-  │                  │  AES Decrypt │                         │
-  │                  └──────────────┘                         │
-  │                           │                                │
-  │                     Plaintext: "4111"                      │
-  │                                                            │
-  └─────────────────────────────────────────────────────────────┘
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. The interactive interpreter (REPL — Read-Eval-Print Loop)</h4>
+        <div class="code-block"><pre>python3</pre></div>
+        <p>Lands in an interactive prompt:</p>
+        <div class="code-block"><pre>Python 3.11.4 (main, ...)
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>></pre></div>
+        <p>Type expressions, see results instantly:</p>
+        <div class="code-block"><pre>>>> 2 + 2
+  4
+  >>> "hello" + " world"
+  'hello world'</pre></div>
+        <p>Exit with <code>exit()</code> or <code>Ctrl+D</code>.</p>
 
-                            K = Shared Secret Key
-                  (must be agreed upon before communication)
-            </code>
-          </pre>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. Running a script file</h4>
+        <div class="code-block"><pre>nano hello.py</pre></div>
+        <div class="code-block"><pre><span class="code-comment"># hello.py</span>
+  print("Hello, DevOps Journey")</pre></div>
+        <div class="code-block"><pre>python3 hello.py</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Hello, DevOps Journey</pre></div>
+        <div class="info-box tip">
+          <strong>💡 Pro tip:</strong> The REPL is for quick experiments. Script files are for anything saved, edited, and reused — essentially everything in automation.
         </div>
-        <p><strong>Worked example:</strong> Alice and Bob agree in advance (in person, before any network is involved) on a shared secret key, <code>K</code>. Alice runs her message through AES using <code>K</code>, producing ciphertext, and sends it over the internet. Bob receives the ciphertext and runs AES in reverse using the <em>same</em> key <code>K</code>, recovering the plaintext.</p>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead><tr><th>Pros</th><th>Cons</th></tr></thead>
-            <tbody>
-              <tr><td>Extremely fast — can encrypt gigabytes of data per second</td><td>The key exchange problem is completely unsolved. Alice and Bob had to agree on <code>K</code> beforehand.</td></tr>
-              <tr><td>Used for encrypting large volumes of data: video streams, database backups, entire disk volumes</td><td>Over the open internet, with a stranger, at first contact — there's no "beforehand" to rely on.</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="info-box note"><strong>📌 Algorithm to know:</strong> AES (Advanced Encryption Standard) — the current industry standard, running under the hood in HTTPS, VPNs, and disk encryption tools like BitLocker and LUKS.</div>
       `
     },
     {
-      id: 's1-asymmetric',
-      title: '1.3 Asymmetric Encryption (Public-Key Cryptography)',
+      id: 's1-variables',
+      title: '1.3 Variables',
       priority: false,
-      icon: '🔑',
+      icon: '📦',
       bodyHTML: `
-        <p>
-          This is the breakthrough (Diffie–Hellman, RSA — 1970s) that solves the key exchange problem. Instead of a single shared key, each party generates a <strong>mathematically linked pair</strong>: a public key and a private key. Data encrypted with one half of the pair can <em>only</em> be decrypted with the other half — not a copy of the same key, but its mathematical counterpart.
-        </p>
-        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Asymmetric Encryption Flow</h4>
-        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
-          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
-            <code>
-  ┌───────────────┐          ┌───────────────┐
-  │   Server      │          │   Alice       │
-  │   (Bob)       │          │   (Customer)  │
-  └───────┬───────┘          └───────┬───────┘
-          │                          │
-          │  1. Server generates     │
-          │     key pair             │
-          ▼                          │
-  ┌───────────────┐                  │
-  │ Public Key    │◄─────────────────┘
-  │ Private Key   │  2. Public key sent to Alice
-  └───────┬───────┘
-          │
-          │  3. Alice encrypts with
-          │     Server's public key
-          ▼
-  ┌───────────────┐
-  │ Ciphertext    │──────────────────► Eavesdropper
-  │ "9f2a..."     │     (has public key + ciphertext
-  └───────┬───────┘      → cannot decrypt)
-          │
-          │  4. Server decrypts with
-          │     private key (never sent)
-          ▼
-  ┌───────────────┐
-  │ Plaintext     │
-  │ "4111"        │
-  └───────────────┘
-            </code>
-          </pre>
-        </div>
-        <p><strong>Worked scenario — Alice and the online store:</strong></p>
-        <ol style="padding-left:1.2rem;margin:0.5rem 0;">
-          <li>Your server generated a key pair long before Alice ever connected. The public key is embedded in your server's TLS certificate and handed to anyone who connects.</li>
-          <li>Alice's browser connects and receives your server's public key.</li>
-          <li>Alice's browser encrypts her card number using your server's <em>public</em> key.</li>
-          <li>The ciphertext travels across the hostile network. An eavesdropper captures it and already has the public key too (it's public) — neither piece of information helps them.</li>
-          <li>Your server decrypts using its <em>private</em> key — which never left the server and was never transmitted anywhere.</li>
-        </ol>
-        <p>The elegant part: Alice never needed to have met you before, and no shared secret needed to exist in advance. The public key can be published to the entire planet, and it changes nothing — only the mathematically paired private key can reverse the encryption.</p>
+        <p>A <strong>variable</strong> is a name referring to a value stored in memory. Python is <strong>dynamically typed</strong> — no type declaration up front; the interpreter infers the type from the assigned value.</p>
+        <div class="code-block"><pre>name = "Keith"
+  age = 5
+  is_learning = True</pre></div>
+        <p>No <code>int name = 5</code> syntax (unlike Java/C). Just <code>name = value</code>.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Naming rules:</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Letters, digits, underscores only; cannot start with a digit</li>
+          <li>Case‑sensitive (<code>age</code> ≠ <code>Age</code>)</li>
+          <li>Convention: <code>snake_case</code> (<code>user_name</code>, not <code>userName</code> — that's a Java/JavaScript convention)</li>
+          <li><strong>Reserved keywords</strong> cannot be used as variable names (e.g., <code>if</code>, <code>for</code>, <code>while</code>, <code>def</code>, <code>return</code>).</li>
+        </ul>
+      `
+    },
+    {
+      id: 's1-data-types',
+      title: '1.4 Core Data Types',
+      priority: false,
+      icon: '📊',
+      bodyHTML: `
         <div class="table-wrapper">
           <table class="data-table">
-            <thead><tr><th>Pros</th><th>Cons</th></tr></thead>
+            <thead><tr><th>Type</th><th>Example</th><th>Meaning</th></tr></thead>
             <tbody>
-              <tr><td>Solves key exchange cleanly for two strangers meeting for the first time online</td><td>Computationally expensive — RSA-2048 is roughly 100–1000x slower than AES</td></tr>
-              <tr><td>Enables digital signatures (authenticity) and non-repudiation</td><td>Encrypting a 4GB backup file with RSA directly would be painfully slow</td></tr>
+              <tr><td><code>int</code></td><td><code>42</code></td><td>Whole number</td></tr>
+              <tr><td><code>float</code></td><td><code>3.14</code></td><td>Decimal number</td></tr>
+              <tr><td><code>str</code></td><td><code>"hello"</code></td><td>Text (single or double quotes both valid)</td></tr>
+              <tr><td><code>bool</code></td><td><code>True</code> / <code>False</code></td><td>Boolean — capitalized, unlike JSON/JS</td></tr>
+              <tr><td><code>NoneType</code></td><td><code>None</code></td><td>Represents "no value" — Python's null</td></tr>
             </tbody>
           </table>
         </div>
-        <div class="table-wrapper" style="margin-top:0.75rem;">
-          <table class="data-table">
-            <thead><tr><th>Algorithm</th><th>Year</th><th>Key size</th><th>Use case</th></tr></thead>
-            <tbody>
-              <tr><td>RSA</td><td>1977</td><td>2048–4096 bits</td><td>Widely supported, legacy systems</td></tr>
-              <tr><td>ECC (Elliptic Curve)</td><td>1985</td><td>256–521 bits</td><td>Smaller keys, faster — increasingly preferred in modern TLS</td></tr>
-            </tbody>
-          </table>
-        </div>
+
+        <p>Check type at runtime:</p>
+        <div class="code-block"><pre>>>> x = 42
+  >>> type(x)
+  &lt;class 'int'&gt;</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Type conversion (casting):</h4>
+        <div class="code-block"><pre>>>> str(42)        # '42'
+  >>> int("42")       # 42
+  >>> float("3.14")   # 3.14
+  >>> int("abc")      # ValueError: invalid literal for int() with base 10: 'abc'</pre></div>
         <div class="info-box warning">
-          <strong>⚠️ A Common Misconception</strong>
-          <p>It's tempting to assume asymmetric encryption is "strictly better" since it solves key exchange. It isn't a replacement for symmetric encryption — it <em>can't</em> be, due to the speed gap. If a server used pure RSA to encrypt an entire video stream, page loads would crawl. Early SSL implementations that overused asymmetric operations ran into exactly this bottleneck in practice.</p>
+          <strong>⚠️ Callout:</strong> An impossible conversion raises an <strong>exception</strong> — an error that can be caught and handled programmatically (covered in Section 2). Scripts that accept external input must anticipate this.
         </div>
       `
     },
     {
-      id: 's1-why-asymmetric-alone',
-      title: '1.4 Why Asymmetric Alone Isn\'t Enough',
+      id: 's1-operators',
+      title: '1.5 Basic Operators',
       priority: false,
-      icon: '⚡',
+      icon: '➕',
       bodyHTML: `
-        <p>The speed gap is not academic — it's a hard engineering constraint.</p>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead><tr><th>Operation</th><th>Time (approx)</th></tr></thead>
-            <tbody>
-              <tr><td>Encrypt 1KB with AES</td><td>Microseconds</td></tr>
-              <tr><td>Encrypt 1KB with RSA</td><td>Milliseconds</td></tr>
-              <tr><td>Encrypt 1GB with AES</td><td>Seconds</td></tr>
-              <tr><td>Encrypt 1GB with RSA</td><td>Minutes to hours</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p style="margin-top:0.75rem;">If a server uses RSA to encrypt every byte of a 4GB video file, the operation could take 100–1000x longer than using AES. That's the difference between a responsive API and a timeout.</p>
-        <div class="info-box tip"><strong>💡 The key insight:</strong> Asymmetric encryption is used for <em>exchanging a small secret</em> — not for encrypting the bulk data itself.</div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Arithmetic:</h4>
+        <div class="code-block"><pre>>>> 7 + 3    # 10
+  >>> 7 - 3    # 4
+  >>> 7 * 3    # 21
+  >>> 7 / 3    # 2.333... (true division, always float)
+  >>> 7 // 3   # 2 (floor division, discards remainder)
+  >>> 7 % 3    # 1 (modulo — the remainder)
+  >>> 7 ** 3   # 343 (exponentiation)</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Comparison</h4>
+        <p>Returns <code>bool</code>:</p>
+        <div class="code-block"><pre>>>> 5 == 5    # True
+  >>> 5 != 3    # True
+  >>> 5 > 3     # True
+  >>> 5 <= 5    # True</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Logical:</h4>
+        <div class="code-block"><pre>>>> True and False   # False
+  >>> True or False    # True
+  >>> not True          # False</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Truthiness (important!)</h4>
+        <p>In Python, any value can be used in a boolean context. The following are considered <code>False</code>:</p>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>None</code></li>
+          <li><code>False</code></li>
+          <li>Zero of any numeric type (<code>0</code>, <code>0.0</code>)</li>
+          <li>Empty sequences/collections (<code>""</code>, <code>[]</code>, <code>()</code>, <code>{}</code>, <code>set()</code>)</li>
+        </ul>
+        <p>Everything else is <code>True</code>.</p>
+        <div class="code-block"><pre>>>> if []:
+  ...     print("True")
+  ... else:
+  ...     print("False")
+  False</pre></div>
+        <p>This makes code like <code>if not user_list:</code> very common and clean.</p>
       `
     },
     {
-      id: 's1-hybrid',
-      title: '1.5 Hybrid Cryptosystems',
+      id: 's1-strings',
+      title: '1.6 Strings in Depth',
+      priority: false,
+      icon: '📝',
+      bodyHTML: `
+        <p>Strings are <strong>immutable</strong> — an existing string object cannot be changed in place. Methods that appear to modify a string actually return a new string.</p>
+        <div class="code-block"><pre>>>> s = "hello"
+  >>> s.upper()
+  'HELLO'
+  >>> s              # unchanged
+  'hello'</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">f-strings</h4>
+        <p>Modern, preferred formatting method:</p>
+        <div class="code-block"><pre>>>> name = "Keith"
+  >>> pillar = 4
+  >>> print(f"{name} is on Pillar {pillar}")
+  Keith is on Pillar 4</pre></div>
+        <p>The <code>f</code> prefix enables <code>{}</code> to embed variables directly, replacing older <code>.format()</code> and <code>%</code>-style formatting (still seen in legacy code, but you don't need to master them — just recognise them).</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Common string methods:</h4>
+        <div class="code-block"><pre>>>> s = "  Hello World  "
+  >>> s.strip()                       # 'Hello World' — trims whitespace
+  >>> s.lower()                       # '  hello world  '
+  >>> s.replace("World", "Python")    # '  Hello Python  '
+  >>> s.split(" ")                    # ['', '', 'Hello', 'World', '', '']
+  >>> len(s)                          # 15 (includes spaces)</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Slicing:</h4>
+        <div class="code-block"><pre>>>> s = "networking"
+  >>> s[0]        # 'n' (first character, index 0)
+  >>> s[0:4]      # 'netw' (index 0 up to, not including, 4)
+  >>> s[-1]       # 'g' (negative indexing counts from the end)
+  >>> s[::-1]     # 'gnikrowten' (reversed)</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical detail:</strong> Python indexing is <strong>zero-based</strong> — the first character is index <code>0</code>. This is consistent across all sequence types (strings, lists, tuples) and is a frequent early source of off-by-one errors.
+        </div>
+      `
+    },
+    {
+      id: 's1-comments',
+      title: '1.7 Comments',
+      priority: false,
+      icon: '💬',
+      bodyHTML: `
+        <p>Comments are ignored by the interpreter; they exist solely for human readers. Use them to explain <em>why</em> something is done, not <em>what</em> is done (the code itself shows what).</p>
+        <div class="code-block"><pre><span class="code-comment"># Single-line comment</span>
+
+  <span class="code-comment">"""
+  Multi-line comment / docstring
+  (usually used for function/module documentation)
+  """</span></pre></div>
+        <p>In scripts, always start with a comment explaining the purpose:</p>
+        <div class="code-block"><pre><span class="code-comment"># check_pillar_status.py</span>
+  <span class="code-comment"># Checks the completion status of Phase 1 pillars</span></pre></div>
+      `
+    },
+    {
+      id: 's1-collections',
+      title: '1.8 Collections: Lists, Tuples, Dicts',
+      priority: false,
+      icon: '📚',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Lists</h4>
+        <p>Ordered, mutable:</p>
+        <div class="code-block"><pre>>>> tools = ["docker", "kubernetes", "terraform"]
+  >>> tools[0]                # 'docker'
+  >>> tools.append("ansible")
+  >>> tools
+  ['docker', 'kubernetes', 'terraform', 'ansible']
+  >>> tools[1] = "k8s"        # mutate in place
+  >>> len(tools)              # 4</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Tuples</h4>
+        <p>Ordered, <strong>immutable</strong>:</p>
+        <div class="code-block"><pre>>>> coords = (10, 20)
+  >>> coords[0]      # 10
+  >>> coords[0] = 5  # TypeError: 'tuple' object does not support item assignment</pre></div>
+        <p>Use tuples for data that should not change — e.g., a fixed coordinate pair, or a function returning a fixed group of values.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Dictionaries (<code>dict</code>)</h4>
+        <p>Key-value pairs:</p>
+        <div class="code-block"><pre>>>> user = {"name": "Keith", "pillar": 4, "active": True}
+  >>> user["name"]           # 'Keith'
+  >>> user["pillar"] = 5      # update value
+  >>> user["cert"] = "CCP"    # add new key
+  >>> user
+  {'name': 'Keith', 'pillar': 5, 'active': True, 'cert': 'CCP'}
+  >>> user.keys()             # dict_keys(['name', 'pillar', 'active', 'cert'])
+  >>> user.values()           # dict_values(['Keith', 5, True, 'CCP'])</pre></div>
+        <div class="info-box note">
+          <strong>📌 DevOps connection:</strong> Dictionaries map almost one‑to‑one onto <strong>JSON</strong> objects — the data format used by virtually every REST API (Sections 6–8 of this pillar).
+        </div>
+      `
+    },
+    {
+      id: 's1-conditionals',
+      title: '1.9 Control Flow — Conditionals',
+      priority: false,
+      icon: '🔀',
+      bodyHTML: `
+        <div class="code-block"><pre>score = 85
+
+  if score >= 90:
+      print("A grade")
+  elif score >= 80:
+      print("B grade")
+  else:
+      print("C grade or below")</pre></div>
+        <p>Output: <code>B grade</code></p>
+        <div class="info-box warning">
+          <strong>⚠️ Critical syntax rule:</strong> Python uses <strong>indentation</strong> to define code blocks — not curly braces <code>{}</code> (unlike C/Java/JavaScript). Convention: <strong>4 spaces</strong> per level. Never mix tabs and spaces — causes <code>IndentationError</code>.
+        </div>
+      `
+    },
+    {
+      id: 's1-loops',
+      title: '1.10 Control Flow — Loops',
       priority: false,
       icon: '🔄',
       bodyHTML: `
-        <p>No real system picks one approach exclusively. TLS, SSH, Signal, WhatsApp all do the same thing:</p>
-        <ol style="padding-left:1.2rem;margin:0.5rem 0;">
-          <li><strong>Asymmetric</strong> encryption exchanges a short-lived, randomly generated <strong>symmetric session key</strong> — a small amount of data, so the slower asymmetric operation is cheap here.</li>
-          <li><strong>Symmetric</strong> encryption (AES) then handles all the actual bulk data — full page content, images, video, files — because it's fast.</li>
-        </ol>
-        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Visual: Hybrid Cryptosystem Flow</h4>
-        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
-          <pre style="color:var(--text-primary);font-size:0.7rem;white-space:pre-wrap;word-break:break-all;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
-            <code>
-  Client (Alice)                              Server (Bob)
-      │                                           │
-      │  1. Connect + fetch public key            │
-      │◄──────────────────────────────────────────│
-      │                                           │
-      │  2. Generate random session key (Ks)      │
-      │                                           │
-      │  3. Encrypt Ks with server's public key   │
-      │     (asymmetric — small data, cheap)      │
-      │──────────────────────────────────────────►│
-      │                                           │
-      │  4. Server decrypts Ks with private key   │
-      │                                           │
-      │  5. Encrypt all data with Ks (AES)        │
-      │     (symmetric — bulk data, fast)         │
-      │◄─────────────────────────────────────────►│
-      │                                           │
-      │  Ks is discarded after session ends       │
-      │  (forward secrecy — see Section 3)        │
-            </code>
-          </pre>
-        </div>
-        <div class="info-box note">
-          <strong>📌 Concrete numbers to anchor this:</strong>
-          <ul style="margin-top:0.25rem;padding-left:1.2rem;">
-            <li>Exchanging a 256-bit session key asymmetrically: ~milliseconds</li>
-            <li>Encrypting a 4GB file symmetrically with that key: ~seconds</li>
-            <li>Doing the same 4GB file with pure asymmetric encryption: an order of magnitude longer</li>
-          </ul>
-          <p style="margin-top:0.25rem;">This performance gap is <em>why</em> the hybrid model exists — it's a hard engineering requirement, not academic elegance.</p>
-        </div>
-        <div class="info-box tip" style="margin-top:0.75rem;">
-          <strong>🔗 What's next:</strong> This exact handshake-then-bulk-transfer pattern is precisely what the TLS handshake implements step by step (Section 3) — no new concept, just this same idea as an actual protocol.
-        </div>
-      `
-    },
-    {
-      id: 's1-key-length',
-      title: '1.6 Key Length & Security Levels',
-      priority: false,
-      icon: '📏',
-      bodyHTML: `
-        <p>Not all keys are equal. Here's what the numbers actually mean:</p>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead><tr><th>Algorithm</th><th>Key length</th><th>Equivalent security</th><th>Used for</th><th>Notes</th></tr></thead>
-            <tbody>
-              <tr><td><strong>AES</strong></td><td>128 bits</td><td>128 bits</td><td>Bulk encryption</td><td>Minimum for new systems</td></tr>
-              <tr><td><strong>AES</strong></td><td>256 bits</td><td>256 bits</td><td>Bulk encryption</td><td>✅ Recommended; future-proof</td></tr>
-              <tr><td><strong>RSA</strong></td><td>1024 bits</td><td>~80 bits</td><td>Legacy systems</td><td>❌ Broken — don't use</td></tr>
-              <tr><td><strong>RSA</strong></td><td>2048 bits</td><td>~112 bits</td><td>General use</td><td>✅ Minimum for new systems</td></tr>
-              <tr><td><strong>RSA</strong></td><td>3072 bits</td><td>~128 bits</td><td>Higher security</td><td>✅ Recommended for sensitive data</td></tr>
-              <tr><td><strong>RSA</strong></td><td>4096 bits</td><td>~140 bits</td><td>Very high security</td><td>Slower; use ECC instead</td></tr>
-              <tr><td><strong>ECC (P-256)</strong></td><td>256 bits</td><td>128 bits</td><td>Modern TLS</td><td>✅ Equivalent to RSA 3072, much faster</td></tr>
-              <tr><td><strong>ECC (P-384)</strong></td><td>384 bits</td><td>192 bits</td><td>Higher security</td><td>✅ Recommended for long-term security</td></tr>
-              <tr><td><strong>ECC (P-521)</strong></td><td>521 bits</td><td>256 bits</td><td>Future-proof</td><td>Very high security; overkill for most</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.25rem 0;">What "Equivalent Security" Actually Means</h4>
-        <p>When we say "AES-128 has 128 bits of security," we mean:</p>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;"><code>for</code> loop:</h4>
+        <div class="code-block"><pre>tools = ["docker", "kubernetes", "terraform"]
+  for tool in tools:
+      print(f"Learning: {tool}")</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Learning: docker
+  Learning: kubernetes
+  Learning: terraform</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>range()</code>:</h4>
+        <div class="code-block"><pre>for i in range(5):
+      print(i)</pre></div>
+        <p>Output: <code>0 1 2 3 4</code> — <code>range(5)</code> produces five values, 0 through 4, not through 5.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>while</code> loop:</h4>
+        <div class="code-block"><pre>count = 0
+  while count < 3:
+      print(f"Count is {count}")
+      count += 1   # shorthand for count = count + 1</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Count is 0
+  Count is 1
+  Count is 2</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>break</code> and <code>continue</code></h4>
         <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
-          <li>An attacker would need to try approximately 2^128 possible keys to break it.</li>
-          <li>That's roughly 3.4 × 10^38 attempts.</li>
-          <li>With all the world's computing power, that's effectively impossible.</li>
-        </ul>
-        <p>When we say "RSA-2048 has ~112 bits of security," we mean:</p>
-        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
-          <li>The best attack on RSA-2048 is faster than brute-forcing 2^112 operations.</li>
-          <li>This is why AES with a 128-bit key is considered stronger than RSA-2048, even though RSA-2048 looks like a much larger number.</li>
-        </ul>
-        <div class="info-box tip" style="margin-top:0.75rem;">
-          <strong>💡 Key takeaway:</strong> For equivalent security, <strong>ECC uses much smaller keys than RSA</strong>, making it faster and more efficient. This is why modern TLS prefers ECC.
-        </div>
-      `
-    },
-    {
-      id: 's1-pitfalls',
-      title: '1.7 Common Pitfalls',
-      priority: false,
-      icon: '🚫',
-      bodyHTML: `
-        <p>Even with the right algorithms, implementation mistakes are common — and often catastrophic.</p>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead><tr><th>Pitfall</th><th>Why it happens</th><th>How to avoid</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Using AES-ECB mode</strong></td><td>Default in some libraries; lazy coding</td><td>Always use GCM, CBC, or CTR with a random IV</td></tr>
-              <tr><td><strong>Hardcoding keys in source code</strong></td><td>Convenient for testing; forgotten in production</td><td>Use environment variables, secrets managers, or KMS</td></tr>
-              <tr><td><strong>Reusing a nonce/IV</strong></td><td>Saves time; not understanding the risk</td><td>Generate a fresh random IV for each encryption</td></tr>
-              <tr><td><strong>Rolling your own crypto</strong></td><td>Overconfidence; "I can write a better algorithm"</td><td>Use well-audited libraries (OpenSSL, libsodium, AWS KMS)</td></tr>
-              <tr><td><strong>Using MD5 or SHA-1 for security</strong></td><td>Legacy systems; not keeping up</td><td>Use SHA-256 or SHA-3 for hashing</td></tr>
-              <tr><td><strong>Using RSA-1024</strong></td><td>Old systems; not upgrading</td><td>Minimum RSA-2048, or preferably ECC</td></tr>
-              <tr><td><strong>Storing keys in plaintext</strong></td><td>Misunderstanding threat models</td><td>Encrypt keys at rest; use HSMs or KMS</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <h4 style="font-size:0.95rem;font-weight:600;margin:1rem 0 0.25rem 0;">Real-World Examples</h4>
-        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
-          <li><strong>ECB mode:</strong> The famous "Linux Penguin" image encrypted with ECB still shows the penguin silhouette — because identical blocks produce identical ciphertext.</li>
-          <li><strong>Hardcoded keys:</strong> Uber's 2016 breach was linked to hardcoded AWS keys in source code pushed to GitHub.</li>
-          <li><strong>IV reuse:</strong> WEP wireless encryption was broken largely because it reused IVs.</li>
+          <li><code>break</code> exits the loop immediately.</li>
+          <li><code>continue</code> skips the rest of the current iteration and moves to the next.</li>
         </ul>
       `
     },
     {
-      id: 's1-forward-secrecy',
-      title: '1.8 Forward Secrecy — Teaser for Section 3',
+      id: 's1-input-output',
+      title: '1.11 Simple Input/Output',
       priority: false,
-      icon: '🔮',
+      icon: '⌨️',
       bodyHTML: `
-        <p>There's one more twist to the key exchange problem.</p>
-        <p>Even if you solve the key exchange today, an attacker could <em>record</em> your encrypted traffic today and <em>store</em> it. If they later steal your server's private key (via a breach, vulnerability, or insider threat), they can decrypt <em>all past sessions</em> they recorded.</p>
-        <div class="info-box warning" style="margin-top:0.75rem;">
-          <strong>🔓 Forward Secrecy</strong>
-          <p>This solves the problem by ensuring that each session uses a <em>fresh, ephemeral</em> key that is:</p>
-          <ol style="margin-top:0.25rem;padding-left:1.2rem;">
-            <li>Exchanged using asymmetric cryptography during the handshake</li>
-            <li>Used only for that one session</li>
-            <li>Discarded immediately after the session ends</li>
-          </ol>
-          <p style="margin-top:0.25rem;">Even if an attacker steals your server's private key tomorrow, they cannot decrypt past sessions because each session's key was unique and never stored.</p>
-        </div>
-        <div class="info-box tip" style="margin-top:0.75rem;">
-          <strong>🔗 What's next:</strong> This is implemented using <strong>Diffie-Hellman ephemeral (DHE/ECDHE)</strong> — the "E" stands for "ephemeral" (short-lived). Modern TLS requires it. We'll cover this in detail in <strong>Section 3 (TLS/SSL &amp; the Handshake)</strong>.
-        </div>
-      `
-    },
-    {
-      id: 's1-devops-connection',
-      title: '1.9 DevOps Connection',
-      priority: false,
-      icon: '⚙️',
-      bodyHTML: `
-        <p>This same pattern appears repeatedly in the DevOps world:</p>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead><tr><th>DevOps context</th><th>Where crypto appears</th></tr></thead>
-            <tbody>
-              <tr><td><strong>SSH key-based login</strong></td><td>Asymmetric key pair authenticates the connection; session traffic encrypted symmetrically</td></tr>
-              <tr><td><strong>CI/CD secrets</strong></td><td>GitHub Secrets, GitLab CI variables — encrypted at rest, decrypted in memory during pipeline runs</td></tr>
-              <tr><td><strong>Container image signing</strong></td><td>Cosign/Sigstore uses asymmetric signatures to verify image provenance</td></tr>
-              <tr><td><strong>KMS / Secrets Manager</strong></td><td>Encryption at rest; key rotation policies; "envelope encryption" (KMS encrypts data keys, data keys encrypt data)</td></tr>
-              <tr><td><strong>TLS termination</strong></td><td>Load balancers, ingress controllers, API gateways terminate TLS and forward plaintext (or re-encrypt) internally</td></tr>
-              <tr><td><strong>mTLS (mutual TLS)</strong></td><td>Service-to-service authentication in microservices — both sides present certificates</td></tr>
-              <tr><td><strong>Helm secrets</strong></td><td>Encrypted values files using sops or Helm Secrets</td></tr>
-              <tr><td><strong>Vault</strong></td><td>Dynamic secrets, encryption as a service, transit engine</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="info-box note" style="margin-top:0.75rem;">
-          <strong>📌 The pattern is consistent:</strong> use asymmetric cryptography to establish trust and exchange a small secret, then use symmetric cryptography for all bulk work.
-        </div>
+        <p>To make scripts interactive, use <code>input()</code>:</p>
+        <div class="code-block"><pre>name = input("Enter your name: ")
+  print(f"Hello, {name}!")</pre></div>
+        <p><code>input()</code> always returns a string. Convert if needed:</p>
+        <div class="code-block"><pre>age = int(input("Enter your age: "))</pre></div>
       `
     },
     {
       id: 's1-hands-on',
-      title: '1.10 Hands-On Practice (Codespace)',
+      title: '🖥️ Hands-on Exercise',
       priority: false,
-      icon: '🖥️',
+      icon: '💻',
       bodyHTML: `
-        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">1. Generate an RSA Key Pair (Asymmetric)</h4>
-        <div class="code-block">
-          <pre>
-  # Generate a private key
-  openssl genrsa -out private.pem 2048
-
-  # Extract the public key
-  openssl rsa -in private.pem -pubout -out public.pem
-
-  # View the public key (this is what a server sends to a client)
-  cat public.pem</pre>
-        </div>
-        <p>Run <code>cat public.pem</code> — that block of text is exactly the kind of public key a browser receives from a server during a real TLS handshake. Worth seeing once so "public key" stops being an abstract idea.</p>
-        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">2. Encrypt and Decrypt a File with AES (Symmetric)</h4>
-        <div class="code-block">
-          <pre>
-  # Create a test file
-  echo "This is a secret message for my server" > plaintext.txt
-
-  # Encrypt with AES-256-CBC
-  openssl enc -aes-256-cbc -salt -in plaintext.txt -out encrypted.bin -pass pass:mysecretpassword
-
-  # View the ciphertext (it's binary — use cat or hexdump)
-  hexdump -C encrypted.bin | head
-
-  # Decrypt it
-  openssl enc -d -aes-256-cbc -in encrypted.bin -out decrypted.txt -pass pass:mysecretpassword
-
-  # Verify
-  cat decrypted.txt</pre>
-        </div>
-        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">3. Sign and Verify with RSA (Asymmetric — Preview)</h4>
-        <div class="code-block">
-          <pre>
-  # Create a message
-  echo "Deploy version v1.2.3" > message.txt
-
-  # Sign it with your private key
-  openssl dgst -sha256 -sign private.pem -out signature.bin message.txt
-
-  # Verify with the public key
-  openssl dgst -sha256 -verify public.pem -signature signature.bin message.txt</pre>
-        </div>
-        <p>This is how container image signing works — the publisher signs the image digest with their private key, and consumers verify with the public key.</p>
+        <p>Create a script called <code>pillar_status.py</code> that:</p>
+        <ol style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>Defines a dictionary for each Phase 1 pillar (networking, linux, security, scripting, databases) with keys <code>name</code> and <code>completed</code> (boolean).</li>
+          <li>Stores these dictionaries in a list.</li>
+          <li>Loops through the list and prints:
+            <ul style="margin:0.25rem 0 0 1.2rem;">
+              <li><code>"Pillar: &lt;name&gt; — COMPLETE"</code> if <code>completed</code> is <code>True</code></li>
+              <li><code>"Pillar: &lt;name&gt; — IN PROGRESS"</code> if <code>completed</code> is <code>False</code></li>
+            </ul>
+          </li>
+          <li>Asks the user for their current pillar and prints a personalised status message using the data.</li>
+        </ol>
+        <div class="code-block"><pre>nano pillar_status.py</pre></div>
+        <p>Run:</p>
+        <div class="code-block"><pre>python3 pillar_status.py</pre></div>
       `
     },
     {
-      id: 's1-key-takeaways',
-      title: 'Key Takeaways — Cryptography Fundamentals',
+      id: 's1-devops-connection',
+      title: 'DevOps Connection',
       priority: false,
-      icon: '🧠',
+      icon: '⚙️',
       bodyHTML: `
-        <div class="mental-model-grid">
-          <div class="mental-card">
-            <div class="mental-card-header"><span class="mental-icon">🔐</span><span class="mental-title">Symmetric is Fast</span></div>
-            <div class="mental-card-body">Symmetric encryption (AES) is fast but has a key exchange problem. The same key encrypts and decrypts.</div>
-          </div>
-          <div class="mental-card">
-            <div class="mental-card-header"><span class="mental-icon">🔑</span><span class="mental-title">Asymmetric Solves Key Exchange</span></div>
-            <div class="mental-card-body">Asymmetric encryption (RSA/ECC) solves key exchange but is slow. Public key encrypts; private key decrypts.</div>
-          </div>
-          <div class="mental-card">
-            <div class="mental-card-header"><span class="mental-icon">🔄</span><span class="mental-title">Hybrid Is the Real World</span></div>
-            <div class="mental-card-body">Hybrid cryptosystems use asymmetric to exchange a session key, then symmetric for bulk data — this is how TLS, SSH, and VPNs work.</div>
-          </div>
-          <div class="mental-card">
-            <div class="mental-card-header"><span class="mental-icon">📏</span><span class="mental-title">Key Length Matters</span></div>
-            <div class="mental-card-body">2048-bit RSA ≈ 112 bits of security; 256-bit ECC ≈ 128 bits; AES-256 is 256 bits. ECC is more efficient for equivalent security.</div>
-          </div>
-          <div class="mental-card">
-            <div class="mental-card-header"><span class="mental-icon">🚫</span><span class="mental-title">Avoid These Mistakes</span></div>
-            <div class="mental-card-body">Implementation mistakes are common — avoid ECB mode, hardcoded keys, and IV reuse. Use well-audited libraries.</div>
-          </div>
-          <div class="mental-card">
-            <div class="mental-card-header"><span class="mental-icon">🔮</span><span class="mental-title">Forward Secrecy</span></div>
-            <div class="mental-card-body">Forward secrecy ensures past sessions stay secure even if the private key is stolen later. DHE/ECDHE makes each session key ephemeral.</div>
-          </div>
-          <div class="mental-card mental-card-full">
-            <div class="mental-card-header"><span class="mental-icon">⚙️</span><span class="mental-title">DevOps Pattern</span></div>
-            <div class="mental-card-body">The pattern repeats in DevOps — SSH, KMS, container signing, mTLS, and secrets management all use these same primitives: asymmetric for trust establishment, symmetric for bulk work.</div>
-          </div>
+        <p>Python is the dominant language for infrastructure automation glue code — custom scripts calling APIs, parsing config files, orchestrating deployment steps beyond what Bash alone handles cleanly. Ansible (Phase 2, Pillar 4) is written in Python; its modules are Python under the hood.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">Python Functions, Modules &amp; Error Handling</a>
         </div>
       `
     }
   ];
-  // // ============================================================
-  // // SECTION 2 — Functions, Modules & Error Handling
-  // // ============================================================
+  // ============================================================
+  // SECTION 2 — Python Functions, Modules & Error Handling
+  // ============================================================
   const SECTION_2_ACCORDIONS = [
     {
-      id: 'python-functions',
-      title: 'Defining & Calling Functions',
-      priority: true,
+      id: 's2-functions',
+      title: '2.1 Functions — Why They Exist',
+      priority: false,
       icon: '⚡',
       bodyHTML: `
-        <p>Functions are reusable blocks of code.</p>
+        <p>A <strong>function</strong> is a named, reusable block of code that performs a specific task. Instead of copy-pasting the same logic repeatedly, you define it once and <em>call</em> it wherever needed.</p>
         <div class="code-block"><pre>def greet(name):
-        return f"Hello, {name}!"
+      print(f"Hello, {name}")
 
-    print(greet("Alice"))</pre></div>
+  greet("Keith")
+  greet("Codespace")</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Hello, Keith
+  Hello, Codespace</pre></div>
+        <p>Breaking this down:</p>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>def</code> — keyword that begins a function definition</li>
+          <li><code>greet</code> — the function's name (snake_case convention, same as variables)</li>
+          <li><code>(name)</code> — a <strong>parameter</strong>: a placeholder for input the function needs to do its job</li>
+          <li>The indented block below is the function <strong>body</strong> — executed every time the function is called</li>
+          <li><code>greet("Keith")</code> — a <strong>function call</strong>; <code>"Keith"</code> here is the <strong>argument</strong> — the actual value passed in for <code>name</code></li>
+        </ul>
       `
     },
     {
-      id: 'python-modules',
-      title: 'Modules & Imports',
+      id: 's2-return',
+      title: '2.2 return — Sending a Value Back',
+      priority: false,
+      icon: '↩️',
+      bodyHTML: `
+        <p><code>print()</code> displays something to the terminal, but it doesn't give the caller a value to use afterward. <code>return</code> does.</p>
+        <div class="code-block"><pre>def add(a, b):
+      return a + b
+
+  result = add(5, 3)
+  print(result)      # 8</pre></div>
+        <p>Once <code>return</code> executes, the function exits immediately — code after <code>return</code> in that function never runs.</p>
+        <div class="code-block"><pre>def check_positive(n):
+      if n > 0:
+          return "positive"
+      return "not positive"</pre></div>
+        <p>A function with no explicit <code>return</code> implicitly returns <code>None</code>:</p>
+        <div class="code-block"><pre>def log_message(msg):
+      print(msg)
+
+  output = log_message("test")
+  print(output)   # None</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Pitfall:</strong> Forgetting that a function returns <code>None</code> can cause confusing downstream errors. If the caller expects a value, always add an explicit <code>return</code>.
+        </div>
+      `
+    },
+    {
+      id: 's2-default-params',
+      title: '2.3 Default Parameters and Keyword Arguments',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Parameters can have default values, making them optional at call time:</p>
+        <div class="code-block"><pre>def greet(name, greeting="Hello"):
+      print(f"{greeting}, {name}")
+
+  greet("Keith")                     # Hello, Keith
+  greet("Keith", "Welcome back")     # Welcome back, Keith
+  greet(name="Keith", greeting="Hi") # Hi, Keith — keyword arguments, order doesn't matter</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Pitfall:</strong> Default parameters must come <em>after</em> non-default ones in the function signature. <code>def greet(greeting="Hello", name)</code> is a <code>SyntaxError</code>.
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Mutable Default Arguments — Classic Python Trap</h4>
+        <div class="code-block"><pre>def add_item(item, items=[]):
+      items.append(item)
+      return items
+
+  print(add_item("a"))   # ['a']
+  print(add_item("b"))   # ['a', 'b']  ← Unexpected! The same list persists</pre></div>
+        <p><strong>Fix:</strong> Use <code>None</code> as default and create the mutable object inside the function:</p>
+        <div class="code-block"><pre>def add_item(item, items=None):
+      if items is None:
+          items = []
+      items.append(item)
+      return items
+
+  print(add_item("a"))   # ['a']
+  print(add_item("b"))   # ['b']  ← Correct! Fresh list each time</pre></div>
+      `
+    },
+    {
+      id: 's2-args-kwargs',
+      title: '2.4 *args and **kwargs',
       priority: false,
       icon: '📦',
       bodyHTML: `
-        <p>Python modules are files containing Python code.</p>
-        <div class="code-block"><pre><span class="code-comment"># Import entire module</span>
-    import math
-    print(math.sqrt(16))
+        <p>Sometimes you don't know in advance how many arguments a function needs to accept.</p>
 
-    <span class="code-comment"># Import specific functions</span>
-    from math import sqrt, pi</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>*args</code></h4>
+        <p>Collects any number of extra positional arguments into a tuple:</p>
+        <div class="code-block"><pre>def total(*args):
+      return sum(args)
+
+  total(1, 2, 3)        # 6
+  total(1, 2, 3, 4, 5)  # 15</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>**kwargs</code></h4>
+        <p>Collects any number of extra keyword arguments into a dict:</p>
+        <div class="code-block"><pre>def describe(**kwargs):
+      for key, value in kwargs.items():
+          print(f"{key}: {value}")
+
+  describe(name="Keith", pillar=4, status="in progress")</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>name: Keith
+  pillar: 4
+  status: in progress</pre></div>
+        <div class="info-box note">
+          <strong>📌 Note:</strong> <code>*args</code> and <code>**kwargs</code> appear constantly in library code — they let a function accept flexible, open-ended input.
+        </div>
       `
     },
     {
-      id: 'python-error-handling',
-      title: 'Error Handling (try/except)',
+      id: 's2-scope',
+      title: '2.5 Scope — Local vs Global',
+      priority: false,
+      icon: '🔭',
+      bodyHTML: `
+        <p>A variable created inside a function only exists inside that function — this is called <strong>local scope</strong>.</p>
+        <div class="code-block"><pre>def my_function():
+      x = 10       # local to my_function
+      print(x)
+
+  my_function()   # 10
+  print(x)        # NameError: name 'x' is not defined</pre></div>
+
+        <p>Variables defined outside any function have <strong>global scope</strong> and are readable (but not directly writable) from inside functions:</p>
+        <div class="code-block"><pre>counter = 0
+
+  def show_counter():
+      print(counter)   # readable — 0
+
+  show_counter()</pre></div>
+
+        <p>To <em>modify</em> a global variable from inside a function, it must be explicitly declared with <code>global</code>:</p>
+        <div class="code-block"><pre>counter = 0
+
+  def increment():
+      global counter
+      counter += 1
+
+  increment()
+  increment()
+  print(counter)   # 2</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">⚠️ Why <code>global</code> is Dangerous</h4>
+        <div class="code-block"><pre><span class="code-comment"># BAD — this function silently modifies a global variable</span>
+  total = 0
+  def add_to_total(n):
+      global total
+      total += n
+      <span class="code-comment"># No indication to the caller that total changed</span>
+
+  <span class="code-comment"># GOOD — explicit and predictable</span>
+  def add(n, total):
+      return total + n</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Rule:</strong> Avoid <code>global</code> except for genuinely shared state in very small scripts. Prefer passing values as arguments and returning results.
+        </div>
+      `
+    },
+    {
+      id: 's2-modules',
+      title: '2.6 Modules — Organizing and Reusing Code',
+      priority: false,
+      icon: '📁',
+      bodyHTML: `
+        <p>A <strong>module</strong> is simply a <code>.py</code> file containing Python code — functions, variables, classes — that can be imported and reused in other files.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Using a built-in module:</h4>
+        <div class="code-block"><pre>import math
+
+  print(math.sqrt(16))     # 4.0
+  print(math.pi)           # 3.141592653589793</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Importing specific names only:</h4>
+        <div class="code-block"><pre>from math import sqrt, pi
+
+  print(sqrt(16))   # 4.0
+  print(pi)          # 3.141592653589793</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Aliasing on import:</h4>
+        <div class="code-block"><pre>import datetime as dt
+
+  now = dt.datetime.now()
+  print(now)</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Writing your own module:</h4>
+        <p>Create <code>helpers.py</code>:</p>
+        <div class="code-block"><pre>def double(n):
+      return n * 2</pre></div>
+        <p>In another file in the same directory:</p>
+        <div class="code-block"><pre>import helpers
+
+  print(helpers.double(5))   # 10</pre></div>
+        <div class="info-box note">
+          <strong>📌 Note:</strong> This is exactly the pattern used once scripts grow beyond a single file — shared logic (API calls, logging setup, config loading) lives in its own module and gets imported wherever needed.
+        </div>
+      `
+    },
+    {
+      id: 's2-stdlib',
+      title: '2.7 Commonly Used Standard Library Modules',
+      priority: false,
+      icon: '📚',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Module</th><th>Purpose</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td><code>os</code></td><td>Interact with the operating system</td><td><code>os.getcwd()</code>, <code>os.listdir()</code></td></tr>
+              <tr><td><code>sys</code></td><td>Interact with the interpreter/runtime</td><td><code>sys.argv</code> (command-line arguments)</td></tr>
+              <tr><td><code>datetime</code></td><td>Dates and times</td><td><code>datetime.datetime.now()</code></td></tr>
+              <tr><td><code>json</code></td><td>Parse/generate JSON (Section 8)</td><td><code>json.loads()</code>, <code>json.dumps()</code></td></tr>
+              <tr><td><code>subprocess</code></td><td>Run shell commands from Python</td><td><code>subprocess.run(["ls", "-l"])</code></td></tr>
+              <tr><td><code>random</code></td><td>Generate random values</td><td><code>random.randint(1, 10)</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>sys.argv</code> — Command-line arguments:</h4>
+        <div class="code-block"><pre><span class="code-comment"># script.py</span>
+  import sys
+
+  print(f"Script name: {sys.argv[0]}")
+  print(f"Arguments: {sys.argv[1:]}")
+
+  <span class="code-comment"># python3 script.py arg1 arg2</span>
+  <span class="code-comment"># Script name: script.py</span>
+  <span class="code-comment"># Arguments: ['arg1', 'arg2']</span></pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>subprocess</code> — Running shell commands:</h4>
+        <div class="code-block"><pre>import subprocess
+
+  result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+  print(result.stdout)   # outputs the directory listing</pre></div>
+      `
+    },
+    {
+      id: 's2-exceptions',
+      title: '2.8 Errors and Exceptions',
+      priority: false,
+      icon: '🚨',
+      bodyHTML: `
+        <p>When Python encounters a problem it can't proceed past, it raises an <strong>exception</strong> — the program halts and prints a <strong>traceback</strong> showing what went wrong and where.</p>
+        <div class="code-block"><pre>>>> 10 / 0
+  ZeroDivisionError: division by zero
+
+  >>> int("abc")
+  ValueError: invalid literal for int() with base 10: 'abc'
+
+  >>> undefined_variable
+  NameError: name 'undefined_variable' is not defined</pre></div>
+
+        <p><strong>Exception hierarchy:</strong> Exceptions form a tree. <code>ZeroDivisionError</code> is a subclass of <code>ArithmeticError</code>, which is a subclass of <code>Exception</code>. This means catching <code>Exception</code> catches everything — which is convenient, but also dangerous (see pitfalls below).</p>
+
+        <div class="info-box warning">
+          <strong>⚠️ Important:</strong> Left unhandled, an exception <strong>crashes the script</strong>. In automation, that's often unacceptable — a script processing 1,000 files shouldn't die entirely because file #47 was malformed.
+        </div>
+      `
+    },
+    {
+      id: 's2-try-except',
+      title: '2.9 try/except — Handling Exceptions Gracefully',
       priority: false,
       icon: '🛡️',
       bodyHTML: `
-        <p>Python uses exceptions to handle errors.</p>
         <div class="code-block"><pre>try:
-        x = int(input("Enter a number: "))
-        result = 10 / x
-    except ValueError:
-        print("That's not a valid number!")
-    except ZeroDivisionError:
-        print("Cannot divide by zero!")</pre></div>
-      `
-    }
-  ];
+      result = 10 / 0
+  except ZeroDivisionError:
+      print("Cannot divide by zero")</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Cannot divide by zero</pre></div>
+        <p>The program continues running after the <code>except</code> block — it does not crash.</p>
 
-  // // ============================================================
-  // // SECTION 3 — File I/O in Python
-  // // ============================================================
-  const SECTION_3_ACCORDIONS = [
-    {
-      id: 'python-file-read',
-      title: 'Reading Files',
-      priority: true,
-      icon: '📖',
-      bodyHTML: `
-        <p>The <code>with</code> statement ensures files are properly closed.</p>
-        <div class="code-block"><pre><span class="code-comment"># Read entire file</span>
-    with open("data.txt", "r") as file:
-        content = file.read()
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Catching multiple exception types:</h4>
+        <div class="code-block"><pre>def safe_divide(a, b):
+      try:
+          return a / b
+      except ZeroDivisionError:
+          print("Error: division by zero")
+      except TypeError:
+          print("Error: invalid types for division")
 
-    <span class="code-comment"># Read line by line</span>
-    with open("data.txt", "r") as file:
-        for line in file:
-            print(line.strip())</pre></div>
+  safe_divide(10, 0)      # Error: division by zero
+  safe_divide(10, "a")    # Error: invalid types for division</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Catching any exception (use sparingly — see pitfalls below):</h4>
+        <div class="code-block"><pre>try:
+      risky_operation()
+  except Exception as e:
+      print(f"Something went wrong: {e}")</pre></div>
+        <p><code>as e</code> binds the exception object to a variable so its message can be inspected.</p>
       `
     },
     {
-      id: 'python-file-write',
-      title: 'Writing Files',
+      id: 's2-else-finally',
+      title: '2.10 else and finally',
+      priority: false,
+      icon: '🔚',
+      bodyHTML: `
+        <div class="code-block"><pre>try:
+      result = 10 / 2
+  except ZeroDivisionError:
+      print("Error")
+  else:
+      print(f"Success: {result}")    # runs only if no exception occurred
+  finally:
+      print("This always runs")      # runs no matter what — success or failure</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Success: 5.0
+  This always runs</pre></div>
+
+        <p><code>finally</code> is commonly used for cleanup — closing a file, closing a network connection — that must happen whether or not an error occurred.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>finally</code> with file operations (preview of Section 3):</h4>
+        <div class="code-block"><pre>f = None
+  try:
+      f = open("data.txt", "r")
+      content = f.read()
+  except FileNotFoundError:
+      print("File not found")
+  finally:
+      if f:
+          f.close()   # Always close the file, even if an error occurs</pre></div>
+      `
+    },
+    {
+      id: 's2-raise',
+      title: '2.11 Raising Your Own Exceptions',
+      priority: false,
+      icon: '🔴',
+      bodyHTML: `
+        <p><code>raise</code> deliberately triggers an exception — useful for enforcing that input meets certain conditions:</p>
+        <div class="code-block"><pre>def set_age(age):
+      if age < 0:
+          raise ValueError("Age cannot be negative")
+      return age
+
+  set_age(-5)   # ValueError: Age cannot be negative</pre></div>
+        <div class="info-box note">
+          <strong>📌 Note:</strong> This is how well-written functions protect against invalid input rather than silently producing wrong results.
+        </div>
+      `
+    },
+    {
+      id: 's2-pitfalls',
+      title: 'Pitfalls Table',
+      priority: false,
+      icon: '🚫',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Bare <code>except:</code> with no exception type</td>
+                <td>Silently swallows <em>every</em> error, including ones you didn't anticipate (e.g., <code>KeyboardInterrupt</code>), making bugs invisible</td>
+                <td>Catch specific exception types; use <code>except Exception as e</code> at most, and log <code>e</code></td>
+              </tr>
+              <tr>
+                <td>Overusing <code>global</code></td>
+                <td>Functions that mutate shared state become hard to trace and debug as scripts grow</td>
+                <td>Pass values as arguments, return results; reserve <code>global</code> for genuinely shared counters/state</td>
+              </tr>
+              <tr>
+                <td>Default parameter comes before non-default</td>
+                <td><code>SyntaxError</code> at definition time</td>
+                <td>Order non-default parameters first, defaults after</td>
+              </tr>
+              <tr>
+                <td>Mutable default arguments (<code>def f(items=[])</code>)</td>
+                <td>The same list object is reused across all calls, causing unexpected shared state</td>
+                <td>Use <code>None</code> as default, then create the mutable object inside the function body</td>
+              </tr>
+              <tr>
+                <td>Forgetting a function has an implicit <code>None</code> return</td>
+                <td>Assigning the result of a function with no <code>return</code> gives <code>None</code>, causing confusing downstream errors</td>
+                <td>Always add an explicit <code>return</code> if the caller needs a value</td>
+              </tr>
+              <tr>
+                <td>Catching <code>Exception</code> without logging</td>
+                <td>Errors become invisible, making debugging impossible</td>
+                <td>Log the exception with <code>print(e)</code> or use a proper logging library</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's2-hands-on',
+      title: '🖥️ Hands-on Exercise',
+      priority: false,
+      icon: '💻',
+      bodyHTML: `
+        <p>In <code>/workspaces/DevOps-Journey</code>:</p>
+        <div class="code-block"><pre>nano practice2.py</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Part 1:</h4>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Define a function <code>divide(a, b)</code> that returns <code>a / b</code>, using <code>try/except</code> to catch <code>ZeroDivisionError</code> and print a friendly message instead of crashing</li>
+          <li>Define a function <code>pillar_status(**kwargs)</code> that prints each keyword argument passed in (e.g., call it with <code>name="scripting", section=2, status="in progress"</code>)</li>
+          <li>Import the <code>os</code> module and print the current working directory</li>
+        </ol>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Part 2:</h4>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;" start="4">
+          <li>Write a function <code>validate_username(username)</code> that:
+            <ul style="margin:0.25rem 0 0 1.2rem;">
+              <li>Raises <code>ValueError("Username must be at least 3 characters")</code> if too short</li>
+              <li>Raises <code>ValueError("Username must be alphanumeric")</code> if it contains spaces or special characters</li>
+              <li>Returns <code>True</code> if valid</li>
+            </ul>
+          </li>
+          <li>Test it with <code>validate_username("a")</code>, <code>validate_username("user name")</code>, and <code>validate_username("valid_user")</code></li>
+        </ol>
+
+        <p>Run:</p>
+        <div class="code-block"><pre>python3 practice2.py</pre></div>
+      `
+    },
+    {
+      id: 's2-devops-connection',
+      title: 'DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Error handling is the difference between a script that fails loudly and stops an entire pipeline, versus one that logs the problem, skips the bad input, and keeps going. CI/CD pipelines (Phase 2) live or die on scripts handling unexpected input predictably — a deployment script that crashes on one malformed config file instead of catching and reporting the issue can take down an entire release process.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">File I/O in Python</a>
+        </div>
+      `
+    }
+  ];
+  // ============================================================
+  // SECTION 3 — File I/O in Python
+  // ============================================================
+  const SECTION_3_ACCORDIONS = [
+    {
+      id: 's3-why-file-io',
+      title: '3.1 Why File I/O Matters for Automation',
+      priority: false,
+      icon: '📁',
+      bodyHTML: `
+        <p>Scripts in DevOps constantly read configuration, write logs, or process data dumped by other tools. Being comfortable opening, reading, and writing files is the difference between a script that only works interactively and one that runs unattended as part of a pipeline.</p>
+        <div class="info-box note">
+          <strong>📌 Key insight:</strong> File I/O is the bridge between your script and the outside world — configuration files, logs, data exports, and state persistence all rely on it.
+        </div>
+      `
+    },
+    {
+      id: 's3-open-basics',
+      title: '3.2 Opening a File — The Basics',
+      priority: false,
+      icon: '📂',
+      bodyHTML: `
+        <div class="code-block"><pre>f = open("notes.txt", "r")
+  content = f.read()
+  print(content)
+  f.close()</pre></div>
+
+        <p><code>open()</code> takes a filename and a <strong>mode</strong>:</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Mode</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>"r"</code></td><td>Read (default) — file must exist</td></tr>
+              <tr><td><code>"w"</code></td><td>Write — creates file if missing, <strong>overwrites</strong> if it exists</td></tr>
+              <tr><td><code>"a"</code></td><td>Append — creates file if missing, adds to the end if it exists</td></tr>
+              <tr><td><code>"x"</code></td><td>Exclusive create — fails if file already exists</td></tr>
+              <tr><td><code>"r+"</code></td><td>Read and write, file must exist</td></tr>
+              <tr><td><code>"rb"</code></td><td>Read binary (e.g., images, binaries)</td></tr>
+              <tr><td><code>"wb"</code></td><td>Write binary</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical:</strong> <code>"w"</code> mode <strong>destroys existing content</strong> the instant the file is opened, even if <code>.write()</code> is never called. Double-check the mode before running a script against a file you care about.
+        </div>
+        <p>Calling <code>f.close()</code> manually is required to release the file handle — forgetting it can leave data unflushed to disk or lock the file on some systems.</p>
+      `
+    },
+    {
+      id: 's3-with-statement',
+      title: '3.3 The with Statement — Context Managers (The Correct Way)',
+      priority: false,
+      icon: '🔒',
+      bodyHTML: `
+        <p>Manually closing files is error-prone — an exception between <code>open()</code> and <code>close()</code> skips the close entirely. Python's <code>with</code> statement guarantees the file closes automatically, even if an error occurs inside the block.</p>
+        <div class="code-block"><pre>with open("notes.txt", "r") as f:
+      content = f.read()
+      print(content)
+  <span class="code-comment"># f is automatically closed here, even if an exception occurred above</span></pre></div>
+        <p>This is called a <strong>context manager</strong> — <code>with</code> handles setup (opening) and guaranteed teardown (closing) around the indented block. This is the idiomatic way to work with files in Python; manual <code>open()</code>/<code>close()</code> is considered legacy style.</p>
+        <div class="info-box note">
+          <strong>📌 Note:</strong> <code>with</code> works with any context manager, not just files — database connections, network sockets, and locks all use the same pattern.
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Specifying encoding (critical for cross-platform compatibility):</h4>
+        <div class="code-block"><pre>with open("notes.txt", "r", encoding="utf-8") as f:
+      content = f.read()</pre></div>
+        <p>Without specifying encoding, Python uses the system default, which may differ across platforms and cause unexpected errors when reading files with non-ASCII characters.</p>
+      `
+    },
+    {
+      id: 's3-reading-files',
+      title: '3.4 Reading Files — Three Methods',
+      priority: false,
+      icon: '📖',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># Method 1: .read() — entire file as one string</span>
+  with open("notes.txt", "r") as f:
+      content = f.read()</pre></div>
+
+        <div class="code-block"><pre><span class="code-comment"># Method 2: .readlines() — list of strings, one per line</span>
+  with open("notes.txt", "r") as f:
+      lines = f.readlines()       # each line keeps its trailing \\n</pre></div>
+
+        <div class="code-block"><pre><span class="code-comment"># Method 3: Iterate directly — memory-efficient, reads one line at a time</span>
+  with open("notes.txt", "r") as f:
+      for line in f:
+          print(line.strip())      # .strip() removes the trailing newline</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">When to use which:</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>.read()</code> — small files, need the whole content as one block (e.g., a config string)</li>
+          <li><code>.readlines()</code> — need random access to specific lines, or need a list to manipulate</li>
+          <li>Iterating directly over <code>f</code> — large files, processing line-by-line without loading everything into memory at once</li>
+        </ul>
+      `
+    },
+    {
+      id: 's3-writing-files',
+      title: '3.5 Writing Files',
       priority: false,
       icon: '✍️',
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># Write to file</span>
-    with open("output.txt", "w") as file:
-        file.write("Hello, World!\\n")
+        <div class="code-block"><pre>with open("output.txt", "w") as f:
+      f.write("First line\\n")
+      f.write("Second line\\n")</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Note:</strong> <code>.write()</code> does <strong>not</strong> add a newline automatically — <code>\\n</code> must be included manually, unlike <code>print()</code> which adds one by default.
+        </div>
 
-    <span class="code-comment"># Append to file</span>
-    with open("output.txt", "a") as file:
-        file.write("Appended line.\\n")</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Writing multiple lines from a list:</h4>
+        <div class="code-block"><pre>lines = ["docker\\n", "kubernetes\\n", "terraform\\n"]
+
+  with open("tools.txt", "w") as f:
+      f.writelines(lines)</pre></div>
+        <p><code>.writelines()</code> does not add newlines between items either — they must already be present in each string.</p>
+      `
+    },
+    {
+      id: 's3-append-vs-overwrite',
+      title: '3.6 Appending vs Overwriting',
+      priority: false,
+      icon: '➕',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># First run</span>
+  with open("log.txt", "w") as f:
+      f.write("Log started\\n")
+
+  <span class="code-comment"># Second run — using "w" again would DESTROY the first line</span>
+  with open("log.txt", "a") as f:
+      f.write("Second entry\\n")</pre></div>
+        <p>After both runs, <code>log.txt</code> contains:</p>
+        <div class="code-block"><pre>Log started
+  Second entry</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical:</strong> Using <code>"w"</code> on the second run instead of <code>"a"</code> would leave only <code>Second entry</code> — the first line gone without warning.
+        </div>
+      `
+    },
+    {
+      id: 's3-file-exists',
+      title: '3.7 Checking Whether a File Exists First',
+      priority: false,
+      icon: '🔍',
+      bodyHTML: `
+        <p>Attempting to read a file that doesn't exist raises <code>FileNotFoundError</code>:</p>
+        <div class="code-block"><pre>>>> open("missing.txt", "r")
+  FileNotFoundError: [Errno 2] No such file or directory: 'missing.txt'</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Option 1: Check first (using <code>os.path</code>)</h4>
+        <div class="code-block"><pre>import os
+
+  if os.path.exists("notes.txt"):
+      with open("notes.txt", "r") as f:
+          print(f.read())
+  else:
+      print("File not found")</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Option 2: Handle the exception (preferred — avoids race conditions)</h4>
+        <div class="code-block"><pre>try:
+      with open("notes.txt", "r") as f:
+          print(f.read())
+  except FileNotFoundError:
+      print("File not found")</pre></div>
+        <div class="info-box tip">
+          <strong>💡 Why exception handling is preferred:</strong> Checking existence first and then opening is technically two separate operations — something else (another process, a scheduled cleanup job) could delete the file in between, causing the "checked" branch to still fail.
+        </div>
+      `
+    },
+    {
+      id: 's3-file-paths',
+      title: '3.8 Working with File Paths',
+      priority: false,
+      icon: '🗺️',
+      bodyHTML: `
+        <p>Hardcoding paths like <code>"notes.txt"</code> only works if the script runs from the exact directory containing that file.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Using <code>os.path</code> (traditional):</h4>
+        <div class="code-block"><pre>import os
+
+  path = os.path.join("saa-foundation", "04-scripting", "notes.txt")
+  print(path)   # saa-foundation/04-scripting/notes.txt</pre></div>
+        <p><code>os.path.join()</code> handles the correct path separator for the operating system automatically (<code>/</code> on Linux/Mac, <code>\\</code> on Windows) — safer than hardcoding slashes.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Useful <code>os.path</code> functions:</h4>
+        <div class="code-block"><pre>os.path.exists(path)     # True/False — does it exist
+  os.path.isfile(path)     # True/False — is it a file (not a directory)
+  os.path.isdir(path)      # True/False — is it a directory
+  os.path.abspath(path)    # converts to full absolute path
+  os.path.basename(path)   # just the filename, e.g. 'notes.txt'
+  os.path.dirname(path)    # just the directory portion</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Using <code>pathlib</code> (modern, recommended):</h4>
+        <div class="code-block"><pre>from pathlib import Path
+
+  path = Path("saa-foundation") / "04-scripting" / "notes.txt"
+  print(path)               # saa-foundation/04-scripting/notes.txt
+  print(path.exists())      # True/False
+  print(path.is_file())     # True/False
+  print(path.name)          # 'notes.txt'
+  print(path.parent)        # 'saa-foundation/04-scripting'
+
+  <span class="code-comment"># Read and write directly from pathlib</span>
+  content = Path("notes.txt").read_text()
+  Path("output.txt").write_text("Hello, World!\\n")</pre></div>
+        <div class="info-box tip">
+          <strong>💡 Recommendation:</strong> <code>pathlib</code> is the modern standard in Python 3.4+ and is more intuitive than <code>os.path</code>. It's worth adopting for new code.
+        </div>
+      `
+    },
+    {
+      id: 's3-delimited-data',
+      title: '3.9 Reading and Writing Simple Delimited Data Manually',
+      priority: false,
+      icon: '📊',
+      bodyHTML: `
+        <p>Not every task needs the <code>csv</code> module — sometimes simple line-splitting is enough for basic comma- or pipe-separated data:</p>
+        <div class="code-block"><pre>with open("servers.txt", "r") as f:
+      for line in f:
+          parts = line.strip().split(",")
+          name, ip = parts[0], parts[1]
+          print(f"Server: {name}, IP: {ip}")</pre></div>
+        <p>Given <code>servers.txt</code> containing:</p>
+        <div class="code-block"><pre>web01,192.168.1.10
+  web02,192.168.1.11</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Server: web01, IP: 192.168.1.10
+  Server: web02, IP: 192.168.1.11</pre></div>
+        <div class="info-box note">
+          <strong>📌 Note:</strong> For anything beyond trivial comma-separated lines (quoted fields, embedded commas, headers), Python's built-in <code>csv</code> module handles edge cases this manual approach doesn't — worth knowing it exists even though it's outside this section's scope.
+        </div>
+      `
+    },
+    {
+      id: 's3-pitfalls',
+      title: 'Pitfalls Table',
+      priority: false,
+      icon: '🚫',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Using <code>"w"</code> mode on a file you meant to append to</td>
+                <td>Silently destroys all existing content the moment the file is opened</td>
+                <td>Use <code>"a"</code> for appending; double check mode before running against real files</td>
+              </tr>
+              <tr>
+                <td>Forgetting <code>.close()</code> on manually opened files</td>
+                <td>File handle stays open, risking unflushed data or resource leaks in long-running scripts</td>
+                <td>Always use <code>with open(...) as f:</code> instead of manual open/close</td>
+              </tr>
+              <tr>
+                <td>Assuming <code>.write()</code> adds a newline</td>
+                <td>Output lines run together with no separation</td>
+                <td>Explicitly append <code>\\n</code> to each write</td>
+              </tr>
+              <tr>
+                <td>Checking <code>os.path.exists()</code> then opening separately</td>
+                <td>Race condition — file can be deleted between the check and the open, causing a crash anyway</td>
+                <td>Prefer <code>try/except FileNotFoundError</code> around the open itself</td>
+              </tr>
+              <tr>
+                <td>Hardcoding paths with <code>/</code> or <code>\\</code></td>
+                <td>Breaks when the script runs on a different OS</td>
+                <td>Use <code>os.path.join()</code> or <code>pathlib</code> to build paths portably</td>
+              </tr>
+              <tr>
+                <td>Not specifying <code>encoding</code></td>
+                <td>Different systems may use different default encodings, causing <code>UnicodeDecodeError</code></td>
+                <td>Always use <code>encoding="utf-8"</code> for text files</td>
+              </tr>
+              <tr>
+                <td>Using <code>.read()</code> on a huge file</td>
+                <td>Loads the entire file into memory, potentially exhausting RAM</td>
+                <td>Use iteration over the file object for large files</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's3-hands-on',
+      title: '🖥️ Hands-on Exercise',
+      priority: false,
+      icon: '💻',
+      bodyHTML: `
+        <p>In <code>/workspaces/DevOps-Journey</code>:</p>
+        <div class="code-block"><pre>nano file_practice.py</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Part 1:</h4>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Write three pillar names to <code>pillars.txt</code>, one per line, using <code>"w"</code> mode</li>
+          <li>Reopen the file with <code>"r"</code> mode and print each line (stripped of the trailing newline) using a <code>for</code> loop over the file object</li>
+          <li>Append a fourth pillar name using <code>"a"</code> mode</li>
+          <li>Wrap the read operation in a <code>try/except FileNotFoundError</code> block</li>
+        </ol>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Part 2:</h4>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;" start="5">
+          <li>Create a list of dictionaries: <code>[{"name": "web01", "ip": "192.168.1.10"}, {"name": "web02", "ip": "192.168.1.11"}]</code></li>
+          <li>Write them to <code>servers.csv</code> in a simple comma-separated format (name,ip) using <code>"w"</code></li>
+          <li>Read the file back and print each server's name and IP</li>
+        </ol>
+
+        <p>Run:</p>
+        <div class="code-block"><pre>python3 file_practice.py</pre></div>
+        <p>Then verify:</p>
+        <div class="code-block"><pre>cat pillars.txt
+  cat servers.csv</pre></div>
+      `
+    },
+    {
+      id: 's3-devops-connection',
+      title: 'DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Reading configuration files, parsing log files, and writing structured output are constant tasks in automation — a deployment script might read a list of servers from a file to loop over, or a monitoring script might tail a log file looking for error patterns. The <code>with</code> statement's guaranteed cleanup matters even more in long-running automation, where an unclosed file handle in a script that runs thousands of times can quietly exhaust system resources.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">Bash Scripting Fundamentals</a>
+        </div>
       `
     }
   ];
 
-  // // ============================================================
-  // // SECTION 4 — Bash Scripting Fundamentals
-  // // ============================================================
+  // ============================================================
+  // SECTION 4 — Bash Scripting Fundamentals
+  // ============================================================
   const SECTION_4_ACCORDIONS = [
     {
-      id: 'bash-hello-world',
-      title: 'Hello World & Shebang',
-      priority: true,
-      icon: '🚀',
+      id: 's4-what-is-bash',
+      title: '4.1 What is Bash, and Why Script It?',
+      priority: false,
+      icon: '🐚',
       bodyHTML: `
-        <p>Bash scripts start with a <strong>shebang</strong> line.</p>
-        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
-    echo "Hello, World!"</pre></div>
+        <p>Bash (<strong>Bourne Again SHell</strong>) is the command-line interpreter already in use in the Codespace terminal every time a command like <code>cd</code>, <code>ls</code>, or <code>cat</code> is typed. A <strong>Bash script</strong> is just a text file containing a sequence of those same commands, saved so it can be run repeatedly without retyping.</p>
+        <div class="info-box note">
+          <strong>📌 Key insight:</strong> If Python is the language for structured logic and data handling, Bash is the language for gluing together system commands, files, and processes quickly — it's what most CI/CD pipeline steps, cron jobs, and container entrypoint scripts are written in.
+        </div>
       `
     },
     {
-      id: 'bash-variables',
-      title: 'Variables & Command Substitution',
+      id: 's4-shebang',
+      title: '4.2 The Shebang Line',
+      priority: false,
+      icon: '#!',
+      bodyHTML: `
+        <p>Every Bash script starts with a <strong>shebang</strong> — a special first line telling the operating system which interpreter should execute the file:</p>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span></pre></div>
+        <p><code>#</code> normally starts a comment in Bash, but <code>#!</code> at the very start of a file is special-cased by the OS — it means "run this file using the program at this path." <code>/bin/bash</code> is the standard location of the Bash interpreter on virtually all Linux systems.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Alternative (more portable):</h4>
+        <div class="code-block"><pre><span class="code-comment">#!/usr/bin/env bash</span></pre></div>
+        <p>This uses <code>env</code> to find <code>bash</code> in the user's <code>PATH</code>, which is more portable across systems where Bash might be installed in a non-standard location (e.g., <code>/usr/local/bin/bash</code> on some BSD/macOS systems). This is the recommended shebang for scripts intended to run on multiple platforms.</p>
+        <div class="info-box warning">
+          <strong>⚠️ Important:</strong> Without a shebang, running the script directly (<code>./script.sh</code>) may use the wrong interpreter or fail — always include it as line 1.
+        </div>
+      `
+    },
+    {
+      id: 's4-first-script',
+      title: '4.3 Creating and Running Your First Script',
+      priority: false,
+      icon: '🚀',
+      bodyHTML: `
+        <div class="code-block"><pre>nano hello.sh</pre></div>
+        <p>Contents:</p>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  echo "Hello, DevOps Journey"</pre></div>
+        <p><code>echo</code> is Bash's equivalent of Python's <code>print()</code> — it outputs text to the terminal.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Making it executable and running it:</h4>
+        <div class="code-block"><pre>chmod +x hello.sh
+  ./hello.sh</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Hello, DevOps Journey</pre></div>
+        <p><code>chmod +x</code> adds the <strong>execute permission</strong> to the file (covered in depth in Pillar 3 — Security, and Pillar 2 — Linux permissions). Without it, <code>./hello.sh</code> fails with <code>Permission denied</code>.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Alternative — running without execute permission:</h4>
+        <div class="code-block"><pre>bash hello.sh</pre></div>
+        <p>This works even without <code>chmod +x</code>, since Bash is being told directly to interpret the file rather than asking the OS to execute it as a program.</p>
+      `
+    },
+    {
+      id: 's4-variables',
+      title: '4.4 Variables',
       priority: false,
       icon: '📦',
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># Variables (no spaces around =)</span>
-    name="Alice"
-    echo "Hello, $name"
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  name="Keith"
+  echo "Hello, $name"</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Hello, Keith</pre></div>
 
-    <span class="code-comment"># Command substitution</span>
-    current_date=$(date)
-    echo "Today is $current_date"</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Critical syntax rules:</h4>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong>No spaces around <code>=</code>.</strong> <code>name = "Keith"</code> is a syntax error in Bash — it's interpreted as trying to run a command called <code>name</code> with arguments <code>=</code> and <code>"Keith"</code>.</li>
+          <li>Reference a variable's value with <code>$name</code> or <code>${name}</code> — the curly-brace form is safer when the variable name is adjacent to other text: <code>"${name}_journey"</code> vs the ambiguous <code>"$name_journey"</code> (which Bash would try to read as a variable called <code>name_journey</code>).</li>
+        </ul>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Command substitution:</h4>
+        <p>Capturing the output of a command into a variable:</p>
+        <div class="code-block"><pre>current_dir=$(pwd)
+  echo "Currently in: $current_dir"</pre></div>
+        <p><code>$(...)</code> runs the command inside and substitutes its output as a string. This is one of the most-used Bash patterns.</p>
       `
     },
     {
-      id: 'bash-conditionals',
-      title: 'Conditionals (if, elif, else)',
+      id: 's4-read-input',
+      title: '4.5 Reading User Input',
+      priority: false,
+      icon: '⌨️',
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  echo "What's your name?"
+  read name
+  echo "Hello, $name"</pre></div>
+        <p>Running this pauses at <code>read name</code>, waits for terminal input, then continues.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Inline prompt (cleaner):</h4>
+        <div class="code-block"><pre>read -p "What's your name? " name
+  echo "Hello, $name"</pre></div>
+        <p>The <code>-p</code> flag displays the prompt before reading input, eliminating the separate <code>echo</code> line.</p>
+      `
+    },
+    {
+      id: 's4-conditionals',
+      title: '4.6 Comparison and Conditionals — if/then/else',
       priority: false,
       icon: '🔀',
       bodyHTML: `
-        <div class="code-block"><pre>if [ "$age" -gt 18 ]; then
-        echo "Adult"
-    else
-        echo "Minor"
-    fi</pre></div>
+        <p>Bash's conditional syntax differs substantially from Python's:</p>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  score=85
+
+  if [ $score -ge 90 ]; then
+      echo "A grade"
+  elif [ $score -ge 80 ]; then
+      echo "B grade"
+  else
+      echo "C grade or below"
+  fi</pre></div>
+        <p>Output: <code>B grade</code></p>
+
+        <p>Breaking this down:</p>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>[ ]</code> — the <strong>test command</strong>, evaluates the condition inside (spaces around the brackets are required — <code>[$score</code> is a syntax error)</li>
+          <li><code>-ge</code> — "greater than or equal" (Bash uses letter-codes for numeric comparison, not <code>>=</code>)</li>
+          <li><code>then</code> — begins the block to run if true</li>
+          <li><code>fi</code> — closes the <code>if</code> block (<code>if</code> spelled backwards — a Bash convention also seen in <code>case</code>/<code>esac</code>)</li>
+        </ul>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Numeric comparison operators:</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Operator</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>-eq</code></td><td>equal</td></tr>
+              <tr><td><code>-ne</code></td><td>not equal</td></tr>
+              <tr><td><code>-gt</code></td><td>greater than</td></tr>
+              <tr><td><code>-ge</code></td><td>greater than or equal</td></tr>
+              <tr><td><code>-lt</code></td><td>less than</td></tr>
+              <tr><td><code>-le</code></td><td>less than or equal</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical pitfall:</strong> <code>></code> and <code><</code> inside <code>[ ]</code> do <strong>string comparison</strong>, not numeric — and worse, <code>></code> gets interpreted as output redirection in most contexts. Always use <code>-gt</code>/<code>-lt</code> etc. for numbers.
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">String comparison:</h4>
+        <div class="code-block"><pre>name="Keith"
+
+  if [ "$name" == "Keith" ]; then
+      echo "Match"
+  fi</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Pitfall:</strong> Always quote variables inside <code>[ ]</code> (<code>"$name"</code>, not <code>$name</code>). An empty or unset variable without quotes can break the test's syntax entirely (<code>[ == "Keith" ]</code> is invalid — missing an operand).
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Checking file conditions:</h4>
+        <div class="code-block"><pre>if [ -f "notes.txt" ]; then
+      echo "File exists"
+  fi
+
+  if [ -d "saa-foundation" ]; then
+      echo "Directory exists"
+  fi</pre></div>
+        <p><code>-f</code> tests for a regular file, <code>-d</code> for a directory — both return true/false based on existence and type.</p>
       `
     },
     {
-      id: 'bash-loops',
-      title: 'Loops (for, while)',
+      id: 's4-brackets-vs-double-brackets',
+      title: '4.7 [ ] vs [[ ]] — Which to Use',
+      priority: false,
+      icon: '🔲',
+      bodyHTML: `
+        <p>Bash provides two test syntaxes:</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Syntax</th><th>Used in</th><th>Pros</th><th>Cons</th></tr></thead>
+            <tbody>
+              <tr><td><code>[ ]</code></td><td>All POSIX shells</td><td>Portable (works in <code>sh</code>)</td><td>Requires quoting, no regex, no <code>&&</code>/<code>||</code> inside</td></tr>
+              <tr><td><code>[[ ]]</code></td><td>Bash only</td><td>Safer (no word splitting), supports <code>&&</code>/<code>||</code>, regex, glob patterns</td><td>Not POSIX-compliant (won't work in <code>sh</code>)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Example:</h4>
+        <div class="code-block"><pre><span class="code-comment"># [ ] — safe but requires quoting</span>
+  if [ "$name" == "Keith" ] && [ "$age" -gt 18 ]; then
+      echo "Adult Keith"
+  fi
+
+  <span class="code-comment"># [[ ]] — cleaner and safer</span>
+  if [[ $name == "Keith" && $age -gt 18 ]]; then
+      echo "Adult Keith"
+  fi</pre></div>
+        <div class="info-box tip">
+          <strong>💡 Recommendation:</strong> Use <code>[[ ]]</code> for Bash scripts (safer and more readable). Use <code>[ ]</code> only if the script needs to run with <code>sh</code> (which is rare for DevOps automation — most CI/CD runners use Bash).
+        </div>
+      `
+    },
+    {
+      id: 's4-file-conditions',
+      title: '4.8 Checking File Conditions',
+      priority: false,
+      icon: '📄',
+      bodyHTML: `
+        <div class="code-block"><pre>if [ -f "notes.txt" ]; then
+      echo "File exists"
+  fi
+
+  if [ -d "saa-foundation" ]; then
+      echo "Directory exists"
+  fi</pre></div>
+        <p><code>-f</code> tests for a regular file, <code>-d</code> for a directory — both return true/false based on existence and type.</p>
+      `
+    },
+    {
+      id: 's4-loops',
+      title: '4.9 Loops',
       priority: false,
       icon: '🔄',
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># For loop</span>
-    for i in {1..5}; do
-        echo "Number: $i"
-    done
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;"><code>for</code> loop over a list:</h4>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  for tool in docker kubernetes terraform; do
+      echo "Learning: $tool"
+  done</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Learning: docker
+  Learning: kubernetes
+  Learning: terraform</pre></div>
 
-    <span class="code-comment"># While loop</span>
-    count=0
-    while [ $count -lt 5 ]; do
-        echo "Count: $count"
-        ((count++))
-    done</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>for</code> loop over a range of numbers:</h4>
+        <div class="code-block"><pre>for i in {1..5}; do
+      echo "Number: $i"
+  done</pre></div>
+        <p>Output: <code>Number: 1</code> through <code>Number: 5</code>.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>for</code> loop over files matching a pattern (glob):</h4>
+        <div class="code-block"><pre>for file in *.md; do
+      echo "Found: $file"
+  done</pre></div>
+        <p>Loops over every <code>.md</code> file in the current directory — a pattern used constantly for batch-processing files.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>for</code> loop over command output:</h4>
+        <div class="code-block"><pre>for file in $(ls *.txt); do
+      echo "Processing $file"
+  done</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Pitfall:</strong> Command substitution with <code>$(ls *.txt)</code> can break if filenames contain spaces — safer to use <code>for file in *.txt</code> directly (no <code>ls</code> needed) or use <code>find -print0</code> for edge cases.
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>while</code> loop:</h4>
+        <div class="code-block"><pre>count=1
+  while [ $count -le 3 ]; do
+      echo "Count is $count"
+      count=$((count + 1))
+  done</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Count is 1
+  Count is 2
+  Count is 3</pre></div>
+        <p><code>$((...))</code> is <strong>arithmetic expansion</strong> — the syntax for doing math in Bash, since <code>count + 1</code> alone would just be treated as text.</p>
       `
-    }
-  ];
-
-  // // ============================================================
-  // // SECTION 5 — Bash Scripting Advanced
-  // // ============================================================
-  const SECTION_5_ACCORDIONS = [
+    },
     {
-      id: 'bash-functions',
-      title: 'Functions & Arguments',
+      id: 's4-functions',
+      title: '4.10 Functions in Bash',
       priority: false,
       icon: '⚡',
       bodyHTML: `
-        <div class="code-block"><pre>greet() {
-        echo "Hello, $1!"
-    }
-    greet "Alice"</pre></div>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+
+  greet() {
+      echo "Hello, $1"
+  }
+
+  greet "Keith"</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Hello, Keith</pre></div>
+        <p>Unlike Python, Bash functions don't declare named parameters — arguments are accessed positionally via <code>$1</code>, <code>$2</code>, <code>$3</code>, etc., in the order they were passed.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Returning a value:</h4>
+        <p>Bash functions don't <code>return</code> data the way Python does — <code>return</code> in Bash only sets a numeric <strong>exit status</strong> (0–255, conventionally 0 = success). To get a value back, either <code>echo</code> it and capture with command substitution, or use a global variable:</p>
+        <div class="code-block"><pre>add() {
+      echo $(($1 + $2))
+  }
+
+  result=$(add 5 3)
+  echo "Result: $result"    # Result: 8</pre></div>
       `
     },
     {
-      id: 'bash-text-processing',
-      title: 'Text Processing — grep, sed, awk',
-      priority: true,
-      icon: '📊',
-      bodyHTML: `
-        <h4>grep — Search for patterns</h4>
-        <div class="code-block"><pre>grep "error" /var/log/system.log
-    grep -i "warning" log.txt
-    grep -r "TODO" src/</pre></div>
-
-        <h4>sed — Stream Editor</h4>
-        <div class="code-block"><pre>sed 's/old/new/g' file.txt
-    sed -i 's/old/new/g' file.txt</pre></div>
-
-        <h4>awk — Pattern Scanning</h4>
-        <div class="code-block"><pre>awk '{print $1, $3}' data.txt
-    awk '$2 > 100 {print $1}' data.txt</pre></div>
-      `
-    },
-    {
-      id: 'bash-exit-codes',
-      title: 'Exit Codes & Error Handling',
+      id: 's4-pitfalls',
+      title: 'Pitfalls Table',
       priority: false,
-      icon: '🛡️',
+      icon: '🚫',
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># Exit code — 0 = success</span>
-    ls /nonexistent
-    echo $?                              <span class="code-comment"># 2</span>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Spaces around <code>=</code> in variable assignment</td>
+                <td><code>name = "Keith"</code> is a syntax error — Bash tries to run <code>name</code> as a command</td>
+                <td>Never put spaces around <code>=</code>: <code>name="Keith"</code></td>
+              </tr>
+              <tr>
+                <td>Using <code>></code>/<code><</code> for numeric comparison in <code>[ ]</code></td>
+                <td>Does string comparison, or gets read as output redirection</td>
+                <td>Use <code>-gt</code>, <code>-lt</code>, <code>-ge</code>, <code>-le</code>, <code>-eq</code>, <code>-ne</code> for numbers</td>
+              </tr>
+              <tr>
+                <td>Not quoting variables inside <code>[ ]</code></td>
+                <td>Empty/unset variables can break the test's syntax entirely</td>
+                <td>Always quote: <code>[ "$name" == "Keith" ]</code></td>
+              </tr>
+              <tr>
+                <td>Expecting <code>return</code> to hand back data like Python</td>
+                <td><code>return</code> only sets a 0–255 exit status code</td>
+                <td><code>echo</code> the value and capture it with <code>$(function_name)</code></td>
+              </tr>
+              <tr>
+                <td>Forgetting <code>chmod +x</code> before <code>./script.sh</code></td>
+                <td><code>Permission denied</code> error</td>
+                <td>Run <code>chmod +x script.sh</code>, or invoke with <code>bash script.sh</code> instead</td>
+              </tr>
+              <tr>
+                <td>Using <code>$()</code> around <code>ls</code> for filename loops</td>
+                <td>Breaks on filenames with spaces</td>
+                <td>Use <code>for file in *.txt</code> directly (no <code>ls</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's4-hands-on',
+      title: '🖥️ Hands-on Exercise',
+      priority: false,
+      icon: '💻',
+      bodyHTML: `
+        <p>In <code>/workspaces/DevOps-Journey</code>:</p>
+        <div class="code-block"><pre>nano practice.sh
+  chmod +x practice.sh</pre></div>
 
-    <span class="code-comment"># Exit on error</span>
-    set -e
-    set -euo pipefail</pre></div>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Declare a variable <code>pillar="scripting"</code> and echo <code>"Current pillar: $pillar"</code></li>
+          <li>Use a <code>for</code> loop to print each <code>.md</code> file in <code>saa-foundation/04-scripting/</code></li>
+          <li>Include an <code>if</code> statement checking whether a file called <code>README.md</code> exists in the current directory, printing a message either way</li>
+          <li>Define a function <code>add()</code> that takes two arguments and echoes their sum, then call it and capture the result in a variable</li>
+          <li>Use <code>read -p</code> to ask the user for their name and print a greeting</li>
+        </ol>
+
+        <p>Run:</p>
+        <div class="code-block"><pre>./practice.sh</pre></div>
+      `
+    },
+    {
+      id: 's4-devops-connection',
+      title: 'DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Nearly every CI/CD pipeline step, Docker container entrypoint, and cron job on a Linux server is a Bash script under the hood — GitHub Actions workflow steps frequently run raw <code>bash</code> commands, and Dockerfiles use <code>RUN</code> and <code>ENTRYPOINT</code> instructions that execute shell scripts. Fluency here transfers directly into Phase 2.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">Bash Scripting — Advanced</a>
+        </div>
       `
     }
   ];
 
-  // // ============================================================
-  // // SECTION 6 — REST APIs Concepts
-  // // ============================================================
-  const SECTION_6_ACCORDIONS = [
+  // ============================================================
+  // SECTION 5 — Bash Scripting — Advanced
+  // ============================================================
+  const SECTION_5_ACCORDIONS = [
     {
-      id: 'rest-basics',
-      title: 'REST API Fundamentals',
-      priority: true,
-      icon: '🌐',
+      id: 's5-arrays',
+      title: '5.1 Arrays',
+      priority: false,
+      icon: '📊',
       bodyHTML: `
-        <h4>HTTP Methods</h4>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
-            <tbody>
-              <tr><td><code>GET</code></td><td>Retrieve data</td></tr>
-              <tr><td><code>POST</code></td><td>Create resource</td></tr>
-              <tr><td><code>PUT</code></td><td>Replace resource</td></tr>
-              <tr><td><code>PATCH</code></td><td>Partial update</td></tr>
-              <tr><td><code>DELETE</code></td><td>Remove resource</td></tr>
-            </tbody>
-          </table>
+        <p>Bash supports arrays — ordered lists of values, similar to Python lists but with notably different syntax.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Declaring and populating:</h4>
+        <div class="code-block"><pre>tools=("docker" "kubernetes" "terraform")</pre></div>
+        <p>No commas between elements — just spaces, inside parentheses.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Accessing elements:</h4>
+        <div class="code-block"><pre>echo "\${tools[0]}"     # docker
+  echo "\${tools[1]}"     # kubernetes</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical:</strong> Array access always requires curly braces: <code>\${tools[0]}</code>, not <code>$tools[0]</code>. Without the braces, Bash reads <code>$tools</code> (which evaluates to the <em>first</em> element only) followed by the literal text <code>[0]</code>.
         </div>
 
-        <h4>HTTP Status Codes</h4>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">All elements, and count:</h4>
+        <div class="code-block"><pre>echo "\${tools[@]}"      # docker kubernetes terraform
+  echo "\${#tools[@]}"      # 3 — the number of elements</pre></div>
+        <p><code>@</code> inside <code>[ ]</code> means "all elements." <code>#</code> before the array name means "count of."</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Looping over an array:</h4>
+        <div class="code-block"><pre>for tool in "\${tools[@]}"; do
+      echo "Learning: $tool"
+  done</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Learning: docker
+  Learning: kubernetes
+  Learning: terraform</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Pitfall:</strong> Always quote <code>"\${tools[@]}"</code> in loops. Without quotes, an element containing spaces (e.g., <code>"docker compose"</code>) would get split into two separate loop iterations instead of staying intact.
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Adding an element:</h4>
+        <div class="code-block"><pre>tools+=("ansible")
+  echo "\${tools[@]}"    # docker kubernetes terraform ansible</pre></div>
+      `
+    },
+    {
+      id: 's5-positional-params',
+      title: '5.2 Positional Parameters and Script Arguments',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <p>Scripts can accept arguments from the command line, accessed the same way function arguments were in Section 4:</p>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  echo "Script name: $0"
+  echo "First arg: $1"
+  echo "Second arg: $2"
+  echo "All args: $@"
+  echo "Number of args: $#"</pre></div>
+        <p>Running:</p>
+        <div class="code-block"><pre>./script.sh hello world</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Script name: ./script.sh
+  First arg: hello
+  Second arg: world
+  All args: hello world
+  Number of args: 2</pre></div>
+
         <div class="table-wrapper">
           <table class="data-table">
-            <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+            <thead><tr><th>Variable</th><th>Meaning</th></tr></thead>
             <tbody>
-              <tr><td><strong>200</strong> OK</td><td>Success</td></tr>
-              <tr><td><strong>201</strong> Created</td><td>Resource created</td></tr>
-              <tr><td><strong>404</strong> Not Found</td><td>Resource not found</td></tr>
-              <tr><td><strong>500</strong> Server Error</td><td>Server error</td></tr>
+              <tr><td><code>$0</code></td><td>The script's own name/path</td></tr>
+              <tr><td><code>$1</code>, <code>$2</code>, ...</td><td>Individual positional arguments</td></tr>
+              <tr><td><code>$@</code></td><td>All arguments as separate words</td></tr>
+              <tr><td><code>$#</code></td><td>Total count of arguments</td></tr>
+              <tr><td><code>$?</code></td><td>Exit status of the <em>last</em> command run (covered in 5.4)</td></tr>
             </tbody>
           </table>
         </div>
       `
     },
     {
-      id: 'rest-authentication',
-      title: 'Authentication Methods',
+      id: 's5-shift',
+      title: '5.3 shift — Processing Arguments One at a Time',
       priority: false,
-      icon: '🔐',
+      icon: '➡️',
       bodyHTML: `
+        <p><code>shift</code> removes <code>$1</code> and shifts every remaining argument down by one position — <code>$2</code> becomes the new <code>$1</code>, and so on. This is the standard pattern for looping through an unknown number of arguments:</p>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  while [ $# -gt 0 ]; do
+      echo "Processing: $1"
+      shift
+  done</pre></div>
+        <p>Running <code>./script.sh a b c</code> outputs:</p>
+        <div class="code-block"><pre>Processing: a
+  Processing: b
+  Processing: c</pre></div>
+        <p>Each iteration, <code>$1</code> is the "current" argument, and <code>shift</code> advances to the next one — the loop ends when <code>$#</code> (the remaining count) hits 0.</p>
+      `
+    },
+    {
+      id: 's5-exit-codes',
+      title: '5.4 Exit Codes',
+      priority: false,
+      icon: '🚦',
+      bodyHTML: `
+        <p>Every command and script, when it finishes, produces a numeric <strong>exit status</strong> between 0 and 255. By convention:</p>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>0</code> = success</li>
+          <li>Any nonzero value (typically <code>1</code>) = some kind of failure</li>
+        </ul>
+
+        <div class="code-block"><pre>ls /nonexistent
+  echo $?     # prints the exit code of the previous command — 2, meaning "No such file or directory"</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Setting your own script's exit code with <code>exit</code>:</h4>
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  if [ ! -f "config.txt" ]; then
+      echo "Error: config.txt not found"
+      exit 1
+  fi
+  echo "Proceeding..."</pre></div>
+        <p><code>exit 1</code> immediately stops the script and sets its exit status to <code>1</code> — anything checking this script's success (another script, a CI/CD pipeline step) sees the failure.</p>
+
+        <div class="info-box warning">
+          <strong>⚠️ Why this matters enormously in automation:</strong> CI/CD pipelines, <code>cron</code> jobs, and orchestration tools all decide whether to proceed, retry, or alert <em>based on exit codes</em> — not on whether output "looked okay." A script that encounters an error but exits with <code>0</code> anyway will silently report success to everything downstream.
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Checking exit codes to control flow:</h4>
+        <div class="code-block"><pre>grep "error" logfile.txt
+  if [ $? -eq 0 ]; then
+      echo "Error found in log"
+  else
+      echo "No errors found"
+  fi</pre></div>
+        <p><code>grep</code> exits <code>0</code> if it found a match, <code>1</code> if it didn't — a common pattern for using search commands as conditionals.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Shorthand using <code>&&</code> and <code>||</code>:</h4>
+        <div class="code-block"><pre>mkdir new_folder && echo "Created successfully"
+  cd missing_folder || echo "Failed to enter directory"</pre></div>
+        <p><code>&&</code> runs the next command only if the previous one succeeded (exit <code>0</code>); <code>||</code> runs the next command only if the previous one failed (nonzero exit).</p>
+      `
+    },
+    {
+      id: 's5-set-euo',
+      title: '5.5 set -e, set -u, set -o pipefail — Safer Scripts',
+      priority: false,
+      icon: '🛡️',
+      bodyHTML: `
+        <p>By default, Bash scripts <strong>keep running even after a command fails</strong> — a dangerous default for automation, where a failed step should usually stop everything rather than continue on possibly-corrupted state.</p>
+
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+  set -e   # exit immediately if any command exits non-zero
+  set -u   # treat unset variables as an error, not empty string
+  set -o pipefail   # a pipeline fails if ANY command in it fails, not just the last one</pre></div>
+
+        <p>Placed at the top of a script, these three lines are an extremely common defensive pattern (sometimes combined as <code>set -euo pipefail</code>):</p>
+
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong><code>set -e</code></strong> — without it, a script that fails on line 3 will still barrel ahead to line 4, 5, etc., often causing confusing downstream failures instead of stopping cleanly at the actual point of failure.</li>
+          <li><strong><code>set -u</code></strong> — without it, a typo like <code>$nmae</code> instead of <code>$name</code> silently evaluates to an empty string rather than raising an error, which can cause a script to (for example) <code>rm -rf $nmae/</code> and delete the entire current directory instead of a subfolder.</li>
+          <li><strong><code>set -o pipefail</code></strong> — without it, <code>false | true</code> reports success (exit <code>0</code>) because only the <em>last</em> command in the pipe (<code>true</code>) is checked by default.</li>
+        </ul>
+
+        <div class="info-box tip">
+          <strong>💡 Best practice:</strong> This trio is close to a default best practice for any Bash script meant to run unattended (cron jobs, CI/CD steps, deployment scripts). Interactive one-off scripts can skip it, but anything automated should almost always include it.
+        </div>
+      `
+    },
+    {
+      id: 's5-trap',
+      title: '5.6 trap — Running Cleanup Code on Exit or Signal',
+      priority: false,
+      icon: '🔧',
+      bodyHTML: `
+        <p><code>trap</code> lets a script run a specific command when it receives a signal (like being interrupted) or when it exits — regardless of whether it exited successfully or due to an error.</p>
+
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+
+  cleanup() {
+      echo "Cleaning up temporary files..."
+      rm -f /tmp/tempfile
+  }
+
+  trap cleanup EXIT
+
+  echo "Doing work..."
+  touch /tmp/tempfile
+  sleep 2
+  echo "Work done"</pre></div>
+
+        <p><code>trap cleanup EXIT</code> registers the <code>cleanup</code> function to run automatically whenever the script exits — whether it finished normally, hit <code>exit 1</code>, or was interrupted with <code>Ctrl+C</code>.</p>
+
         <div class="table-wrapper">
           <table class="data-table">
-            <thead><tr><th>Method</th><th>Description</th></tr></thead>
+            <thead><tr><th>Signal</th><th>Trigger</th></tr></thead>
             <tbody>
-              <tr><td><strong>API Key</strong></td><td>Static token in header</td></tr>
-              <tr><td><strong>Bearer Token</strong></td><td>JWT in Authorization header</td></tr>
-              <tr><td><strong>OAuth 2.0</strong></td><td>Delegated authorization</td></tr>
+              <tr><td><code>EXIT</code></td><td>Script exits, for any reason (success, error, or interrupt)</td></tr>
+              <tr><td><code>SIGINT</code></td><td>User presses <code>Ctrl+C</code></td></tr>
+              <tr><td><code>SIGTERM</code></td><td>Process receives a termination request (e.g., from <code>kill</code>)</td></tr>
             </tbody>
           </table>
         </div>
-        <div class="code-block"><pre>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</pre></div>
+
+        <p>This is the Bash equivalent of Python's <code>finally</code> block from Section 2 — guaranteed cleanup regardless of how the script ends.</p>
+      `
+    },
+    {
+      id: 's5-getopts',
+      title: '5.7 getopts — Proper Flag-Based Argument Parsing',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Positional arguments (<code>$1</code>, <code>$2</code>) work for simple scripts, but real-world CLI tools use named flags (<code>-f filename</code>, <code>-v</code> for verbose). <code>getopts</code> is Bash's built-in tool for parsing these.</p>
+
+        <div class="code-block"><pre><span class="code-comment">#!/bin/bash</span>
+
+  while getopts "n:v" opt; do
+      case $opt in
+          n) name="$OPTARG" ;;
+          v) verbose=true ;;
+          \\?) echo "Invalid option"; exit 1 ;;
+      esac
+  done
+
+  echo "Name: $name"
+  echo "Verbose: $verbose"</pre></div>
+
+        <p>Running:</p>
+        <div class="code-block"><pre>./script.sh -n Keith -v</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Name: Keith
+  Verbose: true</pre></div>
+
+        <p>Breaking down the flag string <code>"n:v"</code>:</p>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>n:</code> — the colon means <code>-n</code> <strong>requires a value</strong> (accessed via <code>$OPTARG</code>)</li>
+          <li><code>v</code> — no colon means <code>-v</code> is a standalone flag (a boolean switch, no value needed)</li>
+        </ul>
+
+        <p><code>case</code>/<code>esac</code> works like a more readable alternative to a long <code>if</code>/<code>elif</code> chain when checking one variable against multiple possible values — <code>esac</code> is <code>case</code> spelled backwards, following the same convention as <code>fi</code> and <code>done</code>.</p>
+      `
+    },
+    {
+      id: 's5-pitfalls',
+      title: 'Pitfalls Table',
+      priority: false,
+      icon: '🚫',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Accessing array elements without <code>\${}</code></td>
+                <td><code>$tools[0]</code> reads as the first element plus literal text <code>[0]</code></td>
+                <td>Always use <code>\${tools[0]}</code></td>
+              </tr>
+              <tr>
+                <td>Looping over an array without quotes</td>
+                <td>Elements containing spaces get split into multiple iterations</td>
+                <td>Use <code>"\${tools[@]}"</code> with quotes</td>
+              </tr>
+              <tr>
+                <td>Assuming a script that "ran" means it succeeded</td>
+                <td>A script can produce output and still exit non-zero (or vice versa)</td>
+                <td>Always check <code>$?</code> or use <code>set -e</code></td>
+              </tr>
+              <tr>
+                <td>Skipping <code>set -euo pipefail</code> in automated scripts</td>
+                <td>Unset variables, mid-pipeline failures, and later-line errors go unnoticed</td>
+                <td>Add the trio at the top of every unattended script</td>
+              </tr>
+              <tr>
+                <td>Forgetting <code>trap</code> for cleanup</td>
+                <td>Temp files/processes can be left behind if a script errors or is interrupted</td>
+                <td>Register a <code>cleanup</code> function with <code>trap cleanup EXIT</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's5-hands-on',
+      title: '🖥️ Hands-on Exercise',
+      priority: false,
+      icon: '💻',
+      bodyHTML: `
+        <p>In <code>/workspaces/DevOps-Journey</code>:</p>
+        <div class="code-block"><pre>nano advanced_practice.sh
+  chmod +x advanced_practice.sh</pre></div>
+
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Start with <code>set -euo pipefail</code></li>
+          <li>Declare an array of pillar names and loop over it with <code>"\${array[@]}"</code></li>
+          <li>Use <code>getopts</code> to accept a <code>-p</code> flag (a pillar number, requires a value) and a <code>-v</code> flag (verbose, no value)</li>
+          <li>Register a <code>trap</code> that echoes <code>"Script finished"</code> on <code>EXIT</code></li>
+          <li>Check <code>$#</code> and exit with code <code>1</code> and an error message if no flags were provided</li>
+        </ol>
+
+        <p>Run it several ways:</p>
+        <div class="code-block"><pre>./advanced_practice.sh -p 4 -v
+  ./advanced_practice.sh          <span class="code-comment"># confirm the exit-code error path works</span></pre></div>
+        <p>Then check <code>echo $?</code> after each run.</p>
+      `
+    },
+    {
+      id: 's5-devops-connection',
+      title: 'DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Nearly every production-grade shell script — deployment scripts, entrypoint scripts in Docker images, CI/CD pipeline steps — relies on this section's tools specifically: <code>set -euo pipefail</code> to fail fast and loudly, <code>trap</code> for guaranteed cleanup of temporary resources, and <code>getopts</code> for accepting configuration flags rather than hardcoding values. Scripts without these safeguards are a common source of silent failures in real infrastructure.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">REST APIs — Concepts</a>
+        </div>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 6 — REST APIs — Concepts
+  // ============================================================
+  const SECTION_6_ACCORDIONS = [
+    {
+      id: 's6-what-is-api',
+      title: '6.1 What is an API?',
+      priority: false,
+      icon: '🔌',
+      bodyHTML: `
+        <p>An <strong>API</strong> (Application Programming Interface) is a defined way for two pieces of software to communicate with each other. Instead of a human clicking buttons in a browser, one program sends a structured request to another program and gets a structured response back.</p>
+        <p>A <strong>REST API</strong> (Representational State Transfer) is the most common style of web API — it uses standard HTTP (the same protocol a browser uses to load web pages) as its communication method, with a specific set of conventions around how requests and responses are structured.</p>
+        <div class="info-box note">
+          <strong>📌 Key insight:</strong> An API is a contract between two programs — the client promises to send requests in a certain format, and the server promises to respond in a certain format.
+        </div>
+      `
+    },
+    {
+      id: 's6-client-server',
+      title: '6.2 The Client-Server Model',
+      priority: false,
+      icon: '🖥️',
+      bodyHTML: `
+        <p>Every API interaction has two sides:</p>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><strong>Client</strong> — the program making the request (a Python script, a browser, <code>curl</code>, another server)</li>
+          <li><strong>Server</strong> — the program receiving the request, processing it, and sending back a response</li>
+        </ul>
+        <div class="code-block" style="background:transparent;border:none;padding:0;margin:0.5rem 0;">
+          <pre style="color:var(--text-primary);font-size:0.75rem;white-space:pre;background:var(--bg-tertiary);padding:1rem;border-radius:var(--radius-md);">
+  Client  ──── HTTP Request ────>  Server
+  Client  <─── HTTP Response ───   Server</pre>
+        </div>
+        <p>The client always initiates — servers don't reach out to clients unprompted in the standard REST model (that's a different pattern, covered by things like webhooks, outside this section's scope).</p>
+      `
+    },
+    {
+      id: 's6-resources-endpoints',
+      title: '6.3 Resources and Endpoints',
+      priority: false,
+      icon: '📍',
+      bodyHTML: `
+        <p>REST APIs organize everything around <strong>resources</strong> — nouns representing "things" the API manages (a user, an order, a file). Each resource type typically has a base <strong>endpoint</strong> — a URL representing where to interact with it.</p>
+        <div class="code-block"><pre>https://api.example.com/users
+  https://api.example.com/users/42
+  https://api.example.com/orders</pre></div>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>/users</code> — the collection of all users</li>
+          <li><code>/users/42</code> — one specific user, identified by ID <code>42</code></li>
+          <li><code>/orders</code> — a completely different resource, the collection of orders</li>
+        </ul>
+        <div class="info-box note">
+          <strong>📌 Convention:</strong> Resource endpoints are almost always <strong>plural nouns</strong> (<code>/users</code>, not <code>/user</code>), representing a collection. A specific item within that collection is addressed by appending its identifier (<code>/users/42</code>).
+        </div>
+      `
+    },
+    {
+      id: 's6-http-methods',
+      title: '6.4 HTTP Methods — The Verbs',
+      priority: false,
+      icon: '⚡',
+      bodyHTML: `
+        <p>The URL identifies <em>what</em> is being acted on (the resource); the <strong>HTTP method</strong> identifies <em>what action</em> to take.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Method</th><th>Purpose</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td><code>GET</code></td><td>Retrieve data — should never change anything on the server</td><td><code>GET /users/42</code> — fetch user 42's data</td></tr>
+              <tr><td><code>POST</code></td><td>Create a new resource</td><td><code>POST /users</code> — create a new user</td></tr>
+              <tr><td><code>PUT</code></td><td>Replace an existing resource entirely</td><td><code>PUT /users/42</code> — overwrite all of user 42's data</td></tr>
+              <tr><td><code>PATCH</code></td><td>Partially update an existing resource</td><td><code>PATCH /users/42</code> — update just one field, e.g. email</td></tr>
+              <tr><td><code>DELETE</code></td><td>Remove a resource</td><td><code>DELETE /users/42</code> — delete user 42</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical distinction — PUT vs PATCH:</strong> <code>PUT</code> expects the <em>entire</em> resource representation and replaces it wholesale — omitted fields may get wiped out or reset to defaults. <code>PATCH</code> only touches the fields explicitly included in the request. Using <code>PUT</code> when <code>PATCH</code> was intended is a common source of accidentally erasing data that wasn't included in the request body.
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Idempotency of methods</h4>
+        <p>An operation that produces the same result no matter how many times it's applied:</p>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>GET</code>, <code>PUT</code>, <code>DELETE</code> — <strong>idempotent</strong>. Calling <code>DELETE /users/42</code> five times has the same end state as calling it once (user 42 is gone either way).</li>
+          <li><code>POST</code> — <strong>not</strong> idempotent by default. Calling <code>POST /users</code> five times typically creates five separate new users.</li>
+        </ul>
+        <div class="info-box tip">
+          <strong>💡 Why this matters in automation:</strong> A retry mechanism that blindly re-sends a failed <code>POST</code> request risks creating duplicate resources, whereas retrying a <code>PUT</code> or <code>DELETE</code> is generally safe.
+        </div>
+      `
+    },
+    {
+      id: 's6-status-codes',
+      title: '6.5 Status Codes — The Response\'s Headline',
+      priority: false,
+      icon: '📊',
+      bodyHTML: `
+        <p>Every HTTP response includes a three-digit <strong>status code</strong> summarizing the outcome. They're grouped by their first digit:</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Range</th><th>Category</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>1xx</code></td><td>Informational</td><td>Request received, still processing (rarely seen directly)</td></tr>
+              <tr><td><code>2xx</code></td><td>Success</td><td>The request worked</td></tr>
+              <tr><td><code>3xx</code></td><td>Redirection</td><td>Further action needed to complete the request</td></tr>
+              <tr><td><code>4xx</code></td><td>Client error</td><td>Something wrong with the request itself</td></tr>
+              <tr><td><code>5xx</code></td><td>Server error</td><td>Something went wrong on the server's side</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Commonly encountered codes:</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Name</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>200</code></td><td>OK</td><td>Request succeeded, response body contains the result</td></tr>
+              <tr><td><code>201</code></td><td>Created</td><td>A new resource was successfully created (typical response to <code>POST</code>)</td></tr>
+              <tr><td><code>204</code></td><td>No Content</td><td>Request succeeded, but there's nothing to return (common for <code>DELETE</code>)</td></tr>
+              <tr><td><code>400</code></td><td>Bad Request</td><td>The request was malformed — invalid syntax, missing required data</td></tr>
+              <tr><td><code>401</code></td><td>Unauthorized</td><td>Authentication is required and missing or invalid</td></tr>
+              <tr><td><code>403</code></td><td>Forbidden</td><td>Authenticated, but not permitted to perform this action</td></tr>
+              <tr><td><code>404</code></td><td>Not Found</td><td>The requested resource doesn't exist</td></tr>
+              <tr><td><code>429</code></td><td>Too Many Requests</td><td>Rate limit exceeded — slow down</td></tr>
+              <tr><td><code>500</code></td><td>Internal Server Error</td><td>Something broke on the server, unrelated to what was sent</td></tr>
+              <tr><td><code>503</code></td><td>Service Unavailable</td><td>Server temporarily can't handle the request (overload, maintenance)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning">
+          <strong>⚠️ Automation depends on checking these:</strong> A script blindly assuming success because it got <em>any</em> response, without checking the status code, is a common source of silent automation failures — e.g., treating a <code>404</code> or <code>500</code> response body as valid data.
+        </div>
+      `
+    },
+    {
+      id: 's6-headers',
+      title: '6.6 Headers — Metadata About the Request/Response',
+      priority: false,
+      icon: '📋',
+      bodyHTML: `
+        <p><strong>Headers</strong> are key-value pairs sent alongside a request or response, carrying metadata that isn't part of the main data itself.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Common request headers:</h4>
+        <div class="code-block"><pre>Content-Type: application/json
+  Authorization: Bearer &lt;token&gt;
+  Accept: application/json</pre></div>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>Content-Type</code> — tells the server what format the request body is in (almost always <code>application/json</code> for modern APIs)</li>
+          <li><code>Authorization</code> — carries credentials proving who's making the request (API keys, tokens — covered further in Section 7)</li>
+          <li><code>Accept</code> — tells the server what format the client wants the response in</li>
+        </ul>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Common response headers:</h4>
+        <div class="code-block"><pre>Content-Type: application/json
+  X-RateLimit-Remaining: 42</pre></div>
+        <p><code>X-RateLimit-Remaining</code> (and similar <code>X-*</code> headers) are non-standard but extremely common conventions APIs use to communicate things like remaining rate-limit quota.</p>
+      `
+    },
+    {
+      id: 's6-request-body',
+      title: '6.7 The Request Body',
+      priority: false,
+      icon: '📦',
+      bodyHTML: `
+        <p>For methods that send data (<code>POST</code>, <code>PUT</code>, <code>PATCH</code>), the <strong>body</strong> carries the actual payload — typically formatted as <strong>JSON</strong> (JavaScript Object Notation, covered in depth in Section 8).</p>
+        <div class="code-block"><pre>POST /users
+  Content-Type: application/json
+
+  {
+    "name": "Keith",
+    "role": "student"
+  }</pre></div>
+        <p><code>GET</code> and <code>DELETE</code> requests typically have no body — any parameters they need are usually passed in the URL itself (see 6.8).</p>
+      `
+    },
+    {
+      id: 's6-query-params',
+      title: '6.8 Query Parameters',
+      priority: false,
+      icon: '🔍',
+      bodyHTML: `
+        <p>Additional options for a request — filters, sorting, pagination — are commonly passed as <strong>query parameters</strong>, appended to the URL after a <code>?</code>:</p>
+        <div class="code-block"><pre>GET /users?role=admin&limit=10</pre></div>
+        <ul style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li><code>?</code> starts the query string</li>
+          <li>Each parameter is <code>key=value</code></li>
+          <li><code>&amp;</code> separates multiple parameters</li>
+        </ul>
+        <p>This example requests users filtered to <code>role=admin</code>, limited to <code>10</code> results. Query parameters are a <code>GET</code>-request convention — since <code>GET</code> has no body, filtering criteria travel in the URL instead.</p>
+      `
+    },
+    {
+      id: 's6-complete-example',
+      title: '6.9 A Complete Request/Response Example',
+      priority: false,
+      icon: '📄',
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Request:</h4>
+        <div class="code-block"><pre>GET /users/42
+  Authorization: Bearer abc123
+  Accept: application/json</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Response:</h4>
+        <div class="code-block"><pre>Status: 200 OK
+  Content-Type: application/json
+
+  {
+    "id": 42,
+    "name": "Keith",
+    "role": "student"
+  }</pre></div>
+        <p>Everything from this section is present here: an endpoint (<code>/users/42</code>), a method (<code>GET</code>), headers (<code>Authorization</code>, <code>Accept</code>, <code>Content-Type</code>), a status code (<code>200</code>), and a JSON body.</p>
+      `
+    },
+    {
+      id: 's6-pitfalls',
+      title: 'Pitfalls Table',
+      priority: false,
+      icon: '🚫',
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Not checking the status code before using the response</td>
+                <td>A <code>404</code> or <code>500</code> response body might be treated as valid data</td>
+                <td>Always check status code first; branch on success vs error</td>
+              </tr>
+              <tr>
+                <td>Blindly retrying a failed <code>POST</code></td>
+                <td>Can create duplicate resources since <code>POST</code> isn't idempotent</td>
+                <td>Use idempotency keys if the API supports them, or check for existing resources before retrying</td>
+              </tr>
+              <tr>
+                <td>Using <code>PUT</code> when <code>PATCH</code> was intended</td>
+                <td>Fields not included in the request body may get wiped or reset</td>
+                <td>Use <code>PATCH</code> for partial updates; reserve <code>PUT</code> for full replacement</td>
+              </tr>
+              <tr>
+                <td>Forgetting <code>Content-Type: application/json</code> on a request with a JSON body</td>
+                <td>Server may fail to parse the body correctly or reject the request</td>
+                <td>Always set the header explicitly when sending JSON</td>
+              </tr>
+              <tr>
+                <td>Assuming <code>GET</code> requests can carry a body</td>
+                <td>Many servers ignore or reject bodies on <code>GET</code></td>
+                <td>Pass parameters via the query string instead</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: 's6-hands-on',
+      title: '🖥️ Hands-on Practice (Codespace Terminal)',
+      priority: false,
+      icon: '💻',
+      bodyHTML: `
+        <p>APIs are best explored with <code>curl</code> — a command-line tool for making HTTP requests, available by default in the Codespace.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Basic GET request:</h4>
+        <div class="code-block"><pre>curl -i https://jsonplaceholder.typicode.com/users/1</pre></div>
+        <p><code>-i</code> includes the response headers and status line in the output, not just the body. This is a free public test API — safe to experiment against.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Try a non-existent resource:</h4>
+        <div class="code-block"><pre>curl -i https://jsonplaceholder.typicode.com/users/999</pre></div>
+        <p>Notice the status code — this ID doesn't exist, so <code>404</code> should appear rather than a silent failure or empty success.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">POST request (creating a resource):</h4>
+        <div class="code-block"><pre>curl -i -X POST https://jsonplaceholder.typicode.com/posts \\
+    -H "Content-Type: application/json" \\
+    -d '{"title": "test", "body": "hello", "userId": 1}'</pre></div>
+        <p><code>-X POST</code> sets the method, <code>-H</code> adds a header, <code>-d</code> sends the request body. The status code returned should be <code>201 Created</code>.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Try it yourself:</h4>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>GET a user with ID 3</li>
+          <li>POST a new post with your own data</li>
+          <li>GET a non-existent resource and check the status code</li>
+        </ol>
+      `
+    },
+    {
+      id: 's6-devops-connection',
+      title: 'DevOps Connection',
+      priority: false,
+      icon: '⚙️',
+      bodyHTML: `
+        <p>Virtually every modern infrastructure tool exposes or consumes a REST API — Docker, Kubernetes, GitHub, Terraform providers, and monitoring tools like Grafana all communicate over REST underneath their CLIs and dashboards. Understanding status codes and idempotency directly informs writing reliable automation: knowing that a <code>POST</code> retry can create duplicates, but a <code>PUT</code>/<code>DELETE</code> retry is safe, shapes how deployment and provisioning scripts are designed to handle failures.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">Working with APIs in Python (requests library)</a>
+        </div>
       `
     }
   ];
@@ -1079,6 +2454,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
+  renderScriptingOverview();
   renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
   renderAccordion('js-section2-container', SECTION_2_ACCORDIONS);
   renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
@@ -1421,7 +2797,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // RENDER EVERYTHING
   // ============================================================
 
-  renderScriptingOverview();
+  // renderScriptingOverview();
   renderFlashcards();
   renderQuiz();
 
