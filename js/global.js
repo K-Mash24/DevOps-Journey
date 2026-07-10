@@ -8,7 +8,7 @@ const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevO
 // SERVICE WORKER VERSION CHECK
 // ============================================================
 
-const APP_VERSION = '2026-07-10-v2.5'; // Match your CACHE_NAME
+const APP_VERSION = '2026-07-10-v2.6'; // Match your CACHE_NAME
 
 if (localStorage.getItem('sw-version') !== APP_VERSION) {
   console.log('🔄 New version detected — clearing old caches...');
@@ -51,10 +51,348 @@ function showComingSoonForPillar(element) {
   return false; // Prevent any default behavior
 }
 
+// ============================================================
+// TOGGLE ALL ACCORDIONS
+// ============================================================
+
+function toggleAllAccordions() {
+  const accordions = document.querySelectorAll('.accordion');
+  if (!accordions.length) {
+    if (typeof showToast === 'function') {
+      showToast('No accordions found', 'info');
+    }
+    return;
+  }
+
+  const anyOpen = Array.from(accordions).some(a => a.classList.contains('open'));
+  const shouldOpen = !anyOpen;
+  let changed = 0;
+
+  accordions.forEach(acc => {
+    const header = acc.querySelector('.accordion-header');
+    const isOpen = acc.classList.contains('open');
+
+    if (isOpen !== shouldOpen) {
+      if (shouldOpen) {
+        acc.classList.add('open');
+        if (header) header.setAttribute('aria-expanded', 'true');
+      } else {
+        acc.classList.remove('open');
+        if (header) header.setAttribute('aria-expanded', 'false');
+      }
+      changed++;
+    }
+  });
+
+  // Save states
+  const states = {};
+  document.querySelectorAll('.accordion').forEach(a => {
+    const id = a.querySelector('.accordion-title')?.innerText || 'unknown';
+    states[id] = a.classList.contains('open');
+  });
+  localStorage.setItem('gc-accordion-states', JSON.stringify(states));
+
+  if (typeof showToast === 'function') {
+    const msg = `${changed} accordion${changed !== 1 ? 's' : ''} ${shouldOpen ? 'expanded' : 'collapsed'}`;
+    showToast(msg, 'info');
+  }
+}
+
+window.toggleAllAccordions = toggleAllAccordions;
+
+// ============================================================
+// SMART SIDEBAR TOGGLE — Edge-detect, auto-hide
+// ============================================================
+
+let edgeToggleTimeout = null;
+let edgeToggleVisible = false;
+let edgeToggleHidden = false;
+
+function createSidebarToggleButton() {
+  // Check if button already exists
+  if (document.getElementById('sidebarEdgeToggle')) return;
+
+  const button = document.createElement('button');
+  button.id = 'sidebarEdgeToggle';
+  button.className = 'sidebar-edge-toggle';
+  button.setAttribute('aria-label', 'Toggle sidebar');
+  button.title = 'Toggle sidebar (Ctrl+B)';
+
+  // SVG icon (chevron)
+  button.innerHTML = `
+    <svg class="toggle-chevron" width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+    </svg>
+  `;
+
+  // Style the button
+  Object.assign(button.style, {
+    position: 'fixed',
+    top: '50%',
+    left: '0',
+    transform: 'translateY(-50%)',
+    zIndex: '1000',
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border-color)',
+    borderLeft: 'none',
+    borderRadius: '0 var(--radius-md) var(--radius-md) 0',
+    padding: '12px 6px',
+    cursor: 'pointer',
+    display: 'none', // Hidden by default
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'var(--text-primary)',
+    boxShadow: 'var(--shadow-md)',
+    transition: 'opacity 0.3s ease, transform 0.3s ease, background 0.2s',
+    opacity: '0',
+    width: '24px',
+    height: '48px',
+    pointerEvents: 'none' // Not clickable when hidden
+  });
+
+  // Hover effects
+  button.addEventListener('mouseenter', () => {
+    if (button.style.display === 'flex') {
+      button.style.opacity = '1';
+      button.style.background = 'var(--accent-primary)';
+      button.style.color = 'white';
+    }
+  });
+  button.addEventListener('mouseleave', () => {
+    if (button.style.display === 'flex' && !edgeToggleHidden) {
+      button.style.opacity = '0.7';
+      button.style.background = 'var(--bg-card)';
+      button.style.color = 'var(--text-primary)';
+    }
+  });
+
+  // Click handler — use the SAME toggle mechanism as hamburger
+  button.addEventListener('click', function(e) {
+    e.stopPropagation();
+    toggleSidebarFromEdge();
+  });
+
+  document.body.appendChild(button);
+
+  // --- Edge detection: show button when mouse nears left border ---
+  document.addEventListener('mousemove', function(e) {
+    const sidebar = document.getElementById('sidebar');
+    const isMobile = window.innerWidth <= 768;
+
+    // Don't show on mobile (hamburger handles it)
+    if (isMobile) {
+      hideEdgeToggle();
+      return;
+    }
+
+    // Check if sidebar is open
+    const isOpen = sidebar && !sidebar.classList.contains('collapsed');
+
+    // If sidebar is open, hide the button
+    if (isOpen) {
+      hideEdgeToggle();
+      return;
+    }
+
+    // Show button when mouse is near left edge (0-30px)
+    const isNearLeftEdge = e.clientX <= 30;
+
+    if (isNearLeftEdge) {
+      showEdgeToggle();
+    } else {
+      // If mouse moves away, start timeout to hide
+      startEdgeToggleHideTimer();
+    }
+  });
+
+  // Also show on touch devices when touching near left edge
+  document.addEventListener('touchstart', function(e) {
+    const touch = e.touches[0];
+    const sidebar = document.getElementById('sidebar');
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) return;
+
+    const isOpen = sidebar && !sidebar.classList.contains('collapsed');
+    if (isOpen) {
+      hideEdgeToggle();
+      return;
+    }
+
+    if (touch.clientX <= 30) {
+      showEdgeToggle();
+    }
+  });
+
+  // Hide when sidebar opens (via any method)
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) {
+    const observer = new MutationObserver(() => {
+      const isOpen = !sidebar.classList.contains('collapsed');
+      if (isOpen) {
+        hideEdgeToggle();
+      }
+      // Update chevron when sidebar state changes
+      updateEdgeToggleChevron();
+    });
+    observer.observe(sidebar, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+  }
+
+  // Initial state
+  hideEdgeToggle();
+
+  // Update chevron direction
+  updateEdgeToggleChevron();
+}
+
+function showEdgeToggle() {
+  const button = document.getElementById('sidebarEdgeToggle');
+  if (!button) return;
+
+  // Don't show if sidebar is open
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar && !sidebar.classList.contains('collapsed')) return;
+
+  // Don't show on mobile
+  if (window.innerWidth <= 768) return;
+
+  clearTimeout(edgeToggleTimeout);
+  edgeToggleHidden = false;
+  button.style.display = 'flex';
+  button.style.pointerEvents = 'auto';
+  button.style.opacity = '0.7';
+  edgeToggleVisible = true;
+
+  // Auto-hide after 3 seconds of inactivity
+  startEdgeToggleHideTimer();
+}
+
+function hideEdgeToggle() {
+  const button = document.getElementById('sidebarEdgeToggle');
+  if (!button) return;
+
+  clearTimeout(edgeToggleTimeout);
+  edgeToggleVisible = false;
+  edgeToggleHidden = true;
+  button.style.opacity = '0';
+  button.style.pointerEvents = 'none';
+
+  setTimeout(() => {
+    if (!edgeToggleVisible) {
+      button.style.display = 'none';
+    }
+  }, 300); // Wait for fade transition
+}
+
+function startEdgeToggleHideTimer() {
+  clearTimeout(edgeToggleTimeout);
+  edgeToggleTimeout = setTimeout(() => {
+    // Only hide if mouse is not near the edge
+    // We check this by seeing if the button is being hovered
+    const button = document.getElementById('sidebarEdgeToggle');
+    if (button && button.matches(':hover')) {
+      // User is hovering, keep it visible
+      return;
+    }
+    hideEdgeToggle();
+  }, 3000); // Hide after 3 seconds
+}
+
+function toggleSidebarFromEdge() {
+  const isMobile = window.innerWidth <= 768;
+
+  if (isMobile) {
+    // Mobile: use hamburger
+    const hamburger = document.getElementById('hamburger');
+    if (hamburger) hamburger.click();
+    return;
+  }
+
+  // Desktop: use the hamburger click method (which triggers the sidebar toggle)
+  // This ensures ALL state stays in sync (hamburger, overlay, localStorage, stars, etc.)
+  const hamburger = document.getElementById('hamburger');
+  if (hamburger) {
+    hamburger.click();
+  } else {
+    // Fallback: direct toggle if hamburger not found
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+
+    const isCollapsed = sidebar.classList.contains('collapsed');
+    if (isCollapsed) {
+      sidebar.classList.remove('collapsed');
+      localStorage.setItem('sidebar-collapsed', 'false');
+    } else {
+      sidebar.classList.add('collapsed');
+      localStorage.setItem('sidebar-collapsed', 'true');
+    }
+
+    // Update overlay
+    const overlay = document.getElementById('sidebarOverlay');
+    if (overlay) {
+      if (isCollapsed) {
+        overlay.classList.add('show');
+        overlay.style.display = 'block';
+        overlay.style.opacity = '1';
+      } else {
+        overlay.classList.remove('show');
+        overlay.style.display = 'none';
+        overlay.style.opacity = '0';
+      }
+    }
+  }
+
+  // Hide the edge toggle immediately when sidebar opens
+  // (The hamburger click will handle this via the MutationObserver)
+  setTimeout(() => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && !sidebar.classList.contains('collapsed')) {
+      hideEdgeToggle();
+    }
+    updateEdgeToggleChevron();
+  }, 100);
+}
+
+function updateEdgeToggleChevron() {
+  const button = document.getElementById('sidebarEdgeToggle');
+  if (!button) return;
+
+  const sidebar = document.getElementById('sidebar');
+  const isCollapsed = sidebar?.classList.contains('collapsed') || false;
+
+  const chevron = button.querySelector('.toggle-chevron');
+  if (chevron) {
+    chevron.style.transform = isCollapsed ? 'rotate(0deg)' : 'rotate(180deg)';
+    chevron.style.transition = 'transform 0.3s ease';
+  }
+
+  button.title = isCollapsed ? 'Open sidebar (Ctrl+B)' : 'Close sidebar (Ctrl+B)';
+}
+
+// Handle resize
+window.addEventListener('resize', () => {
+  const isMobile = window.innerWidth <= 768;
+  const button = document.getElementById('sidebarEdgeToggle');
+
+  if (isMobile && button) {
+    hideEdgeToggle();
+  }
+});
+
+// Expose globally
+window.createSidebarToggleButton = createSidebarToggleButton;
+window.toggleSidebarFromEdge = toggleSidebarFromEdge;
+window.showEdgeToggle = showEdgeToggle;
+window.hideEdgeToggle = hideEdgeToggle;
+
 document.addEventListener('DOMContentLoaded', () => {
 
   initCopyButtons();
   setupCopyButtonObserver();
+  createSidebarToggleButton();
 
   // --- Theme Toggle ---
   const html = document.documentElement;
@@ -2220,6 +2558,69 @@ window.openModalToPillarDetails = openModalToPillarDetails;
   }
 
   // ============================================================
+  // DYNAMIC ACCORDION TOGGLE BUTTON — Injects into topbar
+  // ============================================================
+
+  function addAccordionToggleButton() {
+    const topbarRight = document.querySelector('.topbar-right');
+    if (!topbarRight) {
+      console.warn('⚠️ .topbar-right not found, skipping accordion toggle button');
+      return;
+    }
+
+    // Check if button already exists
+    if (topbarRight.querySelector('.accordion-toggle-btn')) return;
+
+    // Create the button
+    const btn = document.createElement('button');
+    btn.className = 'accordion-toggle-btn';
+    btn.setAttribute('aria-label', 'Toggle all accordions');
+    btn.title = 'Toggle all accordions';
+    btn.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4 10a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z" clip-rule="evenodd"/>
+        <path fill-rule="evenodd" d="M10 4a1 1 0 011 1v10a1 1 0 11-2 0V5a1 1 0 011-1z" clip-rule="evenodd"/>
+      </svg>
+    `;
+
+    // Style the button
+    Object.assign(btn.style, {
+      background: 'var(--bg-card)',
+      border: '1px solid var(--border-color)',
+      borderRadius: 'var(--radius-sm)',
+      padding: '4px 8px',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'var(--text-primary)',
+      transition: 'background 0.2s, transform 0.15s',
+      marginRight: '8px'
+    });
+
+    // Add hover effect via CSS or inline
+    btn.addEventListener('mouseenter', () => {
+      btn.style.background = 'var(--bg-tertiary)';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.background = 'var(--bg-card)';
+    });
+
+    // Click handler
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (typeof window.toggleAllAccordions === 'function') {
+        window.toggleAllAccordions();
+      } else {
+        console.warn('⚠️ toggleAllAccordions not defined');
+      }
+    });
+
+    // Insert before the theme toggle
+    topbarRight.insertBefore(btn, topbarRight.firstChild);
+  }
+
+  // ============================================================
   // KEYBOARD SHORTCUTS – Pillar Page Navigation (1-9, 0)
   // ============================================================
 
@@ -3253,7 +3654,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
 
    // --- Initialisation ---
     initWelcomeMessage();  // Call the welcome message initinializer on page load
-    // setupGistBackup();   // Call setupGistBackup
+    addAccordionToggleButton();
     initGlobalSearch();
     initGlobalScrollSpy();
     initResourcePulse();

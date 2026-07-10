@@ -1191,11 +1191,11 @@ pre {
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Sidebar Toggle ── */
-.sidebar-toggle {
+/* ── Sidebar Edge Toggle ── */
+#sidebarEdgeToggle {
   position: fixed;
   top: 50%;
-  left: var(--sidebar-width);
+  left: 0;
   transform: translateY(-50%);
   z-index: 999;
   width: 20px;
@@ -1211,27 +1211,47 @@ pre {
   color: var(--text-muted);
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               background 0.2s ease,
-              box-shadow 0.2s ease;
+              box-shadow 0.2s ease,
+              opacity 0.3s ease,
+              transform 0.3s ease;
   box-shadow: var(--shadow-md);
   padding: 0;
   visibility: visible !important;
-  opacity: 1 !important;
+  opacity: 0; /* Hidden by default (JS controls this) */
+  pointer-events: none; /* Not clickable when hidden */
 }
-.sidebar-toggle:hover {
+
+/* Show state (controlled by JS) */
+#sidebarEdgeToggle.visible {
+  opacity: 0.7;
+  pointer-events: auto;
+}
+
+#sidebarEdgeToggle:hover {
+  opacity: 1 !important;
   background: var(--pillar-color-light);
   color: var(--accent-primary);
   box-shadow: var(--shadow-lg);
 }
-.sidebar-toggle .toggle-icon {
+
+#sidebarEdgeToggle:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+/* ── Chevron Icon ── */
+#sidebarEdgeToggle .toggle-chevron {
   width: 18px;
   height: 18px;
-  stroke: currentColor; /* ADD THIS */
-  stroke-width: 2; /* ADD THIS - adjust value (default is 1) */
-  stroke-linecap: round; /* ADD THIS - optional */
-  stroke-linejoin: round; /* ADD THIS - optional */
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
 }
-.sidebar-toggle .toggle-tooltip {
+
+/* ── Tooltip ── */
+#sidebarEdgeToggle .toggle-tooltip {
   position: absolute;
   left: 28px;
   background: var(--bg-card);
@@ -1249,15 +1269,73 @@ pre {
   font-weight: 500;
   transform: translateX(-5px);
 }
-.sidebar-toggle:hover .toggle-tooltip {
+
+#sidebarEdgeToggle:hover .toggle-tooltip {
   opacity: 1;
   transform: translateX(0);
 }
-.sidebar.collapsed ~ .sidebar-toggle {
-  left: 0;
+
+/* ── Position when sidebar is open (moves with sidebar) ── */
+#sidebarEdgeToggle.sidebar-open {
+  left: 260px; /* Matches --sidebar-width */
 }
-.sidebar.collapsed ~ .sidebar-toggle .toggle-icon {
-  transform: rotate(180deg);
+
+/* ── Mobile adjustments ── */
+@media (max-width: 768px) {
+  #sidebarEdgeToggle {
+    top: 56px;
+    transform: translateY(0);
+    height: 36px;
+    width: 18px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  
+  #sidebarEdgeToggle .toggle-chevron {
+    width: 14px;
+    height: 14px;
+  }
+  
+  #sidebarEdgeToggle .toggle-tooltip {
+    display: none;
+  }
+  
+  #sidebarEdgeToggle:active {
+    transform: scale(0.92);
+  }
+}
+
+/* ── Dark theme ── */
+[data-theme="dark"] #sidebarEdgeToggle {
+  border-color: var(--border-color);
+  background: var(--bg-card);
+}
+
+[data-theme="dark"] #sidebarEdgeToggle:hover {
+  background: var(--pillar-color-light);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  #sidebarEdgeToggle,
+  #sidebarEdgeToggle .toggle-chevron {
+    transition: none !important;
+  }
+}
+/* Sidebar Edge Toggle Button - always visible on the left edge */
+.sidebar-edge-toggle {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sidebar-edge-toggle:active {
+  transform: translateY(-50%) scale(0.92) !important;
+}
+
+/* On mobile, hide the edge toggle (hamburger takes over) */
+@media (max-width: 768px) {
+  .sidebar-edge-toggle {
+    display: none !important;
+  }
 }
 
 /* ── Sidebar Overlay ── */
