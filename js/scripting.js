@@ -2278,178 +2278,1069 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  // // ============================================================
-  // // SECTION 7 — Working with APIs in Python
-  // // ============================================================
+  // ============================================================
+  // SECTION 7 — Working with APIs in Python (requests library)
+  // ============================================================
   const SECTION_7_ACCORDIONS = [
     {
-      id: 'python-requests-get',
-      title: 'Making GET Requests',
-      priority: true,
-      icon: '📥',
+      id: "s7-installing-requests",
+      title: "7.1 Installing and importing requests",
+      priority: false,
+      icon: "📦",
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># pip install requests</span>
-    import requests
-
-    response = requests.get("https://api.github.com/users/octocat")
-    print(response.status_code)
-    print(response.json())
-
-    <span class="code-comment"># With query parameters</span>
-    params = {"q": "python", "per_page": 10}
-    response = requests.get("https://api.github.com/search/repositories", params=params)</pre></div>
+        <p><code>requests</code> is Python's most widely used library for making HTTP calls — it wraps the messy details of raw socket/HTTP handling into a simple, readable interface.</p>
+        <div class="code-block"><pre>pip install requests --break-system-packages</pre></div>
+        <div class="code-block"><pre>import requests</pre></div>
+        <div class="info-box note">
+          <strong>📌 Note:</strong> <code>requests</code> is a third-party library, not part of Python's standard library — unlike <code>os</code>, <code>json</code>, or <code>sys</code> from Section 2, it must be installed separately before it can be imported.
+        </div>
       `
     },
     {
-      id: 'python-requests-post',
-      title: 'Making POST, PUT, DELETE Requests',
+      id: "s7-get-request",
+      title: "7.2 Making a GET request",
       priority: false,
-      icon: '📤',
+      icon: "📥",
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># POST with JSON</span>
-    data = {"name": "Alice", "email": "alice@example.com"}
-    response = requests.post(
-        "https://api.example.com/users",
-        json=data
-    )
+        <div class="code-block"><pre>import requests
 
-    <span class="code-comment"># PUT (replace)</span>
-    response = requests.put(
-        "https://api.example.com/users/123",
-        json={"name": "Alice Smith"}
-    )
+  response = requests.get("https://jsonplaceholder.typicode.com/users/1")
+  print(response.status_code)   # 200
+  print(response.text)          # raw response body as a string</pre></div>
+        <p>The <code>response</code> object bundles status code, headers, and body from Section 6 into one object with convenient attributes and methods.</p>
 
-    <span class="code-comment"># DELETE</span>
-    response = requests.delete(
-        "https://api.example.com/users/123"
-    )</pre></div>
-      `
-    }
-  ];
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Key <code>response</code> attributes (quick reference):</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Attribute/Method</th><th>Returns</th></tr></thead>
+            <tbody>
+              <tr><td><code>response.status_code</code></td><td>The HTTP status code as an integer, e.g. <code>200</code></td></tr>
+              <tr><td><code>response.text</code></td><td>The response body as a raw string</td></tr>
+              <tr><td><code>response.json()</code></td><td>The response body parsed into a Python dict/list (only works if the body is valid JSON)</td></tr>
+              <tr><td><code>response.headers</code></td><td>A dict-like object of response headers</td></tr>
+              <tr><td><code>response.ok</code></td><td><code>True</code> if status code is under <code>400</code>, <code>False</code> otherwise</td></tr>
+              <tr><td><code>response.url</code></td><td>The final URL after any redirects</td></tr>
+              <tr><td><code>response.history</code></td><td>List of redirect responses if any</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-  // // ============================================================
-  // // SECTION 8 — JSON Parsing & Data Manipulation
-  // // ============================================================
-  const SECTION_8_ACCORDIONS = [
-    {
-      id: 'json-parse',
-      title: 'Parsing JSON in Python',
-      priority: true,
-      icon: '🔍',
-      bodyHTML: `
-        <div class="code-block"><pre>import json
-
-    <span class="code-comment"># Parse JSON string</span>
-    json_string = '{"name": "Alice", "age": 30}'
-    data = json.loads(json_string)
-    print(data["name"])
-
-    <span class="code-comment"># Convert Python to JSON</span>
-    person = {"name": "Bob", "age": 25}
-    json_string = json.dumps(person, indent=2)
-
-    <span class="code-comment"># Read from file</span>
-    with open("data.json", "r") as file:
-        data = json.load(file)</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Parsing JSON directly:</h4>
+        <div class="code-block"><pre>response = requests.get("https://jsonplaceholder.typicode.com/users/1")
+  data = response.json()
+  print(data["name"])    # accesses it like any Python dict</pre></div>
+        <p><code>.json()</code> does the equivalent of <code>json.loads(response.text)</code> (JSON-parsing mechanics covered in Section 8) — it's a convenience method built into <code>requests</code> itself.</p>
       `
     },
     {
-      id: 'json-advanced',
-      title: 'Advanced JSON — Data Extraction',
+      id: "s7-check-success",
+      title: "7.3 Checking for success before using the response",
       priority: false,
-      icon: '🔄',
+      icon: "✅",
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># Safe access with .get()</span>
-    city = data.get("address", {}).get("city", "Unknown")
+        <div class="code-block"><pre>response = requests.get("https://jsonplaceholder.typicode.com/users/999")
 
-    <span class="code-comment"># Extract fields from API response</span>
-    response = requests.get("https://api.github.com/users/octocat")
-    data = response.json()
-    print(data.get("login"))
-    print(data.get("name"))
+  if response.status_code == 200:
+      data = response.json()
+      print(data["name"])
+  else:
+      print(f"Request failed with status {response.status_code}")</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical:</strong> Never assume a request succeeded just because it returned <em>a</em> response — a failed request (<code>404</code>, <code>500</code>) still returns a valid <code>response</code> object; only the status code confirms the body actually contains what's expected. Calling <code>.json()</code> on an error response can raise its own exception if the error body isn't valid JSON, compounding the confusion.
+        </div>
 
-    <span class="code-comment"># List comprehension to extract field</span>
-    names = [item["name"] for item in api_response["results"]]</pre></div>
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>response.ok</code> as a simpler alternative:</h4>
+        <div class="code-block"><pre>if response.ok:
+      data = response.json()
+      print(data["name"])
+  else:
+      print(f"Request failed with status {response.status_code}")</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>raise_for_status()</code></h4>
+        <p>A shortcut that raises an exception automatically on any <code>4xx</code>/<code>5xx</code> response:</p>
+        <div class="code-block"><pre>try:
+      response = requests.get("https://jsonplaceholder.typicode.com/users/999")
+      response.raise_for_status()
+      data = response.json()
+  except requests.exceptions.HTTPError as e:
+      print(f"HTTP error occurred: {e}")   # e.g., "404 Client Error: Not Found for url: ..."</pre></div>
+        <p>This combines Section 2's <code>try/except</code> directly with API error handling — a very common real-world pattern.</p>
       `
-    }
-  ];
-
-  // // ============================================================
-  // // SECTION 9 — Automation Patterns
-  // // ============================================================
-  const SECTION_9_ACCORDIONS = [
+    },
     {
-      id: 'automation-patterns',
-      title: 'Common Automation Patterns',
-      priority: true,
-      icon: '🤖',
+      id: "s7-post-request",
+      title: "7.4 Making a POST request",
+      priority: false,
+      icon: "📤",
+      bodyHTML: `
+        <div class="code-block"><pre>import requests
+
+  payload = {"title": "test post", "body": "hello", "userId": 1}
+  response = requests.post("https://jsonplaceholder.typicode.com/posts", json=payload)
+
+  print(response.status_code)   # 201
+  print(response.json())</pre></div>
+        <p>The <code>json=</code> parameter does two things automatically:</p>
+        <ol style="padding-left:1.2rem;margin:0.5rem 0;">
+          <li>Converts the Python dict <code>payload</code> into a JSON string</li>
+          <li>Sets the <code>Content-Type: application/json</code> header automatically</li>
+        </ol>
+        <div class="info-box tip">
+          <strong>💡 Pro tip:</strong> This replaces manually setting headers and serializing data — <code>requests</code> handles both, which is exactly why it's preferred over lower-level HTTP libraries.
+        </div>
+      `
+    },
+    {
+      id: "s7-put-patch-delete",
+      title: "7.5 PUT, PATCH, and DELETE",
+      priority: false,
+      icon: "🔄",
+      bodyHTML: `
+        <div class="code-block"><pre><span class="code-comment"># PUT - full replacement</span>
+  response = requests.put(
+      "https://jsonplaceholder.typicode.com/posts/1",
+      json={"id": 1, "title": "updated", "body": "new content", "userId": 1}
+  )
+
+  <span class="code-comment"># PATCH - partial update</span>
+  response = requests.patch(
+      "https://jsonplaceholder.typicode.com/posts/1",
+      json={"title": "just updating the title"}
+  )
+
+  <span class="code-comment"># DELETE</span>
+  response = requests.delete("https://jsonplaceholder.typicode.com/posts/1")
+  print(response.status_code)   # 200 (this test API always returns 200, real APIs often return 204)</pre></div>
+        <p>Each method mirrors its corresponding HTTP verb from Section 6 directly — <code>requests.get()</code>, <code>requests.post()</code>, <code>requests.put()</code>, <code>requests.patch()</code>, <code>requests.delete()</code>.</p>
+      `
+    },
+    {
+      id: "s7-query-params",
+      title: "7.6 Query parameters",
+      priority: false,
+      icon: "🔍",
+      bodyHTML: `
+        <p>Rather than manually building a URL string with <code>?key=value&key2=value2</code>, <code>requests</code> handles it via the <code>params</code> argument:</p>
+        <div class="code-block"><pre>response = requests.get(
+      "https://jsonplaceholder.typicode.com/posts",
+      params={"userId": 1}
+  )
+  print(response.url)   # https://jsonplaceholder.typicode.com/posts?userId=1</pre></div>
+        <div class="info-box tip">
+          <strong>💡 Pro tip:</strong> <code>requests</code> handles URL-encoding special characters automatically — spaces, ampersands, etc. in parameter values — which is easy to get wrong doing it manually.
+        </div>
+      `
+    },
+    {
+      id: "s7-headers-auth",
+      title: "7.7 Headers and authentication",
+      priority: false,
+      icon: "🔐",
+      bodyHTML: `
+        <p>Most real-world APIs require authentication — proving who's making the request. Two of the most common patterns:</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">API key in a header:</h4>
+        <div class="code-block"><pre>headers = {"Authorization": "Bearer abc123token"}
+  response = requests.get("https://api.example.com/data", headers=headers)</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Basic authentication (username/password):</h4>
+        <div class="code-block"><pre>response = requests.get(
+      "https://api.example.com/data",
+      auth=("username", "password")
+  )</pre></div>
+        <p><code>requests</code> handles encoding the <code>auth</code> tuple into the correct <code>Authorization</code> header format automatically.</p>
+
+        <div class="info-box warning">
+          <strong>⚠️ Critical security callout:</strong> Never hardcode API keys, tokens, or passwords directly into a script committed to a repository. Load them from environment variables instead:
+          <div class="code-block" style="margin-top:0.5rem;"><pre>import os
+  token = os.environ.get("API_TOKEN")
+  headers = {"Authorization": f"Bearer {token}"}</pre></div>
+          <p style="margin-top:0.5rem;">This ties directly back to <code>os</code> from Section 2 and to the security principles from Pillar 3 — a secret leaked into <code>Great_Cheatsheets</code> or <code>DevOps-Journey</code> git history is extremely difficult to fully remove afterward, even after "deleting" it in a later commit.</p>
+        </div>
+      `
+    },
+    {
+      id: "s7-sessions",
+      title: "7.8 Sessions — Reusing Headers and Connections",
+      priority: false,
+      icon: "🔗",
+      bodyHTML: `
+        <p>A <strong>Session</strong> object in <code>requests</code> persists headers, cookies, and connection settings across multiple requests — useful when making many calls to the same API.</p>
+        <div class="code-block"><pre>import requests
+
+  <span class="code-comment"># Create a session</span>
+  session = requests.Session()
+  session.headers.update({"Authorization": "Bearer mytoken"})
+
+  <span class="code-comment"># All requests from this session include the token</span>
+  response1 = session.get("https://api.example.com/users")
+  response2 = session.get("https://api.example.com/posts")
+
+  <span class="code-comment"># Session also reuses TCP connections for performance</span>
+  session.close()</pre></div>
+        <div class="info-box tip">
+          <strong>💡 When to use:</strong> If you're making more than 2-3 requests to the same API with the same headers, use a <code>Session</code> — it's cleaner and more performant than passing headers every time.
+        </div>
+      `
+    },
+    {
+      id: "s7-timeouts",
+      title: "7.9 Timeouts — a critical defensive habit",
+      priority: false,
+      icon: "⏰",
+      bodyHTML: `
+        <p>By default, <code>requests</code> waits <strong>indefinitely</strong> for a server to respond — a hung server can freeze the entire script forever.</p>
+        <div class="code-block"><pre>try:
+      response = requests.get("https://api.example.com/data", timeout=5)
+  except requests.exceptions.Timeout:
+      print("Request timed out after 5 seconds")</pre></div>
+        <p><code>timeout=5</code> means "give up and raise an exception if no response arrives within 5 seconds."</p>
+        <div class="info-box warning">
+          <strong>⚠️ Callout:</strong> Always set a <code>timeout</code> on requests used in automation. A script without one, running as a scheduled job, can hang indefinitely on a slow or dead server — turning a five-minute cron job into one that never finishes and blocks everything scheduled after it.
+        </div>
+      `
+    },
+    {
+      id: "s7-pagination",
+      title: "7.10 Pagination",
+      priority: false,
+      icon: "📄",
+      bodyHTML: `
+        <p>APIs handling large datasets rarely return everything in one response — they <strong>paginate</strong>, returning a limited number of results per request along with information on how to get the next batch.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Common pagination style — page number and page size:</h4>
+        <div class="code-block"><pre>import requests
+
+  all_users = []
+  page = 1
+
+  while True:
+      response = requests.get(
+          "https://api.example.com/users",
+          params={"page": page, "per_page": 50},
+          timeout=5
+      )
+      data = response.json()
+
+      if not data:          # empty list means no more results
+          break
+
+      all_users.extend(data)
+      page += 1
+
+  print(f"Total users fetched: {len(all_users)}")</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Common pagination style — cursor/token-based</h4>
+        <p>Frequent in modern APIs like GitHub's:</p>
+        <div class="code-block"><pre>all_items = []
+  url = "https://api.example.com/items"
+
+  while url:
+      response = requests.get(url, timeout=5)
+      data = response.json()
+      all_items.extend(data["results"])
+      url = data.get("next_page_url")   # None once there are no more pages</pre></div>
+
+        <p>Both patterns share the same shape: loop, request a batch, accumulate results, check for a "more data" signal, repeat until it's gone. The specific mechanism (page numbers vs cursor tokens) varies by API — always check the target API's documentation for which style it uses.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Respecting rate limits</h4>
+        <p>Many APIs enforce rate limits — exceeding them results in <code>429 Too Many Requests</code>. Add a small delay between paginated requests:</p>
+        <div class="code-block"><pre>import time
+
+  <span class="code-comment"># Inside pagination loop</span>
+  time.sleep(0.1)   # 100ms between requests</pre></div>
+      `
+    },
+    {
+      id: "s7-pitfalls",
+      title: "Pitfalls Table",
+      priority: false,
+      icon: "🚫",
       bodyHTML: `
         <div class="table-wrapper">
           <table class="data-table">
-            <thead><tr><th>Pattern</th><th>Description</th><th>Example</th></tr></thead>
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
             <tbody>
-              <tr><td><strong>Scheduled (Cron)</strong></td><td>Run at fixed times</td><td>Daily backups at 2am</td></tr>
-              <tr><td><strong>Polling</strong></td><td>Check for changes periodically</td><td>Check for new files every 5 minutes</td></tr>
-              <tr><td><strong>Idempotent</strong></td><td>Safe to run multiple times</td><td>Create user only if they don't exist</td></tr>
-              <tr><td><strong>Retry</strong></td><td>Retry on failure with backoff</td><td>API call retries 3 times</td></tr>
+              <tr>
+                <td>Not checking status code before calling <code>.json()</code></td>
+                <td>Error response bodies may not be valid JSON, raising a confusing secondary exception</td>
+                <td>Check <code>response.status_code</code> or use <code>raise_for_status()</code> first</td>
+              </tr>
+              <tr>
+                <td>No <code>timeout</code> set</td>
+                <td>A hung server freezes the script indefinitely</td>
+                <td>Always pass <code>timeout=</code> (e.g. <code>timeout=5</code>)</td>
+              </tr>
+              <tr>
+                <td>Hardcoding API keys/tokens in script source</td>
+                <td>Secrets committed to git history are extremely hard to fully remove later</td>
+                <td>Load credentials via <code>os.environ.get()</code></td>
+              </tr>
+              <tr>
+                <td>Assuming all APIs paginate the same way</td>
+                <td>A script written for page-based pagination silently breaks against a cursor-based API</td>
+                <td>Always check the specific API's documentation for its pagination style</td>
+              </tr>
+              <tr>
+                <td>Forgetting <code>json=</code> sends <code>Content-Type</code> automatically and using <code>data=</code> with a manually dumped string instead</td>
+                <td>Easy to forget the header, causing servers to reject or misparse the body</td>
+                <td>Prefer <code>json=payload</code> over manually serializing with <code>json.dumps()</code> and <code>data=</code></td>
+              </tr>
+              <tr>
+                <td>Not respecting rate limits</td>
+                <td>Hitting <code>429 Too Many Requests</code> causes requests to fail</td>
+                <td>Add <code>time.sleep()</code> between paginated requests</td>
+              </tr>
             </tbody>
           </table>
         </div>
       `
     },
     {
-      id: 'automation-cron',
-      title: 'Scheduling with Cron',
+      id: "s7-hands-on",
+      title: "🖥️ Hands-on Exercise",
       priority: false,
-      icon: '⏰',
+      icon: "💻",
       bodyHTML: `
-        <div class="code-block"><pre><span class="code-comment"># Crontab format</span>
-    <span class="code-comment"># ┌───────────── minute</span>
-    <span class="code-comment"># │ ┌───────────── hour</span>
-    <span class="code-comment"># │ │ ┌───────────── day of month</span>
-    <span class="code-comment"># │ │ │ ┌───────────── month</span>
-    <span class="code-comment"># │ │ │ │ ┌───────────── day of week</span>
-    <span class="code-comment"># │ │ │ │ │</span>
-    <span class="code-comment"># * * * * * command</span>
+        <p>In <code>/workspaces/DevOps-Journey</code>:</p>
+        <div class="code-block"><pre>nano api_practice.py</pre></div>
 
-    30 2 * * * /home/user/backup.sh     <span class="code-comment"># daily at 2:30am</span>
-    */5 * * * * /home/user/check.sh      <span class="code-comment"># every 5 minutes</span>
-    0 9 * * 1 /home/user/weekly.sh       <span class="code-comment"># Monday at 9am</span></pre></div>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Make a <code>GET</code> request to <code>https://jsonplaceholder.typicode.com/posts</code>, with <code>timeout=5</code></li>
+          <li>Use <code>raise_for_status()</code> inside a <code>try/except requests.exceptions.HTTPError</code> block</li>
+          <li>Parse the JSON response and print the <code>title</code> of the first 5 posts using a <code>for</code> loop with slicing (<code>data[:5]</code>)</li>
+          <li>Make a <code>POST</code> request creating a new post with a <code>json=</code> payload, and print the resulting status code and the <code>id</code> field from the response</li>
+          <li><strong>Bonus:</strong> Use <code>os.environ.get()</code> to load a GitHub token (optional), then make a request to GitHub's API</li>
+        </ol>
+
+        <p>Run:</p>
+        <div class="code-block"><pre>python3 api_practice.py</pre></div>
       `
     },
     {
-      id: 'automation-python-scripting',
-      title: 'Automation with Python',
+      id: "s7-devops-connection",
+      title: "DevOps Connection",
       priority: false,
-      icon: '🐍',
+      icon: "⚙️",
+      bodyHTML: `
+        <p>Nearly every infrastructure automation task involving a cloud provider, monitoring tool, or CI/CD platform ultimately comes down to Python scripts wrapping this exact <code>requests</code> pattern — authenticate, request, check status, parse JSON, handle pagination. Tools like the AWS SDK (<code>boto3</code>) are essentially very elaborate wrappers around this same fundamental workflow, tailored to a specific API's endpoints and authentication scheme.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">JSON Parsing &amp; Data Manipulation</a>
+        </div>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 8 — JSON Parsing & Data Manipulation
+  // ============================================================
+  const SECTION_8_ACCORDIONS = [
+    {
+      id: "s8-what-is-json",
+      title: "8.1 What is JSON?",
+      priority: false,
+      icon: "📋",
+      bodyHTML: `
+        <p><strong>JSON</strong> (JavaScript Object Notation) is a lightweight, text-based data format for representing structured data. Despite the name, it's language-agnostic — virtually every programming language can read and write it. It's the dominant format for REST API request/response bodies (Sections 6–7) and for configuration files.</p>
+        <div class="code-block"><pre>{
+    "name": "Keith",
+    "pillar": 4,
+    "active": true,
+    "tools": ["docker", "kubernetes"],
+    "cert": null
+  }</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">JSON data types and their Python equivalents:</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>JSON type</th><th>Python equivalent</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>object <code>{}</code></td><td><code>dict</code></td><td>key-value pairs, keys always in double quotes</td></tr>
+              <tr><td>array <code>[]</code></td><td><code>list</code></td><td>ordered collection</td></tr>
+              <tr><td>string</td><td><code>str</code></td><td>always double-quoted — single quotes are invalid JSON</td></tr>
+              <tr><td>number</td><td><code>int</code> or <code>float</code></td><td>no distinction in JSON itself</td></tr>
+              <tr><td><code>true</code> / <code>false</code></td><td><code>True</code> / <code>False</code></td><td>lowercase in JSON, capitalized in Python</td></tr>
+              <tr><td><code>null</code></td><td><code>None</code></td><td>JSON's version of "no value"</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical syntax note:</strong> JSON requires <strong>double quotes</strong> for strings and keys — <code>{'name': 'Keith'}</code> (single quotes) is <strong>not</strong> valid JSON, even though it's valid Python. This trips people up constantly when hand-writing JSON payloads.
+        </div>
+        <div class="info-box note">
+          <strong>📌 JSON vs YAML:</strong> YAML is a superset of JSON — valid JSON is valid YAML. Kubernetes and Ansible use YAML for human readability, but many tools (cloud CLIs) output JSON. Understanding JSON directly translates to understanding YAML.
+        </div>
+      `
+    },
+    {
+      id: "s8-json-module",
+      title: "8.2 Python's json module — the four core functions",
+      priority: false,
+      icon: "📦",
+      bodyHTML: `
+        <div class="code-block"><pre>import json</pre></div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Function</th><th>Direction</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>json.loads()</code></td><td>JSON string → Python object</td><td>Parse a JSON string already in memory</td></tr>
+              <tr><td><code>json.load()</code></td><td>JSON file → Python object</td><td>Parse JSON directly from an open file</td></tr>
+              <tr><td><code>json.dumps()</code></td><td>Python object → JSON string</td><td>Serialize a Python object to a JSON string</td></tr>
+              <tr><td><code>json.dump()</code></td><td>Python object → JSON file</td><td>Serialize and write directly to an open file</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The naming pattern: <strong>no <code>s</code></strong> means it works with <strong>files</strong>; <strong>with <code>s</code></strong> means it works with <strong>strings</strong> already in memory ("loads" = "load string", "dumps" = "dump string").</p>
+      `
+    },
+    {
+      id: "s8-json-loads",
+      title: "8.3 json.loads() — parsing a JSON string",
+      priority: false,
+      icon: "📥",
+      bodyHTML: `
+        <div class="code-block"><pre>import json
+
+  json_string = '{"name": "Keith", "pillar": 4, "active": true}'
+  data = json.loads(json_string)
+
+  print(data["name"])       # Keith
+  print(type(data))         # <class 'dict'></pre></div>
+        <p>This is exactly what <code>response.json()</code> does internally in Section 7 — <code>requests</code> calls <code>json.loads()</code> on <code>response.text</code> behind the scenes.</p>
+      `
+    },
+    {
+      id: "s8-json-dumps",
+      title: "8.4 json.dumps() — converting Python back to a JSON string",
+      priority: false,
+      icon: "📤",
+      bodyHTML: `
+        <div class="code-block"><pre>import json
+
+  data = {"name": "Keith", "pillar": 4, "active": True}
+  json_string = json.dumps(data)
+
+  print(json_string)
+  # {"name": "Keith", "pillar": 4, "active": true}
+  print(type(json_string))   # <class 'str'></pre></div>
+        <p>Notice <code>True</code> (Python) became <code>true</code> (JSON) automatically — <code>json.dumps()</code> handles this type conversion.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Pretty-printing with <code>indent</code>:</h4>
+        <div class="code-block"><pre>print(json.dumps(data, indent=2))</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>{
+    "name": "Keith",
+    "pillar": 4,
+    "active": true
+  }</pre></div>
+        <p>Without <code>indent</code>, <code>dumps()</code> produces a single compact line — fine for sending over the network, unreadable for humans debugging output. <code>indent=2</code> (or <code>4</code>) formats it for readability.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Sorting keys for reproducible output:</h4>
+        <div class="code-block"><pre>print(json.dumps(data, indent=2, sort_keys=True))</pre></div>
+        <div class="info-box tip">
+          <strong>💡 Pro tip:</strong> <code>sort_keys=True</code> is useful when generating config files that are checked into version control — it prevents unnecessary diff noise when fields are reordered.
+        </div>
+      `
+    },
+    {
+      id: "s8-json-files",
+      title: "8.5 Reading and writing JSON files directly",
+      priority: false,
+      icon: "📄",
+      bodyHTML: `
+        <div class="code-block"><pre>import json
+
+  <span class="code-comment"># Writing</span>
+  data = {"name": "Keith", "pillar": 4}
+  with open("config.json", "w") as f:
+      json.dump(data, f, indent=2)
+
+  <span class="code-comment"># Reading</span>
+  with open("config.json", "r") as f:
+      loaded_data = json.load(f)
+
+  print(loaded_data["name"])   # Keith</pre></div>
+        <p><code>json.load(f)</code> and <code>json.dump(data, f, ...)</code> take the file object <code>f</code> directly — no need to manually <code>.read()</code> the file first and then call <code>json.loads()</code> on the resulting string, though that would also work. Combining this with Section 3's <code>with</code> statement is the standard pattern for config files in real scripts.</p>
+      `
+    },
+    {
+      id: "s8-nested-json",
+      title: "8.6 Navigating nested JSON structures",
+      priority: false,
+      icon: "🔍",
+      bodyHTML: `
+        <p>Real-world JSON is rarely flat — it commonly nests objects inside objects, and arrays of objects:</p>
+        <div class="code-block"><pre>data = {
+      "user": {
+          "name": "Keith",
+          "pillars": ["networking", "linux", "security"],
+          "contact": {
+              "email": "keith@example.com"
+          }
+      }
+  }
+
+  print(data["user"]["name"])                    # Keith
+  print(data["user"]["pillars"][0])              # networking
+  print(data["user"]["contact"]["email"])        # keith@example.com</pre></div>
+        <p>Chained bracket access mirrors the nesting structure exactly — each <code>[]</code> steps one level deeper.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Looping over a list of nested objects</h4>
+        <p>A very common API response shape:</p>
+        <div class="code-block"><pre>users = [
+      {"name": "Keith", "role": "student"},
+      {"name": "Alice", "role": "mentor"}
+  ]
+
+  for user in users:
+      print(f"{user['name']} — {user['role']}")</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Keith — student
+  Alice — mentor</pre></div>
+      `
+    },
+    {
+      id: "s8-missing-keys",
+      title: "8.7 Handling missing keys safely",
+      priority: false,
+      icon: "🛡️",
+      bodyHTML: `
+        <p>Directly indexing a dict with <code>[]</code> raises <code>KeyError</code> if the key doesn't exist:</p>
+        <div class="code-block"><pre>data = {"name": "Keith"}
+  print(data["email"])   # KeyError: 'email'</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;"><code>.get()</code> — the safer alternative</h4>
+        <p>Returns <code>None</code> (or a specified default) instead of raising an exception:</p>
+        <div class="code-block"><pre>print(data.get("email"))              # None
+  print(data.get("email", "no email"))  # no email</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical for real-world API data:</strong> Fields are often optional or inconsistently present across different records in a response. Using <code>.get()</code> instead of <code>[]</code> when parsing external data prevents a single missing field from crashing an entire batch-processing script — directly connecting back to Section 2's error-handling philosophy.
+        </div>
+      `
+    },
+    {
+      id: "s8-jsondecode-error",
+      title: "8.8 Handling malformed JSON",
+      priority: false,
+      icon: "🚨",
+      bodyHTML: `
+        <div class="code-block"><pre>import json
+
+  bad_json = '{"name": "Keith", "pillar": }'   # missing value — invalid JSON
+
+  try:
+      data = json.loads(bad_json)
+  except json.JSONDecodeError as e:
+      print(f"Invalid JSON: {e}")</pre></div>
+        <p><code>json.JSONDecodeError</code> is raised when the string simply isn't valid JSON syntax — distinct from <code>KeyError</code> (a missing key in otherwise-valid JSON). Scripts parsing JSON from external, untrusted, or unreliable sources (an API having a bad day, a corrupted config file) should anticipate both failure modes.</p>
+      `
+    },
+    {
+      id: "s8-jq",
+      title: "8.9 jq — JSON parsing from the command line / Bash",
+      priority: false,
+      icon: "🖥️",
+      bodyHTML: `
+        <p><code>jq</code> is a command-line tool for filtering and transforming JSON, used constantly alongside <code>curl</code> in Bash scripts (tying directly back to Sections 4–6).</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Basic pretty-printing:</h4>
+        <div class="code-block"><pre>curl -s https://jsonplaceholder.typicode.com/users/1 | jq</pre></div>
+        <p><code>-s</code> (silent) suppresses <code>curl</code>'s progress output; piping into <code>jq</code> pretty-prints the JSON automatically.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Extracting a specific field:</h4>
+        <div class="code-block"><pre>curl -s https://jsonplaceholder.typicode.com/users/1 | jq '.name'</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>"Keith Mash"</pre></div>
+        <p><code>.name</code> accesses the <code>name</code> key — the leading <code>.</code> is required syntax for <code>jq</code>, representing "the root of the JSON document."</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Nested field access:</h4>
+        <div class="code-block"><pre>curl -s https://jsonplaceholder.typicode.com/users/1 | jq '.address.city'</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Extracting from an array of objects:</h4>
+        <div class="code-block"><pre>curl -s https://jsonplaceholder.typicode.com/users | jq '.[0].name'</pre></div>
+        <p><code>.[0]</code> accesses the first element of the top-level array, then <code>.name</code> on that element.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Extracting a field from every item in an array:</h4>
+        <div class="code-block"><pre>curl -s https://jsonplaceholder.typicode.com/users | jq '.[].name'</pre></div>
+        <p><code>.[]</code> (no index) iterates over every element, applying <code>.name</code> to each — outputs one quoted string per user.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Filtering objects:</h4>
+        <div class="code-block"><pre>curl -s https://jsonplaceholder.typicode.com/users | jq '.[] | select(.id > 5)'</pre></div>
+        <p>This returns all users with <code>id</code> greater than 5. <code>select()</code> filters the stream — very useful for extracting specific items from API responses.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Raw output without quotes:</h4>
+        <div class="code-block"><pre>curl -s https://jsonplaceholder.typicode.com/users/1 | jq -r '.name'</pre></div>
+        <p>Output:</p>
+        <div class="code-block"><pre>Keith Mash</pre></div>
+        <p><code>-r</code> strips the surrounding quotes <code>jq</code> normally adds — critical when the extracted value needs to be used directly in a Bash variable or another command, since <code>"Keith Mash"</code> (with quotes) and <code>Keith Mash</code> behave differently once assigned to a shell variable.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Combining with Bash variables:</h4>
+        <div class="code-block"><pre>name=$(curl -s https://jsonplaceholder.typicode.com/users/1 | jq -r '.name')
+  echo "User name: $name"</pre></div>
+      `
+    },
+    {
+      id: "s8-pitfalls",
+      title: "Pitfalls Table",
+      priority: false,
+      icon: "🚫",
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Hand-writing JSON with single quotes</td>
+                <td>Invalid JSON — <code>json.loads()</code> will raise <code>JSONDecodeError</code></td>
+                <td>Always use double quotes for JSON strings and keys</td>
+              </tr>
+              <tr>
+                <td>Using <code>[]</code> instead of <code>.get()</code> on external/API data</td>
+                <td>A single missing key raises <code>KeyError</code> and can crash batch processing</td>
+                <td>Use <code>.get()</code> with a sensible default when parsing untrusted or variable-shape data</td>
+              </tr>
+              <tr>
+                <td>Forgetting <code>-r</code> when piping <code>jq</code> output into a Bash variable</td>
+                <td>The variable ends up containing literal quote characters</td>
+                <td>Add <code>-r</code> to strip quotes from string output</td>
+              </tr>
+              <tr>
+                <td>Assuming all JSON parses successfully</td>
+                <td>Malformed JSON (missing commas, unquoted keys, trailing commas) raises <code>JSONDecodeError</code></td>
+                <td>Wrap parsing in <code>try/except json.JSONDecodeError</code> for untrusted input</td>
+              </tr>
+              <tr>
+                <td>Confusing <code>jq '.[0]'</code> and <code>jq '.[]'</code></td>
+                <td><code>.[0]</code> returns one element; <code>.[]</code> returns/iterates all elements — easy to mix up</td>
+                <td>Remember: index number = one item, empty brackets = every item</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: "s8-hands-on",
+      title: "🖥️ Hands-on Exercise",
+      priority: false,
+      icon: "💻",
+      bodyHTML: `
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0 0 0.25rem 0;">Python side</h4>
+        <p>In <code>/workspaces/DevOps-Journey</code> — <code>nano json_practice.py</code>:</p>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Create a nested Python dict representing a pillar (<code>name</code>, <code>sections_complete</code>, and a nested <code>topics</code> list)</li>
+          <li>Write it to <code>pillar_status.json</code> using <code>json.dump()</code> with <code>indent=2</code></li>
+          <li>Read it back with <code>json.load()</code> and print the <code>topics</code> list using a <code>for</code> loop</li>
+          <li>Use <code>.get()</code> to safely check for a <code>"deadline"</code> key that doesn't exist, printing a default message if absent</li>
+        </ol>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Bash side</h4>
+        <p>In the terminal:</p>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;" start="5">
+          <li>Run <code>cat pillar_status.json | jq '.topics'</code></li>
+          <li>Run <code>cat pillar_status.json | jq -r '.name'</code> and confirm the output has no surrounding quotes</li>
+          <li><strong>Bonus:</strong> Use <code>curl</code> and <code>jq</code> together: <code>curl -s https://jsonplaceholder.typicode.com/users | jq '.[] | select(.id < 3)'</code></li>
+        </ol>
+      `
+    },
+    {
+      id: "s8-devops-connection",
+      title: "DevOps Connection",
+      priority: false,
+      icon: "⚙️",
+      bodyHTML: `
+        <p>JSON is the universal data-interchange format across the entire DevOps toolchain — Kubernetes manifests (often authored in YAML but convertible to/from JSON), Terraform state files, GitHub Actions workflow outputs, and every cloud provider's CLI (<code>--output json</code>) all speak JSON. <code>jq</code> specifically is a staple in CI/CD pipeline scripts for extracting values from tool output to pass into subsequent steps.</p>
+        <div class="info-box note">
+          <strong>📌 Next section:</strong> <a href="#" style="color:var(--accent-secondary);">Automation Patterns</a>
+        </div>
+      `
+    }
+  ];
+
+  // ============================================================
+  // SECTION 9 — Automation Patterns
+  // ============================================================
+  const SECTION_9_ACCORDIONS = [
+    {
+      id: "s9-automation-ready",
+      title: "9.1 What makes a script 'automation-ready'?",
+      priority: false,
+      icon: "🤖",
+      bodyHTML: `
+        <p>Everything up to this point covered how to write functional scripts. This section covers what separates a script that works <em>once, when run and watched</em> from one that works reliably <em>unattended, on a schedule, for months, without anyone watching.</em> This section ties Sections 1–8 together into production-quality thinking.</p>
+        <div class="info-box note">
+          <strong>📌 Key insight:</strong> A script that works when you run it manually is the minimum. A script that works when run unattended at 3 AM, with network flakiness, missing config, and unexpected input — that's automation-ready.
+        </div>
+      `
+    },
+    {
+      id: "s9-idempotency",
+      title: "9.2 Idempotency — the central automation principle",
+      priority: false,
+      icon: "🔄",
+      bodyHTML: `
+        <p>An <strong>idempotent</strong> operation produces the same end state no matter how many times it's applied.</p>
+        <p>Why this matters for automation specifically: scheduled scripts, retries, and re-runs are inevitable. A script that isn't idempotent creates a growing list of problems every time it accidentally runs twice.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Non-idempotent example:</h4>
+        <div class="code-block"><pre>def create_log_entry():
+      with open("audit.log", "a") as f:
+          f.write("User created\\n")</pre></div>
+        <p>Run this script twice (e.g., a retry after a network blip made it look like it failed) and <code>audit.log</code> now falsely shows two user-creation events instead of one.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Idempotent version — check before acting:</h4>
+        <div class="code-block"><pre>import os
+
+  def create_log_entry():
+      entry = "User created\\n"
+      if os.path.exists("audit.log"):
+          with open("audit.log", "r") as f:
+              if entry in f.read():
+                  return   # already logged, do nothing
+      with open("audit.log", "a") as f:
+          f.write(entry)</pre></div>
+        <p>Now running it multiple times leaves the same end state as running it once.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">The general idempotency pattern:</h4>
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Check whether the desired end state already exists</li>
+          <li>If yes, do nothing (or confirm and exit cleanly)</li>
+          <li>If no, make the change</li>
+        </ol>
+        <div class="info-box note">
+          <strong>📌 Why this matters in DevOps:</strong> This exact pattern is why Terraform and Ansible (Phase 2) can be safely re-run repeatedly — they check current state before making changes, rather than blindly re-executing every action.
+        </div>
+      `
+    },
+    {
+      id: "s9-idempotency-api",
+      title: "9.3 Idempotency with API operations",
+      priority: false,
+      icon: "🔁",
+      bodyHTML: `
+        <p>Tying back to Section 6/7's discussion of HTTP method idempotency — the same principle applies at the script level:</p>
+        <div class="code-block"><pre>import requests
+
+  def ensure_user_exists(name, email):
+      <span class="code-comment"># Check first</span>
+      response = requests.get(
+          "https://api.example.com/users",
+          params={"email": email},
+          timeout=5
+      )
+      existing = response.json()
+
+      if existing:
+          print(f"User {email} already exists — skipping creation")
+          return existing[0]
+
+      <span class="code-comment"># Only create if it doesn't already exist</span>
+      response = requests.post(
+          "https://api.example.com/users",
+          json={"name": name, "email": email},
+          timeout=5
+      )
+      return response.json()</pre></div>
+        <p>This wraps a non-idempotent <code>POST</code> in a "check-then-act" pattern, making the overall function safe to call repeatedly.</p>
+      `
+    },
+    {
+      id: "s9-logging",
+      title: "9.4 Logging — replacing print() with structured records",
+      priority: false,
+      icon: "📝",
+      bodyHTML: `
+        <p><code>print()</code> has been used throughout this pillar for simplicity, but real automation scripts use Python's built-in <code>logging</code> module instead. The difference matters once a script runs unattended: <code>print()</code> output vanishes unless someone happened to be watching the terminal, while logs can be written to a file, timestamped, and categorized by severity.</p>
+        <div class="code-block"><pre>import logging
+
+  logging.basicConfig(
+      level=logging.INFO,
+      format="%(asctime)s [%(levelname)s] %(message)s",
+      filename="script.log"
+  )
+
+  logging.info("Script started")
+  logging.warning("Config value missing, using default")
+  logging.error("Failed to connect to API")</pre></div>
+        <p>Output written to <code>script.log</code>:</p>
+        <div class="code-block"><pre>2026-07-13 10:15:32 [INFO] Script started
+  2026-07-13 10:15:33 [WARNING] Config value missing, using default
+  2026-07-13 10:15:34 [ERROR] Failed to connect to API</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Logging severity levels, in increasing order of seriousness:</h4>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Level</th><th>When to use</th></tr></thead>
+            <tbody>
+              <tr><td><code>DEBUG</code></td><td>Fine-grained diagnostic detail, useful only when actively troubleshooting</td></tr>
+              <tr><td><code>INFO</code></td><td>Normal operation milestones — "script started," "processed 50 records"</td></tr>
+              <tr><td><code>WARNING</code></td><td>Something unexpected but not breaking — a missing optional config, a slow response</td></tr>
+              <tr><td><code>ERROR</code></td><td>Something failed — a request errored, a file couldn't be read</td></tr>
+              <tr><td><code>CRITICAL</code></td><td>The whole script/system is in serious trouble and likely can't continue</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Setting <code>level=logging.INFO</code> means messages at <code>INFO</code> and above are recorded; <code>DEBUG</code> messages are silently ignored unless the level is lowered. This lets a script ship with verbose <code>DEBUG</code> logging built in, quietly available by changing one line, without cluttering normal output.</p>
+        <div class="info-box warning">
+          <strong>⚠️ Callout:</strong> For any script that runs unattended (cron job, CI/CD step), logging to a file is not optional in practice — it's the only record of what happened if something goes wrong at 3 AM with nobody watching.
+        </div>
+      `
+    },
+    {
+      id: "s9-logging-errors",
+      title: "9.5 Combining logging with error handling",
+      priority: false,
+      icon: "🛡️",
+      bodyHTML: `
+        <div class="code-block"><pre>import logging
+  import requests
+
+  logging.basicConfig(level=logging.INFO, filename="script.log",
+                      format="%(asctime)s [%(levelname)s] %(message)s")
+
+  def fetch_data(url):
+      try:
+          response = requests.get(url, timeout=5)
+          response.raise_for_status()
+          logging.info(f"Successfully fetched {url}")
+          return response.json()
+      except requests.exceptions.Timeout:
+          logging.error(f"Timeout while fetching {url}")
+          return None
+      except requests.exceptions.HTTPError as e:
+          logging.error(f"HTTP error fetching {url}: {e}")
+          return None</pre></div>
+        <p>This is Section 2's <code>try/except</code> and Section 7's <code>requests</code> error handling, now feeding into a permanent, timestamped record instead of a <code>print()</code> statement that disappears the moment the terminal closes.</p>
+      `
+    },
+    {
+      id: "s9-retry-backoff",
+      title: "9.6 Retry logic with backoff",
+      priority: false,
+      icon: "⏳",
+      bodyHTML: `
+        <p>Transient failures (a brief network blip, a server momentarily overloaded) are common enough that automation scripts often retry before giving up entirely — but retrying instantly and repeatedly can make an already-struggling server worse.</p>
+        <div class="code-block"><pre>import time
+  import logging
+
+  def fetch_with_retry(url, max_attempts=3, max_wait=60):
+      for attempt in range(1, max_attempts + 1):
+          try:
+              response = requests.get(url, timeout=5)
+              response.raise_for_status()
+              return response.json()
+          except requests.exceptions.RequestException as e:
+              logging.warning(f"Attempt {attempt} failed: {e}")
+              if attempt == max_attempts:
+                  logging.error(f"All {max_attempts} attempts failed for {url}")
+                  raise
+              wait = min(2 ** attempt, max_wait)   <span class="code-comment"># Cap at max_wait</span>
+              time.sleep(wait)   <span class="code-comment"># exponential backoff: 2s, 4s, 8s...</span></pre></div>
+        <p><code>2 ** attempt</code> is <strong>exponential backoff</strong> — each retry waits longer than the last (2 seconds, then 4, then 8), giving a struggling server increasing breathing room rather than hammering it with immediate retries.</p>
+        <div class="info-box warning">
+          <strong>⚠️ Critical connection:</strong> This is only safe to do because of Section 9.3's idempotency pattern. Retrying a non-idempotent <code>POST</code> blindly can create duplicate resources on every retry — retry logic and idempotency are two halves of the same reliability strategy.
+        </div>
+      `
+    },
+    {
+      id: "s9-cron",
+      title: "9.7 Scheduling automation — cron",
+      priority: false,
+      icon: "⏰",
+      bodyHTML: `
+        <p><strong>cron</strong> is the standard Linux utility for running scripts automatically on a schedule, without any human triggering them.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Cron syntax — five fields plus the command:</h4>
+        <div class="code-block"><pre>* * * * * /path/to/script.sh
+  │ │ │ │ │
+  │ │ │ │ └── day of week (0-6, Sunday=0)
+  │ │ │ └──── month (1-12)
+  │ │ └────── day of month (1-31)
+  │ └──────── hour (0-23)
+  └────────── minute (0-59)</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Examples:</h4>
+        <div class="code-block"><pre><span class="code-comment"># Run every day at 2:00 AM</span>
+  0 2 * * * /home/user/backup.sh
+
+  <span class="code-comment"># Run every 15 minutes</span>
+  */15 * * * * /home/user/check_status.sh
+
+  <span class="code-comment"># Run every Monday at 9:00 AM</span>
+  0 9 * * 1 /home/user/weekly_report.sh</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Editing your crontab:</h4>
+        <div class="code-block"><pre>crontab -e</pre></div>
+        <p>Opens an editor where each line is one scheduled job, using the syntax above.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Viewing current scheduled jobs:</h4>
+        <div class="code-block"><pre>crontab -l</pre></div>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Cron environment pitfalls — concrete example:</h4>
+        <p>A script that runs fine manually fails silently under cron:</p>
+        <div class="code-block"><pre><span class="code-comment"># Fails under cron — python3 not found, relative path wrong</span>
+  0 2 * * * python3 backup.py
+
+  <span class="code-comment"># Fix: absolute paths and explicit environment</span>
+  0 2 * * * /usr/bin/python3 /home/user/backup.py &gt;&gt; /home/user/backup.log 2&gt;&amp;1</pre></div>
+        <div class="info-box warning">
+          <strong>⚠️ Critical automation pitfall:</strong> Cron jobs run in a minimal environment — they don't have the same <code>PATH</code>, environment variables, or working directory as an interactive terminal session. A script that works fine when run manually can fail silently under cron because it can't find a command it assumed was available, or a relative file path doesn't resolve to what was expected. Always use absolute paths in cron-scheduled scripts, and explicitly set any environment variables the script needs.
+        </div>
+      `
+    },
+    {
+      id: "s9-complete-script",
+      title: "9.8 Bringing it all together — a realistic automation script shape",
+      priority: false,
+      icon: "📋",
       bodyHTML: `
         <div class="code-block"><pre><span class="code-comment">#!/usr/bin/env python3</span>
-    <span class="code-comment"># Idempotent user creation</span>
+  import logging
+  import time
+  import requests
+  import os
 
-    import json
-    import os
+  logging.basicConfig(
+      level=logging.INFO,
+      filename="automation.log",
+      format="%(asctime)s [%(levelname)s] %(message)s"
+  )
 
-    def create_user(username, email):
-        users_file = "users.json"
+  def check_resource_exists(name):
+      <span class="code-comment">"""Idempotency check before acting."""</span>
+      response = requests.get(
+          "https://api.example.com/resources",
+          params={"name": name},
+          timeout=5
+      )
+      return len(response.json()) > 0
 
-        if os.path.exists(users_file):
-            with open(users_file, "r") as f:
-                users = json.load(f)
-        else:
-            users = []
+  def create_resource(name, max_attempts=3, max_wait=60):
+      <span class="code-comment">"""Retry with exponential backoff."""</span>
+      for attempt in range(1, max_attempts + 1):
+          try:
+              response = requests.post(
+                  "https://api.example.com/resources",
+                  json={"name": name},
+                  timeout=5
+              )
+              response.raise_for_status()
+              logging.info(f"Created resource: {name}")
+              return response.json()
+          except requests.exceptions.RequestException as e:
+              logging.warning(f"Attempt {attempt} failed: {e}")
+              if attempt == max_attempts:
+                  logging.error(f"Failed to create {name} after {max_attempts} attempts")
+                  raise
+              wait = min(2 ** attempt, max_wait)
+              time.sleep(wait)
 
-        for user in users:
-            if user["username"] == username:
-                print(f"User {username} already exists")
-                return
+  def main():
+      resource_name = "web-server-01"
 
-        users.append({"username": username, "email": email})
-        with open(users_file, "w") as f:
-            json.dump(users, f, indent=2)
-        print(f"User {username} created")
+      if check_resource_exists(resource_name):
+          logging.info(f"{resource_name} already exists — nothing to do")
+          return
 
-    if __name__ == "__main__":
-        create_user("alice", "alice@example.com")</pre></div>
+      create_resource(resource_name)
+
+  <span class="code-comment"># The __name__ guard ensures main() only runs when executed directly</span>
+  <span class="code-comment"># Not when imported as a module into another script</span>
+  if __name__ == "__main__":
+      main()</pre></div>
+        <p>Every piece introduced across this entire pillar appears here: functions and modules (Section 2), the <code>requests</code> library (Section 7), JSON handling (Section 8), idempotency, logging, and retry logic (Section 9). This is the realistic shape of a small production automation script.</p>
+
+        <h4 style="font-size:0.95rem;font-weight:600;margin:0.75rem 0 0.25rem 0;">Why <code>if __name__ == "__main__":</code> matters</h4>
+        <p>When you run <code>python3 script.py</code>, Python sets <code>__name__</code> to <code>"__main__"</code>. When the same file is imported as a module (<code>import script</code>), <code>__name__</code> is set to the module name (<code>"script"</code>). This guard ensures <code>main()</code> only runs when the script is executed directly, not when imported — a standard convention for any script that might also be reused as a library.</p>
+      `
+    },
+    {
+      id: "s9-pitfalls",
+      title: "Pitfalls Table",
+      priority: false,
+      icon: "🚫",
+      bodyHTML: `
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Pitfall</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Non-idempotent operations in scheduled/retried scripts</td>
+                <td>Duplicate resources, duplicate log entries, or corrupted state on re-run</td>
+                <td>Always check current state before acting (check-then-act pattern)</td>
+              </tr>
+              <tr>
+                <td>Using <code>print()</code> in unattended scripts</td>
+                <td>Output vanishes with no record if nobody was watching the terminal</td>
+                <td>Use the <code>logging</code> module writing to a file</td>
+              </tr>
+              <tr>
+                <td>Retrying instantly and repeatedly on failure</td>
+                <td>Can worsen an already-struggling server ("retry storm")</td>
+                <td>Use exponential backoff (<code>time.sleep(2 ** attempt)</code>)</td>
+              </tr>
+              <tr>
+                <td>Retrying non-idempotent operations blindly</td>
+                <td>Can create duplicate resources on every retry</td>
+                <td>Combine retry logic with idempotency checks</td>
+              </tr>
+              <tr>
+                <td>Relative file paths or missing env vars in cron jobs</td>
+                <td>Script works manually but fails silently under cron's minimal environment</td>
+                <td>Use absolute paths; explicitly set required environment variables</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `
+    },
+    {
+      id: "s9-hands-on",
+      title: "🖥️ Hands-on Exercise",
+      priority: false,
+      icon: "💻",
+      bodyHTML: `
+        <p>In <code>/workspaces/DevOps-Journey</code>:</p>
+        <div class="code-block"><pre>nano automation_practice.py</pre></div>
+
+        <ol style="padding-left:1.2rem;margin:0.25rem 0 0.5rem 0;">
+          <li>Set up <code>logging</code> to write to <code>practice.log</code>, with <code>INFO</code> level and timestamps</li>
+          <li>Define a function <code>resource_exists(path)</code> that checks with <code>os.path.exists()</code> whether a file already exists (idempotency check)</li>
+          <li>Define a function <code>create_resource(path, content)</code> that creates the file only if <code>resource_exists()</code> returns <code>False</code>, logging either "already exists" or "created" accordingly</li>
+          <li>Wrap a network call (reuse the <code>jsonplaceholder</code> API from earlier sections) in retry logic with exponential backoff, logging each attempt</li>
+          <li>Use the <code>if __name__ == "__main__":</code> guard</li>
+        </ol>
+
+        <p>Run the script twice in a row and confirm via <code>cat practice.log</code> that the second run correctly detects the file already exists rather than recreating it.</p>
+
+        <p><strong>Optional (if comfortable):</strong> Set up a real cron job using <code>crontab -e</code> that runs this script every 5 minutes, then check <code>practice.log</code> a few minutes later to confirm it ran unattended.</p>
+      `
+    },
+    {
+      id: "s9-devops-connection",
+      title: "DevOps Connection",
+      priority: false,
+      icon: "⚙️",
+      bodyHTML: `
+        <p>This section <em>is</em> the DevOps connection — idempotency, structured logging, retry-with-backoff, and scheduling are the exact patterns underlying Ansible playbooks, Terraform applies, Kubernetes reconciliation loops, and CI/CD pipeline steps. Every tool in Phase 2 is, at its core, a more sophisticated implementation of the same principles just built here from scratch in Python and Bash.</p>
+        <div class="info-box note">
+          <strong>📌 Pillar 4 complete.</strong> All 9 sections finished:
+          <ul style="margin-top:0.25rem;padding-left:1.2rem;">
+            <li>Python Fundamentals ✅</li>
+            <li>Python Functions, Modules &amp; Error Handling ✅</li>
+            <li>File I/O in Python ✅</li>
+            <li>Bash Scripting Fundamentals ✅</li>
+            <li>Bash Scripting — Advanced ✅</li>
+            <li>REST APIs — Concepts ✅</li>
+            <li>Working with APIs in Python (requests) ✅</li>
+            <li>JSON Parsing &amp; Data Manipulation ✅</li>
+            <li>Automation Patterns ✅</li>
+          </ul>
+        </div>
+        <div class="info-box tip" style="margin-top:0.75rem;">
+          <strong>Next:</strong> Publish workflow — commit all markdown to <code>Great_Cheatsheets</code>, build <code>html/scripting.html</code> matching the existing site style, update <code>index.html</code>, commit to <code>DevOps-Journey</code>, verify live.
+        </div>
       `
     }
   ];
