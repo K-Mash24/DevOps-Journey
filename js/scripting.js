@@ -3,13 +3,378 @@
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
 
-  //----- FLASHCARD DATA & RENDERING -----
+  // ============================================================
+  // SCRIPTING & AUTOMATION — FLASHCARDS
+  // ============================================================
+
   const FLASHCARDS = [
-    { term: "Placeholder term 1", answer: "Placeholder answer 1" },
-    { term: "Placeholder term 2", answer: "Placeholder answer 2" },
-    { term: "Placeholder term 3", answer: "Placeholder answer 3" },
-    { term: "Placeholder term 4", answer: "Placeholder answer 4" },
-    { term: "Placeholder term 5", answer: "Placeholder answer 5" }
+    // ============================================================
+    // SECTION 1 — Python Fundamentals
+    // ============================================================
+    {
+      term: "Python interpreter",
+      answer: "A program that reads a .py file line by line and executes it directly. No separate compile step. Run with python3."
+    },
+    {
+      term: "Dynamically typed language",
+      answer: "No type declaration up front — the interpreter infers the type from the assigned value. Example: x = 42 (int), x = 'hello' (str)."
+    },
+    {
+      term: "Python immutable data types",
+      answer: "int, float, str, bool, tuple, frozenset. Cannot be changed after creation. Strings are immutable."
+    },
+    {
+      term: "Python mutable data types",
+      answer: "list, dict, set. Can be changed after creation. Example: my_list.append(5) modifies the list in place."
+    },
+    {
+      term: "Zero-based indexing",
+      answer: "The first element of any sequence (string, list, tuple) is at index 0. Example: 'hello'[0] returns 'h'."
+    },
+    {
+      term: "f-string formatting",
+      answer: "f'Hello, {name}!' — Python 3.6+ formatted string literal. Variables inside {} are interpolated."
+    },
+    {
+      term: "List comprehension",
+      answer: "[expression for item in iterable if condition]. Example: [x**2 for x in range(10) if x % 2 == 0]"
+    },
+    {
+      term: "Truthiness in Python",
+      answer: "False values: None, False, 0, 0.0, '', [], (), {}, set(). Everything else is True."
+    },
+    {
+      term: "Indentation in Python",
+      answer: "Python uses indentation (4 spaces by convention) to define code blocks — no curly braces."
+    },
+    {
+      term: "range() function",
+      answer: "Produces a sequence of numbers. range(5) gives 0,1,2,3,4. Stop value is exclusive."
+    },
+
+    // ============================================================
+    // SECTION 2 — Functions, Modules & Error Handling
+    // ============================================================
+    {
+      term: "Function definition",
+      answer: "def function_name(param1, param2): return result. Functions are reusable blocks of code."
+    },
+    {
+      term: "*args and **kwargs",
+      answer: "*args collects variable positional arguments as a tuple. **kwargs collects variable keyword arguments as a dict."
+    },
+    {
+      term: "Default parameter trap",
+      answer: "Using mutable defaults (def f(items=[])) reuses the same list across all calls. Fix: use None and create inside."
+    },
+    {
+      term: "Implicit None return",
+      answer: "A function with no explicit return returns None. Example: def log(msg): print(msg) returns None."
+    },
+    {
+      term: "try/except/else/finally",
+      answer: "try: risky code. except: handle specific errors. else: runs if no exception. finally: always runs (cleanup)."
+    },
+    {
+      term: "Module import patterns",
+      answer: "import math (full module). from math import sqrt (specific function). import datetime as dt (alias)."
+    },
+    {
+      term: "Global vs local scope",
+      answer: "Variables inside functions are local. Use 'global' to modify a global variable — but avoid overusing."
+    },
+
+    // ============================================================
+    // SECTION 3 — File I/O in Python
+    // ============================================================
+    {
+      term: "File modes",
+      answer: "r (read), w (write/overwrite), a (append), x (exclusive create), r+ (read/write), rb/wb (binary)."
+    },
+    {
+      term: "with statement",
+      answer: "Context manager — guarantees resource cleanup. Example: with open('file.txt', 'r') as f: content = f.read()"
+    },
+    {
+      term: "Reading files — 3 methods",
+      answer: ".read() (entire file as string), .readlines() (list of lines), iterating directly (memory efficient for large files)."
+    },
+    {
+      term: "os.path.join()",
+      answer: "Joins path components with the correct OS separator. Safer than hardcoding '/' or '\\'."
+    },
+    {
+      term: "pathlib (modern alternative)",
+      answer: "from pathlib import Path. Intuitive path handling: Path('folder') / 'file.txt'. Preferred for new code."
+    },
+    {
+      term: "FileNotFoundError",
+      answer: "Raised when attempting to read a non-existent file. Preferred handling: try/except rather than os.path.exists()."
+    },
+
+    // ============================================================
+    // SECTION 4 — Bash Scripting Fundamentals
+    // ============================================================
+    {
+      term: "Shebang line",
+      answer: "#!/bin/bash or #!/usr/bin/env bash. Tells the OS which interpreter to use. Always line 1."
+    },
+    {
+      term: "chmod +x",
+      answer: "Makes a script executable. Without it, './script.sh' fails with Permission denied. Alternative: 'bash script.sh'."
+    },
+    {
+      term: "Command substitution",
+      answer: "$(command) or `command`. Captures command output as a string. Example: current_date=$(date)."
+    },
+    {
+      term: "Bash variable assignment",
+      answer: "VAR=value (no spaces around =). Use $VAR to access. Always quote: echo \"$VAR\"."
+    },
+    {
+      term: "Numeric comparison in Bash",
+      answer: "-eq (equal), -ne (not equal), -gt (greater), -ge (≥), -lt (less), -le (≤). Not >, <, = (those are string)."
+    },
+    {
+      term: "File test operators",
+      answer: "-f (file exists), -d (directory exists), -e (exists), -r (readable), -w (writable), -x (executable)."
+    },
+    {
+      term: "Bash for loop",
+      answer: "for item in list; do commands; done. Examples: for i in {1..5}; do echo $i; done"
+    },
+    {
+      term: "Bash if statement",
+      answer: "if [ condition ]; then ... elif [ condition ]; then ... else ... fi. Use [[ ]] for modern Bash."
+    },
+    {
+      term: "Bash function arguments",
+      answer: "Positional: $1, $2, ... $@ (all), $# (count). Unlike Python, no named parameters."
+    },
+    {
+      term: "read -p",
+      answer: "Reads user input with a prompt. Example: read -p 'Enter name: ' name. Stores input in variable."
+    },
+    {
+      term: "Arithmetic expansion in Bash",
+      answer: "$(( ... )) for math. Example: result=$(( 5 + 3 )). Bash doesn't do math with + alone."
+    },
+
+    // ============================================================
+    // SECTION 5 — Bash Scripting — Advanced
+    // ============================================================
+    {
+      term: "Bash arrays",
+      answer: "Declared with parentheses: tools=(\"docker\" \"k8s\"). Access with \${tools[0]}. All elements: \${tools[@]}."
+    },
+    {
+      term: "Array element count",
+      answer: "\${#tools[@]} — the number of elements. Always quote: \"\${tools[@]}\" to preserve spaces."
+    },
+    {
+      term: "shift command",
+      answer: "Removes $1 and shifts all arguments down. Used for processing unknown numbers of arguments."
+    },
+    {
+      term: "Exit codes",
+      answer: "0 = success, non-zero = failure. Check with $? after a command. Set with exit 1."
+    },
+    {
+      term: "set -euo pipefail",
+      answer: "Safety trio: exit on error, error on undefined variables, and fail if any command in a pipe fails."
+    },
+    {
+      term: "trap command",
+      answer: "Runs cleanup code on exit or signal. Example: trap cleanup EXIT. Bash's version of Python's finally."
+    },
+    {
+      term: "getopts",
+      answer: "Parses command-line flags. Example: while getopts \"n:v\" opt; do ... done. Colon means requires value."
+    },
+    {
+      term: "grep command",
+      answer: "Search for patterns: grep 'pattern' file.txt. Flags: -i (case-insensitive), -r (recursive), -n (line numbers)."
+    },
+    {
+      term: "sed command",
+      answer: "Stream editor — find and replace: sed 's/old/new/g' file.txt. Use -i for in-place edit."
+    },
+    {
+      term: "awk command",
+      answer: "Text processing: awk '{print $1, $3}' data.txt. $1 = first field, $2 = second, etc."
+    },
+
+    // ============================================================
+    // SECTION 6 — REST APIs — Concepts
+    // ============================================================
+    {
+      term: "REST API",
+      answer: "Representational State Transfer — uses HTTP methods to interact with resources. Stateless, client-server."
+    },
+    {
+      term: "HTTP GET method",
+      answer: "Retrieve data. Should be idempotent and safe (no side effects). Query parameters via URL."
+    },
+    {
+      term: "HTTP POST method",
+      answer: "Create a new resource. NOT idempotent — each request creates a new resource."
+    },
+    {
+      term: "HTTP PUT vs PATCH",
+      answer: "PUT replaces the entire resource. PATCH performs a partial update. PUT is idempotent; PATCH can be."
+    },
+    {
+      term: "HTTP status code 200",
+      answer: "OK — request succeeded. Used for GET and PUT responses. Response body contains the result."
+    },
+    {
+      term: "HTTP status code 201",
+      answer: "Created — resource created successfully. Typical response to a successful POST request."
+    },
+    {
+      term: "HTTP status code 404",
+      answer: "Not Found — resource doesn't exist or endpoint is wrong. Common client error."
+    },
+    {
+      term: "HTTP status code 500",
+      answer: "Internal Server Error — server-side error. Not the client's fault. Retry may succeed."
+    },
+    {
+      term: "HTTP status code 429",
+      answer: "Too Many Requests — rate limit exceeded. Implement exponential backoff when handling this."
+    },
+    {
+      term: "Bearer token authentication",
+      answer: "Authorization: Bearer <token>. Stateless authentication using JWT tokens. No server-side session state."
+    },
+    {
+      term: "Idempotency in HTTP",
+      answer: "GET, PUT, DELETE are idempotent. POST is NOT idempotent by default. Retrying POST can create duplicates."
+    },
+
+    // ============================================================
+    // SECTION 7 — Working with APIs in Python
+    // ============================================================
+    {
+      term: "requests library",
+      answer: "Python's most popular HTTP library. Install: pip install requests. Import: import requests."
+    },
+    {
+      term: "requests.get()",
+      answer: "response = requests.get(url, params=dict, headers=dict, auth=(user, pass), timeout=seconds)."
+    },
+    {
+      term: "response.json()",
+      answer: "Parses response body as JSON → Python dict/list. Equivalent to json.loads(response.text)."
+    },
+    {
+      term: "response.status_code",
+      answer: "HTTP status code as an integer. Always check this before using response data."
+    },
+    {
+      term: "response.raise_for_status()",
+      answer: "Raises an exception for 4xx/5xx status codes. Wrap in try/except requests.exceptions.HTTPError."
+    },
+    {
+      term: "requests.post() with JSON",
+      answer: "requests.post(url, json=payload). The json parameter auto-serializes dict and sets Content-Type header."
+    },
+    {
+      term: "requests.Session()",
+      answer: "Persists headers, cookies, and connections across multiple requests. More efficient for multiple calls."
+    },
+    {
+      term: "Timeout in requests",
+      answer: "Always set timeout: requests.get(url, timeout=5). Prevents scripts from hanging indefinitely."
+    },
+    {
+      term: "Environment variables for secrets",
+      answer: "Load API keys from environment: token = os.environ.get('API_TOKEN'). Never hardcode secrets in code."
+    },
+    {
+      term: "Pagination — page-based",
+      answer: "Loop with params={'page': page, 'per_page': 50}. Increment page until empty response."
+    },
+    {
+      term: "Pagination — cursor/token-based",
+      answer: "Check for next page URL in response: url = data.get('next_page_url'). Loop until None."
+    },
+
+    // ============================================================
+    // SECTION 8 — JSON Parsing & Data Manipulation
+    // ============================================================
+    {
+      term: "JSON data types",
+      answer: "object (dict), array (list), string (str), number (int/float), boolean, null. Strings and keys use double quotes."
+    },
+    {
+      term: "json.loads()",
+      answer: "JSON string → Python object. Example: data = json.loads('{\"name\": \"Keith\"}')."
+    },
+    {
+      term: "json.dumps()",
+      answer: "Python object → JSON string. Example: json_string = json.dumps(data, indent=2, sort_keys=True)."
+    },
+    {
+      term: "json.load() vs json.dump()",
+      answer: "load() reads from file → Python object. dump() writes Python object → file. No 's' = file operation."
+    },
+    {
+      term: "Dict .get() method",
+      answer: "Safely access keys: value = data.get('key', 'default'). Returns None or default instead of KeyError."
+    },
+    {
+      term: "json.JSONDecodeError",
+      answer: "Raised when a string is not valid JSON. Wrap parsing in try/except for untrusted input."
+    },
+    {
+      term: "jq command",
+      answer: "Command-line JSON processor: curl -s api | jq '.field'. Use -r to strip quotes for strings."
+    },
+    {
+      term: "jq array iteration",
+      answer: "jq '.[]' iterates over all elements. jq '.[0]' gets the first element. jq '.[] | select(.id > 5)' filters."
+    },
+
+    // ============================================================
+    // SECTION 9 — Automation Patterns
+    // ============================================================
+    {
+      term: "Idempotency",
+      answer: "Operation that yields the same result regardless of how many times it runs. Check-then-act pattern."
+    },
+    {
+      term: "Check-then-act pattern",
+      answer: "1. Check if desired state exists. 2. If yes, do nothing. 3. If no, make the change. Core of idempotency."
+    },
+    {
+      term: "logging module",
+      answer: "Python's built-in logging: logging.info(), .warning(), .error(). Writes timestamped messages to file."
+    },
+    {
+      term: "Logging severity levels",
+      answer: "DEBUG, INFO, WARNING, ERROR, CRITICAL. Set level=logging.INFO to capture INFO and above."
+    },
+    {
+      term: "Exponential backoff",
+      answer: "Retry with increasing delays: time.sleep(2 ** attempt). Prevents retry storms on struggling servers."
+    },
+    {
+      term: "Cron syntax",
+      answer: "minute hour day month weekday command. * = any. */5 = every 5. Example: 0 2 * * * /script.sh"
+    },
+    {
+      term: "Cron environment pitfalls",
+      answer: "Cron runs with minimal PATH and environment. Always use absolute paths: /usr/bin/python3 /home/user/script.py."
+    },
+    {
+      term: "if __name__ == '__main__'",
+      answer: "Guard that runs main() only when script is executed directly, not when imported as a module."
+    },
+    {
+      term: "Retry with max_wait",
+      answer: "Prevent unbounded waits: wait = min(2 ** attempt, max_wait). Caps backoff at a safe maximum."
+    }
   ];
 
   function renderFlashcards() {
@@ -3408,18 +3773,389 @@ document.addEventListener('DOMContentLoaded', () => {
   // QUIZ SYSTEM
   // ============================================================
 
+  // ============================================================
+// SCRIPTING & AUTOMATION — QUIZ SETS
+// ============================================================
+
   const QUIZ_SETS = {
     1: [
-      { q: "Placeholder question 1?", options: ["A", "B", "C", "D"], correct: 0, explain: "Placeholder explanation." },
-      { q: "Placeholder question 2?", options: ["A", "B", "C", "D"], correct: 1, explain: "Placeholder explanation." }
+      {
+        q: "What does the f in f-string stand for?",
+        options: [
+          "Formatted — embeds expressions in {}",
+          "Fast — optimised for speed",
+          "Function — calls a function",
+          "File — reads from a file"
+        ],
+        correct: 0,
+        explain: "f-strings are formatted string literals (Python 3.6+). Variables inside {} are interpolated."
+      },
+      {
+        q: "Which of these is immutable in Python?",
+        options: ["list", "dict", "tuple", "set"],
+        correct: 2,
+        explain: "Tuples are immutable. Lists, dicts, and sets are mutable — they can be changed after creation."
+      },
+      {
+        q: "What does range(5) produce?",
+        options: ["1,2,3,4,5", "0,1,2,3,4", "0,1,2,3,4,5", "1,2,3,4"],
+        correct: 1,
+        explain: "range(5) yields 0,1,2,3,4. The stop value is exclusive — it stops before 5."
+      },
+      {
+        q: "What is the correct way to open a file safely?",
+        options: [
+          "f = open('file.txt', 'r')",
+          "with open('file.txt', 'r') as f:",
+          "open('file.txt', 'r') as f:",
+          "file = open('file.txt', 'r'); file.close()"
+        ],
+        correct: 1,
+        explain: "The with statement (context manager) automatically closes the file, even if an exception occurs."
+      },
+      {
+        q: "What is the shebang line for a Bash script?",
+        options: [
+          "#!/bin/bash",
+          "#/bin/bash",
+          "!/bin/bash",
+          "<!-- #!/bin/bash -->"
+        ],
+        correct: 0,
+        explain: "#!/bin/bash is the standard shebang. #!/usr/bin/env bash is an alternative for portability."
+      },
+      {
+        q: "Which Bash operator checks if a file exists?",
+        options: ["-e", "-f", "-d", "-x"],
+        correct: 0,
+        explain: "-e checks existence (any type). -f checks regular file. -d checks directory."
+      },
+      {
+        q: "What is the correct syntax for a Bash for loop?",
+        options: [
+          "for i in {1..5}; do echo $i; done",
+          "for i=1 to 5; do echo $i; done",
+          "foreach i in 1..5 { echo $i }",
+          "for (i=1; i<=5; i++); do echo $i; done"
+        ],
+        correct: 0,
+        explain: "Bash uses: for i in {1..5}; do echo $i; done. The other syntaxes are from other languages."
+      },
+      {
+        q: "What does the grep command do?",
+        options: [
+          "Search for patterns in text",
+          "Replace text in files",
+          "Format text output",
+          "Compress files"
+        ],
+        correct: 0,
+        explain: "grep (Global Regular Expression Print) searches for patterns in text files or input."
+      },
+      {
+        q: "What is the HTTP status code for 'Not Found'?",
+        options: ["200", "401", "404", "500"],
+        correct: 2,
+        explain: "404 Not Found indicates the requested resource doesn't exist on the server."
+      },
+      {
+        q: "What is the difference between PUT and PATCH?",
+        options: [
+          "PUT replaces, PATCH partially updates",
+          "PUT partially updates, PATCH replaces",
+          "They are the same",
+          "PUT is for creation, PATCH is for deletion"
+        ],
+        correct: 0,
+        explain: "PUT replaces the entire resource. PATCH applies a partial update — only specified fields."
+      },
+      {
+        q: "What is an idempotent operation?",
+        options: [
+          "Fails if run multiple times",
+          "Same result regardless of runs",
+          "Runs only once",
+          "Is reversible"
+        ],
+        correct: 1,
+        explain: "Idempotent operations produce the same result each time. GET, PUT, DELETE should be idempotent."
+      },
+      {
+        q: "Which Python library is used for HTTP requests?",
+        options: ["json", "os", "requests", "sys"],
+        correct: 2,
+        explain: "The 'requests' library is the standard for HTTP calls. Install with: pip install requests."
+      }
     ],
+
     2: [
-      { q: "Placeholder question 3?", options: ["A", "B", "C", "D"], correct: 2, explain: "Placeholder explanation." },
-      { q: "Placeholder question 4?", options: ["A", "B", "C", "D"], correct: 3, explain: "Placeholder explanation." }
+      {
+        q: "What is the primary benefit of a context manager (with statement)?",
+        options: [
+          "Automatic resource cleanup",
+          "Faster code execution",
+          "Better error messages",
+          "Type safety"
+        ],
+        correct: 0,
+        explain: "The with statement guarantees resource cleanup (closing files, sockets, etc.) even if an exception occurs."
+      },
+      {
+        q: "Which of these is a valid JSON object?",
+        options: [
+          "{'name': 'Keith'}",
+          "{\"name\": \"Keith\"}",
+          "{name: 'Keith'}",
+          "{'name': \"Keith\"}"
+        ],
+        correct: 1,
+        explain: "JSON requires double quotes for both keys and string values. Single quotes are invalid JSON."
+      },
+      {
+        q: "What does json.loads() do?",
+        options: [
+          "Converts Python object to JSON string",
+          "Converts JSON string to Python object",
+          "Loads JSON from a file",
+          "Validates JSON schema"
+        ],
+        correct: 1,
+        explain: "json.loads() (load string) parses a JSON string into a Python object."
+      },
+      {
+        q: "What is the correct Bash syntax to capture command output?",
+        options: [
+          "$(command)",
+          "`command`",
+          "Both $(command) and `command`",
+          "command > output"
+        ],
+        correct: 2,
+        explain: "Both $(command) and backticks `command` capture output. $(...) is preferred for readability and nesting."
+      },
+      {
+        q: "What is the primary benefit of using logging over print()?",
+        options: [
+          "Logging writes to a file with timestamps",
+          "Logging is faster",
+          "Logging automatically fixes errors",
+          "Logging compresses output"
+        ],
+        correct: 0,
+        explain: "Logging provides structured, timestamped records written to a file — essential for unattended scripts."
+      },
+      {
+        q: "What is exponential backoff used for?",
+        options: [
+          "Retrying with increasing delays",
+          "Compressing data",
+          "Encrypting passwords",
+          "Sorting arrays"
+        ],
+        correct: 0,
+        explain: "Exponential backoff increases the wait time between retries (2s, 4s, 8s) to avoid overloading servers."
+      },
+      {
+        q: "What is the key difference between session-based and token-based authentication?",
+        options: [
+          "Session is server-side, token is stateless",
+          "Token is server-side, session is stateless",
+          "They are the same",
+          "Session uses JWTs, token uses cookies"
+        ],
+        correct: 0,
+        explain: "Session-based authentication stores state on the server. Token-based (JWT) is stateless and scales better."
+      },
+      {
+        q: "What is the purpose of set -e in Bash?",
+        options: [
+          "Exit on any error",
+          "Enable debug mode",
+          "Disable globbing",
+          "Set environment variables"
+        ],
+        correct: 0,
+        explain: "set -e causes the script to exit immediately if any command returns a non-zero exit code."
+      },
+      {
+        q: "What is the JWT payload?",
+        options: [
+          "The data claims (Base64Url encoded)",
+          "The signature verification key",
+          "The encryption algorithm",
+          "The HTTP status code"
+        ],
+        correct: 0,
+        explain: "The JWT payload contains the claims (data) — Base64Url encoded and readable by anyone. Only tampering is prevented."
+      },
+      {
+        q: "What is the primary defence against SQL injection?",
+        options: [
+          "Parameterized queries",
+          "Firewalls",
+          "Encryption",
+          "Two-factor authentication"
+        ],
+        correct: 0,
+        explain: "Parameterized queries (prepared statements) treat user input as data, never as executable SQL syntax."
+      },
+      {
+        q: "What is the difference between authentication and authorization?",
+        options: [
+          "AuthN is identity, AuthZ is permissions",
+          "AuthN is permissions, AuthZ is identity",
+          "They are the same",
+          "AuthN uses passwords only"
+        ],
+        correct: 0,
+        explain: "Authentication verifies who you are (identity). Authorization determines what you can do (permissions)."
+      },
+      {
+        q: "What is a salt in password hashing?",
+        options: [
+          "Random data added per user before hashing",
+          "A global secret key",
+          "The hash algorithm name",
+          "The password length limit"
+        ],
+        correct: 0,
+        explain: "A salt is a random value added to each password before hashing — unique per user to defeat rainbow tables."
+      }
     ],
+
     3: [
-      { q: "Placeholder question 5?", options: ["A", "B", "C", "D"], correct: 0, explain: "Placeholder explanation." },
-      { q: "Placeholder question 6?", options: ["A", "B", "C", "D"], correct: 1, explain: "Placeholder explanation." }
+      {
+        q: "What is the difference between AES and RSA?",
+        options: [
+          "AES is symmetric (fast), RSA is asymmetric (slow)",
+          "AES is asymmetric, RSA is symmetric",
+          "Both are symmetric",
+          "Both are asymmetric"
+        ],
+        correct: 0,
+        explain: "AES is symmetric — one key for encryption and decryption. RSA is asymmetric — public/private key pair."
+      },
+      {
+        q: "What is forward secrecy in TLS?",
+        options: [
+          "Past sessions stay secure even if the private key is stolen later",
+          "Encrypting data at rest",
+          "A faster handshake protocol",
+          "A type of digital certificate"
+        ],
+        correct: 0,
+        explain: "Forward secrecy uses ephemeral keys (ECDHE) so each session uses a unique key. A stolen long-term key doesn't decrypt past sessions."
+      },
+      {
+        q: "What does the SLSA framework address?",
+        options: [
+          "Software supply chain security",
+          "Encryption standards",
+          "Firewall rules",
+          "Password management"
+        ],
+        correct: 0,
+        explain: "SLSA (Supply-chain Levels for Software Artifacts) is an industry framework for defending against supply chain attacks."
+      },
+      {
+        q: "What is the difference between RBAC and ABAC?",
+        options: [
+          "RBAC uses roles, ABAC uses attributes of user/resource/context",
+          "ABAC uses roles, RBAC uses attributes",
+          "They are the same",
+          "RBAC is for files, ABAC is for networks"
+        ],
+        correct: 0,
+        explain: "RBAC (Role-Based Access Control) uses job roles. ABAC (Attribute-Based) uses attributes of the user, resource, and context."
+      },
+      {
+        q: "What is the main advantage of using JWT over session cookies?",
+        options: [
+          "Stateless, scalable, cross-domain",
+          "More secure out of the box",
+          "Always encrypted",
+          "Smaller size"
+        ],
+        correct: 0,
+        explain: "JWTs are stateless — the token contains all claims, so the server doesn't need to store session state, enabling easy scaling."
+      },
+      {
+        q: "What is the difference between encryption and hashing?",
+        options: [
+          "Encryption is reversible, hashing is one-way",
+          "Hashing is reversible, encryption is one-way",
+          "They are the same",
+          "Encryption uses one key, hashing uses two"
+        ],
+        correct: 0,
+        explain: "Encryption is designed to be reversible with the right key. Hashing is one-way by design."
+      },
+      {
+        q: "What is the TLS handshake?",
+        options: [
+          "Negotiating encryption parameters and exchanging keys",
+          "Hashing a password",
+          "Encrypting data at rest",
+          "Generating a certificate"
+        ],
+        correct: 0,
+        explain: "The TLS handshake negotiates cipher suites, authenticates the server, and establishes a shared symmetric session key."
+      },
+      {
+        q: "What is the purpose of the ALPN TLS extension?",
+        options: [
+          "Negotiate HTTP/1.1 vs HTTP/2 during handshake",
+          "Encrypt the certificate",
+          "Add client authentication",
+          "Compress response bodies"
+        ],
+        correct: 0,
+        explain: "ALPN (Application-Layer Protocol Negotiation) lets the client advertise which protocols it supports (HTTP/1.1, HTTP/2, HTTP/3) during the handshake."
+      },
+      {
+        q: "What is the difference between a CA and an intermediate CA?",
+        options: [
+          "Root CA is ultimate trust anchor, intermediate signs leaf certs",
+          "Intermediate is more trusted than root",
+          "They are the same",
+          "Root CA signs only certificates, intermediate signs everything"
+        ],
+        correct: 0,
+        explain: "Root CAs are the ultimate trust anchors. Intermediate CAs are signed by roots and issue leaf certificates — if compromised, they can be revoked without revoking the root."
+      },
+      {
+        q: "What is the primary defence against XSS (Cross-Site Scripting)?",
+        options: [
+          "Output encoding and input validation",
+          "Firewalls",
+          "Encryption",
+          "Two-factor authentication"
+        ],
+        correct: 0,
+        explain: "XSS attacks inject malicious scripts into trusted websites. Output encoding and input validation prevent these scripts from executing in the browser."
+      },
+      {
+        q: "What is the difference between CBC and GCM mode in AES?",
+        options: [
+          "GCM provides authenticated encryption (integrity + confidentiality), CBC only provides confidentiality",
+          "CBC is faster than GCM",
+          "GCM uses larger keys",
+          "CBC is more secure than GCM"
+        ],
+        correct: 0,
+        explain: "GCM (Galois/Counter Mode) is an authenticated encryption mode that provides both confidentiality and integrity. CBC only provides confidentiality."
+      },
+      {
+        q: "What is the purpose of a Certificate Transparency log?",
+        options: [
+          "Public logging of all issued certificates for fraud detection",
+          "Encrypting certificate data",
+          "Revoking compromised certificates",
+          "Generating new certificates"
+        ],
+        correct: 0,
+        explain: "Certificate Transparency logs all issued certificates publicly, making it possible to detect fraudulent or mis-issued certificates."
+      }
     ]
   };
 
