@@ -8,7 +8,7 @@ const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevO
 // SERVICE WORKER VERSION CHECK
 // ============================================================
 
-const APP_VERSION = '2026-07-14-v1'; // Match your CACHE_NAME
+const APP_VERSION = '2026-07-15-v1'; // Match your CACHE_NAME
 
 if (localStorage.getItem('sw-version') !== APP_VERSION) {
   console.log('🔄 New version detected — clearing old caches...');
@@ -518,7 +518,21 @@ document.addEventListener('DOMContentLoaded', () => {
       quizKey: 'scripting-quiz-passed',
       sectionPrefix: 'scripting-section-'
      },
-    databases: { placeholder: true, name: 'Databases' }
+    databases: { 
+      sections: 7,
+      quiz: true,
+      titles: [
+        'Section 1 — Relational Databases & SQL Fundamentals',
+        'Section 2 — Joins & Relationships', 
+        'Section 3 — Normalization',
+        'Section 4 — Indexing',
+        'Section 5 — ACID Transactions',
+        'Section 6 — NoSQL Data Models & CAP Theorem',
+        'Section 7 — Cashing & Database Security Basics'
+      ],
+      quizKey: 'databases-quiz-passed',
+      sectionPrefix: 'databases-section-'
+     },
   };
 
   // Phase 2 pillar data – each has a list of topics and a binary key (used by the Phase 2 chip)
@@ -643,8 +657,8 @@ document.addEventListener('DOMContentLoaded', () => {
       icon: '5',
       status: 'locked',
       name: 'Pillar 5 — Databases & Storage',
-      sub: 'SQL, NoSQL, ACID, indexing, caching, CAP theorem',
-      link: '#'
+      sub: '7 sections · SQL, NoSQL, Relationships, ACID, indexing, caching, CAP theorem',
+      link: 'html/databases.html'
     },
     {
       id: 'Solutions Architect Associate (SAA)',
@@ -1193,7 +1207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pillars = ['networking','linux','security','scripting','databases'];
     const names = ['Networking', 'Linux & CLI', 'Security', 'Scripting', 'Databases'];
     const icons = ['🌐', '🐧', '👀', '⚙️', '🗄️'];
-    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', 'html/scripting.html', '#'];
+    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', 'html/scripting.html', 'html/databases.html'];
     track.innerHTML = pillars.map((p, idx) => {
       const progress = getPhase1PillarCompletion(p);
       const percent = Math.round(progress * 100);
@@ -1632,10 +1646,11 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     btn.addEventListener('click', () => {
       if (confirm('Are you sure? This will delete all quiz scores and pillar progress.')) {
         ['gc-score-networking','gc-score-linux','gc-score-security','gc-score-scripting','gc-score-databases',
-         ...Array.from({length:7}, (_,i)=>`networking-section-${i+1}`), 'networking-quiz-passed',
-         ...Array.from({length:10}, (_,i)=>`linux-section-${i+1}`), 'linux-quiz-passed',
+          ...Array.from({length:8}, (_,i)=>`networking-section-${i+1}`), 'networking-quiz-passed',
+          ...Array.from({length:11}, (_,i)=>`linux-section-${i+1}`), 'linux-quiz-passed',
           ...Array.from({length:10}, (_,i)=>`security-section-${i+1}`), 'security-quiz-passed',
           ...Array.from({length:10}, (_,i)=>`scripting-section-${i+1}`), 'scripting-quiz-passed',
+          ...Array.from({length:8}, (_,i)=>`databases-section-${i+1}`), 'databases-quiz-passed',
          'phase2-docker','phase2-cicd','phase2-kubernetes','phase2-terraform','phase2-monitoring'
         ].forEach(key => localStorage.removeItem(key));
         updateAllUI();
@@ -1699,7 +1714,13 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         }
         if (localStorage.getItem('scripting-quiz-passed') === 'true') sCount++;
         return sCount / 10; // 9 sections + quiz
-      case 'databases': return 0;
+      case 'databases':
+        let dbCount = 0;
+        for (let i = 1; i <= 7; i++) {
+          if (localStorage.getItem(`databases-section-${i}`) === 'true') dbCount++;
+        }
+        if (localStorage.getItem('databases-quiz-passed') === 'true') dbCount++;
+        return dbCount / 8; // 7 sections + quiz
       default: return 0;
     }
   }
@@ -2006,7 +2027,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
                    'Python fundamentals, Functions % Modules, Bash Scripting, REST APIs, Working with APIs, JSON Parsing, Data Manipulation, Automation Patterns',
                    'SQL, NoSQL, indexing, ACID, caching, CAP theorem'];
     const icons = ['net', 'linux', 'sec', 'script', 'db'];
-    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', 'html/scripting.html', '#'];
+    const links = ['html/networking.html', 'html/linux.html', 'html/security.html', 'html/scripting.html', 'html/databases.html'];
 
     // Update roadmap phases
     const roadmapContainer = document.getElementById('phase1Roadmap');
@@ -4458,7 +4479,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
       },
       databases: {
         name: 'Databases & Storage',
-        totalSections: 0,
+        totalSections: 7,
         sectionPrefix: 'databases-section-',
         quizKey: 'databases-quiz-passed',
       }
@@ -4570,6 +4591,7 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     else if (path.includes('linux.html')) pillarId = 'linux';
     else if (path.includes('security.html')) pillarId = 'security';
     else if (path.includes('scripting.html')) pillarId = 'scripting';
+    else if (path.includes('databases.html')) pillarId = 'databases';
     // Add more as needed
     
     if (pillarId) {
