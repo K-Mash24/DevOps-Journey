@@ -5939,3 +5939,80 @@ select.styled-select:hover,
     min-width: unset;
   }
 }
+
+/* ============================================================
+   UTILITY CLASSES FOR ACCORDION CONTENT
+   ============================================================ */
+
+/* ── Compact Lists (replaces inline padding/margin on <ul>/<ol>) ── */
+.compact-list {
+  padding-left: 1.2rem;
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.compact-list li {
+  margin-bottom: 0.3rem;
+  line-height: 1.6;
+}
+
+/* ── Ordered variant with wider indent ── */
+.compact-list.ordered {
+  padding-left: 1.5rem;
+  list-style-type: decimal;
+}
+
+/* ── Sub-heading inside accordion bodies ── */
+.accordion-body h4.sub-heading {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0.75rem 0 0.25rem 0;
+  color: var(--text-primary);
+}
+
+/* ── Clean answer body inside <details> ── */
+.details-answer-body {
+  padding-top: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.details-answer-body p {
+  margin-bottom: 0.5rem;
+}
+
+.details-answer-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Ensure ASCII diagrams inside code-block look natural ── */
+.code-block pre.ascii-art {
+  color: var(--text-primary); 
+  /* override default code-block color if you prefer lighter/gray */ 
+  font-size: 0.75rem;
+  line-height: 1.8;
+  white-space: pre;
+}
+
+/* ── Details styling (replaces inline on <details>) ── */
+.details-box {
+  margin-top: 0.75rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+}
+
+.details-box summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── Info-box with top margin (replaces inline margin) ── */
+.info-box.mt {
+  margin-top: 0.75rem;
+}
+
+/* ── Code-block inside details (already styled) ── */
+.details-box .code-block {
+  margin-top: 0.5rem;
+}
