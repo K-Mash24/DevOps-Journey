@@ -48,32 +48,76 @@ document.addEventListener("DOMContentLoaded", () => {
     initFlashcardScroller();
   }
 
-  // ------------------------------------------------------------------
-  // 2. OVERVIEW DATA – Replace with your pillar's purpose,
-  //    objectives, key concepts, stats, and README links.
-  // ------------------------------------------------------------------
+  // ============================================================
+  // 2. OVERVIEW DATA
+  // ============================================================
+
   const DATABASES_OVERVIEW = {
     purpose: {
       title: "📌 Purpose",
       description: [
-        "This pillar covers Databases & Storage fundamentals.",
-        "Placeholder description – replace with actual content.",
+        "Every application and automation tool eventually needs to store and retrieve data reliably — user records, configuration state, logs, metrics. This pillar builds first-principles understanding of how databases actually work: how data is organized, how it's queried, how consistency is guaranteed, and how performance is managed at scale.",
+        "Studied independently of any specific vendor or cloud offering — the concepts transfer identically regardless of what you eventually run them on. By the end, you'll understand when to choose SQL vs NoSQL, how to design schemas that don't fall apart under load, and why databases behave the way they do."
       ],
     },
     objectives: [
-      "Objective 1 – replace with actual",
-      "Objective 2 – replace with actual",
+      "Understand the difference between relational (SQL) and non-relational (NoSQL) databases, and when each fits",
+      "Write core SQL: SELECT, INSERT, UPDATE, DELETE, and joins across related tables",
+      "Understand normalization — organizing data to eliminate redundancy and inconsistency",
+      "Understand indexing — how databases find data fast, and the tradeoffs involved",
+      "Understand ACID properties and why they matter for reliable transactions",
+      "Understand common NoSQL data models (key-value, document, column-family, graph) and the CAP theorem tradeoffs that motivate them",
+      "Understand caching — reducing database load by storing frequently-accessed data closer to where it's needed",
+      "Understand baseline database security principles (least privilege, injection risks)",
     ],
     keyConcepts: [
-      { term: "Concept 1", definition: "Definition 1" },
-      { term: "Concept 2", definition: "Definition 2" },
+      {
+        term: "Relational Databases & SQL Fundamentals",
+        definition:
+          "Tables, rows, columns, primary/foreign keys, SELECT/INSERT/UPDATE/DELETE — the foundation of SQL.",
+      },
+      {
+        term: "Joins & Relationships",
+        definition:
+          "INNER JOIN, LEFT JOIN, one-to-many, many-to-many — connecting data across tables.",
+      },
+      {
+        term: "Normalization",
+        definition:
+          "1NF/2NF/3NF — organizing data to eliminate redundancy and update anomalies.",
+      },
+      {
+        term: "Indexing",
+        definition:
+          "How indexes speed up lookups (B-trees conceptually) and the write-cost tradeoff.",
+      },
+      {
+        term: "ACID Transactions",
+        definition:
+          "Atomicity, Consistency, Isolation, Durability — concrete failure-scenario examples.",
+      },
+      {
+        term: "NoSQL Data Models & CAP Theorem",
+        definition:
+          "Key-value, document, column-family, graph models — motivated directly by CAP theorem tradeoffs.",
+      },
+      {
+        term: "Caching & Database Security Basics",
+        definition:
+          "Cache-aside, write-through, TTL/eviction, stale-data tradeoffs; least-privilege DB access and SQL injection awareness.",
+      },
     ],
     stats: [
-      { label: "Sections", value: "0/0" },
-      { label: "Status", value: "⏳ Placeholder" },
+      { label: "Sections", value: "7/7 (100%)" },
+      { label: "Topics covered", value: "40+" },
+      { label: "Estimated time", value: "~10-12 hours" },
+      { label: "Difficulty range", value: "🟡 Intermediate → 🟠 Advanced" },
+      { label: "Status", value: "🚧 IN PROGRESS" },
     ],
-    readmeLink: "#", // Replace with actual GitHub README link
-    readmeDetailLink: "#", // Replace with actual README.md link
+    readmeLink:
+      "https://github.com/K-Mash24/Great_Cheatsheets/tree/Master/saa-foundation/05-databases",
+    readmeDetailLink:
+      "https://github.com/K-Mash24/Great_Cheatsheets/blob/Master/saa-foundation/05-databases/README.md",
   };
 
   // ----- Overview rendering (do not modify) -----
@@ -123,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="info-box note">
           <strong>📖 Detailed notes</strong>
-          <p style="margin-top: 0.25rem;">Placeholder – replace with actual links.</p>
+          <p style="margin-top: 0.25rem;">All markdown notes are committed to <a href="${DATABASES_OVERVIEW.readmeLink}" target="_blank" style="color: var(--accent-secondary);">Great_Cheatsheets/saa-foundation/05-databases/</a>. The <a href="${DATABASES_OVERVIEW.readmeDetailLink}" target="_blank" style="color: var(--accent-secondary);">README.md</a> in that folder contains the complete pillar summary, learning objectives, and revision checklist.</p>
         </div>
       </div>
     `;
@@ -152,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const SECTION_ACCORDIONS = [];
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= 7; i++) {
     SECTION_ACCORDIONS.push(buildPlaceholderAccordion(i));
   }
 
@@ -392,9 +436,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ⚠️ IMPORTANT: If you want the header ring to update after quiz submit,
     //    uncomment the following lines:
-    // if (typeof updatePageHeader === 'function') {
-    //   updatePageHeader('scripting');
-    // }
+    if (typeof updatePageHeader === 'function') {
+      updatePageHeader('scripting');
+    }
 
     document.getElementById("quizFeedback").style.display = "none";
     document.getElementById("quizScore").classList.add("show");
@@ -544,9 +588,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ⚠️ IMPORTANT: If you want the header ring to update when a section checkbox is toggled,
         //    uncomment the following lines:
-        // if (typeof updatePageHeader === 'function') {
-        //   updatePageHeader('scripting');
-        // }
+        if (typeof updatePageHeader === 'function') {
+          updatePageHeader('databases');
+        }
       });
     });
 
@@ -605,8 +649,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "js-section5-container",
     "js-section6-container",
     "js-section7-container",
-    "js-section8-container",
-    "js-section9-container",
   ];
 
   containerIds.forEach((id, index) => {
@@ -633,10 +675,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initImageLightbox();
 
   // ⚠️ IMPORTANT: If you want the header ring to update on page load (and after any progress changes),
-  //    uncomment the following line:
-  // if (typeof updatePageHeader === 'function') {
-  //   updatePageHeader('scripting');
-  // }
+  if (typeof updatePageHeader === 'function') {
+    updatePageHeader('scripting');
+  }
 
   console.log("✅ Databases & Storage pillar loaded (placeholder mode)");
 });
