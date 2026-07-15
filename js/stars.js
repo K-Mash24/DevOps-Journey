@@ -1021,7 +1021,7 @@
       }
       fontName = fontName.replace(/\+/g, ' ');
       document.documentElement.style.fontFamily = `'${fontName}', sans-serif`;
-      showToast(`✅ Font "${fontName}" loaded successfully`, 'success');
+      showToast(`Font "${fontName}" loaded successfully`, 'success');
     };
 
     link.onerror = function () {
