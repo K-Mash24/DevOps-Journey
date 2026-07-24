@@ -4424,7 +4424,7 @@ pre {
    BACKUP TAB
    ============================================================ */
 #backupContainer {
-  padding: 1.25rem;
+  padding: 1.5rem;
 }
 .backup-tab-header {
   margin-bottom: 1.5rem;
@@ -6257,4 +6257,326 @@ select.styled-select:hover,
 /* ── Code-block inside details (already styled) ── */
 .details-box .code-block {
   margin-top: 0.5rem;
+}
+
+.pdf-export-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin: 0.5rem;
+}
+
+.pdf-export-section h5 {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-display);
+}
+
+.pdf-export-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.pdf-export-button-wrap {
+  display: flex;
+}
+
+.pdf-export-button-wrap .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── PDF / Print Export ── */
+.print-export-banner {
+  display: none;
+}
+
+.print-only { display: none; }
+
+@media print {
+  @page {
+    margin: 1.8cm 1.5cm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 11pt;
+    line-height: 1.55;
+  }
+
+  body {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Hide all interactive/navigational chrome */
+  .sidebar,
+  .sidebar-overlay,
+  .topbar,
+  .progress-modal,
+  .rj45-practice,
+  .btn,
+  canvas,
+  .scroller-nav,
+  .scroller-arrow,
+  .flashcard-nav-buttons,
+  .quiz-footer,
+  .quiz-progress-bar,
+  .lightbox,
+  .accordion-chevron,
+  .search-bar,
+  .theme-toggle {
+    display: none !important;
+  }
+
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  /* ── Cover block + generated TOC (injected by JS) ── */
+  .print-cover {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #111111;
+  }
+  .print-cover h1 {
+    font-size: 20pt;
+    margin-bottom: 0.25rem;
+  }
+  .print-cover .print-meta {
+    font-size: 9pt;
+    color: #444444;
+  }
+  .print-toc {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #999999;
+    break-after: page;
+  }
+  .print-toc h2 {
+    font-size: 13pt;
+    margin-bottom: 0.5rem;
+  }
+  .print-toc ol {
+    margin: 0;
+    padding-left: 1.4rem;
+    font-size: 10pt;
+  }
+  .print-toc li {
+    margin-bottom: 0.3rem;
+  }
+
+  /* ── Typography ── */
+  h1, h2, h3, h4, h5, h6 {
+    color: #111111 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  h1 { font-size: 18pt; margin-top: 0; }
+  h2 { font-size: 15pt; margin-top: 1.4rem; }
+  h3 { font-size: 12.5pt; margin-top: 1.1rem; }
+  p, li { orphans: 3; widows: 3; }
+
+  /* ── Accordions: force fully open, no interactive affordances ── */
+  .accordion-body {
+    display: block !important;
+    max-height: none !important;
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+  }
+  .accordion-header {
+    background: #f2f2f2 !important;
+    border: 1px solid #cccccc !important;
+    cursor: default !important;
+  }
+  .accordion-title {
+    color: #111111 !important;
+    font-size: 11.5pt;
+  }
+  .accordion {
+    break-inside: avoid-page;
+  }
+
+  /* ── Details / expandable answers ── */
+  details {
+    display: block !important;
+    break-inside: avoid-page;
+  }
+  details > *:not(summary) {
+    display: block !important;
+  }
+  details summary {
+    font-weight: 600;
+    color: #111111 !important;
+  }
+  details summary::-webkit-details-marker,
+  details summary::marker {
+    display: none;
+  }
+
+  /* ── Links: show destination URL for external links ── */
+  a {
+    color: #111111 !important;
+    text-decoration: underline;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8.5pt;
+    color: #555555;
+    word-break: break-all;
+  }
+  a[href^="#"]::after,
+  .sidebar a::after {
+    content: "";
+  }
+
+  /* ── Code blocks: force readable dark-on-light ── */
+  .code-block {
+    background: #f5f5f5 !important;
+    border: 1px solid #cccccc !important;
+    break-inside: avoid-page;
+  }
+  .code-block pre {
+    color: #111111 !important;
+    white-space: pre-wrap !important;
+    word-break: break-word;
+    font-size: 9.5pt;
+  }
+  .code-comment  { color: #6a6a6a !important; font-style: italic; }
+  .code-keyword  { color: #6b3fa0 !important; font-weight: 600; }
+  .code-string   { color: #1e7a3d !important; }
+  .code-number   { color: #b5560a !important; }
+  .code-operator { color: #0b6e8f !important; }
+
+  /* ── Info boxes: border-only, label already in markup ── */
+  .info-box {
+    background: #fafafa !important;
+    break-inside: avoid-page;
+  }
+  .info-box.note    { border-left-color: #3730a3 !important; }
+  .info-box.tip     { border-left-color: #0f6e56 !important; }
+  .info-box.warning { border-left-color: #b5560a !important; }
+
+  /* ── Data tables: repeat header row across page breaks ── */
+  .table-wrapper {
+    overflow: visible !important;
+    border: 1px solid #999999 !important;
+  }
+  .data-table {
+    width: 100% !important;
+    font-size: 9.5pt;
+  }
+  .data-table thead {
+    display: table-header-group;
+  }
+  .data-table tr {
+    break-inside: avoid;
+  }
+  .data-table th {
+    background: #e8e8e8 !important;
+    color: #111111 !important;
+    border: 1px solid #999999 !important;
+  }
+  .data-table td {
+    border: 1px solid #cccccc !important;
+    color: #111111 !important;
+  }
+  .data-table tbody tr:nth-child(even) {
+    background: #f7f7f7 !important;
+  }
+
+  /* ── Tags/badges: outlined pills instead of filled color blocks ── */
+  .tag {
+    border: 1px solid #999999 !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  /* ── Images ── */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    box-shadow: none !important;
+    break-inside: avoid-page;
+  }
+
+  /* ── Flashcards: unfold 3D flip into stacked Q/A, grid instead of horizontal scroll ── */
+  .flashcard-scroller,
+  .flashcard-track,
+  .flashcard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    overflow: visible !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+  .flashcard {
+    width: auto !important;
+    height: auto !important;
+    perspective: none !important;
+    break-inside: avoid-page;
+  }
+  .flashcard-inner {
+    position: static !important;
+    transform: none !important;
+    display: block !important;
+  }
+  .flashcard-front,
+  .flashcard-back {
+    position: static !important;
+    transform: none !important;
+    backface-visibility: visible !important;
+    border: 1px solid #cccccc !important;
+    background: #ffffff !important;
+    padding: 0.75rem !important;
+    display: block !important;
+    text-align: left !important;
+  }
+  .flashcard-front { border-bottom: none !important; border-radius: 4px 4px 0 0 !important; }
+  .flashcard-back  { border-top: none !important; border-radius: 0 0 4px 4px !important; margin-bottom: 0.5rem; }
+  .card-label::before { content: "Q: "; }
+  .flashcard-back .card-label::before { content: "A: "; }
+
+  /* ── Quiz: clean static question list, no interactive chrome ── */
+  .quiz-option {
+    border: 1px solid #cccccc !important;
+    background: #ffffff !important;
+    break-inside: avoid-page;
+  }
+  .quiz-option.selected,
+  .quiz-option.correct,
+  .quiz-option.incorrect {
+    background: #ffffff !important;
+    border-color: #cccccc !important;
+  }
+  .quiz-container {
+    break-inside: avoid-page;
+  }
+
+  /* ── Print export banner ── */
+  .print-export-banner {
+    display: block !important;
+    border: 1px solid #999999;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 9pt;
+    color: #333333;
+    break-after: avoid;
+  }
 }

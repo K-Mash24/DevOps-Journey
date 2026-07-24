@@ -1314,6 +1314,91 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     openStates[id] = accordion.classList.contains('open');
     localStorage.setItem('gc-accordion-states', JSON.stringify(openStates));
   };
+
+  // --- PDF Export (print-based, no dependencies) ---
+  window.exportPageAsPDF = function () {
+    console.log('[PDF Export] exportPageAsPDF() started');
+
+    try {
+      // 1. Record current state so we can restore it after printing
+      const accordionStates = [];
+      document.querySelectorAll('.accordion').forEach(acc => {
+        accordionStates.push({ el: acc, wasOpen: acc.classList.contains('open') });
+        acc.classList.add('open');
+      });
+      console.log(`[PDF Export] expanded ${accordionStates.length} accordion(s)`);
+
+      const detailsStates = [];
+      document.querySelectorAll('details').forEach(d => {
+        detailsStates.push({ el: d, wasOpen: d.open });
+        d.open = true;
+      });
+      console.log(`[PDF Export] expanded ${detailsStates.length} <details> element(s)`);
+
+      // 2. Build a cover block (title + generated date)
+      const pageTitle = document.querySelector('.page-header h1')?.innerText.trim()
+        || document.title
+        || 'DevOps Journey — Study Notes';
+
+      const cover = document.createElement('div');
+      cover.className = 'print-cover print-only';
+      cover.innerHTML = `
+        <h1>${pageTitle}</h1>
+        <div class="print-meta">Exported from k-mash24.github.io/DevOps-Journey · Generated ${new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+      `;
+
+      // 3. Build an auto-generated table of contents from every accordion title
+      const sectionTitles = Array.from(document.querySelectorAll('.accordion-title'))
+        .map(t => t.innerText.trim())
+        .filter(Boolean);
+
+      const toc = document.createElement('div');
+      toc.className = 'print-toc print-only';
+      if (sectionTitles.length) {
+        toc.innerHTML = `
+          <h2>Contents</h2>
+          <ol>${sectionTitles.map(t => `<li>${t}</li>`).join('')}</ol>
+        `;
+      }
+
+      // 4. Insert cover + TOC + omission banner, in order, at the top
+      const banner = document.createElement('div');
+      banner.className = 'print-export-banner print-only';
+      banner.textContent = 'Interactive practice tools (RJ45 wiring, subnet calculators) are omitted from this PDF — visit the live site to use them.';
+
+      document.body.insertBefore(banner, document.body.firstChild);
+      document.body.insertBefore(toc, document.body.firstChild);
+      document.body.insertBefore(cover, document.body.firstChild);
+      console.log('[PDF Export] cover, TOC, and banner inserted');
+
+      // 5. Restore everything once the print dialog closes (or is cancelled)
+      const restore = () => {
+        accordionStates.forEach(({ el, wasOpen }) => {
+          if (!wasOpen) el.classList.remove('open');
+        });
+        detailsStates.forEach(({ el, wasOpen }) => {
+          el.open = wasOpen;
+        });
+        cover.remove();
+        toc.remove();
+        banner.remove();
+        window.removeEventListener('afterprint', restore);
+        console.log('[PDF Export] state restored after print dialog closed');
+      };
+      window.addEventListener('afterprint', restore);
+
+      // 6. Trigger the browser's native print dialog
+      console.log('[PDF Export] calling window.print() now');
+      window.print();
+      console.log('[PDF Export] window.print() call completed (dialog should be open)');
+    } catch (err) {
+      console.error('[PDF Export] failed:', err);
+      alert('PDF export failed — check the console for details.');
+    }
+  };
+
+  console.log('[PDF Export] exportPageAsPDF function registered:', typeof window.exportPageAsPDF);
+
   function restoreAccordionStates() {
     const openStates = JSON.parse(localStorage.getItem('gc-accordion-states') || '{}');
     document.querySelectorAll('.accordion').forEach(acc => {
@@ -2370,6 +2455,8 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         </div>
     </div>
     `;
+
+    console.log('[PDF Export] exportPdfBtn found in DOM:', !!document.getElementById('exportPdfBtn'));
     
     // Save settings
     document.getElementById('saveBackupSettingsBtn')?.addEventListener('click', () => {
@@ -2700,6 +2787,15 @@ window.openModalToPillarDetails = openModalToPillarDetails;
             <div id="pillarDetailContainer" style="min-height: 200px;">...</div>
           </div>
           <div class="tab-pane" id="tab4">
+            <div class="pdf-export-section">
+              <h5>📄 Export This Page as PDF</h5>
+              <p class="pdf-export-note">Opens your browser's print dialog — choose "Save as PDF" as the destination. All sections expand automatically; interactive practice widgets are excluded from the export.</p>
+              <div class="pdf-export-button-wrap">
+                <button type="button" id="exportPdfBtn" class="btn btn-primary" onclick="console.log('[PDF Export] button clicked'); exportPageAsPDF();">
+                  <span class="btn-icon">📄</span> Export PDF
+                </button>
+              </div>
+            </div>
             <div id="backupContainer" class="backup-tab-content"></div>
           </div>
           <!-- ============================================================ -->

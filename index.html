@@ -482,8 +482,17 @@
         </div>
       </div>
       <div class="tab-pane" id="tab4">
+        <div class="pdf-export-section">
+          <h5>📄 Export This Page as PDF</h5>
+          <p class="pdf-export-note">Opens your browser's print dialog — choose "Save as PDF" as the destination. All sections expand automatically; interactive practice widgets are excluded from the export.</p>
+          <div class="pdf-export-button-wrap">
+            <button type="button" id="exportPdfBtn" class="btn btn-primary" onclick="console.log('[PDF Export] button clicked'); exportPageAsPDF();">
+              <span class="btn-icon">📄</span> Export PDF
+            </button>
+          </div>
+        </div>
         <div id="backupContainer" class="backup-tab-content">  <!-- Container gets THIS ID -->
-          <!-- Backup UI will be injected here -->
+         <!-- Backup UI will be injected here -->
         </div>
       </div>
       <!-- ============================================================ -->
