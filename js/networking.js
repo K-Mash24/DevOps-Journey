@@ -617,6 +617,34 @@ document.addEventListener('DOMContentLoaded', () => {
             <small style="display: block; margin-top: 0.5rem;">Crossover — pins 1↔3, 2↔6 swap orange/green pairs</small>
           </div>
         </div>
+
+        <div class="rj45-practice" id="rj45binPractice">
+          <div class="rj45-practice-header">
+            <h4>🧩 Practice: Arrange the Standard</h4>
+            <p>Pick a standard, then place all 8 shuffled wires into the correct pin order from memory.</p>
+          </div>
+          <div class="rj45-mode-buttons">
+            <button type="button" class="btn btn-secondary btn-sm" id="rj45binBtnA" onclick="rj45bSetStandard('A')">T568A</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="rj45binBtnB" onclick="rj45bSetStandard('B')">T568B</button>
+          </div>
+          <div id="rj45binWorkspace">
+            <p style="color:var(--text-muted); font-size:0.85rem;">Choose a standard above to begin.</p>
+          </div>
+        </div>
+
+        <div class="rj45-practice" id="rj45Practice">
+          <div class="rj45-practice-header">
+            <h4>🔧 Practice: Wire the second end</h4>
+            <p>End A is already crimped and shown below. Pick a cable type, then click each pin on End B and choose the correct color to complete it.</p>
+          </div>
+          <div class="rj45-mode-buttons">
+            <button type="button" class="btn btn-secondary btn-sm" id="rj45BtnStraight" onclick="rj45SetMode('straight')">Straight-Through</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="rj45BtnCross" onclick="rj45SetMode('cross')">Crossover</button>
+          </div>
+          <div id="rj45Workspace">
+            <p style="color:var(--text-muted); font-size:0.85rem;">Choose a cable type above to begin.</p>
+          </div>
+        </div>
       `
     }
   ];
@@ -801,6 +829,41 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="info-box note">
           <strong>Requirements for valid summarisation</strong>
           Networks must be contiguous · Number summarised must be a power of 2 · Summary address must fall on correct block boundary
+        </div>
+
+        <div class="rj45-practice" id="subnetRefCalc">
+          <div class="rj45-practice-header">
+            <h4>📊 Reference: Subnet Calculator</h4>
+            <p>Type any IPv4 address and CIDR prefix — every value below updates instantly. No grading, just a lookup tool.</p>
+          </div>
+          <div class="subnet-fields subnet-ref-inputs">
+            <div class="subnet-field">
+              <label for="subnetRefIp">IP address</label>
+              <input type="text" id="subnetRefIp" value="192.168.1.10" oninput="subnetRefCalculate()">
+            </div>
+            <div class="subnet-field subnet-field-prefix">
+              <label for="subnetRefPrefix">CIDR prefix</label>
+              <div class="subnet-prefix-wrap">
+                <span>/</span>
+                <input type="number" id="subnetRefPrefix" min="0" max="32" value="24" oninput="subnetRefCalculate()">
+              </div>
+            </div>
+          </div>
+          <div id="subnetRefOutput"></div>
+        </div>
+
+        <div class="rj45-practice" id="subnetCalcPractice">
+          <div class="rj45-practice-header">
+            <h4>🧮 Practice: Break Down a Subnet</h4>
+            <p>You're given a host IP and a CIDR prefix. Work out the network address, broadcast address, usable host range, and usable host count.</p>
+          </div>
+          <div class="rj45-mode-buttons">
+            <button type="button" class="btn btn-secondary btn-sm" id="subnetBtnEasy" onclick="subnetSetDifficulty('easy')">Easy (/25–/26)</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="subnetBtnHard" onclick="subnetSetDifficulty('hard')">Hard (/27–/30)</button>
+          </div>
+          <div id="subnetWorkspace">
+            <p style="color:var(--text-muted); font-size:0.85rem;">Choose a difficulty above to begin.</p>
+          </div>
         </div>
       `
     }
@@ -1060,11 +1123,684 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ============================================================
+  // RJ45 CABLE PRACTICE WIDGET (Section 1 — RJ45 Cabling)
+  // ============================================================
+  const RJ45_COLORS = [
+    { id: 'wo',  label: 'White/Orange', c1: '#ffffff', c2: '#e67e22' },
+    { id: 'o',   label: 'Orange',       c1: '#e67e22', c2: '#e67e22' },
+    { id: 'wg',  label: 'White/Green',  c1: '#ffffff', c2: '#27ae60' },
+    { id: 'bl',  label: 'Blue',         c1: '#2980b9', c2: '#2980b9' },
+    { id: 'wb',  label: 'White/Blue',   c1: '#ffffff', c2: '#2980b9' },
+    { id: 'g',   label: 'Green',        c1: '#27ae60', c2: '#27ae60' },
+    { id: 'wbr', label: 'White/Brown',  c1: '#ffffff', c2: '#8b5e3c' },
+    { id: 'br',  label: 'Brown',        c1: '#8b5e3c', c2: '#8b5e3c' }
+  ];
+  const RJ45_COLOR_MAP = Object.fromEntries(RJ45_COLORS.map(c => [c.id, c]));
+  const T568A_ORDER = ['wg', 'g', 'wo', 'bl', 'wb', 'o', 'wbr', 'br'];
+  const T568B_ORDER = ['wo', 'o', 'wg', 'bl', 'wb', 'g', 'wbr', 'br'];
+
+  const rj45State = {
+    mode: null,          // 'straight' | 'cross'
+    endA: [],            // array of 8 color ids (fixed, read-only)
+    endB: [null, null, null, null, null, null, null, null], // user answers
+    selectedPin: null,
+    checked: false,
+    results: null        // array of true/false per pin after check
+  };
+
+  function rj45CorrectEndB() {
+    if (rj45State.mode === 'straight') {
+      return [...rj45State.endA];
+    }
+    // crossover: pins 1<->3 and 2<->6 swap relative to End A, 4/5/7/8 unchanged
+    const b = [...rj45State.endA];
+    [b[0], b[2]] = [b[2], b[0]];
+    [b[1], b[5]] = [b[5], b[1]];
+    return b;
+  }
+
+  function rj45SwatchStyle(colorId) {
+    const c = RJ45_COLOR_MAP[colorId];
+    if (!c) return 'background: var(--bg-primary);';
+    if (c.c1 === c.c2) return `background:${c.c1};`;
+    return `background: linear-gradient(135deg, ${c.c1} 0%, ${c.c1} 49%, ${c.c2} 51%, ${c.c2} 100%);`;
+  }
+
+  window.rj45SetMode = function (mode) {
+    rj45State.mode = mode;
+    document.getElementById('rj45BtnStraight')?.classList.toggle('active-mode', mode === 'straight');
+    document.getElementById('rj45BtnCross')?.classList.toggle('active-mode', mode === 'cross');
+    rj45NewCable();
+  };
+
+  window.rj45NewCable = function () {
+    if (!rj45State.mode) return;
+    rj45State.endA = Math.random() < 0.5 ? [...T568A_ORDER] : [...T568B_ORDER];
+    rj45State.endB = [null, null, null, null, null, null, null, null];
+    rj45State.selectedPin = 0;
+    rj45State.checked = false;
+    rj45State.results = null;
+    rj45RenderWorkspace();
+  };
+
+  window.rj45SelectPin = function (idx) {
+    if (rj45State.checked) return;
+    rj45State.selectedPin = idx;
+    rj45RenderWorkspace();
+  };
+
+  window.rj45PickColor = function (colorId) {
+    if (rj45State.selectedPin === null || rj45State.checked) return;
+    rj45State.endB[rj45State.selectedPin] = colorId;
+    // auto-advance to next empty pin
+    const nextEmpty = rj45State.endB.findIndex(v => v === null);
+    rj45State.selectedPin = nextEmpty === -1 ? null : nextEmpty;
+    rj45RenderWorkspace();
+  };
+
+  window.rj45Check = function () {
+    if (rj45State.endB.some(v => v === null)) {
+      rj45State.checked = false;
+      rj45State.results = 'incomplete';
+      rj45RenderWorkspace();
+      return;
+    }
+    const correct = rj45CorrectEndB();
+    rj45State.results = rj45State.endB.map((v, i) => v === correct[i]);
+    rj45State.checked = true;
+    rj45RenderWorkspace();
+  };
+
+  function rj45RenderWorkspace() {
+    const container = document.getElementById('rj45Workspace');
+    if (!container) return;
+
+    if (!rj45State.mode) {
+      container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem;">Choose a cable type above to begin.</p>`;
+      return;
+    }
+
+    const correct = rj45State.checked ? rj45CorrectEndB() : null;
+
+    const endARow = rj45State.endA.map((colorId, i) => `
+      <div class="rj45-pin">
+        <div class="rj45-pin-num">Pin ${i + 1}</div>
+        <div class="rj45-swatch" style="${rj45SwatchStyle(colorId)}" title="${RJ45_COLOR_MAP[colorId].label}"></div>
+      </div>
+    `).join('');
+
+    const endBRow = rj45State.endB.map((colorId, i) => {
+      let stateClass = '';
+      let hint = '';
+      if (rj45State.checked && Array.isArray(rj45State.results)) {
+        stateClass = rj45State.results[i] ? 'correct' : 'incorrect';
+        if (!rj45State.results[i]) {
+          hint = `<div class="rj45-hint">${RJ45_COLOR_MAP[correct[i]].label}</div>`;
+        }
+      } else if (rj45State.selectedPin === i) {
+        stateClass = 'selected';
+      }
+      return `
+        <div class="rj45-pin">
+          <div class="rj45-pin-num">Pin ${i + 1}</div>
+          <div class="rj45-swatch editable ${stateClass}"
+               style="${colorId ? rj45SwatchStyle(colorId) : ''}"
+               title="${colorId ? RJ45_COLOR_MAP[colorId].label : 'Empty'}"
+               onclick="rj45SelectPin(${i})"></div>
+          ${hint}
+        </div>
+      `;
+    }).join('');
+
+    const palette = RJ45_COLORS.map(c => `
+      <button type="button" class="rj45-swatch-btn" style="${rj45SwatchStyle(c.id)}" title="${c.label}" aria-label="${c.label}" onclick="rj45PickColor('${c.id}')"></button>
+    `).join('');
+
+    let resultMsg = '';
+    if (rj45State.results === 'incomplete') {
+      resultMsg = `<div class="rj45-result fail">Fill in all 8 pins before checking.</div>`;
+    } else if (Array.isArray(rj45State.results)) {
+      const numCorrect = rj45State.results.filter(Boolean).length;
+      if (numCorrect === 8) {
+        resultMsg = `<div class="rj45-result pass">✓ 8/8 correct — that's a valid ${rj45State.mode === 'straight' ? 'straight-through' : 'crossover'} cable.</div>`;
+      } else {
+        resultMsg = `<div class="rj45-result fail">${numCorrect}/8 correct — check the pins outlined in red above (correct color shown underneath).</div>`;
+      }
+    }
+
+    container.innerHTML = `
+      <div class="rj45-end-label">End A (already crimped)</div>
+      <div class="rj45-end-row">${endARow}</div>
+      <div class="rj45-end-label">End B (your job)</div>
+      <div class="rj45-end-row">${endBRow}</div>
+      <div class="rj45-palette">${palette}</div>
+      <div class="rj45-actions">
+        <button type="button" class="btn btn-primary btn-sm" onclick="rj45Check()">Check</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="rj45NewCable()">New Cable</button>
+      </div>
+      ${resultMsg}
+    `;
+  }
+
+  // ============================================================
+  // RJ45 "ARRANGE THE STANDARD" WIDGET (bin → pins, from scratch)
+  // ============================================================
+  const rj45bState = {
+    standard: null,       // 'A' | 'B'
+    bin: [],              // remaining color ids not yet placed
+    pins: [null, null, null, null, null, null, null, null],
+    selectedPin: null,
+    checked: false,
+    results: null
+  };
+
+  function rj45bShuffledColors() {
+    const ids = RJ45_COLORS.map(c => c.id);
+    for (let i = ids.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [ids[i], ids[j]] = [ids[j], ids[i]];
+    }
+    return ids;
+  }
+
+  window.rj45bSetStandard = function (std) {
+    rj45bState.standard = std;
+    document.getElementById('rj45binBtnA')?.classList.toggle('active-mode', std === 'A');
+    document.getElementById('rj45binBtnB')?.classList.toggle('active-mode', std === 'B');
+    rj45bShuffle();
+  };
+
+  window.rj45bShuffle = function () {
+    if (!rj45bState.standard) return;
+    rj45bState.bin = rj45bShuffledColors();
+    rj45bState.pins = [null, null, null, null, null, null, null, null];
+    rj45bState.selectedPin = null;
+    rj45bState.checked = false;
+    rj45bState.results = null;
+    rj45bRenderWorkspace();
+  };
+
+  window.rj45bSelectPin = function (idx) {
+    if (rj45bState.checked) return;
+    if (rj45bState.pins[idx] !== null) {
+      // filled pin clicked -> return its wire to the bin
+      rj45bState.bin.push(rj45bState.pins[idx]);
+      rj45bState.pins[idx] = null;
+      rj45bState.selectedPin = idx;
+    } else {
+      rj45bState.selectedPin = idx;
+    }
+    rj45bRenderWorkspace();
+  };
+
+  window.rj45bPickFromBin = function (colorId) {
+    if (rj45bState.selectedPin === null || rj45bState.checked) return;
+    const binIdx = rj45bState.bin.indexOf(colorId);
+    if (binIdx === -1) return;
+    rj45bState.bin.splice(binIdx, 1);
+    rj45bState.pins[rj45bState.selectedPin] = colorId;
+    const nextEmpty = rj45bState.pins.findIndex(v => v === null);
+    rj45bState.selectedPin = nextEmpty === -1 ? null : nextEmpty;
+    rj45bRenderWorkspace();
+  };
+
+  window.rj45bCheck = function () {
+    if (rj45bState.pins.some(v => v === null)) {
+      rj45bState.checked = false;
+      rj45bState.results = 'incomplete';
+      rj45bRenderWorkspace();
+      return;
+    }
+    const correctOrder = rj45bState.standard === 'A' ? T568A_ORDER : T568B_ORDER;
+    rj45bState.results = rj45bState.pins.map((v, i) => v === correctOrder[i]);
+    rj45bState.checked = true;
+    rj45bRenderWorkspace();
+  };
+
+  function rj45bRenderWorkspace() {
+    const container = document.getElementById('rj45binWorkspace');
+    if (!container) return;
+
+    if (!rj45bState.standard) {
+      container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem;">Choose a standard above to begin.</p>`;
+      return;
+    }
+
+    const correctOrder = rj45bState.checked ? (rj45bState.standard === 'A' ? T568A_ORDER : T568B_ORDER) : null;
+
+    const pinsRow = rj45bState.pins.map((colorId, i) => {
+      let stateClass = '';
+      let hint = '';
+      if (rj45bState.checked && Array.isArray(rj45bState.results)) {
+        stateClass = rj45bState.results[i] ? 'correct' : 'incorrect';
+        if (!rj45bState.results[i]) {
+          hint = `<div class="rj45-hint">${RJ45_COLOR_MAP[correctOrder[i]].label}</div>`;
+        }
+      } else if (rj45bState.selectedPin === i) {
+        stateClass = 'selected';
+      }
+      return `
+        <div class="rj45-pin">
+          <div class="rj45-pin-num">Pin ${i + 1}</div>
+          <div class="rj45-swatch editable ${stateClass}"
+               style="${colorId ? rj45SwatchStyle(colorId) : ''}"
+               title="${colorId ? RJ45_COLOR_MAP[colorId].label : 'Empty'}"
+               onclick="rj45bSelectPin(${i})"></div>
+          ${hint}
+        </div>
+      `;
+    }).join('');
+
+    const binRow = rj45bState.bin.length
+      ? rj45bState.bin.map(colorId => `
+          <button type="button" class="rj45-swatch-btn" style="${rj45SwatchStyle(colorId)}" title="${RJ45_COLOR_MAP[colorId].label}" aria-label="${RJ45_COLOR_MAP[colorId].label}" onclick="rj45bPickFromBin('${colorId}')"></button>
+        `).join('')
+      : `<div class="rj45-bin-empty">All wires placed — hit Check.</div>`;
+
+    let resultMsg = '';
+    if (rj45bState.results === 'incomplete') {
+      resultMsg = `<div class="rj45-result fail">Place all 8 wires before checking.</div>`;
+    } else if (Array.isArray(rj45bState.results)) {
+      const numCorrect = rj45bState.results.filter(Boolean).length;
+      resultMsg = numCorrect === 8
+        ? `<div class="rj45-result pass">✓ 8/8 correct — that's a valid T568${rj45bState.standard} arrangement.</div>`
+        : `<div class="rj45-result fail">${numCorrect}/8 correct — check the pins outlined in red (correct color shown underneath).</div>`;
+    }
+
+    container.innerHTML = `
+      <div class="rj45-end-label">Wire bin</div>
+      <div class="rj45-palette">${binRow}</div>
+      <div class="rj45-end-label">Pins (click one, then pick a wire from the bin)</div>
+      <div class="rj45-end-row">${pinsRow}</div>
+      <div class="rj45-actions">
+        <button type="button" class="btn btn-primary btn-sm" onclick="rj45bCheck()">Check</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="rj45bShuffle()">Shuffle</button>
+      </div>
+      ${resultMsg}
+    `;
+  }
+
+  // ============================================================
+  // SUBNET REFERENCE CALCULATOR (live lookup, no grading)
+  // ============================================================
+  function subnetIsPrivate(ipInt) {
+    const a = (ipInt >>> 24) & 255;
+    const b = (ipInt >>> 16) & 255;
+    if (a === 10) return true;
+    if (a === 172 && b >= 16 && b <= 31) return true;
+    if (a === 192 && b === 168) return true;
+    if (a === 127) return true; // loopback, treated as non-public
+    return false;
+  }
+
+window.subnetRefCalculate = function () {
+    const output = document.getElementById('subnetRefOutput');
+    if (!output) return;
+
+    const ipStr = document.getElementById('subnetRefIp')?.value.trim();
+    const prefixRaw = document.getElementById('subnetRefPrefix')?.value.trim();
+    const prefix = Number(prefixRaw);
+
+    const ipInt = subnetIpToInt(ipStr);
+    if (ipInt === null || isNaN(prefix) || prefix < 0 || prefix > 32) {
+      output.innerHTML = `<div class="rj45-result fail">Enter a valid IPv4 address (e.g. 192.168.1.10) and a prefix between 0 and 32.</div>`;
+      return;
+    }
+
+    // Preserve which explanations were already open before re-rendering
+    const rowKeys = ['ipType', 'cidr', 'mask', 'wildcard', 'network', 'broadcast', 'range', 'total', 'usable'];
+    const openState = {};
+    rowKeys.forEach(key => {
+      const el = document.getElementById(`subnetExpl-${key}`);
+      if (el) openState[key] = el.open;
+    });
+
+    const hostBits = 32 - prefix;
+    const maskInt = hostBits === 32 ? 0 : (0xFFFFFFFF << hostBits) >>> 0;
+    const wildcardInt = (~maskInt) >>> 0;
+    const networkInt = (ipInt & maskInt) >>> 0;
+    const broadcastInt = (networkInt | wildcardInt) >>> 0;
+    const totalAddresses = Math.pow(2, hostBits);
+
+    let firstUsable, lastUsable, usableHosts;
+    if (prefix === 32) {
+      firstUsable = networkInt;
+      lastUsable = networkInt;
+      usableHosts = 1;
+    } else if (prefix === 31) {
+      firstUsable = networkInt;
+      lastUsable = broadcastInt;
+      usableHosts = 2;
+    } else {
+      firstUsable = networkInt + 1;
+      lastUsable = broadcastInt - 1;
+      usableHosts = totalAddresses - 2;
+    }
+
+    const isPrivate = subnetIsPrivate(ipInt);
+
+    // ---- Binary helpers for the explanations ----
+    function bin8(n) { return n.toString(2).padStart(8, '0'); }
+    function binIp(int) {
+      return [(int >>> 24) & 255, (int >>> 16) & 255, (int >>> 8) & 255, int & 255].map(bin8).join('.');
+    }
+    function groupBinary(bitString) {
+      return [bitString.slice(0, 8), bitString.slice(8, 16), bitString.slice(16, 24), bitString.slice(24, 32)].join('.');
+    }
+
+    const ipBin = binIp(ipInt);
+    const maskBitString = '1'.repeat(prefix) + '0'.repeat(hostBits);
+    const wildcardBitString = maskBitString.split('').map(b => b === '1' ? '0' : '1').join('');
+    const maskBin = groupBinary(maskBitString);
+    const wildcardBin = groupBinary(wildcardBitString);
+    const networkBin = binIp(networkInt);
+    const broadcastBin = binIp(broadcastInt);
+
+    const rows = [
+      {
+        key: 'ipType',
+        label: 'IP address',
+        value: `<code>${ipStr}</code> <span class="tag ${isPrivate ? 'both' : 'tcp'}">${isPrivate ? 'Private' : 'Public'}</span>`,
+        explanation: `
+          <p>Private ranges are reserved for internal networks and never routed on the public internet: <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code> (plus <code>127.0.0.0/8</code> for loopback).</p>
+          <p>Your address <code>${ipStr}</code> ${isPrivate ? 'falls inside one of these private blocks' : 'falls outside all private ranges'}, so it's classified as <strong>${isPrivate ? 'Private' : 'Public'}</strong>.</p>
+        `
+      },
+      {
+        key: 'cidr',
+        label: 'CIDR notation',
+        value: `<code>${subnetIntToIp(networkInt)}/${prefix}</code>`,
+        explanation: `
+          <p>CIDR notation pairs a network address with a prefix length — the count of leading bits (out of 32) that belong to the network portion.</p>
+          <p>Here, <code>/${prefix}</code> means the first ${prefix} bits are network bits and the remaining ${hostBits} bits are host bits.</p>
+        `
+      },
+      {
+        key: 'mask',
+        label: 'Subnet mask',
+        value: `<code>${subnetIntToIp(maskInt)}</code>`,
+        explanation: `
+          <p>A /${prefix} mask sets the first ${prefix} bits to 1 (network) and the remaining ${hostBits} bits to 0 (host):</p>
+          <div class="code-block"><pre>${maskBin}</pre></div>
+          <p>Converted back to decimal per octet: <code>${subnetIntToIp(maskInt)}</code></p>
+        `
+      },
+      {
+        key: 'wildcard',
+        label: 'Wildcard mask',
+        value: `<code>${subnetIntToIp(wildcardInt)}</code>`,
+        explanation: `
+          <p>The wildcard mask is the bitwise NOT (inverse) of the subnet mask — every 1 becomes 0 and every 0 becomes 1:</p>
+          <div class="code-block"><pre>Subnet mask:   ${maskBin}
+Wildcard mask: ${wildcardBin}</pre></div>
+          <p>In decimal: <code>${subnetIntToIp(wildcardInt)}</code>. Used in Cisco ACLs and OSPF to specify which bits to match.</p>
+        `
+      },
+      {
+        key: 'network',
+        label: 'Network address',
+        value: `<code>${subnetIntToIp(networkInt)}</code>`,
+        explanation: `
+          <p>The network address is found with a bitwise AND between your IP address and the subnet mask — every host bit gets zeroed out:</p>
+          <div class="code-block"><pre>IP:      ${ipBin}
+Mask:    ${maskBin}
+AND  →   ${networkBin}</pre></div>
+          <p>Result: <code>${subnetIntToIp(networkInt)}</code></p>
+        `
+      },
+      {
+        key: 'broadcast',
+        label: 'Broadcast address',
+        value: `<code>${subnetIntToIp(broadcastInt)}</code>`,
+        explanation: `
+          <p>The broadcast address is found with a bitwise OR between the network address and the wildcard mask — every host bit gets set to 1:</p>
+          <div class="code-block"><pre>Network:   ${networkBin}
+Wildcard:  ${wildcardBin}
+OR    →    ${broadcastBin}</pre></div>
+          <p>Result: <code>${subnetIntToIp(broadcastInt)}</code></p>
+        `
+      },
+      {
+        key: 'range',
+        label: 'Usable host range',
+        value: `<code>${subnetIntToIp(firstUsable)} – ${subnetIntToIp(lastUsable)}</code>`,
+        explanation: prefix === 32 ? `
+          <p>A /32 prefix has zero host bits — it identifies exactly one address, itself. There's no separate network/broadcast/usable split; <code>${subnetIntToIp(networkInt)}</code> is the host route.</p>
+        ` : prefix === 31 ? `
+          <p>A /31 prefix (RFC 3021) is reserved for point-to-point links. Both addresses in the block are usable — there's no dedicated broadcast address here:</p>
+          <div class="code-block"><pre>First usable: ${subnetIntToIp(firstUsable)}
+Last usable:  ${subnetIntToIp(lastUsable)}</pre></div>
+        ` : `
+          <p>The network and broadcast addresses can't be assigned to hosts, so the usable range is everything in between:</p>
+          <div class="code-block"><pre>First usable = Network + 1   = ${subnetIntToIp(networkInt)} + 1 = ${subnetIntToIp(firstUsable)}
+Last usable  = Broadcast − 1 = ${subnetIntToIp(broadcastInt)} − 1 = ${subnetIntToIp(lastUsable)}</pre></div>
+        `
+      },
+      {
+        key: 'total',
+        label: 'Total addresses',
+        value: `<code>${totalAddresses.toLocaleString()}</code>`,
+        explanation: `
+          <p>Total addresses in a block equal 2 raised to the number of host bits. With a /${prefix} prefix, ${hostBits} bits remain for hosts:</p>
+          <div class="code-block"><pre>2^${hostBits} = ${totalAddresses.toLocaleString()}</pre></div>
+        `
+      },
+      {
+        key: 'usable',
+        label: 'Usable hosts',
+        value: `<code>${usableHosts.toLocaleString()}</code>`,
+        explanation: prefix >= 31 ? `
+          <p>${prefix === 32
+            ? 'A /32 has no host bits at all, so the single address itself counts as 1 usable host route.'
+            : 'A /31 has no room to reserve either address, so RFC 3021 makes both addresses usable — total and usable are equal here.'}</p>
+        ` : `
+          <p>Usable hosts = total addresses minus the 2 reserved for network and broadcast:</p>
+          <div class="code-block"><pre>${totalAddresses.toLocaleString()} − 2 = ${usableHosts.toLocaleString()}</pre></div>
+        `
+      }
+    ];
+
+    const rowsHTML = rows.map(r => `
+      <tr>
+        <td>${r.label}</td>
+        <td>
+          ${r.value}
+          <details class="details-box subnet-details" id="subnetExpl-${r.key}" ${openState[r.key] ? 'open' : ''}>
+            <summary>How is this calculated?</summary>
+            <div class="details-answer-body">${r.explanation}</div>
+          </details>
+        </td>
+      </tr>
+    `).join('');
+
+    output.innerHTML = `
+      <div class="table-wrapper" style="margin-top:0.75rem;">
+        <table class="data-table">
+          <tbody>${rowsHTML}</tbody>
+        </table>
+      </div>
+    `;
+  };
+
+  // ============================================================
+  // SUBNET CALCULATOR PRACTICE WIDGET (Section 3 — Subnetting)
+  // ============================================================
+  const subnetState = {
+    difficulty: null,     // 'easy' | 'hard'
+    givenIp: null,        // string, the host IP shown to the user
+    prefix: null,
+    networkInt: null,
+    broadcastInt: null,
+    firstUsableInt: null,
+    lastUsableInt: null,
+    usableHosts: null,
+    checked: false,
+    results: null          // { network: bool, broadcast: bool, first: bool, last: bool, count: bool }
+  };
+
+  function subnetIpToInt(ip) {
+    const parts = ip.split('.').map(Number);
+    if (parts.length !== 4 || parts.some(p => isNaN(p) || p < 0 || p > 255)) return null;
+    return ((parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | parts[3]) >>> 0;
+  }
+
+  function subnetIntToIp(int) {
+    return [(int >>> 24) & 255, (int >>> 16) & 255, (int >>> 8) & 255, int & 255].join('.');
+  }
+
+  function subnetRandomBaseInt() {
+    // Pick a realistic private-range base (10.x, 172.16.x, 192.168.x)
+    const templates = [
+      () => [10, Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), 0],
+      () => [172, 16 + Math.floor(Math.random() * 16), Math.floor(Math.random() * 256), 0],
+      () => [192, 168, Math.floor(Math.random() * 256), 0]
+    ];
+    const octets = templates[Math.floor(Math.random() * templates.length)]();
+    return ((octets[0] << 24) | (octets[1] << 16) | (octets[2] << 8) | octets[3]) >>> 0;
+  }
+
+  window.subnetSetDifficulty = function (level) {
+    subnetState.difficulty = level;
+    document.getElementById('subnetBtnEasy')?.classList.toggle('active-mode', level === 'easy');
+    document.getElementById('subnetBtnHard')?.classList.toggle('active-mode', level === 'hard');
+    subnetNewProblem();
+  };
+
+  window.subnetNewProblem = function () {
+    if (!subnetState.difficulty) return;
+
+    const prefixPool = subnetState.difficulty === 'easy' ? [25, 26] : [27, 28, 29, 30];
+    const prefix = prefixPool[Math.floor(Math.random() * prefixPool.length)];
+    const hostBits = 32 - prefix;
+    const blockSize = Math.pow(2, hostBits);
+
+    const rawBase = subnetRandomBaseInt();
+    const mask = hostBits === 0 ? 0xFFFFFFFF : (~(blockSize - 1)) >>> 0;
+    const networkInt = (rawBase & mask) >>> 0;
+    const broadcastInt = (networkInt + blockSize - 1) >>> 0;
+    const firstUsableInt = networkInt + 1;
+    const lastUsableInt = broadcastInt - 1;
+    const usableHosts = blockSize - 2;
+
+    // Pick a random valid host address inside this block to present to the user
+    const hostOffset = 1 + Math.floor(Math.random() * (blockSize - 2));
+    const givenIp = subnetIntToIp(networkInt + hostOffset);
+
+    subnetState.givenIp = givenIp;
+    subnetState.prefix = prefix;
+    subnetState.networkInt = networkInt;
+    subnetState.broadcastInt = broadcastInt;
+    subnetState.firstUsableInt = firstUsableInt;
+    subnetState.lastUsableInt = lastUsableInt;
+    subnetState.usableHosts = usableHosts;
+    subnetState.checked = false;
+    subnetState.results = null;
+
+    subnetRenderWorkspace();
+  };
+
+  window.subnetCheck = function () {
+    const network = document.getElementById('subnetInputNetwork')?.value.trim();
+    const broadcast = document.getElementById('subnetInputBroadcast')?.value.trim();
+    const first = document.getElementById('subnetInputFirst')?.value.trim();
+    const last = document.getElementById('subnetInputLast')?.value.trim();
+    const count = document.getElementById('subnetInputCount')?.value.trim();
+
+    if (!network || !broadcast || !first || !last || !count) {
+      subnetState.results = 'incomplete';
+      subnetRenderWorkspace();
+      return;
+    }
+
+    subnetState.results = {
+      network: subnetIpToInt(network) === subnetState.networkInt,
+      broadcast: subnetIpToInt(broadcast) === subnetState.broadcastInt,
+      first: subnetIpToInt(first) === subnetState.firstUsableInt,
+      last: subnetIpToInt(last) === subnetState.lastUsableInt,
+      count: Number(count) === subnetState.usableHosts
+    };
+    subnetState.checked = true;
+    subnetRenderWorkspace();
+  };
+
+  function subnetFieldClass(key) {
+    if (!subnetState.checked || subnetState.results === 'incomplete' || !subnetState.results) return '';
+    return subnetState.results[key] ? 'correct' : 'incorrect';
+  }
+
+  function subnetFieldHint(key, correctInt) {
+    if (subnetState.checked && subnetState.results !== 'incomplete' && subnetState.results && !subnetState.results[key]) {
+      return `<div class="rj45-hint">${subnetIntToIp(correctInt)}</div>`;
+    }
+    return '';
+  }
+
+  function subnetRenderWorkspace() {
+    const container = document.getElementById('subnetWorkspace');
+    if (!container) return;
+
+    if (!subnetState.difficulty) {
+      container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem;">Choose a difficulty above to begin.</p>`;
+      return;
+    }
+
+    let resultMsg = '';
+    if (subnetState.results === 'incomplete') {
+      resultMsg = `<div class="rj45-result fail">Fill in all 5 fields before checking.</div>`;
+    } else if (subnetState.results && typeof subnetState.results === 'object') {
+      const numCorrect = Object.values(subnetState.results).filter(Boolean).length;
+      resultMsg = numCorrect === 5
+        ? `<div class="rj45-result pass">✓ 5/5 correct.</div>`
+        : `<div class="rj45-result fail">${numCorrect}/5 correct — check the fields outlined in red (correct answer shown underneath).</div>`;
+    }
+
+    const countHint = (subnetState.checked && subnetState.results !== 'incomplete' && subnetState.results && !subnetState.results.count)
+      ? `<div class="rj45-hint">${subnetState.usableHosts}</div>` : '';
+
+    container.innerHTML = `
+      <div class="subnet-given">Given host: <strong>${subnetState.givenIp}/${subnetState.prefix}</strong></div>
+      <div class="subnet-fields">
+        <div class="subnet-field">
+          <label for="subnetInputNetwork">Network address</label>
+          <input type="text" id="subnetInputNetwork" placeholder="e.g. 172.16.54.0" class="${subnetFieldClass('network')}" ${subnetState.checked ? 'disabled' : ''}>
+          ${subnetFieldHint('network', subnetState.networkInt)}
+        </div>
+        <div class="subnet-field">
+          <label for="subnetInputBroadcast">Broadcast address</label>
+          <input type="text" id="subnetInputBroadcast" placeholder="e.g. 172.16.54.31" class="${subnetFieldClass('broadcast')}" ${subnetState.checked ? 'disabled' : ''}>
+          ${subnetFieldHint('broadcast', subnetState.broadcastInt)}
+        </div>
+        <div class="subnet-field">
+          <label for="subnetInputFirst">First usable host</label>
+          <input type="text" id="subnetInputFirst" placeholder="e.g. 172.16.54.1" class="${subnetFieldClass('first')}" ${subnetState.checked ? 'disabled' : ''}>
+          ${subnetFieldHint('first', subnetState.firstUsableInt)}
+        </div>
+        <div class="subnet-field">
+          <label for="subnetInputLast">Last usable host</label>
+          <input type="text" id="subnetInputLast" placeholder="e.g. 172.16.54.30" class="${subnetFieldClass('last')}" ${subnetState.checked ? 'disabled' : ''}>
+          ${subnetFieldHint('last', subnetState.lastUsableInt)}
+        </div>
+        <div class="subnet-field">
+          <label for="subnetInputCount">Usable host count</label>
+          <input type="text" id="subnetInputCount" placeholder="e.g. 30" class="${subnetFieldClass('count')}" ${subnetState.checked ? 'disabled' : ''}>
+          ${countHint}
+        </div>
+      </div>
+      <div class="rj45-actions">
+        <button type="button" class="btn btn-primary btn-sm" onclick="subnetCheck()" ${subnetState.checked ? 'disabled' : ''}>Check</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="subnetNewProblem()">New Problem</button>
+      </div>
+      ${resultMsg}
+    `;
+  }
+
   // Render sections
   renderNetworkingOverview();
   renderAccordion('js-section1-container', SECTION_1_ACCORDIONS);
   renderAccordion('js-section2-container', SECTION_2_ACCORDIONS);
   renderAccordion('js-section3-container', SECTION_3_ACCORDIONS);
+  subnetRefCalculate();
   renderAccordion('js-section4-container', SECTION_4_ACCORDIONS);
   renderAccordion('js-section5-container', SECTION_5_ACCORDIONS);
   renderAccordion('js-section6-container', SECTION_6_ACCORDIONS);

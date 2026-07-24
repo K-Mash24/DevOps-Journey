@@ -2513,7 +2513,7 @@ pre {
 }
 .data-table code {
   background: var(--pillar-color-light);
-  color: var(--pillar-color);
+  color: var(--accent-secondary);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.8em;
@@ -6010,6 +6010,248 @@ select.styled-select:hover,
 /* ── Info-box with top margin (replaces inline margin) ── */
 .info-box.mt {
   margin-top: 0.75rem;
+}
+
+/* ── RJ45 Cable Practice Widget ── */
+.rj45-practice {
+  margin-top: 1.25rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.rj45-practice-header h4 {
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.rj45-practice-header p {
+  margin: 0 0 1rem 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.rj45-mode-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.rj45-mode-buttons .btn.active-mode {
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  border-color: var(--accent-primary);
+}
+
+.rj45-end-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.rj45-end-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.rj45-pin {
+  width: 52px;
+  text-align: center;
+}
+
+.rj45-pin-num {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.rj45-swatch {
+  width: 100%;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-color);
+  cursor: default;
+}
+
+.rj45-swatch.editable {
+  cursor: pointer;
+  background: var(--bg-primary);
+}
+
+.rj45-swatch.editable:hover {
+  border-color: var(--accent-secondary);
+}
+
+.rj45-swatch.selected {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-primary);
+}
+
+.rj45-swatch.correct {
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 0 2px var(--accent-secondary);
+}
+
+.rj45-swatch.incorrect {
+  border-color: var(--accent-danger);
+  box-shadow: 0 0 0 2px var(--accent-danger);
+}
+
+.rj45-hint {
+  font-size: 0.65rem;
+  color: var(--accent-danger);
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+.rj45-palette {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.rj45-swatch-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+}
+
+.rj45-swatch-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+}
+
+.rj45-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rj45-result {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.rj45-result.pass {
+  color: var(--accent-secondary);
+}
+
+.rj45-result.fail {
+  color: var(--accent-danger);
+}
+
+.rj45-bin-empty {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 0.4rem;
+}
+
+@media (max-width: 640px) {
+  .rj45-pin { width: 40px; }
+  .rj45-swatch { height: 28px; }
+  .rj45-swatch-btn { width: 34px; height: 34px; }
+}
+
+.subnet-given {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+}
+
+.subnet-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.subnet-field label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.subnet-field input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.subnet-field input:focus {
+  outline: none;
+  border-color: var(--accent-secondary);
+}
+
+.subnet-field input.correct {
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 0 2px var(--accent-secondary);
+}
+
+.subnet-field input.incorrect {
+  border-color: var(--accent-danger);
+  box-shadow: 0 0 0 2px var(--accent-danger);
+}
+
+.subnet-field input:disabled {
+  opacity: 0.85;
+}
+
+.subnet-ref-inputs {
+  grid-template-columns: 2fr 1fr;
+  margin-bottom: 0;
+}
+
+.subnet-field-prefix .subnet-prefix-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.subnet-field-prefix .subnet-prefix-wrap span {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+}
+
+.subnet-field-prefix input {
+  width: 100%;
+}
+
+.subnet-details {
+  margin-top: 0.5rem;
+}
+
+.subnet-details summary {
+  font-size: 0.78rem;
 }
 
 /* ── Code-block inside details (already styled) ── */
