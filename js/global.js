@@ -8,7 +8,7 @@ const BASE_PATH = window.location.pathname.includes('/DevOps-Journey/') ? '/DevO
 // SERVICE WORKER VERSION CHECK
 // ============================================================
 
-const APP_VERSION = '2026-07-24-v1'; // Match your CACHE_NAME
+const APP_VERSION = '2026-07-24-v2'; // Match your CACHE_NAME
 
 if (localStorage.getItem('sw-version') !== APP_VERSION) {
   console.log('🔄 New version detected — clearing old caches...');
@@ -1315,12 +1315,16 @@ window.openModalToPillarDetails = openModalToPillarDetails;
     localStorage.setItem('gc-accordion-states', JSON.stringify(openStates));
   };
 
-  // --- PDF Export (print-based, no dependencies) ---
+// --- PDF Export (print-based, no dependencies) ---
   window.exportPageAsPDF = function () {
     console.log('[PDF Export] exportPageAsPDF() started');
 
     try {
-      // 1. Record current state so we can restore it after printing
+      const pillarPrefix = document.body.dataset.pillar || 'networking';
+      const onlyCompleted = document.getElementById('pdfOnlyCompleted')?.checked || false;
+      console.log(`[PDF Export] pillar prefix: "${pillarPrefix}", onlyCompleted: ${onlyCompleted}`);
+
+      // 1. Record accordion/details state, then force everything open
       const accordionStates = [];
       document.querySelectorAll('.accordion').forEach(acc => {
         accordionStates.push({ el: acc, wasOpen: acc.classList.contains('open') });
@@ -1335,7 +1339,27 @@ window.openModalToPillarDetails = openModalToPillarDetails;
       });
       console.log(`[PDF Export] expanded ${detailsStates.length} <details> element(s)`);
 
-      // 2. Build a cover block (title + generated date)
+      // 2. If requested, hide any section whose checkbox isn't marked complete
+      const excludedEls = [];
+      if (onlyCompleted) {
+        document.querySelectorAll('.section-checkbox').forEach(cb => {
+          const sectionNum = cb.dataset.section;
+          const isComplete = localStorage.getItem(`${pillarPrefix}-section-${sectionNum}`) === 'true';
+          if (!isComplete) {
+            const divider = document.getElementById(`s${sectionNum}`);
+            const container = document.getElementById(`js-section${sectionNum}-container`);
+            [divider, container].forEach(el => {
+              if (el) {
+                el.classList.add('print-exclude');
+                excludedEls.push(el);
+              }
+            });
+          }
+        });
+        console.log(`[PDF Export] excluded ${excludedEls.length} element(s) for incomplete sections`);
+      }
+
+      // 3. Cover block
       const pageTitle = document.querySelector('.page-header h1')?.innerText.trim()
         || document.title
         || 'DevOps Journey — Study Notes';
@@ -1344,11 +1368,12 @@ window.openModalToPillarDetails = openModalToPillarDetails;
       cover.className = 'print-cover print-only';
       cover.innerHTML = `
         <h1>${pageTitle}</h1>
-        <div class="print-meta">Exported from k-mash24.github.io/DevOps-Journey · Generated ${new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+        <div class="print-meta">Exported from k-mash24.github.io/DevOps-Journey · Generated ${new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}${onlyCompleted ? ' · Completed sections only' : ''}</div>
       `;
 
-      // 3. Build an auto-generated table of contents from every accordion title
+      // 4. Auto-TOC — only from titles inside non-excluded containers
       const sectionTitles = Array.from(document.querySelectorAll('.accordion-title'))
+        .filter(t => !t.closest('.print-exclude'))
         .map(t => t.innerText.trim())
         .filter(Boolean);
 
@@ -1361,15 +1386,9 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         `;
       }
 
-      // 4. Insert cover + TOC + omission banner, in order, at the top
-      const banner = document.createElement('div');
-      banner.className = 'print-export-banner print-only';
-      banner.textContent = 'Interactive practice tools (RJ45 wiring, subnet calculators) are omitted from this PDF — visit the live site to use them.';
-
-      document.body.insertBefore(banner, document.body.firstChild);
       document.body.insertBefore(toc, document.body.firstChild);
       document.body.insertBefore(cover, document.body.firstChild);
-      console.log('[PDF Export] cover, TOC, and banner inserted');
+      console.log('[PDF Export] cover and TOC inserted');
 
       // 5. Restore everything once the print dialog closes (or is cancelled)
       const restore = () => {
@@ -1379,9 +1398,9 @@ window.openModalToPillarDetails = openModalToPillarDetails;
         detailsStates.forEach(({ el, wasOpen }) => {
           el.open = wasOpen;
         });
+        excludedEls.forEach(el => el.classList.remove('print-exclude'));
         cover.remove();
         toc.remove();
-        banner.remove();
         window.removeEventListener('afterprint', restore);
         console.log('[PDF Export] state restored after print dialog closed');
       };
@@ -2788,8 +2807,14 @@ window.openModalToPillarDetails = openModalToPillarDetails;
           </div>
           <div class="tab-pane" id="tab4">
             <div class="pdf-export-section">
-              <h5>📄 Export This Page as PDF</h5>
-              <p class="pdf-export-note">Opens your browser's print dialog — choose "Save as PDF" as the destination. All sections expand automatically; interactive practice widgets are excluded from the export.</p>
+              <div class="backup-tab-header">
+                <h5>📄 Export This Page as PDF</h5>
+                <p class="pdf-export-note">Opens your browser's print dialog — choose "Save as PDF" as the destination. All sections expand automatically; interactive practice widgets are excluded from the export.</p>
+              </div>
+                <label class="pdf-export-filter">
+                  <input type="checkbox" id="pdfOnlyCompleted">
+                  <span>Only include sections marked complete</span>
+                </label>
               <div class="pdf-export-button-wrap">
                 <button type="button" id="exportPdfBtn" class="btn btn-primary" onclick="console.log('[PDF Export] button clicked'); exportPageAsPDF();">
                   <span class="btn-icon">📄</span> Export PDF

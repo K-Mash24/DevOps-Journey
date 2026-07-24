@@ -485,6 +485,10 @@
         <div class="pdf-export-section">
           <h5>📄 Export This Page as PDF</h5>
           <p class="pdf-export-note">Opens your browser's print dialog — choose "Save as PDF" as the destination. All sections expand automatically; interactive practice widgets are excluded from the export.</p>
+          <label class="pdf-export-filter">
+            <input type="checkbox" id="pdfOnlyCompleted">
+            <span>Only include sections marked complete</span>
+          </label>
           <div class="pdf-export-button-wrap">
             <button type="button" id="exportPdfBtn" class="btn btn-primary" onclick="console.log('[PDF Export] button clicked'); exportPageAsPDF();">
               <span class="btn-icon">📄</span> Export PDF

@@ -6263,8 +6263,8 @@ select.styled-select:hover,
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 1.5rem;
-  margin: 0.5rem;
+  padding: 1rem;
+  margin: 1.5rem;
 }
 
 .pdf-export-section h5 {
@@ -6290,11 +6290,27 @@ select.styled-select:hover,
 }
 
 /* ── PDF / Print Export ── */
-.print-export-banner {
-  display: none;
+.pdf-export-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.85rem;
+  cursor: pointer;
+}
+
+.pdf-export-filter input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
 .print-only { display: none; }
+
+.print-exclude {
+    display: none !important;
+  }
 
 @media print {
   @page {
@@ -6320,8 +6336,11 @@ select.styled-select:hover,
   }
 
   /* Hide all interactive/navigational chrome */
+  .page-header,
   .sidebar,
   .sidebar-overlay,
+  .overview-content,
+  .quiz-container,
   .topbar,
   .progress-modal,
   .rj45-practice,
@@ -6335,7 +6354,18 @@ select.styled-select:hover,
   .lightbox,
   .accordion-chevron,
   .search-bar,
-  .theme-toggle {
+  .theme-toggle,
+  .floating-progress-ring,
+  .flashcard-scroller-container,
+  #quiz,
+  #overview,
+  #resources,
+  #flashcards,
+  #extra,
+  #js-sectionPBX-container,
+  #scrollTop,
+  .github-cta,
+  .global-toast {
     display: none !important;
   }
 
